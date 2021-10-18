@@ -32,4 +32,8 @@ class ProvidersContext {
   ProvidersContext() : _container = ProviderContainer();
 
   ProviderContainer call() => _container;
+
+  void dispose() {
+    _container.dispose();
+  }
 }

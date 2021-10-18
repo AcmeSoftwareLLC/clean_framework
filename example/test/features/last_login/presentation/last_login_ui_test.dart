@@ -13,20 +13,44 @@ void main() {
       tester,
       MaterialApp(
         home: LastLoginISODateUI(
-          create: (builder) => PresenterFake(builder: builder),
+          create: (builder) => PresenterIsoFake(builder: builder),
         ),
       ),
     );
 
-    //debugDumpApp();
-
     expect(find.text('Full Date'), findsOneWidget);
+    expect(find.text('December 31, 2000'), findsOneWidget);
+  });
+
+  testWidgets('LastLoginISODateUI initial load', (tester) async {
+    await ProviderTester().pumpWidget(
+      tester,
+      MaterialApp(
+        home: LastLoginShortDateUI(
+          create: (builder) => PresenterShortFake(builder: builder),
+        ),
+      ),
+    );
+
+    debugDumpApp();
+
+    expect(find.text('Short Date'), findsOneWidget);
     expect(find.text('December 31, 2000'), findsOneWidget);
   });
 }
 
-class PresenterFake extends LastLoginIsoDatePresenter {
-  PresenterFake({required PresenterBuilder<LastLoginISOViewModel> builder})
+class PresenterIsoFake extends LastLoginIsoDatePresenter {
+  PresenterIsoFake({required PresenterBuilder<LastLoginISOViewModel> builder})
+      : super(builder: builder);
+
+  @override
+  LastLoginUIOutput subscribe(_) =>
+      LastLoginUIOutput(lastLogin: DateTime.parse('2000-12-31'));
+}
+
+class PresenterShortFake extends LastLoginShortDatePresenter {
+  PresenterShortFake(
+      {required PresenterBuilder<LastLoginShortViewModel> builder})
       : super(builder: builder);
 
   @override

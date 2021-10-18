@@ -3,9 +3,11 @@ import 'package:either_dart/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class UseCaseFake extends Fake implements UseCase<EntityFake> {
+class UseCaseFake<I extends SuccessInput> extends Fake
+    implements UseCase<EntityFake> {
   EntityFake _entity = EntityFake();
   late Function subscription;
+  I? successInput;
   final Output? output;
 
   UseCaseFake({this.output});
@@ -62,7 +64,10 @@ class UseCaseFake extends Fake implements UseCase<EntityFake> {
   Future<void> doFakeRequest<O extends Output>(O output) async {
     await request(output,
         onFailure: (failure) => _entity.merge('failure'),
-        onSuccess: (success) => _entity.merge('success'));
+        onSuccess: (success) {
+          successInput = success as I;
+          return _entity.merge('success');
+        });
   }
 }
 

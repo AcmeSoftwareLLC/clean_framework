@@ -51,6 +51,8 @@ class LastLoginISODateUI extends UI<LastLoginISOViewModel> {
 }
 
 class LastLoginShortDateUI extends UI<LastLoginShortViewModel> {
+  LastLoginShortDateUI({PresenterCreator<LastLoginShortViewModel>? create})
+      : super(create: create);
   @override
   create(PresenterBuilder<LastLoginShortViewModel> builder) {
     return LastLoginShortDatePresenter(builder: builder);
@@ -74,6 +76,8 @@ class LastLoginShortDateUI extends UI<LastLoginShortViewModel> {
 }
 
 class LastLoginCTADateUI extends UI<LastLoginCTAViewModel> {
+  LastLoginCTADateUI({PresenterCreator<LastLoginCTAViewModel>? create})
+      : super(create: create);
   @override
   create(PresenterBuilder<LastLoginCTAViewModel> builder) {
     return LastLoginCTAPresenter(builder: builder);

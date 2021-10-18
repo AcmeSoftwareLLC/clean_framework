@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 void main() {
   loadProviders();
-  runApp(_ExampleApp());
+  runApp(ExampleApp());
 }
 
-class _ExampleApp extends StatelessWidget {
+class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppProvidersContainer(
@@ -16,8 +16,7 @@ class _ExampleApp extends StatelessWidget {
       onBuild: (context, _) {
         providersContext().read(featureStatesProvider.featuresMap).load({
           'features': [
-            {'name': 'example', 'state': 'ACTIVE'},
-            {'name': 'payments', 'state': 'HIDDEN'},
+            {'name': 'last_login', 'state': 'ACTIVE'},
           ]
         });
       },

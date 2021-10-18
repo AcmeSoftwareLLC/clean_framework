@@ -31,5 +31,5 @@ class LastLoginDateGateway extends FirebaseGateway<LastLoginDateOutput,
 class LastLoginDateRequest extends FirebaseReadIdRequest {
   LastLoginDateRequest() : super(path: 'last_login', id: '12345');
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [id, path];
 }

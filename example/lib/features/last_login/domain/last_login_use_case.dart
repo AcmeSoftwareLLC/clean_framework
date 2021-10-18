@@ -19,7 +19,7 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
         isLoading: entity.state == LastLoginState.loading,
       );
 
-  void fetchCurrentDate() async {
+  Future<void> fetchCurrentDate() async {
     entity = entity.merge(state: LastLoginState.loading);
 
     await request(LastLoginDateOutput(), onSuccess: (LastLoginDateInput input) {
@@ -51,14 +51,6 @@ class LastLoginCTAUIOutput extends Output {
 class LastLoginDateOutput extends Output {
   @override
   List<Object?> get props => [];
-}
-
-class LastLoginUpdateDateOutput extends Output {
-  final DateTime date;
-
-  LastLoginUpdateDateOutput(this.date);
-  @override
-  List<Object?> get props => [date];
 }
 
 class LastLoginDateInput extends SuccessInput {

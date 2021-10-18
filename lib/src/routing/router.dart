@@ -16,10 +16,10 @@ typedef CFRoutePageGenerator<T> = CFRoutePage<T> Function<T>(
 /// It is recommended to use [CFRouterScope] which provides an access to
 /// the instance of this class to all its descendants.
 class CFRouter {
-  /// The [Pipe] responsible for notifying the underlying [RouterDelegate] that
+  /// Function responsible for notifying the underlying [RouterDelegate] that
   /// the page stack has been updated.
   @protected
-  late final Function onUpdate;
+  Function? onUpdate;
 
   /// The initial route name.
   final String initialRouteName;
@@ -124,6 +124,6 @@ class CFRouter {
 
   bool _notifyUpdate() {
     _pages = List.from(_pages);
-    return onUpdate();
+    return onUpdate?.call();
   }
 }
