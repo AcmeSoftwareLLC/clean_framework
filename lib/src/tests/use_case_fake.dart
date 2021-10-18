@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:either_dart/either.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 class UseCaseFake extends Fake implements UseCase<EntityFake> {
   EntityFake _entity = EntityFake();
@@ -17,8 +17,7 @@ class UseCaseFake extends Fake implements UseCase<EntityFake> {
   set entity(newEntity) => _entity = newEntity;
 
   @override
-  RemoveListener addListener(Listener<EntityFake> listener,
-      {bool fireImmediately = true}) {
+  RemoveListener addListener(listener, {bool fireImmediately = true}) {
     return () {};
   }
 
