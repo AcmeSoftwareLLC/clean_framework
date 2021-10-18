@@ -43,10 +43,11 @@ class LastLoginShortDatePresenter extends Presenter<LastLoginShortViewModel,
 
 class LastLoginCTAPresenter extends Presenter<LastLoginCTAViewModel,
     LastLoginCTAUIOutput, LastLoginUseCase> {
-  LastLoginCTAPresenter(
-      {required PresenterBuilder<LastLoginCTAViewModel> builder})
-      : super(
-          provider: lastLoginUseCaseProvider,
+  LastLoginCTAPresenter({
+    required PresenterBuilder<LastLoginCTAViewModel> builder,
+    UseCaseProvider? provider,
+  }) : super(
+          provider: provider ?? lastLoginUseCaseProvider,
           builder: builder,
         );
 

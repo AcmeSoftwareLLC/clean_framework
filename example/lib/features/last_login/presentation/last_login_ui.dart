@@ -101,6 +101,7 @@ class LastLoginCTADateUI extends UI<LastLoginCTAViewModel> {
 
   Widget _defaultButton(VoidCallback callback) {
     return ElevatedButton(
+      key: Key('FetchDateButton'),
       child: Text('Fetch Date'),
       onPressed: callback,
     );
