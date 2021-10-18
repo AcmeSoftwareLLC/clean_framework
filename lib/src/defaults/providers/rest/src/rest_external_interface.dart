@@ -3,7 +3,7 @@ import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.d
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:either_dart/src/either.dart';
+import 'package:either_dart/either.dart';
 
 class RestExternalInterface
     extends DirectExternalInterface<RestRequest, RestSuccessResponse> {

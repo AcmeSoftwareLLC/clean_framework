@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:either_dart/src/either.dart';
+import 'package:either_dart/either.dart';
 
 import 'firebase_client.dart';
 import 'firebase_requests.dart';

@@ -10,7 +10,6 @@ export 'package:clean_framework/src/defaults/providers/firebase/firebase_gateway
 export 'package:clean_framework/src/defaults/providers/firebase/firebase_watcher_gateway.dart';
 export 'package:clean_framework/src/defaults/providers/firebase/firebase_requests.dart';
 export 'package:clean_framework/src/defaults/providers/firebase/firebase_responses.dart';
-export 'package:clean_framework/src/defaults/providers/firebase/firebase_watch_external_interface.dart';
 export 'package:clean_framework/src/defaults/providers/graphql/graphql.dart';
 export 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 export 'package:clean_framework/src/defaults/providers/rest/rest.dart';
