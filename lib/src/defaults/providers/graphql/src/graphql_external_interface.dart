@@ -4,7 +4,7 @@ import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_servi
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
-import 'package:either_dart/src/either.dart';
+import 'package:either_dart/either.dart';
 
 class GraphQLExternalInterface
     extends DirectExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
