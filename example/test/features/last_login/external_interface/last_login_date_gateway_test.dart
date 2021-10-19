@@ -19,6 +19,11 @@ void main() {
     gateway.transport = (request) async =>
         Right(FirebaseSuccessResponse({'date': '2000-01-01'}));
 
+    final testRequest = LastLoginDateRequest();
+    expect(gateway.buildRequest(LastLoginDateOutput()), testRequest);
+    expect(testRequest.id, '12345');
+    expect(testRequest.path, 'last_login');
+
     await useCase.doFakeRequest(LastLoginDateOutput());
 
     expect(

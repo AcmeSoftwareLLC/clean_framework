@@ -35,8 +35,10 @@ void main() {
     final useCase = LastLoginUseCase();
 
     // Subscription shortcut to mock a failure in the response from a Gateway
-    useCase.subscribe(LastLoginDateOutput,
-        (_) => Left<FailureInput, LastLoginDateInput>(FailureInput()));
+    useCase.subscribe(LastLoginDateOutput, (output) {
+      expect(output, LastLoginDateOutput());
+      return Left<FailureInput, LastLoginDateInput>(FailureInput());
+    });
 
     await useCase.fetchCurrentDate();
 
@@ -46,11 +48,8 @@ void main() {
     expect(output, LastLoginUIOutput(lastLogin: DateTime.parse('1900-01-01')));
   });
 
-  test('Coverage', () {
+  test('Entity merge', () {
     final entity = LastLoginEntity().merge(lastLogin: currentDate);
-    expect(entity.lastLogin, currentDate);
-    expect(LastLoginEntity(), LastLoginEntity());
-
-    expect(LastLoginDateOutput(), LastLoginDateOutput());
+    expect(entity, LastLoginEntity(lastLogin: currentDate));
   });
 }

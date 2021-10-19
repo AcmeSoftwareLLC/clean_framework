@@ -7,10 +7,11 @@ import 'last_login_view_model.dart';
 
 class LastLoginIsoDatePresenter extends Presenter<LastLoginISOViewModel,
     LastLoginUIOutput, LastLoginUseCase> {
-  LastLoginIsoDatePresenter(
-      {required PresenterBuilder<LastLoginISOViewModel> builder})
-      : super(
-          provider: lastLoginUseCaseProvider,
+  LastLoginIsoDatePresenter({
+    required PresenterBuilder<LastLoginISOViewModel> builder,
+    UseCaseProvider? provider,
+  }) : super(
+          provider: provider ?? lastLoginUseCaseProvider,
           builder: builder,
         );
 
@@ -25,10 +26,11 @@ class LastLoginIsoDatePresenter extends Presenter<LastLoginISOViewModel,
 
 class LastLoginShortDatePresenter extends Presenter<LastLoginShortViewModel,
     LastLoginUIOutput, LastLoginUseCase> {
-  LastLoginShortDatePresenter(
-      {required PresenterBuilder<LastLoginShortViewModel> builder})
-      : super(
-          provider: lastLoginUseCaseProvider,
+  LastLoginShortDatePresenter({
+    required PresenterBuilder<LastLoginShortViewModel> builder,
+    UseCaseProvider? provider,
+  }) : super(
+          provider: provider ?? lastLoginUseCaseProvider,
           builder: builder,
         );
 

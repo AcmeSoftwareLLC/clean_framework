@@ -54,6 +54,7 @@ void uiTest(
               )
             : scopedWidget,
       );
+      await tester.pumpAndSettle();
       await verify(tester);
 
       if (screenSize != null) window.clearPhysicalSizeTestValue();

@@ -21,15 +21,10 @@ class LastLoginDateGateway extends FirebaseGateway<LastLoginDateOutput,
     return LastLoginDateInput(
         DateTime.parse(response.json['date'] ?? '2000-01-01'));
   }
-
-  @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput();
-  }
 }
 
 class LastLoginDateRequest extends FirebaseReadIdRequest {
   LastLoginDateRequest() : super(path: 'last_login', id: '12345');
   @override
-  List<Object?> get props => [id, path];
+  List<Object?> get props => [path, id];
 }
