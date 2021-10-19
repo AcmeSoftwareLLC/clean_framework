@@ -23,10 +23,16 @@ void uiTest(
   bool semanticsEnabled = true,
   TestVariant<Object?> variant = const DefaultTestVariant(),
   dynamic tags,
+  Size? screenSize,
 }) {
   testWidgets(
     description,
     (tester) async {
+      final window = tester.binding.window;
+      if (screenSize != null) {
+        window.physicalSizeTestValue = screenSize * window.devicePixelRatio;
+      }
+
       await setup?.call();
 
       final scopedWidget = UncontrolledProviderScope(
@@ -38,6 +44,8 @@ void uiTest(
         wrapWithMaterialApp ? MaterialApp(home: scopedWidget) : scopedWidget,
       );
       await verify(tester);
+
+      if (screenSize != null) window.clearPhysicalSizeTestValue();
     },
     skip: skip,
     timeout: timeout,
