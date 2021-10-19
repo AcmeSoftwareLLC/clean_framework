@@ -24,7 +24,13 @@ void uiTest(
   TestVariant<Object?> variant = const DefaultTestVariant(),
   dynamic tags,
   Size? screenSize,
+  Iterable<LocalizationsDelegate>? localizationDelegates,
 }) {
+  assert(
+    localizationDelegates == null || wrapWithMaterialApp,
+    'Need to wrap with MaterialApp if overriding localization delegates is required',
+  );
+
   testWidgets(
     description,
     (tester) async {
@@ -41,7 +47,12 @@ void uiTest(
       );
 
       await tester.pumpWidget(
-        wrapWithMaterialApp ? MaterialApp(home: scopedWidget) : scopedWidget,
+        wrapWithMaterialApp
+            ? MaterialApp(
+                home: scopedWidget,
+                localizationsDelegates: localizationDelegates,
+              )
+            : scopedWidget,
       );
       await verify(tester);
 
