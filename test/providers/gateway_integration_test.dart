@@ -96,12 +96,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
   }
 
   @override
-  SuccessInput onSuccess(_) {
-    return SuccessInput();
-  }
-
-  @override
-  TestSuccessInput onYield(TestResponse response) {
+  TestSuccessInput onSuccess(TestResponse response) {
     return TestSuccessInput(response.foo);
   }
 }

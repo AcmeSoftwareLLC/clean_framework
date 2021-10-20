@@ -37,7 +37,7 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     var gateway = TestYieldGateway(provider);
 
-    gateway.transport = (request) async => Right(SuccessResponse());
+    gateway.transport = (request) async => Right(TestResponse('success'));
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
@@ -81,7 +81,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 }
 
 class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
-    TestRequest, SuccessResponse, TestSuccessInput> {
+    TestRequest, TestResponse, TestSuccessInput> {
   TestYieldGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
@@ -95,12 +95,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
   }
 
   @override
-  SuccessInput onSuccess(_) {
-    return SuccessInput();
-  }
-
-  @override
-  TestSuccessInput onYield(TestResponse response) {
+  TestSuccessInput onSuccess(TestResponse response) {
     return TestSuccessInput(response.foo);
   }
 }
