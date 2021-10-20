@@ -54,8 +54,5 @@ class FirebaseClientFake implements FirebaseClient {
   }
 
   @override
-  void addToQuery(SnapshotQuery query) {}
-
-  @override
   void createQuery<T>(String path, SnapshotQuery query) {}
 }

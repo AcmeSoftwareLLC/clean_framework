@@ -81,12 +81,12 @@ class FirebaseClient {
   }
 
   void createQuery<T>(String path, SnapshotQuery query) {
-    var ref = _fireStore.collection(path);
-    _queryRef = query(ref) as CollectionReference;
-  }
-
-  void addToQuery(SnapshotQuery query) {
-    _queryRef = query(_queryRef!) as CollectionReference;
+    if (_queryRef == null) {
+      var ref = _fireStore.collection(path);
+      _queryRef = query(ref) as CollectionReference;
+    } else {
+      _queryRef = query(_queryRef!) as CollectionReference;
+    }
   }
 
   /// Queries a fire-store collection for the [path].
