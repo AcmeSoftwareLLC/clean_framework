@@ -50,31 +50,36 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   }
 
   void subscribe(Type outputType, Function callback) {
-    if (_requestSubscriptions[outputType] != null)
+    if (_requestSubscriptions[outputType] != null) {
       throw StateError('A subscription for $outputType already exists');
+    }
     _requestSubscriptions[outputType] = callback;
   }
 
-  Future<void> request<O extends Output, S extends SuccessInput>(O output,
-      {required E Function(S successInput) onSuccess,
-      required E Function(FailureInput failureInput) onFailure}) async {
+  Future<void> request<O extends Output, S extends SuccessInput>(
+    O output, {
+    required E Function(S successInput) onSuccess,
+    required E Function(FailureInput failureInput) onFailure,
+  }) async {
     final callback = _requestSubscriptions[O] ??
         (_) => Left<NoSubscriptionFailureInput, S>(
               NoSubscriptionFailureInput(O),
             );
     final Either<FailureInput, S> either = await callback(output);
-    entity = either.fold((FailureInput failureInput) => onFailure(failureInput),
-        (S successInput) => onSuccess(successInput));
+    entity = either.fold(onFailure, onSuccess);
   }
 }
 
 typedef InputCallback = void Function<I extends Input>(I input);
 
 typedef InputProcessor<I extends Input, E extends Entity> = E Function(
-    I input, E entity);
+  I input,
+  E entity,
+);
 
 typedef SubscriptionFilter<E extends Entity, V extends ViewModel> = V Function(
-    E entity);
+  E entity,
+);
 
 @immutable
 abstract class Output extends Equatable {
