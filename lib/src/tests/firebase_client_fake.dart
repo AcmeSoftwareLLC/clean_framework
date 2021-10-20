@@ -19,8 +19,8 @@ class FirebaseClientFake implements FirebaseClient {
 
   @override
   Future<Map<String, dynamic>> readAll(
-      {required String path, SnapshotQuery? query}) {
-    throw UnimplementedError();
+      {required String path, SnapshotQuery? query}) async {
+    return content;
   }
 
   @override
@@ -52,4 +52,10 @@ class FirebaseClientFake implements FirebaseClient {
       BatchKey? batchKey}) {
     throw UnimplementedError();
   }
+
+  @override
+  void addToQuery(SnapshotQuery query) {}
+
+  @override
+  void createQuery<T>(String path, SnapshotQuery query) {}
 }

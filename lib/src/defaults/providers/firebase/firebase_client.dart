@@ -5,6 +5,7 @@ class FirebaseClient {
       : _fireStore = fireStore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _fireStore;
+  CollectionReference<dynamic>? _queryRef;
 
   /// Writes using fire-store collection or document depending upon the [path].
   ///
@@ -79,16 +80,20 @@ class FirebaseClient {
     return doc;
   }
 
+  void createQuery<T>(String path, SnapshotQuery query) {
+    var ref = _fireStore.collection(path);
+    _queryRef = query(ref) as CollectionReference;
+  }
+
+  void addToQuery(SnapshotQuery query) {
+    _queryRef = query(_queryRef!) as CollectionReference;
+  }
+
   /// Queries a fire-store collection for the [path].
   Future<Map<String, dynamic>> readAll({
     required String path,
-    SnapshotQuery? query,
   }) async {
-    var ref = _fireStore.collection(path);
-    if (query != null) {
-      final queryRef = query(ref);
-      if (queryRef is CollectionReference<Map<String, dynamic>>) ref = queryRef;
-    }
+    var ref = _queryRef ?? _fireStore.collection(path);
 
     final querySnapshots = await ref.get();
 
@@ -120,13 +125,8 @@ class FirebaseClient {
   /// Queries a fire-store collection for the [path].
   Stream<Map<String, dynamic>> watchAll({
     required String path,
-    SnapshotQuery? query,
   }) async* {
-    var ref = _fireStore.collection(path);
-    if (query != null) {
-      final queryRef = query(ref);
-      if (queryRef is CollectionReference<Map<String, dynamic>>) ref = queryRef;
-    }
+    var ref = _queryRef ?? _fireStore.collection(path);
 
     await for (final qs in ref.snapshots()) {
       final _docs = <Map<String, dynamic>>[];
