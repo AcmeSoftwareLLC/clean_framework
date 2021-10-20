@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
@@ -12,44 +13,41 @@ final context = ProvidersContext();
 late UseCaseProvider<TestEntity, TestUseCase> provider;
 
 void main() {
-  test('Interface using basic transport', () async {
-    provider = UseCaseProvider((_) => TestUseCase(TestEntity(foo: 'bar')));
-    final gatewayProvider = GatewayProvider((_) => TestDirectGateway(provider));
+  useCaseTest<TestUseCase, TestOutput>(
+    'Interface using direct gateway',
+    context: context,
+    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider(
+        (_) => TestDirectGateway(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataImmediately(),
+    verify: (useCase) {
+      final output = useCase.getOutput<TestOutput>();
+      expect(output, TestOutput('success'));
+    },
+  );
 
-    TestInterface(gatewayProvider);
-
-    final TestUseCase useCase = provider.getUseCaseFromContext(context);
-
-    await useCase.fetchDataImmediately();
-
-    var output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('success'));
-  });
-
-  test('Interface using yield', () async {
-    provider = UseCaseProvider((_) => TestUseCase(TestEntity(foo: 'bar')));
-    final gatewayProvider = GatewayProvider<WatcherGateway>(
-      (_) => TestYieldGateway(provider),
-    );
-
-    TestInterface(gatewayProvider);
-
-    final TestUseCase useCase = provider.getUseCaseFromContext(context);
-
-    expectLater(
-      useCase.stream.map((_) => useCase.getOutput<TestOutput>()),
-      emitsInOrder(
-        [
-          TestOutput('0'),
-          TestOutput('1'),
-          TestOutput('2'),
-          TestOutput('3'),
-        ],
-      ),
-    );
-
-    useCase.fetchDataEventually();
-  });
+  useCaseTest<TestUseCase, TestOutput>(
+    'Interface using watcher gateway',
+    context: context,
+    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider<WatcherGateway>(
+        (_) => TestYieldGateway(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataEventually(),
+    expect: () => [
+      TestOutput('0'),
+      TestOutput('1'),
+      TestOutput('2'),
+      TestOutput('3'),
+    ],
+  );
 }
 
 class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
