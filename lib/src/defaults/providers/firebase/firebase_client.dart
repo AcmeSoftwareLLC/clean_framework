@@ -85,8 +85,7 @@ class FirebaseClient {
       var ref = _fireStore.collection(path);
       _queryRef = query(ref);
     } else {
-      _queryRef = query(_queryRef! as CollectionReference<Map<String, dynamic>>)
-          as CollectionReference<Map<String, dynamic>>;
+      _queryRef = query(_queryRef!);
     }
   }
 
@@ -142,7 +141,7 @@ class FirebaseClient {
   }
 }
 
-typedef SnapshotQuery<T> = Query<T> Function(CollectionReference<T>);
+typedef SnapshotQuery<T> = Query<T> Function(Query<T>);
 
 class BatchKey {
   WriteBatch _batch;
