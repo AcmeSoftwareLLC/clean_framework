@@ -90,6 +90,10 @@ class FirebaseClient {
     }
   }
 
+  void clearQuery() {
+    _queryRef = null;
+  }
+
   /// Queries a fire-store collection for the [path].
   Future<Map<String, dynamic>> readAll({
     required String path,
