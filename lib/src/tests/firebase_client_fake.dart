@@ -18,8 +18,7 @@ class FirebaseClientFake implements FirebaseClient {
   }
 
   @override
-  Future<Map<String, dynamic>> readAll(
-      {required String path, SnapshotQuery? query}) async {
+  Future<Map<String, dynamic>> readAll({required String path}) async {
     return content;
   }
 
@@ -39,8 +38,7 @@ class FirebaseClientFake implements FirebaseClient {
   }
 
   @override
-  Stream<Map<String, dynamic>> watchAll(
-      {required String path, SnapshotQuery? query}) {
+  Stream<Map<String, dynamic>> watchAll({required String path}) {
     throw UnimplementedError();
   }
 
@@ -54,5 +52,5 @@ class FirebaseClientFake implements FirebaseClient {
   }
 
   @override
-  void createQuery<T>(String path, SnapshotQuery query) {}
+  void createQuery(String path, SnapshotQuery query) {}
 }
