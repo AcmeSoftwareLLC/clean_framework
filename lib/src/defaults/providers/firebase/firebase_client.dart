@@ -5,7 +5,7 @@ class FirebaseClient {
       : _fireStore = fireStore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _fireStore;
-  CollectionReference<Map<String, dynamic>>? _queryRef;
+  Query<Map<String, dynamic>>? _queryRef;
 
   /// Writes using fire-store collection or document depending upon the [path].
   ///
@@ -80,17 +80,13 @@ class FirebaseClient {
     return doc;
   }
 
-  void createQuery(String path, SnapshotQuery query) {
+  void createQuery(String path, SnapshotQuery<Map<String, dynamic>> query) {
     if (_queryRef == null) {
       var ref = _fireStore.collection(path);
-      _queryRef = query(ref) as CollectionReference<Map<String, dynamic>>;
-      // if (queryRef is CollectionReference<Map<String, dynamic>>)
-      //   _queryRef = queryRef;
+      _queryRef = query(ref);
     } else {
-      _queryRef =
-          query(_queryRef!) as CollectionReference<Map<String, dynamic>>;
-      // if (queryRef is CollectionReference<Map<String, dynamic>>)
-      //   _queryRef = queryRef;
+      _queryRef = query(_queryRef! as CollectionReference<Map<String, dynamic>>)
+          as CollectionReference<Map<String, dynamic>>;
     }
   }
 
