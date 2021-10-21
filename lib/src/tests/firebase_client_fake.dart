@@ -53,4 +53,7 @@ class FirebaseClientFake implements FirebaseClient {
 
   @override
   void createQuery(String path, SnapshotQuery<Map<String, dynamic>> query) {}
+
+  @override
+  clearQuery() {}
 }
