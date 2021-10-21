@@ -53,11 +53,6 @@ class WatcherGatewayFake extends Fake implements WatcherGateway {
   }
 
   @override
-  SuccessInput onYield(SuccessResponse response) {
-    return SuccessInput();
-  }
-
-  @override
   void yieldResponse(SuccessResponse response) {
     successResponse = response;
     hasYielded.complete(true);

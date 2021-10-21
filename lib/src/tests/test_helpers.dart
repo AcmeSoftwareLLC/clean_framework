@@ -67,3 +67,37 @@ void uiTest(
     tags: tags,
   );
 }
+
+@isTest
+void useCaseTest<U extends UseCase, O extends Output>(
+  String description, {
+  required ProvidersContext context,
+  required U Function(ProviderRefBase) build,
+  required FutureOr<void> Function(U) execute,
+  FutureOr<void> Function(UseCaseProvider)? setup,
+  Iterable Function()? expect,
+  FutureOr<void> Function(U)? verify,
+}) {
+  test(
+    description,
+    () async {
+      final provider = UseCaseProvider(build);
+      await setup?.call(provider);
+
+      final useCase = provider.getUseCaseFromContext(context);
+
+      Future<void>? expectation;
+      if (expect != null) {
+        expectation = expectLater(
+          useCase.stream.map((_) => useCase.getOutput<O>()),
+          emitsInOrder(expect()),
+        );
+      }
+
+      await execute(useCase);
+      await expectation;
+
+      await verify?.call(useCase);
+    },
+  );
+}

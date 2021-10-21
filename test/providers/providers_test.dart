@@ -20,11 +20,15 @@ void main() {
   });
 }
 
-class TestInterface extends DirectExternalInterface {
+class TestInterface extends ExternalInterface {
   TestInterface(GatewayProvider provider) : super([]);
 
   @override
-  onTransport(request) async => Right(TestResponse());
+  void handleRequest() {
+    on((request, send) {
+      send(Right(TestResponse()));
+    });
+  }
 }
 
 class TestGateway extends Gateway {

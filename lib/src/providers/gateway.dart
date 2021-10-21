@@ -11,19 +11,24 @@ abstract class Gateway<O extends Output, R extends Request,
 
   late final Transport<R, P> transport;
 
-  Gateway(
-      {required ProvidersContext context, required UseCaseProvider provider})
-      : _provider = provider,
+  Gateway({
+    required ProvidersContext context,
+    required UseCaseProvider provider,
+  })  : _provider = provider,
         _context = context {
     final useCase = _provider.getUseCaseFromContext(_context);
     useCase.subscribe(
-        O, (O output) async => _processRequest(buildRequest(output)));
+      O,
+      (O output) async => _processRequest(buildRequest(output)),
+    );
   }
 
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
-    return either.fold((failureResponse) => Left(onFailure(failureResponse)),
-        (response) => Right(onSuccess(response)));
+    return either.fold(
+      (failureResponse) => Left(onFailure(failureResponse)),
+      (response) => Right(onSuccess(response)),
+    );
   }
 
   S onSuccess(covariant P response);
@@ -31,26 +36,24 @@ abstract class Gateway<O extends Output, R extends Request,
   R buildRequest(O output);
 }
 
-abstract class WatcherGateway<O extends Output, R extends Request,
-        P extends SuccessResponse, S extends SuccessInput>
-    extends Gateway<O, R, SuccessResponse, SuccessInput> {
-  WatcherGateway(
-      {required ProvidersContext context, required UseCaseProvider provider})
-      : super(context: context, provider: provider);
+abstract class WatcherGateway<
+    O extends Output,
+    R extends Request,
+    P extends SuccessResponse,
+    S extends SuccessInput> extends Gateway<O, R, P, S> {
+  WatcherGateway({
+    required ProvidersContext context,
+    required UseCaseProvider provider,
+  }) : super(context: context, provider: provider);
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
 
-  @override
-  SuccessInput onSuccess(covariant SuccessResponse response) => SuccessInput();
-
   @nonVirtual
   void yieldResponse(P response) {
     final useCase = _provider.getUseCaseFromContext(_context);
-    useCase.setInput(onYield(response));
+    useCase.setInput(onSuccess(response));
   }
-
-  S onYield(covariant P response);
 }
 
 typedef Transport<R extends Request, P extends SuccessResponse>
