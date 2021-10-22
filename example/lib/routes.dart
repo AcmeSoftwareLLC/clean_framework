@@ -37,11 +37,20 @@ final router = AppRouter<Routes>(
       ],
     ),
   ],
-  errorBuilder: (context, state) {
+  errorBuilder: (context, state) => Page404(error: state.error),
+);
+
+class Page404 extends StatelessWidget {
+  const Page404({Key? key, required this.error}) : super(key: key);
+
+  final Exception? error;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(state.error.toString()),
+        child: Text(error.toString()),
       ),
     );
-  },
-);
+  }
+}
