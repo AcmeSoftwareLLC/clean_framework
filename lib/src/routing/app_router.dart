@@ -55,14 +55,7 @@ class AppRouter<R extends Object> {
     _router.go(location, extra: extra);
   }
 
-  void back() {
-    final navigator = _router.navigator;
-    assert(
-      navigator != null,
-      'Ensure that router delegate from app router is passed to MaterialApp or CupertinoApp',
-    );
-    navigator!.pop();
-  }
+  void back() => _router.navigator!.pop();
 
   @visibleForTesting
   void reset() => _initInnerRouter();

@@ -372,6 +372,181 @@ void main() {
 
       expect(testRouter.location, '/detail');
     });
+
+    testWidgets(
+      'navigating using open',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.open(
+                  '/detail/123?b=456',
+                  extra: 789,
+                ),
+              ),
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
+
+    testWidgets('shows error widget when route is not found', (tester) async {
+      testRouter = AppRouter(
+        routes: [
+          AppRoute(
+            name: Routes.home,
+            path: '/',
+            builder: (_, __) => OnTapPage(
+              id: 'Home',
+              onTap: (context) => testRouter.open('/test'),
+            ),
+          ),
+        ],
+        errorBuilder: (_, __) => Page404(),
+      );
+      await pumpApp(tester);
+
+      expect(find.text('Home'), findsOneWidget);
+      expect(find.text('Detail'), findsNothing);
+      expect(find.text('More Detail'), findsNothing);
+
+      expect(testRouter.location, '/');
+
+      // push
+      await tester.tap(find.byType(ElevatedButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Page404), findsOneWidget);
+    });
+
+    testWidgets(
+      'calling reset() will reset the underlying router',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail',
+                  builder: (_, __) => OnTapPage(id: 'Detail'),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail');
+
+        testRouter.reset();
+        expect(testRouter.location, '/');
+
+        // Just resets the underlying router; no change in UI
+        // Since this method is only intended for tests
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'throws assertion error if querying key in not found in param',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(
+                  Routes.detail,
+                  params: {'a': 'b'},
+                ),
+              ),
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value: state.getParam('c'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(
+          tester.takeException(),
+          isA<AssertionError>().having(
+            (e) => e.message,
+            'error message',
+            'No route param with "c" key was passed',
+          ),
+        );
+      },
+    );
   });
 }
 
