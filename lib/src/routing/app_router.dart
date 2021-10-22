@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meta/meta.dart';
 
 typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
 
@@ -7,24 +8,33 @@ class AppRouter<R extends Object> {
   AppRouter({
     required List<AppRoute> routes,
     required RouteWidgetBuilder errorBuilder,
-  }) {
-    _router = GoRouter(
-      routes: routes.map((r) => r._toGoRoute()).toList(growable: false),
-      errorPageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: errorBuilder(context, AppRouteState._fromGoRouteState(state)),
-        );
-      },
-    );
+  })  : _routes = routes,
+        _errorBuilder = errorBuilder {
+    _initInnerRouter();
   }
 
-  late final GoRouter _router;
+  late GoRouter _router;
+  final List<AppRoute> _routes;
+  final RouteWidgetBuilder _errorBuilder;
 
   RouterDelegate<Uri> get delegate => _router.routerDelegate;
 
   RouteInformationParser<Uri> get informationParser {
     return _router.routeInformationParser;
+  }
+
+  String get location => _router.location;
+
+  void _initInnerRouter() {
+    _router = GoRouter(
+      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
+      errorPageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
+        );
+      },
+    );
   }
 
   void to(
@@ -50,7 +60,8 @@ class AppRouter<R extends Object> {
     navigator!.pop();
   }
 
-  String get location => _router.location;
+  @visibleForTesting
+  void reset() => _initInnerRouter();
 }
 
 class AppRoute<R extends Object> {
