@@ -28,13 +28,16 @@ class GatewayFake extends Fake implements Gateway {
   }
 }
 
-class WatcherGatewayFake extends Fake implements WatcherGateway {
+class WatcherGatewayFake<R extends Request, P extends SuccessResponse>
+    extends Fake implements WatcherGateway<Output, R, P, SuccessInput> {
   FailureResponse? failureResponse;
-  SuccessResponse? successResponse;
-  final Completer hasYielded = Completer();
+  P? _successResponse;
+  final Completer<P> hasYielded = Completer();
+
+  P get successResponse => _successResponse!;
 
   @override
-  late final Transport<Request, SuccessResponse> transport;
+  late final Transport<R, P> transport;
 
   @override
   // A fake gateway doesn't have a constructor, and this method is used
@@ -53,8 +56,8 @@ class WatcherGatewayFake extends Fake implements WatcherGateway {
   }
 
   @override
-  void yieldResponse(SuccessResponse response) {
-    successResponse = response;
-    hasYielded.complete(true);
+  void yieldResponse(P response) {
+    _successResponse = response;
+    if (!hasYielded.isCompleted) hasYielded.complete(_successResponse);
   }
 }
