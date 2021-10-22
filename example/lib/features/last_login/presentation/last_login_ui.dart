@@ -13,9 +13,11 @@ class LastLoginUI extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Card(
-                child: Text(
-                    'This example shows how the screen can be fractionalized '
-                    'in multiple presenters and view models.')),
+              child: Text(
+                'This example shows how the screen can be fractionalized '
+                'in multiple presenters and view models.',
+              ),
+            ),
             LastLoginISODateUI(),
             LastLoginShortDateUI(),
             LastLoginCTADateUI(),
