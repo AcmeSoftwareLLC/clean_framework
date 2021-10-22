@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final context = ProvidersContext();
+
   test('All providers', () async {
     final useCase = TestUseCase(TestEntity());
     final provider = UseCaseProvider((_) => useCase);
@@ -45,7 +46,7 @@ class TestGateway extends Gateway {
 
   @override
   onSuccess(response) {
-    return TestSuccessInput();
+    return SuccessInput();
   }
 }
 
@@ -60,11 +61,6 @@ class TestEntity extends Entity {
 }
 
 class TestRequest extends Request {
-  @override
-  List<Object?> get props => [];
-}
-
-class TestSuccessInput extends SuccessInput {
   @override
   List<Object?> get props => [];
 }

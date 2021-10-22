@@ -88,22 +88,14 @@ abstract class Output extends Equatable {
 }
 
 @immutable
-abstract class Input extends Equatable {
-  @override
-  bool get stringify => true;
-}
+abstract class Input {}
 
-class SuccessInput extends Input {
-  @override
-  List<Object?> get props => [];
-}
+class SuccessInput extends Input {}
 
 class FailureInput extends Input {
   final String message;
 
   FailureInput({this.message = ''});
-  @override
-  List<Object?> get props => [message];
 }
 
 class NoSubscriptionFailureInput extends FailureInput {

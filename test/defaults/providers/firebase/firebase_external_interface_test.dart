@@ -61,7 +61,7 @@ void main() {
 
   test('FirebaseExternalInterface read id request', () async {
     final gateWay =
-        WatcherGatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -73,7 +73,7 @@ void main() {
 
   test('FirebaseExternalInterface read all request', () async {
     final gateWay =
-        WatcherGatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -86,7 +86,7 @@ void main() {
   test('FirebaseExternalInterface write request', () async {
     final firebaseClient = FirebaseClientFake(testContent);
     final gateWay =
-        WatcherGatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -100,7 +100,7 @@ void main() {
 
   test('FirebaseExternalInterface update request', () async {
     final gateWay =
-        WatcherGatewayFake<FirebaseUpdateRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseUpdateRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -112,7 +112,7 @@ void main() {
 
   test('FirebaseExternalInterface delete request', () async {
     final gateWay =
-        WatcherGatewayFake<FirebaseDeleteRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseDeleteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -126,7 +126,7 @@ void main() {
     firebaseClient = FirebaseClientFake({});
 
     final gateWay =
-        WatcherGatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -142,7 +142,7 @@ void main() {
     firebaseClient = FirebaseClientFake({});
 
     final gateWay =
-        WatcherGatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -157,7 +157,7 @@ void main() {
   test('FirebaseExternalInterface write no content', () async {
     final firebaseClient = FirebaseClientFake({});
     final gateWay =
-        WatcherGatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
+        GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
         firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
 
@@ -166,6 +166,13 @@ void main() {
     expect(result.isLeft, isTrue);
     expect(result.left, NoContentFirebaseFailureResponse());
 
+    firebaseClient.dispose();
+  });
+
+  test('FirebaseExternalInterface query', () async {
+    final firebaseClient = FirebaseClientFake({});
+    firebaseClient.createQuery('fake', (_) => _);
+    firebaseClient.clearQuery();
     firebaseClient.dispose();
   });
 }

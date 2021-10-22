@@ -13,6 +13,12 @@ class UseCaseFake<I extends SuccessInput> extends Fake
   UseCaseFake({this.output});
 
   @override
+  EntityFake get state => _entity;
+
+  @override
+  set state(newEntity) => _entity = newEntity;
+
+  @override
   EntityFake get entity => _entity;
 
   @override
