@@ -6,6 +6,9 @@ import 'package:clean_framework_example/main.dart' as app;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('main', () {
+    expect(() => app.main(), throwsAssertionError);
+  });
   test('Load providers', () {
     loadProviders();
     final fb = firebaseExternalInterface.getExternalInterface(providersContext);

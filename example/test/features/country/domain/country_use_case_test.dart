@@ -49,7 +49,7 @@ void main() {
                 .having(
                   (e) => e.countries,
                   'countries',
-                  isA<List<CountryModel>>()
+                  isA<List<CountryInput>>()
                       .having(
                         (countries) => countries[35].name,
                         '36th country name',
@@ -91,7 +91,7 @@ void main() {
                 .having(
                   (e) => e.countries,
                   'countries',
-                  isA<List<CountryModel>>()
+                  isA<List<CountryInput>>()
                       .having(
                         (countries) => countries[37].name,
                         '38th country name',

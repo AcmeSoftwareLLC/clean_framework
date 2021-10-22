@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-
 import 'last_login_entity.dart';
 
 class LastLoginUseCase extends UseCase<LastLoginEntity> {
@@ -57,7 +56,4 @@ class LastLoginDateInput extends SuccessInput {
   final DateTime lastLogin;
 
   LastLoginDateInput(this.lastLogin);
-
-  @override
-  List<Object?> get props => [lastLogin];
 }

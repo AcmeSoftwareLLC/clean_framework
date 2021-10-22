@@ -59,6 +59,16 @@ void main() {
 
     expect(useCase.entity, EntityFake(value: 'failure'));
   });
+
+  test('props', () {
+    final response = SuccessResponse();
+    expect(response, SuccessResponse());
+    // If we log the responses and compare the output, that could replace this
+    expect(response.stringify, isTrue);
+
+    final request = TestRequest('123');
+    expect(request.stringify, isTrue);
+  });
 }
 
 class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
@@ -122,9 +132,6 @@ class TestSuccessInput extends SuccessInput {
   final String foo;
 
   TestSuccessInput(this.foo);
-
-  @override
-  List<Object?> get props => [foo];
 }
 
 class TestDirectOutput extends Output {

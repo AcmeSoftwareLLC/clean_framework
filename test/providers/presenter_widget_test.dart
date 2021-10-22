@@ -6,7 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final provider = UseCaseProvider((_) => UseCaseFake());
+final provider = UseCaseProvider((_) => TestUseCase());
 void main() {
   testWidgets('Presenter initial load', (tester) async {
     await ProviderTester().pumpWidget(
@@ -23,15 +23,21 @@ void main() {
   });
 }
 
-class TestPresenter extends Presenter<TestViewModel, TestOutput, UseCaseFake> {
+class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
   TestPresenter({required PresenterBuilder<TestViewModel> builder})
       : super(provider: provider, builder: builder);
 
   @override
-  TestOutput subscribe(_) => TestOutput('bar');
+  TestViewModel createViewModel(_, output) => TestViewModel.fromOutput(output);
+}
+
+class TestUseCase extends UseCase<EntityFake> {
+  TestUseCase() : super(entity: EntityFake());
 
   @override
-  TestViewModel createViewModel(_, output) => TestViewModel.fromOutput(output);
+  O getOutput<O extends Output>() {
+    return TestOutput('bar') as O;
+  }
 }
 
 class TestOutput extends Output {

@@ -1,7 +1,8 @@
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:equatable/equatable.dart';
 
-class CountryModel extends Input {
-  CountryModel({
+class CountryInput extends Input with EquatableMixin {
+  CountryInput({
     required this.name,
     required this.emoji,
     required this.capital,
@@ -11,8 +12,8 @@ class CountryModel extends Input {
   final String emoji;
   final String capital;
 
-  factory CountryModel.fromJson(Map<String, dynamic> json) {
-    return CountryModel(
+  factory CountryInput.fromJson(Map<String, dynamic> json) {
+    return CountryInput(
       name: json['name'] ?? '',
       emoji: json['emoji'] ?? '',
       capital: json['capital'] ?? '',

@@ -7,7 +7,7 @@ import 'firebase_requests.dart';
 import 'firebase_responses.dart';
 
 class FirebaseExternalInterface
-    extends ExternalInterface<FirebaseRequest, SuccessResponse> {
+    extends ExternalInterface<FirebaseRequest, FirebaseSuccessResponse> {
   final FirebaseClient _client;
 
   FirebaseExternalInterface({
@@ -30,7 +30,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseReadIdRequest(
     FirebaseReadIdRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final content = await _client.read(path: request.path, id: request.id);
     if (content.isEmpty) {
@@ -42,7 +42,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseReadAllRequest(
     FirebaseReadAllRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final content = await _client.readAll(path: request.path);
     if (content.isEmpty) {
@@ -54,7 +54,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseWriteRequest(
     FirebaseWriteRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final id = await _client.write(
       path: request.path,
@@ -70,7 +70,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseUpdateRequest(
     FirebaseUpdateRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     await _client.update(
       path: request.path,
@@ -82,7 +82,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseDeleteRequest(
     FirebaseDeleteRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     await _client.delete(path: request.path, id: request.id);
     send(Right(FirebaseSuccessResponse({})));
@@ -90,7 +90,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseWatchIdRequest(
     FirebaseWatchIdRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) {
     final featureStream = _client.watch(path: request.path, id: request.id);
     featureStream.listen(
@@ -100,7 +100,7 @@ class FirebaseExternalInterface
 
   void _withFirebaseWatchAllRequest(
     FirebaseWatchAllRequest request,
-    ResponseSender send,
+    ResponseSender<FirebaseSuccessResponse> send,
   ) {
     final featureStream = _client.watchAll(path: request.path);
     featureStream.listen(

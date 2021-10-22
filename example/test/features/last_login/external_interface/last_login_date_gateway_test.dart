@@ -26,9 +26,6 @@ void main() {
 
     await useCase.doFakeRequest(LastLoginDateOutput());
 
-    expect(
-        useCase.successInput, LastLoginDateInput(DateTime.parse('2000-01-01')));
-
     expect(useCase.entity, EntityFake(value: 'success'));
   });
 

@@ -26,10 +26,6 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     final useCase = getUseCase(ref);
     return ref.watch(_provider.select((e) => useCase.getOutput()));
   }
-
-  void listenFromContext(ProvidersContext context, ProviderListener listener) {
-    context().listen<E>(_provider, listener);
-  }
 }
 
 typedef ProviderListener<E extends Entity> = void Function(E entity);
