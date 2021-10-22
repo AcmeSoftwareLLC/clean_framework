@@ -27,7 +27,9 @@ void uiTest(
   Iterable<LocalizationsDelegate>? localizationDelegates,
 }) {
   assert(
-    localizationDelegates == null || wrapWithMaterialApp,
+    () {
+      return localizationDelegates == null || wrapWithMaterialApp;
+    }(),
     'Need to wrap with MaterialApp if overriding localization delegates is required',
   );
 

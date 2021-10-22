@@ -6,18 +6,20 @@ import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
-  final UseCaseProvider _provider;
-  final ProvidersContext _context;
+  late UseCase _useCase;
 
   late final Transport<R, P> transport;
 
   Gateway({
-    required ProvidersContext context,
-    required UseCaseProvider provider,
-  })  : _provider = provider,
-        _context = context {
-    final useCase = _provider.getUseCaseFromContext(_context);
-    useCase.subscribe(
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) {
+    assert(() {
+      return (context != null && provider != null) || useCase != null;
+    }());
+    _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
+    _useCase.subscribe(
       O,
       (O output) async => _processRequest(buildRequest(output)),
     );
@@ -51,8 +53,7 @@ abstract class WatcherGateway<
 
   @nonVirtual
   void yieldResponse(P response) {
-    final useCase = _provider.getUseCaseFromContext(_context);
-    useCase.setInput(onSuccess(response));
+    _useCase.setInput(onSuccess(response));
   }
 }
 

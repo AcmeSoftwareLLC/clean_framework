@@ -1,16 +1,23 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final context = ProvidersContext();
-
+  testWidgets('AppProviderContainer', (tester) async {
+    await tester.pumpWidget(AppProvidersContainer(
+      child: MaterialApp(),
+      onBuild: (_, __) {},
+    ));
+  });
   test('All providers', () async {
+    final context = ProvidersContext();
     final useCase = TestUseCase(TestEntity());
+    final gateway = TestGateway(useCase);
+    final externalInterface = TestInterface();
+
     final provider = UseCaseProvider((_) => useCase);
-    final gateway = TestGateway(provider, context);
     final gatewayProvider = GatewayProvider((_) => gateway);
-    final externalInterface = TestInterface(gatewayProvider);
     final externalInterfaceProvider =
         ExternalInterfaceProvider((_) => externalInterface);
 
@@ -18,11 +25,36 @@ void main() {
     expect(gatewayProvider.getGateway(context), gateway);
     expect(externalInterfaceProvider.getExternalInterface(context),
         externalInterface);
+    context.dispose();
+  });
+
+  test('Providers with overrides', () async {
+    final provider = UseCaseProvider((_) => TestUseCase(TestEntity()));
+    final gatewayProvider =
+        GatewayProvider((_) => TestGateway(TestUseCase(TestEntity())));
+    final externalInterfaceProvider =
+        ExternalInterfaceProvider((_) => TestInterface());
+
+    final useCase = TestUseCase(TestEntity());
+    final gateway = TestGateway(useCase);
+    final externalInterface = TestInterface();
+
+    final context = ProvidersContext([
+      provider.overrideWith(useCase),
+      gatewayProvider.overrideWith(gateway),
+      externalInterfaceProvider.overrideWith(externalInterface),
+    ]);
+
+    expect(provider.getUseCaseFromContext(context), useCase);
+    expect(gatewayProvider.getGateway(context), gateway);
+    expect(externalInterfaceProvider.getExternalInterface(context),
+        externalInterface);
+    context.dispose();
   });
 }
 
 class TestInterface extends ExternalInterface {
-  TestInterface(GatewayProvider provider) : super([]);
+  TestInterface() : super([]);
 
   @override
   void handleRequest() {
@@ -33,8 +65,7 @@ class TestInterface extends ExternalInterface {
 }
 
 class TestGateway extends Gateway {
-  TestGateway(UseCaseProvider provider, ProvidersContext context)
-      : super(provider: provider, context: context);
+  TestGateway(UseCase useCase) : super(useCase: useCase);
 
   @override
   buildRequest(output) => TestRequest();
@@ -52,12 +83,26 @@ class TestGateway extends Gateway {
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity) : super(entity: entity);
+
+  void doRequest() => request(TestOutput(),
+      onSuccess: (_) => TestEntity(), onFailure: (_) => TestEntity());
 }
 
 class TestEntity extends Entity {
   @override
   List<Object?> get props => [];
   TestEntity merge({String? foo}) => TestEntity();
+}
+
+class TestEntity2 extends TestEntity {
+  @override
+  List<Object?> get props => [];
+  TestEntity2 merge({String? foo}) => TestEntity2();
+}
+
+class TestOutput extends Output {
+  @override
+  List<Object?> get props => [];
 }
 
 class TestRequest extends Request {
