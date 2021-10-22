@@ -13,33 +13,7 @@ class UseCaseFake<I extends SuccessInput> extends Fake
   UseCaseFake({this.output});
 
   @override
-  EntityFake get state => _entity;
-
-  @override
-  set state(newEntity) => _entity = newEntity;
-
-  @override
   EntityFake get entity => _entity;
-
-  @override
-  set entity(newEntity) => _entity = newEntity;
-
-  @override
-  RemoveListener addListener(listener, {bool fireImmediately = true}) {
-    return () {};
-  }
-
-  @override
-  EntityFake get debugState => _entity;
-
-  @override
-  void dispose() {}
-
-  @override
-  bool get hasListeners => true;
-
-  @override
-  bool get mounted => true;
 
   @override
   Future<void> request<O extends Output, S extends SuccessInput>(O output,
@@ -60,11 +34,6 @@ class UseCaseFake<I extends SuccessInput> extends Fake
   @override
   void subscribe(Type outputType, Function callback) {
     subscription = callback;
-  }
-
-  @override
-  O getOutput<O extends Output>() {
-    return output as O;
   }
 
   Future<void> doFakeRequest<O extends Output>(O output) async {
