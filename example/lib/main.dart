@@ -20,15 +20,16 @@ class ExampleApp extends StatelessWidget {
           ]
         });
       },
-      child: CFRouterScope(
-        initialRoute: Routes.home,
-        routeGenerator: Routes.generate,
-        builder: (context) {
-          return MaterialApp.router(
-            routeInformationParser: CFRouteInformationParser(),
-            routerDelegate: CFRouterDelegate(context),
-          );
-        },
+      child: MaterialApp.router(
+        routeInformationParser: router.informationParser,
+        routerDelegate: router.delegate,
+        theme: ThemeData(
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            },
+          ),
+        ),
       ),
     );
   }
