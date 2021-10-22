@@ -51,6 +51,10 @@ class AppRouter<R extends Object> {
     );
   }
 
+  void open(String location, {Object? extra}) {
+    _router.go(location, extra: extra);
+  }
+
   void back() {
     final navigator = _router.navigator;
     assert(
