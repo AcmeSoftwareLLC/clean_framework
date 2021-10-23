@@ -56,6 +56,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
     _requestSubscriptions[outputType] = callback;
   }
 
+  @protected
   Future<void> request<O extends Output, S extends SuccessInput>(
     O output, {
     required E Function(S successInput) onSuccess,

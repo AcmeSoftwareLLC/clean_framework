@@ -21,24 +21,33 @@ class GraphQLExternalInterface
   void handleRequest() {
     on<QueryGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
-          method: GraphQLMethod.query,
-          document: request.document,
-          variables: request.variables,
-        );
-
-        send(Right(GraphQLSuccessResponse(data: data)));
+        try {
+          final data = await _graphQLService.request(
+            method: GraphQLMethod.query,
+            document: request.document,
+            variables: request.variables,
+          );
+          send(Right(GraphQLSuccessResponse(data: data)));
+        } catch (e) {
+          // log the details on the exception here
+          send(Left(FailureResponse()));
+        }
       },
     );
     on<MutationGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
-          method: GraphQLMethod.mutation,
-          document: request.document,
-          variables: request.variables,
-        );
+        try {
+          final data = await _graphQLService.request(
+            method: GraphQLMethod.mutation,
+            document: request.document,
+            variables: request.variables,
+          );
 
-        send(Right(GraphQLSuccessResponse(data: data)));
+          send(Right(GraphQLSuccessResponse(data: data)));
+        } catch (e) {
+          // log the details on the exception here
+          send(Left(FailureResponse()));
+        }
       },
     );
   }

@@ -14,7 +14,7 @@ void main() {
   });
 
   test('FirebaseExternalInterface watch id request', () async {
-    // to cover the internal initialize
+    // to cover the internal initialize of FirebaseClient
     expect(() => FirebaseExternalInterface(gatewayConnections: []),
         throwsException);
 
