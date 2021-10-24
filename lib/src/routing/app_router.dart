@@ -3,19 +3,28 @@ import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
 
 typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
+typedef AppRouterRedirect = String? Function(AppRouteState);
 
 class AppRouter<R extends Object> {
   AppRouter({
     required List<AppRoute> routes,
     required RouteWidgetBuilder errorBuilder,
+    bool enableLogging = false,
+    this.initialLocation = '/',
+    AppRouterRedirect? redirect,
   })  : _routes = routes,
-        _errorBuilder = errorBuilder {
+        _errorBuilder = errorBuilder,
+        _enableLogging = enableLogging,
+        _redirect = redirect {
     _initInnerRouter();
   }
 
   late GoRouter _router;
   final List<AppRoute> _routes;
   final RouteWidgetBuilder _errorBuilder;
+  final bool _enableLogging;
+  final AppRouterRedirect? _redirect;
+  final String initialLocation;
 
   RouterDelegate<Uri> get delegate => _router.routerDelegate;
 
@@ -34,6 +43,11 @@ class AppRouter<R extends Object> {
           child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
         );
       },
+      initialLocation: initialLocation,
+      debugLogDiagnostics: _enableLogging,
+      redirect: _redirect == null
+          ? null
+          : (state) => _redirect!(AppRouteState._fromGoRouteState(state)),
     );
   }
 
