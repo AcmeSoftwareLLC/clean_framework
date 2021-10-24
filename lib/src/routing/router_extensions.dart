@@ -8,9 +8,12 @@ extension CFRouterExtension on BuildContext {
   /// The [CFRouter] in the current context.
   ///
   /// Alternatively, [CFRouterScope.of(context)] can used.
+
+  @deprecated
   CFRouter get router => CFRouterScope.of(this);
 
   /// The arguments passed to this route.
+  @deprecated
   T routeArguments<T>() {
     final args = _routeSettings.arguments as T?;
     assert(
@@ -22,6 +25,7 @@ extension CFRouterExtension on BuildContext {
   }
 
   /// Similar to [routeArguments], but can return null arguments.
+  @deprecated
   T? routeArgumentsMayBe<T>() => _routeSettings.arguments as T?;
 
   RouteSettings get _routeSettings {
