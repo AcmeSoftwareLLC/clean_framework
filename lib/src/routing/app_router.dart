@@ -71,6 +71,11 @@ class AppRouter<R extends Object> {
 
   void back() => _router.navigator!.pop();
 
+  void Function() addListener(VoidCallback listener) {
+    _router.addListener(listener);
+    return () => _router.removeListener(listener);
+  }
+
   @visibleForTesting
   void reset() => _initInnerRouter();
 }
