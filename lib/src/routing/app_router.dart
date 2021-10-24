@@ -108,11 +108,12 @@ class AppRoute<R extends Object> {
   }
 }
 
-class AppRouteState {
+class AppRouteState<R extends Object> {
   AppRouteState({
     required this.location,
     Map<String, String> params = const {},
     this.queryParams = const {},
+    this.path,
     this.extra,
     this.error,
   }) : _params = params;
@@ -120,12 +121,14 @@ class AppRouteState {
   final String location;
   final Map<String, String> _params;
   final Map<String, String> queryParams;
+  final String? path;
   final Object? extra;
   final Exception? error;
 
   factory AppRouteState._fromGoRouteState(GoRouterState state) {
     return AppRouteState(
       location: state.location,
+      path: state.path,
       params: state.params,
       queryParams: state.queryParams,
       extra: state.extra,
