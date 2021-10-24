@@ -86,12 +86,14 @@ class AppRoute<R extends Object> {
     required this.path,
     required this.builder,
     this.routes = const [],
+    this.redirect,
   });
 
   final R name;
   final String path;
   final RouteWidgetBuilder builder;
   final List<AppRoute> routes;
+  final AppRouterRedirect? redirect;
 
   GoRoute _toGoRoute() {
     return GoRoute(
@@ -104,24 +106,27 @@ class AppRoute<R extends Object> {
           child: builder(context, AppRouteState._fromGoRouteState(state)),
         );
       },
+      redirect: (state) => redirect?.call(
+        AppRouteState._fromGoRouteState(state),
+      ),
     );
   }
 }
 
-class AppRouteState<R extends Object> {
+class AppRouteState {
   AppRouteState({
     required this.location,
+    this.path,
     Map<String, String> params = const {},
     this.queryParams = const {},
-    this.path,
     this.extra,
     this.error,
   }) : _params = params;
 
   final String location;
+  final String? path;
   final Map<String, String> _params;
   final Map<String, String> queryParams;
-  final String? path;
   final Object? extra;
   final Exception? error;
 
