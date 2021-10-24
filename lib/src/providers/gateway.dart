@@ -38,6 +38,26 @@ abstract class Gateway<O extends Output, R extends Request,
   R buildRequest(O output);
 }
 
+abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
+    PUBLISHER_OUTPUT extends Output, SUBSCRIBER_INPUT extends Input> {
+  late UseCase _subscriberUseCase;
+  late UseCase _publisherUseCase;
+
+  BridgeGateway({
+    required UseCase subscriberUseCase,
+    required UseCase publisherUseCase,
+  })  : _subscriberUseCase = subscriberUseCase,
+        _publisherUseCase = publisherUseCase {
+    _subscriberUseCase.subscribe(
+        SUBSCRIBER_OUTPUT,
+        (SUBSCRIBER_OUTPUT output) async =>
+            Right<FailureInput, SUBSCRIBER_INPUT>(
+                onResponse(_publisherUseCase.getOutput<PUBLISHER_OUTPUT>())));
+  }
+
+  SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
+}
+
 abstract class WatcherGateway<
     O extends Output,
     R extends Request,

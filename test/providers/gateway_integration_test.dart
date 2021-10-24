@@ -60,6 +60,31 @@ void main() {
     var output2 = useCase.getOutput<TestOutput>();
     expect(output2, TestOutput('with yield'));
   });
+
+  test('BridgeGateway transfer of data', () async {
+    final useCase1 = TestUseCase(TestEntity(foo: 'bar'));
+    final useCase2 = TestUseCase(TestEntity(foo: 'to be replaced'));
+
+    TestBridgeGateway(subscriberUseCase: useCase2, publisherUseCase: useCase1);
+
+    await useCase2.fetchStateFromOtherUseCase();
+    var output = useCase2.getOutput<TestOutput>();
+
+    expect(output, TestOutput('bar'));
+  });
+}
+
+class TestBridgeGateway
+    extends BridgeGateway<TestDirectOutput, TestOutput, TestSuccessInput> {
+  TestBridgeGateway({
+    required UseCase subscriberUseCase,
+    required UseCase publisherUseCase,
+  }) : super(
+            subscriberUseCase: subscriberUseCase,
+            publisherUseCase: publisherUseCase);
+  @override
+  TestSuccessInput onResponse(TestOutput output) =>
+      TestSuccessInput(output.foo);
 }
 
 class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
@@ -125,6 +150,12 @@ class TestUseCase extends UseCase<TestEntity> {
       onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
     );
+  }
+
+  Future<void> fetchStateFromOtherUseCase() async {
+    await request<TestDirectOutput, TestSuccessInput>(TestDirectOutput(''),
+        onFailure: (_) => entity,
+        onSuccess: (input) => entity.merge(foo: input.foo));
   }
 }
 
