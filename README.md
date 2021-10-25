@@ -35,6 +35,8 @@ Alternatively, your editor might support flutter pub get. Check the docs for you
 
 Now in your Dart code, you can use:
 
+```
 import 'package:clean_framework/clean_framework.dart';
+```
 
 Check the docs directory and the example project for implementation details.
