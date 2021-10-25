@@ -547,6 +547,99 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      'local redirect',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(id: 'Detail'),
+              redirect: (state) => '/more-detail',
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/more-detail');
+      },
+    );
+
+    testWidgets(
+      'global redirect',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(id: 'Detail'),
+              redirect: (state) => '/more-detail',
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+          redirect: (state) {
+            if (state.location == '/detail') return '/more-detail';
+          },
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/more-detail');
+      },
+    );
   });
 }
 
