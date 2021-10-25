@@ -28,10 +28,6 @@ void main() {
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
 
-    //TODO Find out why this verify doesn't work
-    // verify(() =>
-    //     firebaseClient.watch(path: any(named: 'path'), id: any(named: 'id')));
-
     if (gateWay.hasYielded.isCompleted)
       expect(gateWay.successResponse, FirebaseSuccessResponse(testContent));
     else

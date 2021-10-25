@@ -15,6 +15,7 @@ pubspec.lock
 *.code-workspace
 /coverage
 .vscode
+.fvm
 
 # IntelliJ related
 *.iml

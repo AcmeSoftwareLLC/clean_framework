@@ -110,9 +110,6 @@ class SuccessfulRequest extends QueryGraphQLRequest {
   String get document => r'''
    
   ''';
-
-  @override
-  List<Object?> get props => [];
 }
 
 class MutationRequest extends MutationGraphQLRequest {
@@ -120,7 +117,4 @@ class MutationRequest extends MutationGraphQLRequest {
   String get document => r'''
    
   ''';
-
-  @override
-  List<Object?> get props => [];
 }

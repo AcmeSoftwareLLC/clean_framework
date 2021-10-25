@@ -53,7 +53,4 @@ class CountryRequest extends QueryGraphQLRequest {
       }
     };
   }
-
-  @override
-  List<Object?> get props => [continentCode];
 }

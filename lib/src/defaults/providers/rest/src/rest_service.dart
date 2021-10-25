@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:http/http.dart';
 
 class RestService extends NetworkService {
-  RestService({String baseUrl = '', Map<String, String>? headers})
+  RestService({String baseUrl = '', Map<String, String> headers = const {}})
       : super(baseUrl: baseUrl, headers: headers);
 
   Future<Map<String, dynamic>> request({
@@ -23,13 +24,26 @@ class RestService extends NetworkService {
     if (data != null) request.bodyFields = data.cast<String, String>();
     if (headers != null) request.headers.addAll(headers!);
 
-    final response = await Response.fromStream(await client.send(request));
-    client.close();
+    try {
+      final response = await Response.fromStream(await client.send(request));
 
-    final resultData = jsonDecode(response.body);
+      final resultData = jsonDecode(response.body);
 
-    if (resultData is Map<String, dynamic>) return resultData;
-    return {'data': resultData};
+      if (resultData is Map<String, dynamic>) return resultData;
+      return {'data': resultData};
+
+      //TODO Enable the types of error we should consider later:
+      // } on SocketException {
+      //   print('No Internet connection 😑');
+      // } on HttpException {
+      //   print("Couldn't find the post 😱");
+      // } on FormatException {
+      //   print("Bad response format 👎");
+    } on Exception {
+      throw RestServiceFailure;
+    } finally {
+      client.close();
+    }
   }
 
   Uri _pathToUri(String path) {
@@ -41,3 +55,5 @@ class RestService extends NetworkService {
     return Uri.parse(_url);
   }
 }
+
+class RestServiceFailure {}

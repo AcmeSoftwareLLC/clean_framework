@@ -6,7 +6,13 @@ import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.d
 abstract class RestGateway<O extends Output, R extends RestRequest,
     S extends SuccessInput> extends Gateway<O, R, RestSuccessResponse, S> {
   RestGateway({
-    required ProvidersContext context,
-    required UseCaseProvider provider,
-  }) : super(context: context, provider: provider);
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) : super(context: context, provider: provider, useCase: useCase);
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput();
+  }
 }
