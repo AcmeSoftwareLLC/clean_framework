@@ -54,25 +54,54 @@ void main() {
     expect(find.text('visible'), findsNothing);
     expect(find.byKey(Key('empty')), findsOneWidget);
 
-    await tester.tap(find.byKey(Key('hideButton')));
-    await tester.pump();
-
     await tester.tap(find.byKey(Key('loadButton')));
-    await tester.pump(Duration(milliseconds: 500));
-    await tester.pump(Duration(milliseconds: 500));
-    await tester.pump(Duration(milliseconds: 500));
-    await tester.pump(Duration(milliseconds: 500));
-    await tester.pump(Duration(milliseconds: 500));
-
     await tester.pumpAndSettle();
-
-    //debugDumpApp();
 
     expect(find.text('visible'), findsOneWidget);
     expect(find.byKey(Key('empty')), findsNothing);
 
     await tester.tap(find.byKey(Key('hideButton')));
     await tester.pump();
+
+    expect(find.text('visible'), findsNothing);
+    expect(find.byKey(Key('empty')), findsOneWidget);
+
+    featureTester.dispose();
+  });
+
+  testWidgets('FeatureStatesProvider load error', (tester) async {
+    final featureStateProvider =
+        FeatureStateProvider<FeatureState, TestFeatureStateMapper>(
+            (_) => TestFeatureStateMapper());
+
+    final featureTester = FeatureTester<FeatureState>(featureStateProvider);
+
+    final testWidget = MaterialApp(
+        home: Column(
+      children: [
+        TestFeatureWidget(
+          featureStateProvider,
+        ),
+        ElevatedButton(
+          key: Key('loadButton'),
+          child: Text('load'),
+          onPressed: () {
+            try {
+              featureTester.featuresMap.append({});
+            } catch (e) {}
+          },
+        ),
+      ],
+    ));
+
+    await featureTester.pumpWidget(tester, testWidget);
+
+    expect(find.byType(TestFeatureWidget), findsOneWidget);
+    expect(find.text('visible'), findsNothing);
+    expect(find.byKey(Key('empty')), findsOneWidget);
+
+    await tester.tap(find.byKey(Key('loadButton')));
+    await tester.pumpAndSettle();
 
     expect(find.text('visible'), findsNothing);
     expect(find.byKey(Key('empty')), findsOneWidget);

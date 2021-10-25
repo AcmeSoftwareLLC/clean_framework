@@ -1,7 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 
-const exampleFeature = Feature(name: 'example');
-const paymentFeature = Feature(name: 'payments');
+const lastLoginFeature = Feature(name: 'last_login');
 
 enum FeatureState { hidden, active, forbidden }
 

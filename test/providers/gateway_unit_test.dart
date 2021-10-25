@@ -37,7 +37,7 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     var gateway = TestYieldGateway(provider);
 
-    gateway.transport = (request) async => Right(SuccessResponse());
+    gateway.transport = (request) async => Right(TestResponse('success'));
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
@@ -58,6 +58,16 @@ void main() {
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'failure'));
+  });
+
+  test('props', () {
+    final response = SuccessResponse();
+    expect(response, SuccessResponse());
+    // If we log the responses and compare the output, that could replace this
+    expect(response.stringify, isTrue);
+
+    final request = TestRequest('123');
+    expect(request.stringify, isTrue);
   });
 }
 
@@ -81,7 +91,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 }
 
 class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
-    TestRequest, SuccessResponse, TestSuccessInput> {
+    TestRequest, TestResponse, TestSuccessInput> {
   TestYieldGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
@@ -95,12 +105,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
   }
 
   @override
-  SuccessInput onSuccess(_) {
-    return SuccessInput();
-  }
-
-  @override
-  TestSuccessInput onYield(TestResponse response) {
+  TestSuccessInput onSuccess(TestResponse response) {
     return TestSuccessInput(response.foo);
   }
 }
@@ -127,9 +132,6 @@ class TestSuccessInput extends SuccessInput {
   final String foo;
 
   TestSuccessInput(this.foo);
-
-  @override
-  List<Object?> get props => [foo];
 }
 
 class TestDirectOutput extends Output {

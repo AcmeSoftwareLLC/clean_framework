@@ -44,8 +44,6 @@ void main() {
       context: providersContext,
       builder: () => CountryUI(),
       verify: (tester) async {
-        await tester.pumpAndSettle();
-
         final listTileFinder = find.byType(ListTile);
 
         expect(listTileFinder, findsNWidgets(2));
@@ -92,8 +90,6 @@ void main() {
       context: providersContext,
       builder: () => CountryUI(),
       verify: (tester) async {
-        await tester.pumpAndSettle();
-
         final listTileFinder = find.byType(ListTile);
         expect(listTileFinder, findsNWidgets(2));
 

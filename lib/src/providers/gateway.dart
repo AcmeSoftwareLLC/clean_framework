@@ -6,24 +6,31 @@ import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
-  final UseCaseProvider _provider;
-  final ProvidersContext _context;
+  late UseCase _useCase;
 
   late final Transport<R, P> transport;
 
-  Gateway(
-      {required ProvidersContext context, required UseCaseProvider provider})
-      : _provider = provider,
-        _context = context {
-    final useCase = _provider.getUseCaseFromContext(_context);
-    useCase.subscribe(
-        O, (O output) async => _processRequest(buildRequest(output)));
+  Gateway({
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) {
+    assert(() {
+      return (context != null && provider != null) || useCase != null;
+    }());
+    _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
+    _useCase.subscribe(
+      O,
+      (O output) async => _processRequest(buildRequest(output)),
+    );
   }
 
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
-    return either.fold((failureResponse) => Left(onFailure(failureResponse)),
-        (response) => Right(onSuccess(response)));
+    return either.fold(
+      (failureResponse) => Left(onFailure(failureResponse)),
+      (response) => Right(onSuccess(response)),
+    );
   }
 
   S onSuccess(covariant P response);
@@ -31,26 +38,43 @@ abstract class Gateway<O extends Output, R extends Request,
   R buildRequest(O output);
 }
 
-abstract class WatcherGateway<O extends Output, R extends Request,
-        P extends SuccessResponse, S extends SuccessInput>
-    extends Gateway<O, R, SuccessResponse, SuccessInput> {
-  WatcherGateway(
-      {required ProvidersContext context, required UseCaseProvider provider})
-      : super(context: context, provider: provider);
+abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
+    PUBLISHER_OUTPUT extends Output, SUBSCRIBER_INPUT extends Input> {
+  late UseCase _subscriberUseCase;
+  late UseCase _publisherUseCase;
+
+  BridgeGateway({
+    required UseCase subscriberUseCase,
+    required UseCase publisherUseCase,
+  })  : _subscriberUseCase = subscriberUseCase,
+        _publisherUseCase = publisherUseCase {
+    _subscriberUseCase.subscribe(
+        SUBSCRIBER_OUTPUT,
+        (SUBSCRIBER_OUTPUT output) async =>
+            Right<FailureInput, SUBSCRIBER_INPUT>(
+                onResponse(_publisherUseCase.getOutput<PUBLISHER_OUTPUT>())));
+  }
+
+  SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
+}
+
+abstract class WatcherGateway<
+    O extends Output,
+    R extends Request,
+    P extends SuccessResponse,
+    S extends SuccessInput> extends Gateway<O, R, P, S> {
+  WatcherGateway({
+    required ProvidersContext context,
+    required UseCaseProvider provider,
+  }) : super(context: context, provider: provider);
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
 
-  @override
-  SuccessInput onSuccess(covariant SuccessResponse response) => SuccessInput();
-
   @nonVirtual
   void yieldResponse(P response) {
-    final useCase = _provider.getUseCaseFromContext(_context);
-    useCase.setInput(onYield(response));
+    _useCase.setInput(onSuccess(response));
   }
-
-  S onYield(covariant P response);
 }
 
 typedef Transport<R extends Request, P extends SuccessResponse>

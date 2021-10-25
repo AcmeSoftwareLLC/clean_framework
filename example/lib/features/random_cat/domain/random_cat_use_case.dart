@@ -67,7 +67,4 @@ class RandomCatSuccessInput extends SuccessInput {
       url: json['webpurl'],
     );
   }
-
-  @override
-  List<Object?> get props => [id, url];
 }

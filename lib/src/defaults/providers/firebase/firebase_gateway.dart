@@ -9,4 +9,7 @@ abstract class FirebaseGateway<O extends Output, R extends FirebaseRequest,
   FirebaseGateway(
       {required ProvidersContext context, required UseCaseProvider provider})
       : super(context: context, provider: provider);
+
+  @override
+  FailureInput onFailure(failureResponse) => FailureInput();
 }

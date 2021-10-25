@@ -4,8 +4,16 @@ import 'package:graphql/client.dart';
 class GraphQLService extends NetworkService {
   late final GraphQLClient _client;
 
-  GraphQLService({required String link, Map<String, String>? headers})
+  GraphQLService(
+      {required String link,
+      Map<String, String>? headers,
+      GraphQLClient? client})
       : super(baseUrl: link, headers: headers) {
+    if (client != null) {
+      _client = client;
+      return;
+    }
+
     final httpLink = HttpLink(link);
     Link _link;
 
@@ -35,13 +43,13 @@ class GraphQLService extends NetworkService {
   Map<String, dynamic> _handleExceptions(QueryResult result) {
     if (result.hasException) {
       // TODO: handle this properly.
-      throw result.exception!;
+      throw ExternalGraphQLServiceException(result.exception!.toString());
     }
 
     final resultData = result.data;
     if (resultData == null) {
       // TODO: handle this properly.
-      throw 'Result Data is null';
+      throw NullDataGraphQLServiceException();
     }
 
     return resultData;
@@ -68,4 +76,17 @@ class GraphQLService extends NetworkService {
     );
     return _client.mutate(options);
   }
+}
+
+class NullDataGraphQLServiceException implements Exception {
+  @override
+  String toString() => 'NullDataGraphQLServiceException';
+}
+
+class ExternalGraphQLServiceException implements Exception {
+  final String message;
+  ExternalGraphQLServiceException(this.message);
+
+  @override
+  String toString() => 'ExternalGraphQLServiceException: ' + message;
 }

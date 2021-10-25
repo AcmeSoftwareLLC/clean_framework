@@ -6,7 +6,13 @@ import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_respo
 abstract class GraphQLGateway<O extends Output, R extends GraphQLRequest,
     S extends SuccessInput> extends Gateway<O, R, GraphQLSuccessResponse, S> {
   GraphQLGateway({
-    required ProvidersContext context,
-    required UseCaseProvider provider,
-  }) : super(context: context, provider: provider);
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) : super(context: context, provider: provider, useCase: useCase);
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput();
+  }
 }

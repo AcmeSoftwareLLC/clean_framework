@@ -11,7 +11,7 @@ class CountryEntity extends Entity {
   });
 
   final bool isLoading;
-  final List<CountryModel> countries;
+  final List<CountryInput> countries;
   final Map<String, String> continents;
   final String selectedContinentId;
 
@@ -22,7 +22,7 @@ class CountryEntity extends Entity {
 
   CountryEntity merge({
     bool? isLoading,
-    List<CountryModel>? countries,
+    List<CountryInput>? countries,
     Map<String, String>? continents,
     String? continentId,
   }) {

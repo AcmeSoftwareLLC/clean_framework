@@ -1,37 +1,18 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:either_dart/either.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class UseCaseFake extends Fake implements UseCase<EntityFake> {
+class UseCaseFake<I extends SuccessInput> extends Fake
+    implements UseCase<EntityFake> {
   EntityFake _entity = EntityFake();
   late Function subscription;
+  I? successInput;
   final Output? output;
 
   UseCaseFake({this.output});
 
   @override
   EntityFake get entity => _entity;
-
-  @override
-  set entity(newEntity) => _entity = newEntity;
-
-  @override
-  RemoveListener addListener(listener, {bool fireImmediately = true}) {
-    return () {};
-  }
-
-  @override
-  EntityFake get debugState => _entity;
-
-  @override
-  void dispose() {}
-
-  @override
-  bool get hasListeners => true;
-
-  @override
-  bool get mounted => true;
 
   @override
   Future<void> request<O extends Output, S extends SuccessInput>(O output,
@@ -54,15 +35,13 @@ class UseCaseFake extends Fake implements UseCase<EntityFake> {
     subscription = callback;
   }
 
-  @override
-  O getOutput<O extends Output>() {
-    return output as O;
-  }
-
   Future<void> doFakeRequest<O extends Output>(O output) async {
     await request(output,
         onFailure: (failure) => _entity.merge('failure'),
-        onSuccess: (success) => _entity.merge('success'));
+        onSuccess: (success) {
+          successInput = success as I;
+          return _entity.merge('success');
+        });
   }
 }
 

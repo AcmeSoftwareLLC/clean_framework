@@ -1,13 +1,13 @@
+import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_requests.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_responses.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:either_dart/either.dart';
 
 class GraphQLExternalInterface
-    extends DirectExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
+    extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
   final GraphQLService _graphQLService;
 
   GraphQLExternalInterface({
@@ -18,21 +18,37 @@ class GraphQLExternalInterface
         super(gatewayConnections);
 
   @override
-  Future<Either<FailureResponse, SuccessResponse>> onTransport(
-    GraphQLRequest request,
-  ) async {
-    final data = await _graphQLService.request(
-      method: _requestToMethod(request),
-      document: request.document,
-      variables: request.variables,
+  void handleRequest() {
+    on<QueryGraphQLRequest>(
+      (request, send) async {
+        try {
+          final data = await _graphQLService.request(
+            method: GraphQLMethod.query,
+            document: request.document,
+            variables: request.variables,
+          );
+          send(Right(GraphQLSuccessResponse(data: data)));
+        } catch (e) {
+          // log the details on the exception here
+          send(Left(FailureResponse()));
+        }
+      },
     );
+    on<MutationGraphQLRequest>(
+      (request, send) async {
+        try {
+          final data = await _graphQLService.request(
+            method: GraphQLMethod.mutation,
+            document: request.document,
+            variables: request.variables,
+          );
 
-    return Right(GraphQLSuccessResponse(data: data));
-  }
-
-  GraphQLMethod _requestToMethod(GraphQLRequest request) {
-    if (request is QueryGraphQLRequest) return GraphQLMethod.query;
-    if (request is MutationGraphQLRequest) return GraphQLMethod.mutation;
-    throw UnsupportedError('${request.runtimeType} is not supported.');
+          send(Right(GraphQLSuccessResponse(data: data)));
+        } catch (e) {
+          // log the details on the exception here
+          send(Left(FailureResponse()));
+        }
+      },
+    );
   }
 }

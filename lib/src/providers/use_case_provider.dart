@@ -17,18 +17,12 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   U getUseCase(WidgetRef ref) => ref.watch(_provider.notifier);
 
   U getUseCaseFromContext(ProvidersContext context) {
-    context().listen<E>(_provider, (E entity) {});
-
     return context().read(_provider.notifier);
   }
 
   O subscribe<O extends Output>(WidgetRef ref) {
     final useCase = getUseCase(ref);
     return ref.watch(_provider.select((e) => useCase.getOutput()));
-  }
-
-  void listenFromContext(ProvidersContext context, ProviderListener listener) {
-    context().listen<E>(_provider, listener);
   }
 }
 

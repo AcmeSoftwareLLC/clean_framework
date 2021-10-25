@@ -29,7 +29,12 @@ class AppProvidersContainer extends StatelessWidget {
 class ProvidersContext {
   final ProviderContainer _container;
 
-  ProvidersContext() : _container = ProviderContainer();
+  ProvidersContext([List<Override> overrides = const []])
+      : _container = ProviderContainer(overrides: overrides);
 
   ProviderContainer call() => _container;
+
+  void dispose() {
+    _container.dispose();
+  }
 }
