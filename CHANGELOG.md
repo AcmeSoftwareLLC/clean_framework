@@ -1,4 +1,4 @@
-# 1.1.0 Mixed External Interface and Router
+# 1.1.1 Mixed External Interface and Router
 
 - Merged into one class the Direct and Watcher External Interfaces, this is a breaking change for any class using this ancestor. The [onTransport] method is replaced by [handleRequest]. Please refer to the code example and tests to understand the migration effort.
 
