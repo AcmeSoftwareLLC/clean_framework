@@ -29,12 +29,14 @@ extension RestMethodExt on RestMethod {
 }
 
 abstract class NetworkService {
-  final String? baseUrl;
+  final String baseUrl;
   final Map<String, String>? headers;
 
   NetworkService({required this.baseUrl, this.headers})
       : assert(
-          baseUrl == null || !baseUrl.endsWith('/'),
-          'Base URl must not end with "/"',
+          () {
+            return !baseUrl.endsWith('/');
+          }(),
+          'Base URl must not be empty or end with "/"',
         );
 }

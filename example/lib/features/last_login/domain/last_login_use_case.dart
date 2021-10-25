@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-
 import 'last_login_entity.dart';
 
 class LastLoginUseCase extends UseCase<LastLoginEntity> {
@@ -19,7 +18,7 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
         isLoading: entity.state == LastLoginState.loading,
       );
 
-  void fetchCurrentDate() async {
+  Future<void> fetchCurrentDate() async {
     entity = entity.merge(state: LastLoginState.loading);
 
     await request(LastLoginDateOutput(), onSuccess: (LastLoginDateInput input) {
@@ -53,19 +52,8 @@ class LastLoginDateOutput extends Output {
   List<Object?> get props => [];
 }
 
-class LastLoginUpdateDateOutput extends Output {
-  final DateTime date;
-
-  LastLoginUpdateDateOutput(this.date);
-  @override
-  List<Object?> get props => [date];
-}
-
 class LastLoginDateInput extends SuccessInput {
   final DateTime lastLogin;
 
   LastLoginDateInput(this.lastLogin);
-
-  @override
-  List<Object?> get props => [lastLogin];
 }

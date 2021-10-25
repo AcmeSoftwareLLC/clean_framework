@@ -10,6 +10,4 @@ class ProviderTester<S> {
   Future<void> pumpWidget(WidgetTester tester, Widget widget) =>
       tester.pumpWidget(
           UncontrolledProviderScope(container: _container, child: widget));
-
-  void dispose() => _container.dispose();
 }

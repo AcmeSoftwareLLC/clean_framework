@@ -4,7 +4,7 @@ import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:http/http.dart';
 
 class RestService extends NetworkService {
-  RestService({String? baseUrl, Map<String, String>? headers})
+  RestService({String baseUrl = '', Map<String, String>? headers})
       : super(baseUrl: baseUrl, headers: headers);
 
   Future<Map<String, dynamic>> request({
@@ -34,8 +34,10 @@ class RestService extends NetworkService {
 
   Uri _pathToUri(String path) {
     String _url;
-    if (baseUrl == null) _url = path;
-    _url = '$baseUrl/$path';
+    if (baseUrl.isEmpty)
+      _url = path;
+    else
+      _url = '$baseUrl/$path';
     return Uri.parse(_url);
   }
 }

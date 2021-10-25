@@ -22,9 +22,14 @@ void main() {
   test('UseCase subscription with successful request', () async {
     final useCase = TestUseCase(TestEntity(foo: ''));
 
+    final successInput = TestSuccessInput('success');
+    expect(SuccessInput() == successInput, isFalse);
+
     useCase.subscribe(TestDirectOutput, (output) {
-      return Right<FailureInput, TestSuccessInput>(TestSuccessInput('success'));
+      return Right<FailureInput, TestSuccessInput>(successInput);
     });
+
+    expect(() => useCase.subscribe(TestDirectOutput, (_) {}), throwsStateError);
 
     await useCase.fetchDataImmediatelly();
 
@@ -48,6 +53,17 @@ void main() {
     useCase.setInput(TestSuccessInput('from input filter'));
 
     expect(useCase.entity, TestEntity(foo: 'from input filter'));
+
+    useCase.dispose();
+  });
+
+  test('UseCase instance, request failure due to not having a subscription',
+      () async {
+    final useCase = TestUseCase(TestEntity(foo: ''));
+
+    expect(() => useCase.getOutput<TestDirectOutput>(), throwsStateError);
+    expect(
+        () => useCase.setInput<FailureInput>(FailureInput()), throwsStateError);
 
     useCase.dispose();
   });
@@ -84,9 +100,6 @@ class TestSuccessInput extends SuccessInput {
   final String foo;
 
   TestSuccessInput(this.foo);
-
-  @override
-  List<Object?> get props => [foo];
 }
 
 class TestDirectOutput extends Output {

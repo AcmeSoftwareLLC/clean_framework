@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 final context = ProvidersContext();
 
 void main() {
-  test('LastLoginWatchDateGateway unit test for success', () async {
+  test('LastLoginDateGateway success', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     var gateway = LastLoginDateGateway(context: context, provider: provider);
@@ -19,12 +19,17 @@ void main() {
     gateway.transport = (request) async =>
         Right(FirebaseSuccessResponse({'date': '2000-01-01'}));
 
+    final testRequest = LastLoginDateRequest();
+    expect(gateway.buildRequest(LastLoginDateOutput()), testRequest);
+    expect(testRequest.id, '12345');
+    expect(testRequest.path, 'last_login');
+
     await useCase.doFakeRequest(LastLoginDateOutput());
 
     expect(useCase.entity, EntityFake(value: 'success'));
   });
 
-  test('Gateway unit test for failure on yield output', () async {
+  test('LastLoginDateGateway failure on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     var gateway = LastLoginDateGateway(context: context, provider: provider);

@@ -58,7 +58,7 @@ class CountryUIOutput extends Output {
   });
 
   final bool isLoading;
-  final List<CountryModel> countries;
+  final List<CountryInput> countries;
   final Map<String, String> continents;
   final String selectedContinentId;
 
@@ -78,18 +78,15 @@ class CountryGatewayOutput extends Output {
 }
 
 class CountrySuccessInput extends SuccessInput {
-  final List<CountryModel> countries;
+  final List<CountryInput> countries;
 
   CountrySuccessInput({required this.countries});
 
   factory CountrySuccessInput.fromJson(Map<String, dynamic> json) {
     return CountrySuccessInput(
       countries: List.of(json['countries'] ?? [])
-          .map((c) => CountryModel.fromJson(c))
+          .map((c) => CountryInput.fromJson(c))
           .toList(growable: false),
     );
   }
-
-  @override
-  List<Object?> get props => [countries];
 }

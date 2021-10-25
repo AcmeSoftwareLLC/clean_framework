@@ -38,7 +38,7 @@ void main() {
         CountryEntity(
           continents: continents,
           countries: [
-            CountryModel(
+            CountryInput(
               name: 'Nepal',
               emoji: '🇳🇵',
               capital: 'Kathmandu',

@@ -6,9 +6,9 @@ see http://www.amazon.com/dp/0134494164/
 Learning Resources 
 Coming soon !
 
-## Coverage
 
-[![Coverage](https://codecov.io/gh/MattHamburger/clean_framework/branch/main/graph/badge.svg)](https://codecov.io/gh/MattHamburger/clean_framework)
+## Coverage
+https://codecov.io/gh/MattHamburger/clean_framework/tree/cbd15aed6433defebd614ccf8b08ff0d0da1b3c5
 
 
 ## Installation 

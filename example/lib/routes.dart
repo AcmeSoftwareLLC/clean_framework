@@ -1,38 +1,56 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
 import 'package:clean_framework_example/features/last_login/presentation/last_login_ui.dart';
 import 'package:clean_framework_example/features/random_cat/presentation/random_cat_ui.dart';
 import 'package:clean_framework_example/home_page.dart';
 import 'package:flutter/material.dart';
 
-///
-class Routes {
-  static const String home = '/home';
+enum Routes {
+  home,
+  lastLogin,
+  countries,
+  randomCat,
+}
 
-  ///
-  static const String lastLogin = '/lastLogin';
+final router = AppRouter<Routes>(
+  routes: [
+    AppRoute(
+      name: Routes.home,
+      path: '/',
+      builder: (context, state) => HomePage(),
+      routes: [
+        AppRoute(
+          name: Routes.lastLogin,
+          path: 'last-login',
+          builder: (context, state) => LastLoginUI(),
+        ),
+        AppRoute(
+          name: Routes.countries,
+          path: 'countries',
+          builder: (context, state) => CountryUI(),
+        ),
+        AppRoute(
+          name: Routes.randomCat,
+          path: 'random-cat',
+          builder: (context, state) => RandomCatUI(),
+        ),
+      ],
+    ),
+  ],
+  errorBuilder: (context, state) => Page404(error: state.error),
+);
 
-  ///
-  static const String countries = '/countries';
+class Page404 extends StatelessWidget {
+  const Page404({Key? key, required this.error}) : super(key: key);
 
-  static const String randomCat = '/random-cat';
+  final Exception? error;
 
-  ///
-  static Widget generate(String routeName) {
-    switch (routeName) {
-      case home:
-        return HomePage();
-      case lastLogin:
-        return LastLoginUI();
-      case countries:
-        return CountryUI();
-      case randomCat:
-        return RandomCatUI();
-      default:
-        return Scaffold(
-          body: Center(
-            child: Text('404, Page Not Found!'),
-          ),
-        );
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text(error.toString()),
+      ),
+    );
   }
 }

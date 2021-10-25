@@ -3,6 +3,9 @@ import 'package:clean_framework/clean_framework_providers.dart';
 class FirebaseSuccessResponse extends SuccessResponse {
   final Map<String, dynamic> json;
   const FirebaseSuccessResponse(this.json);
+
+  @override
+  List<Object?> get props => [json];
 }
 
 abstract class FirebaseFailureResponse extends FailureResponse {}

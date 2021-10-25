@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
@@ -12,61 +13,94 @@ final context = ProvidersContext();
 late UseCaseProvider<TestEntity, TestUseCase> provider;
 
 void main() {
-  test('Interface using basic transport', () async {
-    provider = UseCaseProvider((_) => TestUseCase(TestEntity(foo: 'bar')));
-    final gatewayProvider = GatewayProvider((_) => TestDirectGateway(provider));
+  useCaseTest<TestUseCase, TestOutput>(
+    'Interface using direct gateway',
+    context: context,
+    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider(
+        (_) => TestDirectGateway(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataImmediately(),
+    verify: (useCase) {
+      final output = useCase.getOutput<TestOutput>();
+      expect(output, TestOutput('success'));
+    },
+  );
 
-    TestInterface(gatewayProvider);
+  useCaseTest<TestUseCase, TestOutput>(
+    'Interface with failure',
+    context: context,
+    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider(
+        (_) => TestWatcherGatewayWitFailure(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataImmediately(),
+    verify: (useCase) {
+      final output = useCase.getOutput<TestOutput>();
+      expect(output, TestOutput('failure'));
+    },
+  );
 
-    final TestUseCase useCase = provider.getUseCaseFromContext(context);
-
-    await useCase.fetchDataImmediatelly();
-
-    var output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('success'));
-  });
-
-  test('Interface using yield', () async {
-    provider = UseCaseProvider((_) => TestUseCase(TestEntity(foo: 'bar')));
-    final gatewayProvider =
-        GatewayProvider<WatcherGateway>((_) => TestYieldGateway(provider));
-
-    TestInterfaceWithYield(gatewayProvider);
-
-    final TestUseCase useCase = provider.getUseCaseFromContext(context);
-
-    await useCase.fetchDataEventually();
-
-    var output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('with yield'));
-  });
+  useCaseTest<TestUseCase, TestOutput>(
+    'Interface using watcher gateway',
+    context: context,
+    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider<WatcherGateway>(
+        (_) => TestYieldGateway(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataEventually(),
+    expect: () => [
+      TestOutput('0'),
+      TestOutput('1'),
+      TestOutput('2'),
+      TestOutput('3'),
+    ],
+  );
 }
 
-class TestInterfaceWithYield
-    extends WatcherExternalInterface<TestRequest, TestResponse> {
-  TestInterfaceWithYield(GatewayProvider<WatcherGateway> provider)
-      : super([
-          () => provider.getGateway(context),
-        ]);
-
-  @override
-  Future<Either<FailureResponse, TestResponse>> onTransport(
-      TestRequest request, Function(TestResponse) yieldResponse) async {
-    yieldResponse(TestResponse('with yield'));
-    return Right(TestResponse('success'));
-  }
-}
-
-class TestInterface extends DirectExternalInterface<TestRequest, TestResponse> {
+class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   TestInterface(GatewayProvider provider)
-      : super([
-          () => provider.getGateway(context),
-        ]);
+      : super([() => provider.getGateway(context)]);
 
   @override
-  Future<Either<FailureResponse, TestResponse>> onTransport(
-          TestRequest request) async =>
-      Right(TestResponse('success'));
+  void handleRequest() {
+    on<FutureTestRequest>(
+      (request, send) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        send(Right(TestResponse('success')));
+      },
+    );
+    on<FailedRequest>(
+      (request, send) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        send(Left(FailureResponse()));
+      },
+    );
+    on<StreamTestRequest>(
+      (request, send) async {
+        final stream = Stream.periodic(
+          Duration(milliseconds: 100),
+          (count) => count,
+        );
+
+        final subscription = stream.listen(
+          (count) => send(Right(TestResponse(count.toString()))),
+        );
+
+        await Future.delayed(Duration(milliseconds: 500));
+        subscription.cancel();
+      },
+    );
+  }
 }
 
 class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
@@ -75,12 +109,28 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestDirectOutput output) => TestRequest(output.id);
+  TestRequest buildRequest(TestDirectOutput output) =>
+      FutureTestRequest(output.id);
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
     return FailureInput(message: 'backend error');
   }
+
+  @override
+  TestSuccessInput onSuccess(TestResponse response) {
+    return TestSuccessInput(response.foo);
+  }
+}
+
+class TestWatcherGatewayWitFailure extends WatcherGateway<TestDirectOutput,
+    FailedRequest, TestResponse, TestSuccessInput> {
+  TestWatcherGatewayWitFailure(UseCaseProvider provider)
+      : super(provider: provider, context: context);
+
+  @override
+  FailedRequest buildRequest(TestDirectOutput output) =>
+      FailedRequest(output.id);
 
   @override
   TestSuccessInput onSuccess(TestResponse response) {
@@ -95,34 +145,36 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 
   @override
   TestRequest buildRequest(TestSubscriptionOutput output) =>
-      TestRequest(output.id);
+      StreamTestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
-  }
-
-  @override
-  SuccessInput onSuccess(_) {
-    return SuccessInput();
-  }
-
-  @override
-  TestSuccessInput onYield(TestResponse response) {
+  TestSuccessInput onSuccess(TestResponse response) {
     return TestSuccessInput(response.foo);
   }
 }
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
-      : super(entity: entity, outputFilters: {
-          TestOutput: (entity) => TestOutput(entity.foo),
-        }, inputFilters: {
-          TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-              entity.merge(foo: input.foo),
-        });
+      : super(
+          entity: entity,
+          outputFilters: {
+            TestOutput: (entity) => TestOutput(entity.foo),
+          },
+          inputFilters: {
+            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
+                entity.merge(foo: input.foo),
+          },
+        );
 
-  Future<void> fetchDataImmediatelly() async {
+  Future<void> fetchDataImmediately() async {
+    await request<TestDirectOutput, TestSuccessInput>(
+      TestDirectOutput('123'),
+      onFailure: (_) => entity.merge(foo: 'failure'),
+      onSuccess: (success) => entity.merge(foo: success.foo),
+    );
+  }
+
+  Future<void> fetchDataImmediatelyWithFailure() async {
     await request<TestDirectOutput, TestSuccessInput>(
       TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
@@ -140,13 +192,25 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 }
 
-class TestRequest extends Request {
+abstract class TestRequest extends Request {
   final String id;
 
   TestRequest(this.id);
 
   @override
   List<Object?> get props => [id];
+}
+
+class FutureTestRequest extends TestRequest {
+  FutureTestRequest(String id) : super(id);
+}
+
+class FailedRequest extends TestRequest {
+  FailedRequest(String id) : super(id);
+}
+
+class StreamTestRequest extends TestRequest {
+  StreamTestRequest(String id) : super(id);
 }
 
 class TestResponse extends SuccessResponse {
@@ -162,9 +226,6 @@ class TestSuccessInput extends SuccessInput {
   final String foo;
 
   TestSuccessInput(this.foo);
-
-  @override
-  List<Object?> get props => [foo];
 }
 
 class TestDirectOutput extends Output {
