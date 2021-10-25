@@ -3,7 +3,7 @@ name: Analyze, Run Tests & Generate Coverage
 on: push
 
 jobs:
-  tester:
+  gen-cov:
     runs-on: ubuntu-latest
 
     steps:
