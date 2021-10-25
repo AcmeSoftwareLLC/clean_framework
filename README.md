@@ -1,3 +1,5 @@
+[![Coverage](https://codecov.io/gh/MattHamburger/clean_framework/branch/main/graph/badge.svg)](https://codecov.io/gh/MattHamburger/clean_framework)
+
 # clean_framework
 Flutter implementation of Clean Architecture, inspired on the guidelines created by Uncle Bob.
 
@@ -5,10 +7,6 @@ see http://www.amazon.com/dp/0134494164/
 
 Learning Resources 
 Coming soon !
-
-## Coverage
-https://codecov.io/gh/MattHamburger/clean_framework/tree/cbd15aed6433defebd614ccf8b08ff0d0da1b3c5
-
 
 ## Installation 
 
