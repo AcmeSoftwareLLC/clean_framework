@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - lcov.info - src/routing/router.dart</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/routing</a> - router.dart<span style="font-size: 80%;"> (source / <a href="router.dart.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">lcov.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">52</td>
+            <td class="headerCovTableEntry">53</td>
+            <td class="headerCovTableEntryHi">98.1 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2021-10-22 14:19:14</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntryHi">-</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : import 'dart:async';</a>
+<a name="2"><span class="lineNum">       2 </span>            : </a>
+<a name="3"><span class="lineNum">       3 </span>            : import 'package:flutter/material.dart';</a>
+<a name="4"><span class="lineNum">       4 </span>            : </a>
+<a name="5"><span class="lineNum">       5 </span>            : part 'route_page.dart';</a>
+<a name="6"><span class="lineNum">       6 </span>            : part 'router_scope.dart';</a>
+<a name="7"><span class="lineNum">       7 </span>            : </a>
+<a name="8"><span class="lineNum">       8 </span>            : /// A [CFRoutePage] generator.</a>
+<a name="9"><span class="lineNum">       9 </span>            : typedef CFRoutePageGenerator&lt;T&gt; = CFRoutePage&lt;T&gt; Function&lt;T&gt;(</a>
+<a name="10"><span class="lineNum">      10 </span>            :   String routeName, [</a>
+<a name="11"><span class="lineNum">      11 </span>            :   Object? arguments,</a>
+<a name="12"><span class="lineNum">      12 </span>            : ]);</a>
+<a name="13"><span class="lineNum">      13 </span>            : </a>
+<a name="14"><span class="lineNum">      14 </span>            : /// The router which provides functionality to mutate the navigation stack.</a>
+<a name="15"><span class="lineNum">      15 </span>            : ///</a>
+<a name="16"><span class="lineNum">      16 </span>            : /// It is recommended to use [CFRouterScope] which provides an access to</a>
+<a name="17"><span class="lineNum">      17 </span>            : /// the instance of this class to all its descendants.</a>
+<a name="18"><span class="lineNum">      18 </span>            : class CFRouter {</a>
+<a name="19"><span class="lineNum">      19 </span>            :   /// Function responsible for notifying the underlying [RouterDelegate] that</a>
+<a name="20"><span class="lineNum">      20 </span>            :   /// the page stack has been updated.</a>
+<a name="21"><span class="lineNum">      21 </span>            :   @protected</a>
+<a name="22"><span class="lineNum">      22 </span>            :   Function? onUpdate;</a>
+<a name="23"><span class="lineNum">      23 </span>            : </a>
+<a name="24"><span class="lineNum">      24 </span>            :   /// The initial route name.</a>
+<a name="25"><span class="lineNum">      25 </span>            :   final String initialRouteName;</a>
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<a name="27"><span class="lineNum">      27 </span>            :   /// The [CFRoutePage] generator.</a>
+<a name="28"><span class="lineNum">      28 </span>            :   final CFRoutePageGenerator routePageGenerator;</a>
+<a name="29"><span class="lineNum">      29 </span>            : </a>
+<a name="30"><span class="lineNum">      30 </span>            :   /// Creates a CFRouter.</a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          1 :   CFRouter({</span></a>
+<a name="32"><span class="lineNum">      32 </span>            :     required this.initialRouteName,</a>
+<a name="33"><span class="lineNum">      33 </span>            :     required this.routePageGenerator,</a>
+<a name="34"><span class="lineNum">      34 </span><span class="lineCov">          1 :   }) : _pages = [routePageGenerator(initialRouteName)];</span></a>
+<a name="35"><span class="lineNum">      35 </span>            : </a>
+<a name="36"><span class="lineNum">      36 </span>            :   List&lt;CFRoutePage&gt; _pages;</a>
+<a name="37"><span class="lineNum">      37 </span>            : </a>
+<a name="38"><span class="lineNum">      38 </span>            :   /// The list of [CFRoutePage]s currently in the navigation stack.</a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">          2 :   List&lt;CFRoutePage&gt; get pages =&gt; _pages;</span></a>
+<a name="40"><span class="lineNum">      40 </span>            : </a>
+<a name="41"><span class="lineNum">      41 </span>            :   /// The [CFRoutePage] at the top of the navigation stack .i.e currently visible.</a>
+<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          1 :   CFRoutePage get currentPage {</span></a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          2 :     assert(_pages.isNotEmpty, 'There is no current route.');</span></a>
+<a name="44"><span class="lineNum">      44 </span><span class="lineCov">          2 :     return _pages.last;</span></a>
+<a name="45"><span class="lineNum">      45 </span>            :   }</a>
+<a name="46"><span class="lineNum">      46 </span>            : </a>
+<a name="47"><span class="lineNum">      47 </span>            :   /// The [CFRoutePage] just below the [currentPage] in the navigation stack.</a>
+<a name="48"><span class="lineNum">      48 </span><span class="lineCov">          1 :   CFRoutePage? get previousPage {</span></a>
+<a name="49"><span class="lineNum">      49 </span>            :     // Returns null if there's no previous route.</a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          3 :     final _previousPageIndex = _pages.length - 2;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          1 :     if (_previousPageIndex.isNegative) return null;</span></a>
+<a name="52"><span class="lineNum">      52 </span><span class="lineCov">          2 :     return _pages[_previousPageIndex];</span></a>
+<a name="53"><span class="lineNum">      53 </span>            :   }</a>
+<a name="54"><span class="lineNum">      54 </span>            : </a>
+<a name="55"><span class="lineNum">      55 </span>            :   /// Push the route resolved by [routeName] onto the navigation stack,</a>
+<a name="56"><span class="lineNum">      56 </span>            :   /// optionally with an [arguments].</a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :   Future&lt;T&gt; push&lt;T&gt;(String routeName, {Object? arguments}) {</span></a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineCov">          1 :     final routePage = routePageGenerator&lt;T&gt;(routeName, arguments);</span></a>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 :     _pages</span></a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          4 :       ..removeWhere((page) =&gt; page.name == routeName)</span></a>
+<a name="61"><span class="lineNum">      61 </span><span class="lineCov">          1 :       ..add(routePage);</span></a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          1 :     _notifyUpdate();</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">          2 :     return routePage._completer.future;</span></a>
+<a name="64"><span class="lineNum">      64 </span>            :   }</a>
+<a name="65"><span class="lineNum">      65 </span>            : </a>
+<a name="66"><span class="lineNum">      66 </span>            :   /// Replaces the current route with the route resolved by [routeName] onto the navigation stack,</a>
+<a name="67"><span class="lineNum">      67 </span>            :   /// optionally with an [arguments].</a>
+<a name="68"><span class="lineNum">      68 </span><span class="lineCov">          1 :   Future&lt;T&gt; replaceWith&lt;T&gt;(String routeName, {Object? arguments}) {</span></a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineCov">          1 :     final routePage = routePageGenerator&lt;T&gt;(routeName, arguments);</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineCov">          1 :     _pages</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineCov">          4 :       ..removeWhere((page) =&gt; page.name == routeName)</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineCov">          1 :       ..removeLast()</span></a>
+<a name="73"><span class="lineNum">      73 </span><span class="lineCov">          1 :       ..add(routePage);</span></a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineCov">          1 :     _notifyUpdate();</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineCov">          2 :     return routePage._completer.future;</span></a>
+<a name="76"><span class="lineNum">      76 </span>            :   }</a>
+<a name="77"><span class="lineNum">      77 </span>            : </a>
+<a name="78"><span class="lineNum">      78 </span>            :   /// Pop the top-most route off the navigation stack.</a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          1 :   bool pop&lt;T&gt;([T? value]) {</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">          3 :     if (_pages.length &lt; 2) return false;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineCov">          2 :     final _lastRoutePage = _pages.last;</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineCov">          2 :     _pages.removeLast();</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :     _notifyUpdate();</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          2 :     _lastRoutePage._completer.complete(value);</span></a>
+<a name="85"><span class="lineNum">      85 </span>            :     return true;</a>
+<a name="86"><span class="lineNum">      86 </span>            :   }</a>
+<a name="87"><span class="lineNum">      87 </span>            : </a>
+<a name="88"><span class="lineNum">      88 </span>            :   /// Calls [pop] repeatedly until the route resolved by [routeName]</a>
+<a name="89"><span class="lineNum">      89 </span>            :   /// becomes the top-most route in the navigation stack.</a>
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">          1 :   bool popUntil(String routeName) {</span></a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">          3 :     if (_pages.length &lt; 2) return false;</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineCov">          5 :     if (_pages.every((page) =&gt; page.name != routeName)) {</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :       throw StateError('No route found = $routeName');</span></a>
+<a name="94"><span class="lineNum">      94 </span>            :     }</a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineCov">          4 :     while (_pages.last.name != routeName) {</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineCov">          2 :       _pages.removeLast();</span></a>
+<a name="97"><span class="lineNum">      97 </span>            :     }</a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineCov">          1 :     _notifyUpdate();</span></a>
+<a name="99"><span class="lineNum">      99 </span>            :     return true;</a>
+<a name="100"><span class="lineNum">     100 </span>            :   }</a>
+<a name="101"><span class="lineNum">     101 </span>            : </a>
+<a name="102"><span class="lineNum">     102 </span>            :   /// Updates the navigation stack in granular level with the help of [routeInfoList].</a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineCov">          1 :   void update(List&lt;CFRouteInformation&gt; routeInfoList) {</span></a>
+<a name="104"><span class="lineNum">     104 </span>            :     assert(</a>
+<a name="105"><span class="lineNum">     105 </span><span class="lineCov">          1 :         routeInfoList.isNotEmpty, 'There should be at least one initial route');</span></a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">          1 :     _pages = routeInfoList</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">          5 :         .map((r) =&gt; routePageGenerator(r.name, r.arguments))</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineCov">          1 :         .toList();</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">          1 :     _notifyUpdate();</span></a>
+<a name="110"><span class="lineNum">     110 </span>            :   }</a>
+<a name="111"><span class="lineNum">     111 </span>            : </a>
+<a name="112"><span class="lineNum">     112 </span>            :   /// Resets the navigation stack to the earliest form</a>
+<a name="113"><span class="lineNum">     113 </span>            :   /// i.e. the [initialRouteName] will be the top-most and only route in the stack.</a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineCov">          1 :   bool reset() {</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineCov">          4 :     _pages = [routePageGenerator(initialRouteName)];</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineCov">          1 :     return _notifyUpdate();</span></a>
+<a name="117"><span class="lineNum">     117 </span>            :   }</a>
+<a name="118"><span class="lineNum">     118 </span>            : </a>
+<a name="119"><span class="lineNum">     119 </span>            :   /// Similar to reset, but provides and option to decide a new [initialRoute].</a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineCov">          1 :   bool updateInitialRoute(String initialRoute) {</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineCov">          3 :     _pages = [routePageGenerator(initialRoute)];</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">          1 :     return _notifyUpdate();</span></a>
+<a name="123"><span class="lineNum">     123 </span>            :   }</a>
+<a name="124"><span class="lineNum">     124 </span>            : </a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineCov">          1 :   bool _notifyUpdate() {</span></a>
+<a name="126"><span class="lineNum">     126 </span><span class="lineCov">          3 :     _pages = List.from(_pages);</span></a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineCov">          2 :     return onUpdate?.call();</span></a>
+<a name="128"><span class="lineNum">     128 </span>            :   }</a>
+<a name="129"><span class="lineNum">     129 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
