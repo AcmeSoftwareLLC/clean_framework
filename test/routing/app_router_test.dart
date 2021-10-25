@@ -547,6 +547,172 @@ void main() {
         );
       },
     );
+
+    testWidgets(
+      'local redirect',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(id: 'Detail'),
+              redirect: (state) => '/more-detail',
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/more-detail');
+      },
+    );
+
+    testWidgets(
+      'global redirect',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(id: 'Detail'),
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+          redirect: (state) {
+            if (state.location == '/detail') return '/more-detail';
+          },
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/more-detail');
+      },
+    );
+
+    testWidgets(
+      'listening to changes in route using addListener',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(
+                id: 'Detail',
+                onTap: (context) => testRouter.to(Routes.moreDetail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        int count = 1;
+        final removeListener = testRouter.addListener(
+          expectAsync0(
+            () {
+              // TODO(sarbagya): Update the test when go_router fixes listener being called twice
+              switch (count) {
+                case 1:
+                case 2:
+                  expect(testRouter.location, '/detail');
+                  break;
+                case 3:
+                case 4:
+                  expect(testRouter.location, '/more-detail');
+                  break;
+              }
+              count++;
+            },
+            count: 4,
+          ),
+        );
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        removeListener();
+      },
+    );
   });
 }
 
