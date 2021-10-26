@@ -50,7 +50,8 @@ class RestServiceFake extends Fake implements RestService {
   Future<Map<String, dynamic>> request({
     required RestMethod method,
     required String path,
-    Map<String, dynamic>? data,
+    Map<String, dynamic> data = const {},
+    Client? client,
   }) async {
     if (_response.isEmpty) throw RestServiceFailure();
     return {'foo': 'bar'};
