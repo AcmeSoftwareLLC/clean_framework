@@ -32,7 +32,7 @@ abstract class FeatureWidget<S> extends ConsumerStatefulWidget {
   /// on the currentState value. A common pattern is to have states that
   /// instead of returning a visible widget, return an empty container.
   ///
-  /// The developer can use [HiddenWidget] to return a simple empty container
+  /// The developer can use hidden widget to return a simple empty container
   /// with a key that can by checked during tests.
   Widget builder(BuildContext context, S currentState);
 

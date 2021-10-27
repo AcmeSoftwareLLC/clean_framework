@@ -12,7 +12,6 @@ pubspec.lock
 *.code-workspace
 *.log.*
 .fvm/
-*.code-workspace
 /coverage
 .vscode
 .fvm
