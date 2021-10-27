@@ -49,10 +49,15 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
   })  : _subscriberUseCase = subscriberUseCase,
         _publisherUseCase = publisherUseCase {
     _subscriberUseCase.subscribe(
-        SUBSCRIBER_OUTPUT,
-        (SUBSCRIBER_OUTPUT output) async =>
-            Right<FailureInput, SUBSCRIBER_INPUT>(
-                onResponse(_publisherUseCase.getOutput<PUBLISHER_OUTPUT>())));
+      SUBSCRIBER_OUTPUT,
+      (SUBSCRIBER_OUTPUT output) {
+        return Right<FailureInput, SUBSCRIBER_INPUT>(
+          onResponse(
+            _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
+          ),
+        );
+      },
+    );
   }
 
   SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
