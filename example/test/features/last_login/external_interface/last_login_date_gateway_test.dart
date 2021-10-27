@@ -20,7 +20,6 @@ void main() {
         Right(FirebaseSuccessResponse({'date': '2000-01-01'}));
 
     final testRequest = LastLoginDateRequest();
-    expect(gateway.buildRequest(LastLoginDateOutput()), testRequest);
     expect(testRequest.id, '12345');
     expect(testRequest.path, 'last_login');
 
