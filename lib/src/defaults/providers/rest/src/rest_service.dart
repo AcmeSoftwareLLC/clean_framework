@@ -29,6 +29,8 @@ class RestService extends NetworkService {
     try {
       final response = await Response.fromStream(await _client.send(request));
 
+      if (response.statusCode != 200) throw RestServiceFailure();
+
       final resultData = jsonDecode(response.body);
 
       if (resultData is Map<String, dynamic>) return resultData;
@@ -42,8 +44,8 @@ class RestService extends NetworkService {
       // } on FormatException {
       //   print("Bad response format 👎");
     } catch (e) {
-      print(e);
-      throw RestServiceFailure;
+      //print(e);
+      throw RestServiceFailure();
     } finally {
       _client.close();
     }
