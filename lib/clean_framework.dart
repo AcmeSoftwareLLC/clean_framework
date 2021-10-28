@@ -1,3 +1,4 @@
+/// Clean Framework
 library clean_framework;
 
 export 'package:clean_framework/src/app_providers_container.dart';

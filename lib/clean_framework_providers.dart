@@ -1,4 +1,5 @@
-library clean_framework;
+/// Clean Framework Providers
+library clean_framework_providers;
 
 export 'package:clean_framework/src/providers/use_case_provider.dart';
 export 'package:clean_framework/src/providers/gateway_provider.dart';

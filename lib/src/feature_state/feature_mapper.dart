@@ -37,13 +37,17 @@ abstract class FeatureMapper<S> extends StateNotifier<Map<Feature, S>> {
     return newStates;
   }
 
-  /// This method creates the interl mapping of states, and the JSON that serves
+  /// This method creates the internal mapping of states, and the JSON that serves
   /// as the input should have the following structure:
-  ///    {
-  ///      "features": [
-  ///        {"name": "example", "state": "STATE_VALUE"}
-  ///      ]
-  ///    }
+  ///
+  /// ```json
+  /// {
+  ///   "features": [
+  ///     {"name": "example", "state": "STATE_VALUE"}
+  ///   ]
+  /// }
+  /// ```
+  ///
   void load(Map<String, dynamic> json) {
     state = _parseJson(json);
   }
@@ -62,11 +66,11 @@ abstract class FeatureMapper<S> extends StateNotifier<Map<Feature, S>> {
   S getStateFor(Feature feature) => state[feature] ?? defaultState;
 
   /// This override is required to map correctly between the string
-  /// values in the JSON and the state values of the choosen data type
+  /// values in the JSON and the state values of the chosen data type
   S parseState(String rawStateName);
 
   /// This override is used to determine the default value among the possible
-  /// states according to the choosen data type. This value will be used
+  /// states according to the chosen data type. This value will be used
   /// when the parsing process finds string states that don't match to any
   /// possible states, and also while trying to retrieve the state of features
   /// that don't exist in the map or whose name don't match
