@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-10-27T20:22:10-04:00",
+  "id": "clean-framework-introduction",
+  "duration": 15,
+  "title": "Introduction to Clean Framework",
+  "summary": "Introduction to Clean Framework",
+  "source": "introduction.md",
+  "theme": "",
+  "status": [
+    "active"
+  ],
+  "category": [
+    "acmesoftarecodelabs"
+  ],
+  "tags": [
+    "introductioncleanframework",
+    "web"
+  ],
+  "feedback": "https://github.com/MattHamburger/clean_framework/issues",
+  "url": "clean-framework-introduction"
+}
