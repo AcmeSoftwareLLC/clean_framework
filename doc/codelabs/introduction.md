@@ -15,9 +15,15 @@ Duration: 0:10:00
 
 Clean Framework is a toolkit of classes and implementations that help any developer create a layered architecture on any app, following the principles of Clean Architecture from Uncle Bob (Robert Martin).
 
-## The Layers
+### The Layers
 
 To understand the components, first we have to talk about the layers, which are just a way to group your code to avoid interdependencies and to separate concerns.
+
+The following diagram explains how the Clean Architecture proposes the implementation of the layers.
+
+![Clean Architecture Layers](assets/clean_architecture_layers.png)
+
+The idea of layering the architecture to separate the domain logic from the implementation details is not recent, and some other approaches have also been proposed (like the Hexagonal Architecture). Bob Martin took good ideas from the existing proposals, so some of the terms may seem familiar.
 
 ### Entities Layer
 

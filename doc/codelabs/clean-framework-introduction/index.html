@@ -29,12 +29,11 @@
     
       <google-codelab-step label="Overview" duration="10">
         <p>Clean Framework is a toolkit of classes and implementations that help any developer create a layered architecture on any app, following the principles of Clean Architecture from Uncle Bob (Robert Martin).</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="The Layers" duration="0">
-        <p>To understand the components, first we have to talk about the layers, which are just a way to group your code to avoid interdependencies and to separate concerns.</p>
+<h2 is-upgraded>The Layers</h2>
+<p>To understand the components, first we have to talk about the layers, which are just a way to group your code to avoid interdependencies and to separate concerns.</p>
+<p>The following diagram explains how the Clean Architecture proposes the implementation of the layers.</p>
+<p class="image-container"><img alt="Clean Architecture Layers" src="img/7132fc7d4eb27414.png"></p>
+<p>The idea of layering the architecture to separate the domain logic from the implementation details is not recent, and some other approaches have also been proposed (like the Hexagonal Architecture). Bob Martin took good ideas from the existing proposals, so some of the terms may seem familiar.</p>
 <h2 is-upgraded>Entities Layer</h2>
 <p>The core of your app should exist within this layer. Here we have Entity instances that hold the state of all your features. These entities are immutable and should be free of any external code, they should not care about databases, UI, or services. If you are familiar with Domain Driven Design, this is considered your Domain data.</p>
 <h2 is-upgraded>Use Cases Layer</h2>
