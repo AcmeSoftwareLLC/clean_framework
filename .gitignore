@@ -1,6 +1,6 @@
 # Miscellaneous
-pubspec.lock
 *.class
+*.lock
 *.log
 *.pyc
 *.swp
@@ -9,13 +9,7 @@ pubspec.lock
 .buildlog/
 .history
 .svn/
-*.code-workspace
-*.log.*
 .fvm/
-*.code-workspace
-/coverage
-.vscode
-.fvm
 
 # IntelliJ related
 *.iml
@@ -23,10 +17,14 @@ pubspec.lock
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Visual Studio Code related
+.classpath
+.project
+.settings/
+.vscode/
+
+# packages file containing multi-root paths
+.packages.generated
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -37,6 +35,10 @@ pubspec.lock
 .pub-cache/
 .pub/
 build/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
 
 # Android related
 **/android/**/gradle-wrapper.jar
@@ -46,8 +48,11 @@ build/
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+**/android/key.properties
+*.jks
 
 # iOS/XCode related
+Podfile.lock
 **/ios/**/*.mode1v3
 **/ios/**/*.mode2v3
 **/ios/**/*.moved-aside
@@ -75,11 +80,16 @@ build/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+# Coverage
+coverage/
+coverage_badge.svg
+.test_coverage.dart
+*.lcov
+nohup.out
+
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
 !**/ios/**/default.mode2v3
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-/example/ios/Podfile.lock
-

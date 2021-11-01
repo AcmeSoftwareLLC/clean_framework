@@ -43,4 +43,3 @@ import 'package:clean_framework/clean_framework.dart';
 ```
 
 Check the docs directory and the example project for implementation details.
-
