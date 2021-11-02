@@ -1,3 +1,6 @@
+# 1.1.2 Introduction Codelab
+
+Added the Introduction to Clean Framework Codelab under the docs folder. The codelab is also published, see the public link on the README file.
 # 1.1.1 Mixed External Interface and Router
 
 - Merged into one class the Direct and Watcher External Interfaces, this is a breaking change for any class using this ancestor. The [onTransport] method is replaced by [handleRequest]. Please refer to the code example and tests to understand the migration effort.
