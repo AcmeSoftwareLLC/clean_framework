@@ -57,7 +57,4 @@ class TestRequest extends QueryGraphQLRequest {
   String get document => r'''
    
   ''';
-
-  @override
-  List<Object?> get props => [];
 }

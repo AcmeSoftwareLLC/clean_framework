@@ -81,11 +81,8 @@ typedef Transport<R extends Request, P extends SuccessResponse>
     = Future<Either<FailureResponse, P>> Function(R request);
 
 @immutable
-abstract class Request extends Equatable {
+abstract class Request {
   const Request();
-
-  @override
-  bool get stringify => true;
 }
 
 @immutable

@@ -1,0 +1,25 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2021-11-01T19:05:32-04:00",
+  "id": "clean-framework-features",
+  "duration": 44,
+  "title": "Clean Framework Features",
+  "summary": "Clean Framework Features",
+  "source": "features.md",
+  "theme": "",
+  "status": [
+    "active"
+  ],
+  "category": [
+    "acmesoftarecodelabs"
+  ],
+  "tags": [
+    "featurescleanframework",
+    "web"
+  ],
+  "feedback": "https://github.com/MattHamburger/clean_framework/issues",
+  "url": "clean-framework-features"
+}

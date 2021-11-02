@@ -65,9 +65,6 @@ void main() {
     expect(response, SuccessResponse());
     // If we log the responses and compare the output, that could replace this
     expect(response.stringify, isTrue);
-
-    final request = TestRequest('123');
-    expect(request.stringify, isTrue);
   });
 }
 
@@ -114,9 +111,6 @@ class TestRequest extends Request {
   final String id;
 
   TestRequest(this.id);
-
-  @override
-  List<Object?> get props => [id];
 }
 
 class TestResponse extends SuccessResponse {

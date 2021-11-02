@@ -12,7 +12,7 @@ class RestExternalInterface
   RestExternalInterface({
     required List<GatewayConnection<Gateway>> gatewayConnections,
     required String baseUrl,
-    Map<String, String>? headers,
+    Map<String, String> headers = const {},
     RestService? restService,
   })  : _restService = restService ??
             RestService(
@@ -25,14 +25,19 @@ class RestExternalInterface
   void handleRequest() {
     on<RestRequest>(
       (request, send) async {
-        final data = await _restService.request(
-          method: request.method,
-          path: request.path,
-          data: request.data,
-        );
-
-        send(Right(RestSuccessResponse(data: data)));
+        try {
+          final data = await _restService.request(
+            method: request.method,
+            path: request.path,
+            data: request.data,
+          );
+          send(Right(RestSuccessResponse(data: data)));
+        } on RestServiceFailure {
+          send(Left(FailureResponse()));
+        }
       },
     );
   }
 }
+
+class RequestNotRecognizedFailureResponse extends FailureResponse {}

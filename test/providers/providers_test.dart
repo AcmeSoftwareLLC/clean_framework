@@ -105,10 +105,7 @@ class TestOutput extends Output {
   List<Object?> get props => [];
 }
 
-class TestRequest extends Request {
-  @override
-  List<Object?> get props => [];
-}
+class TestRequest extends Request {}
 
 class TestResponse extends SuccessResponse {
   @override

@@ -163,9 +163,6 @@ class TestRequest extends Request {
   final String id;
 
   TestRequest(this.id);
-
-  @override
-  List<Object?> get props => [id];
 }
 
 class TestResponse extends SuccessResponse {

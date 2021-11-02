@@ -16,13 +16,6 @@ void main() {
       return Right(FirebaseSuccessResponse({'content': 'success'}));
     };
 
-    expect(
-        gateway.buildRequest(TestOutput('555')),
-        FirebaseReadIdRequest(
-          path: 'fake path',
-          id: '555',
-        ));
-
     await useCase.doFakeRequest(TestOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'success'));
@@ -40,22 +33,6 @@ void main() {
     await useCase.doFakeRequest(TestOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'failure'));
-  });
-
-  test('Other requests props', () {
-    expect(FirebaseRequest(path: 'fake'), FirebaseRequest(path: 'fake'));
-    expect(FirebaseWatchAllRequest(path: 'fake'),
-        FirebaseWatchAllRequest(path: 'fake'));
-    expect(FirebaseWatchIdRequest(path: 'fake', id: 'fake'),
-        FirebaseWatchIdRequest(path: 'fake', id: 'fake'));
-    expect(FirebaseReadAllRequest(path: 'fake'),
-        FirebaseReadAllRequest(path: 'fake'));
-    expect(FirebaseWriteRequest(path: 'fake', id: 'fake'),
-        FirebaseWriteRequest(path: 'fake', id: 'fake'));
-    expect(FirebaseUpdateRequest(path: 'fake', id: 'fake'),
-        FirebaseUpdateRequest(path: 'fake', id: 'fake'));
-    expect(FirebaseDeleteRequest(path: 'fake', id: 'fake'),
-        FirebaseDeleteRequest(path: 'fake', id: 'fake'));
   });
 }
 

@@ -9,31 +9,31 @@ abstract class RestRequest extends Request {
 
   String get path;
 
-  Map<String, dynamic>? get data => null;
+  Map<String, dynamic> get data => {};
 }
 
 abstract class GetRestRequest extends RestRequest {
   GetRestRequest() : super(RestMethod.get);
 
-  Map<String, dynamic>? get params => null;
+  Map<String, dynamic> get params => {};
 
   @nonVirtual
   @override
-  Map<String, dynamic>? get data => params;
+  Map<String, dynamic> get data => params;
 }
 
 abstract class PostRestRequest extends RestRequest {
-  PostRestRequest() : super(RestMethod.get);
+  PostRestRequest() : super(RestMethod.post);
 }
 
 abstract class PutRestRequest extends RestRequest {
-  PutRestRequest() : super(RestMethod.get);
+  PutRestRequest() : super(RestMethod.put);
 }
 
 abstract class PatchRestRequest extends RestRequest {
-  PatchRestRequest() : super(RestMethod.get);
+  PatchRestRequest() : super(RestMethod.patch);
 }
 
 abstract class DeleteRestRequest extends RestRequest {
-  DeleteRestRequest() : super(RestMethod.get);
+  DeleteRestRequest() : super(RestMethod.delete);
 }
