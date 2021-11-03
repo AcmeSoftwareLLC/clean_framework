@@ -497,46 +497,57 @@ Now that we have a full presenter implementation, the test can stop relying on t
 ```dart
 void main() {
   uiTest(
-    'AddMachineUI unit test',
+    'AddMachineUI unit test - Scenario 2',
     context: ProvidersContext(),
-    builder: () => AddMachineUI(
-      create: (builder) => AddMachinePresenter(builder: builder),
-    ),
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
     verify: (tester) async {
-      expect(find.text('Add Machine'), findsOneWidget);
+      final numberField = find.byKey(Key('NumberField'));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, '15');
+
+      final addButton = find.byKey(Key('AddButton'));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
 
       final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')),
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
           findsOneWidget);
     },
   );
 }
 
-class AddMachinePresenter
-    extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
-  AddMachinePresenter({
-    required PresenterBuilder<AddMachineViewModel> builder,
-  }) : super(provider: addMachineUseCaseProvider, builder: builder);
+final addMachineUseCaseProvider = UseCaseProvider((_) => StaticUseCase([
+      AddMachineUIOutput(total: 0),
+      AddMachineUIOutput(total: 15),
+    ]));
+    
+class StaticUseCase extends UseCase<EmptyEntity> {
+  static int _index = 0;
+  final List<Output> outputs;
+
+  StaticUseCase(this.outputs) : super(entity: EmptyEntity());
 
   @override
-  AddMachineViewModel createViewModel(UseCase<Entity> useCase, output) =>
-      AddMachineViewModel(total: output.total.toString());
-
-  AddMachineUIOutput subscribe(_) => AddMachineUIOutput(total: 0);
-}
-
-class AddMachineUIOutput extends Output {
-  final int total;
-
-  AddMachineUIOutput({required this.total});
+  void setInput<I extends Input>(I input) {
+    _index++;
+    entity = EmptyEntity();
+  }
 
   @override
-  List<Object?> get props => [total];
+  O getOutput<O extends Output>() {
+    return outputs[_index] as O;
+  }
 }
 
-final addMachineUseCaseProvider = UseCaseProvider((_) => UseCaseFake());
+class EmptyEntity extends Entity {
+  @override
+  List<Object?> get props => [];
+}
 
 ```
 

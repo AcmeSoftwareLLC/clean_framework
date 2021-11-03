@@ -397,46 +397,57 @@ final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; UseCaseFake());
 <h3 is-upgraded>test/features/add_machine/presentation/add_machine_ui_test.dart</h3>
 <pre><code language="language-dart" class="language-dart">void main() {
   uiTest(
-    &#39;AddMachineUI unit test&#39;,
+    &#39;AddMachineUI unit test - Scenario 2&#39;,
     context: ProvidersContext(),
-    builder: () =&gt; AddMachineUI(
-      create: (builder) =&gt; AddMachinePresenter(builder: builder),
-    ),
+    builder: () =&gt; AddMachineUI(provider: addMachineUseCaseProvider),
     verify: (tester) async {
-      expect(find.text(&#39;Add Machine&#39;), findsOneWidget);
+      final numberField = find.byKey(Key(&#39;NumberField&#39;));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, &#39;15&#39;);
+
+      final addButton = find.byKey(Key(&#39;AddButton&#39;));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
 
       final sumTotalWidget = find.byKey(Key(&#39;SumTotalWidget&#39;));
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;0&#39;)),
+      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;15&#39;)),
           findsOneWidget);
     },
   );
 }
 
-class AddMachinePresenter
-    extends Presenter&lt;AddMachineViewModel, AddMachineUIOutput, UseCase&gt; {
-  AddMachinePresenter({
-    required PresenterBuilder&lt;AddMachineViewModel&gt; builder,
-  }) : super(provider: addMachineUseCaseProvider, builder: builder);
+final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; StaticUseCase([
+      AddMachineUIOutput(total: 0),
+      AddMachineUIOutput(total: 15),
+    ]));
+    
+class StaticUseCase extends UseCase&lt;EmptyEntity&gt; {
+  static int _index = 0;
+  final List&lt;Output&gt; outputs;
+
+  StaticUseCase(this.outputs) : super(entity: EmptyEntity());
 
   @override
-  AddMachineViewModel createViewModel(UseCase&lt;Entity&gt; useCase, output) =&gt;
-      AddMachineViewModel(total: output.total.toString());
-
-  AddMachineUIOutput subscribe(_) =&gt; AddMachineUIOutput(total: 0);
-}
-
-class AddMachineUIOutput extends Output {
-  final int total;
-
-  AddMachineUIOutput({required this.total});
+  void setInput&lt;I extends Input&gt;(I input) {
+    _index++;
+    entity = EmptyEntity();
+  }
 
   @override
-  List&lt;Object?&gt; get props =&gt; [total];
+  O getOutput&lt;O extends Output&gt;() {
+    return outputs[_index] as O;
+  }
 }
 
-final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; UseCaseFake());
+class EmptyEntity extends Entity {
+  @override
+  List&lt;Object?&gt; get props =&gt; [];
+}
 
 </code></pre>
 <aside class="special"><p> Remember that as part of the TDD methodology, you will be constantly refactoring and updating the tests the more production code you complete, at this point you can see that the UseCaseFake is basically a minimal functioning Use Case. This is done intentionally to exemplify how fakes can be used to avoid writing production code before it&#39;s actually needed. For a normal real-case project, this is probably a step you can skip. </p>
