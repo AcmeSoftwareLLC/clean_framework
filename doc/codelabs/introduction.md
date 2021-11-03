@@ -156,7 +156,7 @@ As mentioned on the previous topic, the UI component lives on the most external 
 
 When building an app using the Clean Framework classes, we try to separate as much as possible any code that is not related to pure UI logic and put that on the Presenter (to send and receive data from internal layers) and the Use Case (the normal location for business logic).
 
-UI is a class that extends from Stateless Widget. It will be very rare that a Stateful Widget is needed, since the state provided breaks the layer rules. Try to always think on ways the UI widgets without the need for Stateful Widgets.
+UI is a class that behaves like a Stateless Widget. It will be very rare that a Stateful Widget is needed, since the state usage for important data breaks the layer rules. Try to always think on ways the UI widgets without the need for Stateful Widgets.
 
 All UI implementations require at least one View Model to fetch data from the entities. This data comes from Use Case Outputs, which Presenters receive and translate as needed.
 
@@ -176,10 +176,11 @@ After a feature folder is created, any developer will probably try to start addi
 
 The simplest way to start working on a new feature is to first decide how many UI elements will be required to complete the implementation of the feature. For the sake of simplicity we are going to considering only one widget for the single screen of the new feature.
 
-Positive
-: While working on this codelab, we will be creating the code by using TDD so we can focus on stablishing the desired outcome before explaining the code that produces it.
+<aside class="positive">
+While working on this codelab, we will be creating the code by using TDD so we can focus on stablishing the desired outcome before explaining the code that produces it.
+</aside>
 
-### The feature requirement
+### The feature requirements
 
 We are going to code a very simple feature which can be explained in a few Gherkin scenarios:
 
@@ -208,8 +209,9 @@ And this is the design of the page, which we have as reference, but the scope of
 
 ![Add Machine Design](assets/feature_design.png)
 
-Negative
-: These are not the only scenarios that should exist, since we are not covering possible error scenarios, like when the user adds no input at all, or tries to write something that is not a number. We leave the gaps of behavior out to be covered as an additional exercise for the developers.
+<aside class="negative">
+These are not the only scenarios that should exist, since we are not covering possible error scenarios, like when the user adds no input at all, or tries to write something that is not a number. We leave the gaps of behavior out to be covered as an additional exercise for the developers.
+</aside>
 
 ### The UI component test
 
@@ -240,8 +242,9 @@ void main() {
 
 After creating the initial blank project (using 'flutter create' for instance), you can add this test under the suggested path (features/add_machine/presentation).
 
-Negative
-: Be aware that TDD rules should cause the developer to not write more code than what is needed in order to make the test pass, but recreating the actual process will be lengthy for this codelab. We are oversimplifying the process here.
+<aside class="negative">
+Be aware that TDD rules should cause the developer to not write more code than what is needed in order to make the test pass, but recreating the actual process will be lengthy for this codelab. We are oversimplifying the process here.
+</aside>
 
 Now, to explain the code:
 * Notice how we are using our own "tester" component, the uiTest function. This helper uses a Widget tester internally, but also helps on the setup of a MaterialApp with a proper provider context. The context allows the override of already defined providers if needed.
@@ -257,7 +260,7 @@ But in practice, we not only need that. UI is coupled to a valid ViewModel, whic
 #### lib/features/add_machine/presentation/add_machine_ui.dart
 ```dart
 class AddMachineUI extends UI<AddMachineViewModel> {
-  AddMachineUI({required PresenterCreator<AddMachineViewModel>? create})
+  AddMachineUI({required PresenterCreator<AddMachineViewModel> create})
       : super(create: create);
 
   @override
@@ -350,7 +353,203 @@ final addMachineUseCaseProvider = UseCaseProvider((_) => UseCaseFake());
 
 The Presenter, Output and UseCaseProvider are using as much fake data as possible to control the outcome of the test.
 
-Positive
-: We use to write any mocks and fakes in the test file that uses them, and try to not share them, since scenarios change over time and trying to refactor all the helpers and derivates can be a complex and time-consuming task. Projects benefit more from fast unit tests that can be changed easily over time. If this doesn't fit your company policy, feel free to adapt the implementation to your needs.
+<aside class="positive">
+We use to write any mocks and fakes in the test file that uses them, and try to not share them, since scenarios change over time and trying to refactor all the helpers and derivates can be a complex and time-consuming task. Projects benefit more from fast unit tests that can be changed easily over time. If this doesn't fit your company policy, feel free to adapt the implementation to your needs.
+</aside>
 
-That's it for this lesson, on the next one we will finish properly the Presenter implementation and this time work with a "dumb" Use Case with minimal business logic.
+### A complete Presenter
+
+Now lets evolve our current code so we can test the second scenario. This is the test for it:
+
+```dart
+/// Given I opened the Add Machine feature
+  /// When I write a number on the number field
+  /// And I press the "Add" button
+  /// Then the total shown will be the entered number.
+  uiTest(
+    'AddMachineUI unit test - Scenario 2',
+    context: ProvidersContext(),
+    builder: () => AddMachineUI(
+      create: (builder) => AddMachinePresenter(builder: builder),
+    ),
+    verify: (tester) async {
+      final numberField = find.byKey(Key('NumberField'));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, '15');
+
+      final addButton = find.byKey(Key('AddButton'));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+
+      final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
+          findsOneWidget);
+    },
+  );
+```
+
+<aside class="positive">
+There are opportunities to refactor the two tests, since we are repeating usages of finders, but it would be hard to understand the code on the codelab, we will have to constantly be looking at all the tests to understand the code. We leave that effort to you.
+</aside>
+
+To make this test work, we will need to first move the Presenter code into its corresponding place inside the production features code, complete the implementation, and make the test use a fake Use Case that publishes a single static Output.
+
+#### lib/features/add_machine/presentation/add_machine_presenter.dart
+```dart
+class AddMachinePresenter
+    extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
+  AddMachinePresenter({
+    required UseCaseProvider provider,
+    required PresenterBuilder<AddMachineViewModel> builder,
+  }) : super(provider: provider, builder: builder);
+
+  @override
+  AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
+      total: output.total.toString(),
+      onAddNumber: (number) => _onAddNumber(useCase, number));
+
+  void _onAddNumber(useCase, String number) {
+    useCase.setInput(AddMachineAddNumberInput(int.parse(number)));
+  }
+}
+```
+
+#### lib/features/add_machine/domain/add_machine_ui_output.dart
+```dart
+class AddMachineUIOutput extends Output {
+  final int total;
+
+  AddMachineUIOutput({required this.total});
+
+  @override
+  List<Object?> get props => [total];
+}
+```
+
+#### lib/features/add_machine/domain/add_machine_add_number_input.dart
+```dart
+class AddMachineAddNumberInput extends Input {
+  final int number;
+
+  AddMachineAddNumberInput(this.number);
+}
+```
+
+About the code so far:
+
+* The Presenter got rid of the "subscribe" override since we will depend now entirely on an AddMachineUIOutput object from a provided use case.
+
+* When sending messages to the use case, we can either do it through a custom method or by using an Input, as we are doing here. Using the input helps us to not have to declare a custom Use Case, to make the test pass with as little code as possible.
+
+* Both input and output classes now are inside the proper folder. UI components can import from domain files, and at this point, only the Presenter and test mocks create instances of them.
+
+We have to make fixes on the UI to add the new widgets:
+
+#### lib/features/add_machine/presentation/add_machine_ui.dart
+```dart
+class AddMachineUI extends UI<AddMachineViewModel> {
+  final UseCaseProvider provider;
+
+  AddMachineUI({required this.provider});
+
+  @override
+  Widget build(BuildContext context, AddMachineViewModel viewModel) {
+    final fieldController = TextEditingController();
+    return Scaffold(
+      body: Column(children: [
+        Text('Add Machine'),
+        Container(
+          key: Key('SumTotalWidget'),
+          child: Text(viewModel.total),
+        ),
+        TextFormField(
+          key: Key('NumberField'),
+          controller: fieldController,
+          decoration: const InputDecoration(
+              border: UnderlineInputBorder(), labelText: 'Write a number'),
+        ),
+        ElevatedButton(
+          key: Key('AddButton'),
+          onPressed: () => viewModel.onAddNumber(fieldController.value.text),
+          child: Text('Add'),
+        ),
+      ]),
+    );
+  }
+
+  @override
+  create(PresenterBuilder<AddMachineViewModel> builder) =>
+      AddMachinePresenter(provider: provider, builder: builder);
+}
+```
+
+* Notice that now the View Model has a callback field, which the UI calls to send the current number text to the Presenter. This is the goal of the code separation, we delegate the parsing and validation of the field value to the Presenter, which in turn can rely on the Use Case for complex validations.
+
+* We are intentionally creating a TextEditingController inside a build method. This is not what Flutter developers normally do, since any rebuild will override the current value, but for this simple feature this is enough. If this becomes an issue, then we suggest creating a wrapper widget around your field, with a state that handles the controller, just remember to avoid using the state for anything else.
+
+Now that we have a full presenter implementation, the test can stop relying on the test presenter we coded previously, and change the mocks, now we need to mock the Use Case, as follows:
+
+#### test/features/add_machine/presentation/add_machine_ui_test.dart
+```dart
+void main() {
+  uiTest(
+    'AddMachineUI unit test',
+    context: ProvidersContext(),
+    builder: () => AddMachineUI(
+      create: (builder) => AddMachinePresenter(builder: builder),
+    ),
+    verify: (tester) async {
+      expect(find.text('Add Machine'), findsOneWidget);
+
+      final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')),
+          findsOneWidget);
+    },
+  );
+}
+
+class AddMachinePresenter
+    extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
+  AddMachinePresenter({
+    required PresenterBuilder<AddMachineViewModel> builder,
+  }) : super(provider: addMachineUseCaseProvider, builder: builder);
+
+  @override
+  AddMachineViewModel createViewModel(UseCase<Entity> useCase, output) =>
+      AddMachineViewModel(total: output.total.toString());
+
+  AddMachineUIOutput subscribe(_) => AddMachineUIOutput(total: 0);
+}
+
+class AddMachineUIOutput extends Output {
+  final int total;
+
+  AddMachineUIOutput({required this.total});
+
+  @override
+  List<Object?> get props => [total];
+}
+
+final addMachineUseCaseProvider = UseCaseProvider((_) => UseCaseFake());
+
+```
+
+<aside class="positive">
+Remember that as part of the TDD methodology, you will be constantly refactoring and updating the tests the more production code you complete, at this point you can see that the UseCaseFake is basically a minimal functioning Use Case. This is done intentionally to exemplify how fakes can be used to avoid writing production code before it's actually needed. For a normal real-case project, this is probably a step you can skip.
+</aside>
+
+Hopefuly by now you can appreciate the capacity of the Clean Framework components to help developers work with the UI layer without the need to first finish the Domain Layer code. You can even work in paralel with another developer that is doing it, while also having a high coverage on your code.
+
+It has to be noted that this is very helpful to create MVP builds and have a working prototype that can be reviewed by stakeholders and QA teams, saving the development team a lot of headaches, since the feedback can be received sooner.
+
+
+## The Domain Layer: Use Case and the interactions with Outputs and Inputs
+
+Duration: 00:10:00
+
