@@ -832,4 +832,130 @@ After these changes, all 3 tests pass as normal, very easy refactor, right?
 
 Congratulations if you made it until this point, on the next section we will plug-in a Gateway,
 
+## Adapter Layer: Gateways
+
+We already learned part of this layer componets with the Presenter and View Model. The only thing left to learn here are the Gateways, which handle Outputs used as requests, and create Inputs to be processed by the Use Case.
+
+![Adapter Layer Components](assets/adapter_layer.png)
+
+Let's look at a simple example first:
+
+```dart
+class MyGateway extends Gateway<MyOutput,
+    MyRequest, MyResponse, MyInput> {
+  LastLoginDateGateway({ProvidersContext? context, UseCaseProvider? provider})
+      : super(
+            context: context ?? providersContext,
+            provider: provider ?? lastLoginUseCaseProvider);
+
+  @override
+  MyRequest buildRequest(MyOutput output) {
+    return MyRequest(data: output.data);
+  }
+
+  @override
+  MyInput onSuccess(covariant FirebaseSuccessResponse response) {
+    return MyInput(data: response.data);
+  }
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput();
+  }
+}
+
+final myGatewayProvider = GatewayProvider<MyGateway>(
+  (_) => MyGateway(),
+);
+```
+
+In a very similar role to a Presenter, the Gateways are translators, take Outputs and create Requests, passing the data, and when the data is received as a Response, then translate it into a valid Input.
+
+This is the way we create a bridge between very specific libraries and dependencies and the agnostic Domain layer. Gateways exist on a 1 to 1 relationship for every type of Output that is lauched as part of a request from the Use Case.
+
+Since they are created at the start of the execution through a Provider, keep in mind that a *loader* of providers help you ensure an instance of the Gateway exists before attempting to create requests.
+
+The implementation makes the intent very clear: when the Output is launched, it triggers the **onSuccess** method to create a Request, which in turns gets launched to any External Interface that is listening to those types of requests.
+
+When the Response is launched by the External Interface, it could come back as a succesful or failed response. On each case, the Gateway generates the proper Input, which is pushed into the Use Case immediately.
+
+These Gateways create a circuit that is thread-blocking. For when you want to create a request that doesn't require an immediate response, you can use another type of Gateway:
+
+```dart
+class MyGateway extends WatcherGateway<MyOutput,
+    MyRequest, MyResponse, MyInput> {
+      // rest of the code is the same
+    }
+```
+
+When extending the WatcherGateway, the External Interface connected to this Gateway will be able to send a stream of Responses. Each time a Response is received, the **onSuccess** method will be invoked, so a new Input gets created.
+
+The Use Case in this case will need to setup a proper input filter to allow the Inputs to change the Entity multiple times.
+
+For WatcherGateways, the **onFailure** method happens when the subscription could not be set for some reason. For example, for Firebase style dependencies, it could happen when attempting to create the connection for the stream of data.
+
+### Testing and Coding the Gateway
+
+TBD
+
+## External Interface Layer
+
+Duration: 00:10:00
+
+The final piece of the Framework is the most flexible one, since it work as a wrapper for any external dependency code from libraries and modules. If coded properly, they will protect you from dependencies migrations and version upgrades.
+
+![External Interface Components](assets/interface_layer.png)
+
+As usual, let's study the example first:
+
+```dart
+class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
+  TestInterface(GatewayProvider provider)
+      : super([() => provider.getGateway(context)]);
+
+  @override
+  void handleRequest() {
+    // For normal Gateways
+    on<FutureTestRequest>(
+      (request, send) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        send(Right(TestResponse('success')));
+      },
+    );
+
+    // For WatcherGateways
+    on<StreamTestRequest>(
+      (request, send) async {
+        final stream = Stream.periodic(
+          Duration(milliseconds: 100),
+          (count) => count,
+        );
+
+        final subscription = stream.listen(
+          (count) => send(Right(TestResponse(count.toString()))),
+        );
+
+        await Future.delayed(Duration(milliseconds: 500));
+        subscription.cancel();
+      },
+    );
+  }
+}
+```
+
+First let's understand the constructor. It requires a list of Gateway references, which are normally retrieved from providers. During tests, you can add the object reference direcly.
+
+When the External Interface gets created by its Provider, this connection will attach the object to the mechanism that the Gateway uses to send Requests.
+
+The **handleRequest** method will have one or multiple calls of the **on** method, each one associated to a Request Type. These types must extend from the Response type specified on the generics class declaration.
+
+Each of the **on** calls will send back an *Either* instance, where the *Right* value is a **SuccessResponse**, and the *Left* is a **FailureResponse**.
+
+External Interfaces are meant to listen to groups of Requests that use the same dependency. Clean Framework has default implementations of external interfaces for Firebase, GraphQL and REST services, ready to be used in any application, you just need to create the providers using them.
+
+### Testing and Coding the External Interface
+
+TBD
+
+
 

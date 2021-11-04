@@ -658,6 +658,105 @@ final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; AddMachineUseCase())
 
       </google-codelab-step>
     
+      <google-codelab-step label="Adapter Layer: Gateways" duration="0">
+        <p>We already learned part of this layer componets with the Presenter and View Model. The only thing left to learn here are the Gateways, which handle Outputs used as requests, and create Inputs to be processed by the Use Case.</p>
+<p class="image-container"><img alt="Adapter Layer Components" src="img/2072d7c7b0cca78e.png"></p>
+<p>Let&#39;s look at a simple example first:</p>
+<pre><code language="language-dart" class="language-dart">class MyGateway extends Gateway&lt;MyOutput,
+    MyRequest, MyResponse, MyInput&gt; {
+  LastLoginDateGateway({ProvidersContext? context, UseCaseProvider? provider})
+      : super(
+            context: context ?? providersContext,
+            provider: provider ?? lastLoginUseCaseProvider);
+
+  @override
+  MyRequest buildRequest(MyOutput output) {
+    return MyRequest(data: output.data);
+  }
+
+  @override
+  MyInput onSuccess(covariant FirebaseSuccessResponse response) {
+    return MyInput(data: response.data);
+  }
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput();
+  }
+}
+
+final myGatewayProvider = GatewayProvider&lt;MyGateway&gt;(
+  (_) =&gt; MyGateway(),
+);
+</code></pre>
+<p>In a very similar role to a Presenter, the Gateways are translators, take Outputs and create Requests, passing the data, and when the data is received as a Response, then translate it into a valid Input.</p>
+<p>This is the way we create a bridge between very specific libraries and dependencies and the agnostic Domain layer. Gateways exist on a 1 to 1 relationship for every type of Output that is lauched as part of a request from the Use Case.</p>
+<p>Since they are created at the start of the execution through a Provider, keep in mind that a <em>loader</em> of providers help you ensure an instance of the Gateway exists before attempting to create requests.</p>
+<p>The implementation makes the intent very clear: when the Output is launched, it triggers the <strong>onSuccess</strong> method to create a Request, which in turns gets launched to any External Interface that is listening to those types of requests.</p>
+<p>When the Response is launched by the External Interface, it could come back as a succesful or failed response. On each case, the Gateway generates the proper Input, which is pushed into the Use Case immediately.</p>
+<p>These Gateways create a circuit that is thread-blocking. For when you want to create a request that doesn&#39;t require an immediate response, you can use another type of Gateway:</p>
+<pre><code language="language-dart" class="language-dart">class MyGateway extends WatcherGateway&lt;MyOutput,
+    MyRequest, MyResponse, MyInput&gt; {
+      // rest of the code is the same
+    }
+</code></pre>
+<p>When extending the WatcherGateway, the External Interface connected to this Gateway will be able to send a stream of Responses. Each time a Response is received, the <strong>onSuccess</strong> method will be invoked, so a new Input gets created.</p>
+<p>The Use Case in this case will need to setup a proper input filter to allow the Inputs to change the Entity multiple times.</p>
+<p>For WatcherGateways, the <strong>onFailure</strong> method happens when the subscription could not be set for some reason. For example, for Firebase style dependencies, it could happen when attempting to create the connection for the stream of data.</p>
+<h2 is-upgraded>Testing and Coding the Gateway</h2>
+<p>TBD</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="External Interface Layer" duration="10">
+        <p>The final piece of the Framework is the most flexible one, since it work as a wrapper for any external dependency code from libraries and modules. If coded properly, they will protect you from dependencies migrations and version upgrades.</p>
+<p class="image-container"><img alt="External Interface Components" src="img/a79555228fb3f4c6.png"></p>
+<p>As usual, let&#39;s study the example first:</p>
+<pre><code language="language-dart" class="language-dart">class TestInterface extends ExternalInterface&lt;TestRequest, TestResponse&gt; {
+  TestInterface(GatewayProvider provider)
+      : super([() =&gt; provider.getGateway(context)]);
+
+  @override
+  void handleRequest() {
+    // For normal Gateways
+    on&lt;FutureTestRequest&gt;(
+      (request, send) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        send(Right(TestResponse(&#39;success&#39;)));
+      },
+    );
+
+    // For WatcherGateways
+    on&lt;StreamTestRequest&gt;(
+      (request, send) async {
+        final stream = Stream.periodic(
+          Duration(milliseconds: 100),
+          (count) =&gt; count,
+        );
+
+        final subscription = stream.listen(
+          (count) =&gt; send(Right(TestResponse(count.toString()))),
+        );
+
+        await Future.delayed(Duration(milliseconds: 500));
+        subscription.cancel();
+      },
+    );
+  }
+}
+</code></pre>
+<p>First let&#39;s understand the constructor. It requires a list of Gateway references, which are normally retrieved from providers. During tests, you can add the object reference direcly.</p>
+<p>When the External Interface gets created by its Provider, this connection will attach the object to the mechanism that the Gateway uses to send Requests.</p>
+<p>The <strong>handleRequest</strong> method will have one or multiple calls of the <strong>on</strong> method, each one associated to a Request Type. These types must extend from the Response type specified on the generics class declaration.</p>
+<p>Each of the <strong>on</strong> calls will send back an <em>Either</em> instance, where the <em>Right</em> value is a <strong>SuccessResponse</strong>, and the <em>Left</em> is a <strong>FailureResponse</strong>.</p>
+<p>External Interfaces are meant to listen to groups of Requests that use the same dependency. Clean Framework has default implementations of external interfaces for Firebase, GraphQL and REST services, ready to be used in any application, you just need to create the providers using them.</p>
+<h2 is-upgraded>Testing and Coding the External Interface</h2>
+<p>TBD</p>
+
+
+      </google-codelab-step>
+    
   </google-codelab>
 
   <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
