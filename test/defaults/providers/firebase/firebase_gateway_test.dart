@@ -27,7 +27,9 @@ void main() {
     var gateway = TestGateway(context, provider);
 
     gateway.transport = (request) async {
-      return Left(NoContentFirebaseFailureResponse());
+      return Left(
+        FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      );
     };
 
     await useCase.doFakeRequest(TestOutput('123'));

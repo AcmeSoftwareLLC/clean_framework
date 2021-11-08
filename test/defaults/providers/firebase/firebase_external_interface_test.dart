@@ -129,7 +129,10 @@ void main() {
     final result = await gateWay
         .transport(FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
     expect(result.isLeft, isTrue);
-    expect(result.left, NoContentFirebaseFailureResponse());
+    expect(
+      result.left,
+      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+    );
 
     firebaseClient.dispose();
   });
@@ -145,7 +148,10 @@ void main() {
     final result =
         await gateWay.transport(FirebaseReadAllRequest(path: 'fake path'));
     expect(result.isLeft, isTrue);
-    expect(result.left, NoContentFirebaseFailureResponse());
+    expect(
+      result.left,
+      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+    );
 
     firebaseClient.dispose();
   });
@@ -160,7 +166,10 @@ void main() {
     final result = await gateWay
         .transport(FirebaseWriteRequest(path: 'fake path', id: 'foo'));
     expect(result.isLeft, isTrue);
-    expect(result.left, NoContentFirebaseFailureResponse());
+    expect(
+      result.left,
+      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+    );
 
     firebaseClient.dispose();
   });
