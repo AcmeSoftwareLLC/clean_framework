@@ -6,7 +6,7 @@ import 'gateway.dart';
 
 class GatewayProvider<G extends Gateway> implements OverridableProvider<G> {
   final Provider<G> _provider;
-  final G Function(ProviderRefBase) create;
+  final G Function(Ref) create;
 
   GatewayProvider(this.create) : _provider = Provider<G>(create);
 

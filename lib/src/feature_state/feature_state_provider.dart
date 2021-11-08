@@ -17,7 +17,7 @@ import 'feature.dart';
 /// the mapper and obtain the states that way.
 class FeatureStateProvider<S, F extends FeatureMapper<S>> {
   final StateNotifierProvider<F, Map<Feature, S>> _provider;
-  final F Function(ProviderRefBase) create;
+  final F Function(Ref) create;
 
   FeatureStateProvider(this.create)
       : _provider = StateNotifierProvider<F, Map<Feature, S>>(create);

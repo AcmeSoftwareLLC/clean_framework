@@ -55,9 +55,7 @@ class _FeatureWidgetState<S> extends ConsumerState<FeatureWidget<S>> {
     final currentState = mapper.getStateFor(widget.feature);
 
     //TODO THIS SHOULDN'T BE NEEDED, FIGURE OUT WHY THE REBUILD DOESN'T HAPPEN
-    ref.listen(widget.provider(), (map) {
-      setState(() {});
-    });
+    ref.listen(widget.provider(), (_, __) => setState(() {}));
 
     return widget.builder(context, currentState);
   }
