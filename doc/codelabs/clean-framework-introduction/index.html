@@ -122,7 +122,7 @@ void loadProviders() {
 <p class="image-container"><img alt="The UI Layer" src="img/785ff89ecec6ef69.png"></p>
 <p>As mentioned on the previous topic, the UI component lives on the most external layer of the architecture. It means that it is related to specific libraries that conform the frontend of the application, in our case, the Flutter widgets libraries.</p>
 <p>When building an app using the Clean Framework classes, we try to separate as much as possible any code that is not related to pure UI logic and put that on the Presenter (to send and receive data from internal layers) and the Use Case (the normal location for business logic).</p>
-<p>UI is a class that extends from Stateless Widget. It will be very rare that a Stateful Widget is needed, since the state provided breaks the layer rules. Try to always think on ways the UI widgets without the need for Stateful Widgets.</p>
+<p>UI is a class that behaves like a Stateless Widget. It will be very rare that a Stateful Widget is needed, since the state usage for important data breaks the layer rules. Try to always think on ways the UI widgets without the need for Stateful Widgets.</p>
 <p>All UI implementations require at least one View Model to fetch data from the entities. This data comes from Use Case Outputs, which Presenters receive and translate as needed.</p>
 <p>The feature you code can be expresed into multiple screens presented to the user, and even include small widgets that are inserted in other screens. These are your entry points to the feature, and as such, will require for the UI to listen to the state changes of the feature&#39;s Use Case through its Outputs. In other words, Use Cases can have multiple Outputs, that can have relationships with many View Models through the Presenters.</p>
 <p>View Models are immutable classes, almost pure PODO&#39;s (Plain Old Dart Objects). We try to make them as lean as possible, because its only responsibility is the passing of digested data fields into the UI object.</p>
@@ -132,8 +132,9 @@ void loadProviders() {
 <h2 is-upgraded>Testing and Coding the UI Layer</h2>
 <p>After a feature folder is created, any developer will probably try to start adding Flutter Widgets to build up the code requirements. This framework is flexible enough to allow you to start coding components that don&#39;t require to have any access or even knowledge of any possible dependency (databases, services, cache, etc), because those concerns belong to other layers.</p>
 <p>The simplest way to start working on a new feature is to first decide how many UI elements will be required to complete the implementation of the feature. For the sake of simplicity we are going to considering only one widget for the single screen of the new feature.</p>
-<p>Positive : While working on this codelab, we will be creating the code by using TDD so we can focus on stablishing the desired outcome before explaining the code that produces it.</p>
-<h2 is-upgraded>The feature requirement</h2>
+<aside class="special"><p> While working on this codelab, we will be creating the code by using TDD so we can focus on stablishing the desired outcome before explaining the code that produces it. </p>
+</aside>
+<h2 is-upgraded>The feature requirements</h2>
 <p>We are going to code a very simple feature which can be explained in a few Gherkin scenarios:</p>
 <pre><code language="language-gherkin" class="language-gherkin">Given I have navigated to the Add Machine feature
 Then I will see the Add Machine screen
@@ -154,7 +155,8 @@ Then the total shown is 0.
 </code></pre>
 <p>And this is the design of the page, which we have as reference, but the scope of the codelab won&#39;t be to focus on completing the code to reflect exactly the appearance, it will be up to you to finish the implementation.</p>
 <p class="image-container"><img alt="Add Machine Design" src="img/c67ac4d94ed214f1.png"></p>
-<p>Negative : These are not the only scenarios that should exist, since we are not covering possible error scenarios, like when the user adds no input at all, or tries to write something that is not a number. We leave the gaps of behavior out to be covered as an additional exercise for the developers.</p>
+<aside class="warning"><p> These are not the only scenarios that should exist, since we are not covering possible error scenarios, like when the user adds no input at all, or tries to write something that is not a number. We leave the gaps of behavior out to be covered as an additional exercise for the developers. </p>
+</aside>
 <h2 is-upgraded>The UI component test</h2>
 <p>UI components are extensions of Flutter Widgets, so this means the we have to use a Widget Tester. Our goal is to confirm that the data is retrieved correctly from the view model.</p>
 <p>This is how our basic test looks like:</p>
@@ -178,7 +180,8 @@ Then the total shown is 0.
 }
 </code></pre>
 <p>After creating the initial blank project (using ‘flutter create&#39; for instance), you can add this test under the suggested path (features/add_machine/presentation).</p>
-<p>Negative : Be aware that TDD rules should cause the developer to not write more code than what is needed in order to make the test pass, but recreating the actual process will be lengthy for this codelab. We are oversimplifying the process here.</p>
+<aside class="warning"><p> Be aware that TDD rules should cause the developer to not write more code than what is needed in order to make the test pass, but recreating the actual process will be lengthy for this codelab. We are oversimplifying the process here. </p>
+</aside>
 <p>Now, to explain the code:</p>
 <ul>
 <li>Notice how we are using our own &#34;tester&#34; component, the uiTest function. This helper uses a Widget tester internally, but also helps on the setup of a MaterialApp with a proper provider context. The context allows the override of already defined providers if needed.</li>
@@ -189,7 +192,7 @@ Then the total shown is 0.
 <p>But in practice, we not only need that. UI is coupled to a valid ViewModel, which gets translated from a specific Output inside a Presenter. So lets create the minimal code on these classes to make the test pass:</p>
 <h3 is-upgraded>lib/features/add_machine/presentation/add_machine_ui.dart</h3>
 <pre><code language="language-dart" class="language-dart">class AddMachineUI extends UI&lt;AddMachineViewModel&gt; {
-  AddMachineUI({required PresenterCreator&lt;AddMachineViewModel&gt;? create})
+  AddMachineUI({required PresenterCreator&lt;AddMachineViewModel&gt; create})
       : super(create: create);
 
   @override
@@ -272,8 +275,484 @@ final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; UseCaseFake());
 
 </code></pre>
 <p>The Presenter, Output and UseCaseProvider are using as much fake data as possible to control the outcome of the test.</p>
-<p>Positive : We use to write any mocks and fakes in the test file that uses them, and try to not share them, since scenarios change over time and trying to refactor all the helpers and derivates can be a complex and time-consuming task. Projects benefit more from fast unit tests that can be changed easily over time. If this doesn&#39;t fit your company policy, feel free to adapt the implementation to your needs.</p>
-<p>That&#39;s it for this lesson, on the next one we will finish properly the Presenter implementation and this time work with a &#34;dumb&#34; Use Case with minimal business logic.</p>
+<aside class="special"><p> We use to write any mocks and fakes in the test file that uses them, and try to not share them, since scenarios change over time and trying to refactor all the helpers and derivates can be a complex and time-consuming task. Projects benefit more from fast unit tests that can be changed easily over time. If this doesn&#39;t fit your company policy, feel free to adapt the implementation to your needs. </p>
+</aside>
+<h2 is-upgraded>A complete Presenter</h2>
+<p>Now lets evolve our current code so we can test the second scenario. This is the test for it:</p>
+<pre><code language="language-dart" class="language-dart">/// Given I opened the Add Machine feature
+  /// When I write a number on the number field
+  /// And I press the &#34;Add&#34; button
+  /// Then the total shown will be the entered number.
+  uiTest(
+    &#39;AddMachineUI unit test - Scenario 2&#39;,
+    context: ProvidersContext(),
+    builder: () =&gt; AddMachineUI(
+      create: (builder) =&gt; AddMachinePresenter(builder: builder),
+    ),
+    verify: (tester) async {
+      final numberField = find.byKey(Key(&#39;NumberField&#39;));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, &#39;15&#39;);
+
+      final addButton = find.byKey(Key(&#39;AddButton&#39;));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+
+      final sumTotalWidget = find.byKey(Key(&#39;SumTotalWidget&#39;));
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;15&#39;)),
+          findsOneWidget);
+    },
+  );
+</code></pre>
+<aside class="special"><p> There are opportunities to refactor the two tests, since we are repeating usages of finders, but it would be hard to understand the code on the codelab, we will have to constantly be looking at all the tests to understand the code. We leave that effort to you. </p>
+</aside>
+<p>To make this test work, we will need to first move the Presenter code into its corresponding place inside the production features code, complete the implementation, and make the test use a fake Use Case that publishes a single static Output.</p>
+<h3 is-upgraded>lib/features/add_machine/presentation/add_machine_presenter.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachinePresenter
+    extends Presenter&lt;AddMachineViewModel, AddMachineUIOutput, UseCase&gt; {
+  AddMachinePresenter({
+    required UseCaseProvider provider,
+    required PresenterBuilder&lt;AddMachineViewModel&gt; builder,
+  }) : super(provider: provider, builder: builder);
+
+  @override
+  AddMachineViewModel createViewModel(useCase, output) =&gt; AddMachineViewModel(
+      total: output.total.toString(),
+      onAddNumber: (number) =&gt; _onAddNumber(useCase, number));
+
+  void _onAddNumber(useCase, String number) {
+    useCase.setInput&lt;AddMachineAddNumberInput&gt;(
+        AddMachineAddNumberInput(int.parse(number)));
+  }
+}
+</code></pre>
+<h3 is-upgraded>lib/features/add_machine/presentation/add_machine_view_model.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineViewModel extends ViewModel {
+  final String total;
+  final ValueChanged&lt;String&gt; onAddNumber;
+
+  AddMachineViewModel({required this.total, required this.onAddNumber});
+
+  @override
+  List&lt;Object?&gt; get props =&gt; [total];
+}
+</code></pre>
+<h3 is-upgraded>lib/features/add_machine/domain/add_machine_ui_output.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineUIOutput extends Output {
+  final int total;
+
+  AddMachineUIOutput({required this.total});
+
+  @override
+  List&lt;Object?&gt; get props =&gt; [total];
+}
+</code></pre>
+<h3 is-upgraded>lib/features/add_machine/domain/add_machine_add_number_input.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineAddNumberInput extends Input {
+  final int number;
+
+  AddMachineAddNumberInput(this.number);
+}
+
+class AddMachineViewModel extends ViewModel {
+  final String total;
+  final ValueChanged&lt;String&gt; onAddNumber;
+
+  AddMachineViewModel({required this.total, required this.onAddNumber});
+
+  @override
+  List&lt;Object?&gt; get props =&gt; [total];
+}
+</code></pre>
+<p>About the code so far:</p>
+<ul>
+<li>The Presenter got rid of the &#34;subscribe&#34; override since we will depend now entirely on an AddMachineUIOutput object from a provided use case.</li>
+<li>When sending messages to the use case, we can either do it through a custom method or by using an Input, as we are doing here. Using the input helps us to not have to declare a custom Use Case, to make the test pass with as little code as possible.</li>
+<li>The View Model has a new attribute, the callback that we will use to link the user action on the UI with an Input that is sent to the Use Case. <strong><em>Notice how callbacks are not considered part of the fieds used for equality comparisons.</em></strong></li>
+<li>Both input and output classes now are inside the proper folder. UI components can import from domain files, and at this point, only the Presenter and test mocks create instances of them.</li>
+</ul>
+<p>We have to make fixes on the UI to add the new widgets:</p>
+<h3 is-upgraded>lib/features/add_machine/presentation/add_machine_ui.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineUI extends UI&lt;AddMachineViewModel&gt; {
+  final UseCaseProvider provider;
+
+  AddMachineUI({required this.provider});
+
+  @override
+  Widget build(BuildContext context, AddMachineViewModel viewModel) {
+    final fieldController = TextEditingController();
+    return Scaffold(
+      body: Column(children: [
+        Text(&#39;Add Machine&#39;),
+        Container(
+          key: Key(&#39;SumTotalWidget&#39;),
+          child: Text(viewModel.total),
+        ),
+        TextFormField(
+          key: Key(&#39;NumberField&#39;),
+          controller: fieldController,
+          decoration: const InputDecoration(
+              border: UnderlineInputBorder(), labelText: &#39;Write a number&#39;),
+        ),
+        ElevatedButton(
+          key: Key(&#39;AddButton&#39;),
+          onPressed: () =&gt; viewModel.onAddNumber(fieldController.value.text),
+          child: Text(&#39;Add&#39;),
+        ),
+      ]),
+    );
+  }
+
+  @override
+  create(PresenterBuilder&lt;AddMachineViewModel&gt; builder) =&gt;
+      AddMachinePresenter(provider: provider, builder: builder);
+}
+</code></pre>
+<ul>
+<li>Notice that now the View Model has a callback field, which the UI calls to send the current number text to the Presenter. This is the goal of the code separation, we delegate the parsing and validation of the field value to the Presenter, which in turn can rely on the Use Case for complex validations.</li>
+<li>We are intentionally creating a TextEditingController inside a build method. This is not what Flutter developers normally do, since any rebuild will override the current value, but for this simple feature this is enough. If this becomes an issue, then we suggest creating a wrapper widget around your field, with a state that handles the controller, just remember to avoid using the state for anything else.</li>
+</ul>
+<p>Now that we have a full presenter implementation, the test can stop relying on the test presenter we coded previously, and change the mocks, now we need to mock the Use Case, as follows:</p>
+<h3 is-upgraded>test/features/add_machine/presentation/add_machine_ui_test.dart</h3>
+<pre><code language="language-dart" class="language-dart">void main() {
+  uiTest(
+    &#39;AddMachineUI unit test - Scenario 2&#39;,
+    context: ProvidersContext(),
+    builder: () =&gt; AddMachineUI(provider: addMachineUseCaseProvider),
+    verify: (tester) async {
+      final numberField = find.byKey(Key(&#39;NumberField&#39;));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, &#39;15&#39;);
+
+      final addButton = find.byKey(Key(&#39;AddButton&#39;));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      final sumTotalWidget = find.byKey(Key(&#39;SumTotalWidget&#39;));
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;15&#39;)),
+          findsOneWidget);
+    },
+  );
+}
+
+final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; StaticUseCase([
+      AddMachineUIOutput(total: 0),
+      AddMachineUIOutput(total: 15),
+    ]));
+    
+class StaticUseCase extends UseCase&lt;EmptyEntity&gt; {
+  static int _index = 0;
+  final List&lt;Output&gt; outputs;
+
+  StaticUseCase(this.outputs) : super(entity: EmptyEntity());
+
+  @override
+  void setInput&lt;I extends Input&gt;(I input) {
+    _index++;
+    entity = EmptyEntity();
+  }
+
+  @override
+  O getOutput&lt;O extends Output&gt;() {
+    return outputs[_index] as O;
+  }
+}
+
+class EmptyEntity extends Entity {
+  @override
+  List&lt;Object?&gt; get props =&gt; [];
+}
+
+</code></pre>
+<aside class="special"><p> Remember that as part of the TDD methodology, you will be constantly refactoring and updating the tests the more production code you complete, at this point you can see that the UseCaseFake is basically a minimal functioning Use Case. This is done intentionally to exemplify how fakes can be used to avoid writing production code before it&#39;s actually needed. For a normal real-case project, this is probably a step you can skip. </p>
+</aside>
+<p>Hopefuly by now you can appreciate the capacity of the Clean Framework components to help developers work with the UI layer without the need to first finish the Domain Layer code. You can even work in paralel with another developer that is doing it, while also having a high coverage on your code.</p>
+<p>It has to be noted that this is very helpful to create MVP builds and have a working prototype that can be reviewed by stakeholders and QA teams, saving the development team a lot of headaches, since the feedback can be received sooner.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The Domain Layer: Entity, Use Case and the interactions with Outputs and Inputs" duration="10">
+        <p>Congratulations, at this point we are ready to start exploring the Domain Layer, the heart of anything important for the project.</p>
+<p class="image-container"><img alt="Domain Layer Components" src="img/114426cedf96e3a2.png"></p>
+<h2 is-upgraded>Entity</h2>
+<p>Let&#39;s start by understanding the Entities. If you are familiar with Domain Driven Design (DDD), you already know how important are the Domain components to an app. When the design is robust, there is a zero chance that the state of the app failes due to validation or null errors. Domain models have strict rules so it is very hard to create instances with inconsistent states.</p>
+<p>The sum of all your Entities is the state of the whole feature. This state will be kept alive as long as its Use Case exists. Since we create it when the app is executed (using a provider), this reference is alive until the app is removed from memory.</p>
+<p>So it is important to understand that this state needs initial values and rules governing how those values chage. When writing an Entity, try to follow these rules:</p>
+<ol type="1">
+<li>Entities don&#39;t depend on other files or libraries except for the clean framework import. This is the most central layer, so it should not need anything, not even from other features. Shared enums are even problematic, since feature requirements could change, forcing you to refactor the affected features.</li>
+<li>Attributes should be final and have initial values on construction. Some of them could be required values, inserted at the time the UseCase is created as well (explained in the following section).</li>
+<li>Use proper data types instead of relaying on parsers. For example, use DateTime instead of a String for a date attribute. You can parse the date in Presenters and Gateways.</li>
+<li>It is OK to create a hierarchy of entities, but keep a single ancestor that the Use Case can create easily. Composition is much better than inheritance. Functional constructs like Either and Unions are useful here as well.</li>
+<li>Add generators like <strong>copyWith</strong> or <strong>merge</strong> to create instances based on current values. This simplifies the Use Case code.</li>
+</ol>
+<p>It is OK to add methods to validate the consistency of the data. For example:</p>
+<pre><code language="language-dart" class="language-dart">class AccountEntity extends Entity{
+  final bool isRegistered;
+  final UserNameEntity userName;
+
+  AccountEntity({required this.isRegistered, this.userName});
+}
+
+class UserNameEntity extends Entity{
+  final String firstName;
+  final String lastName;
+
+  UserNameEntity({required this.firstName, this.lastName}) : assert(firstName.isNotEmpty() &amp;&amp; lastName.isNotEmpty);
+
+  String get fullName =&gt; firstName + &#39; &#39; + lastName;
+}
+</code></pre>
+<p>See how it is virtually impossible to create an inconsistent user name with null or empty first and last name, and we have a dynamic getter that builds the full name.</p>
+<p>This has two main advantages:</p>
+<ol type="1">
+<li>Developers will not write wrong code around this entity fields, since they have syntax errors or exceptions that are easy to catch while writing tests and coding.</li>
+<li>The custom logic to compose fields is delegated to the Entity and is not floating around next other business logic from the Use Case, making the Use Case code easier to read.</li>
+</ol>
+<p>Try to delegate similar helper methods to the Entity, where they only rely on the data, such as form validations, math calculations, derivatives, etc.</p>
+<aside class="warning"><p> Be careful to not add logic that doesn&#39;t belong to the Entities, or you will be bleeding behavior that should belong to the Use Case. Remember the layers rules, and think if your method is still valuable if the rest of the layers change or are even removed. </p>
+</aside>
+<h2 is-upgraded>Use Case</h2>
+<p>Use Cases live outside the Entities, on its own layer. Use Cases will create and manipulate Entities internally, while transfering data from Inputs and into Outputs. Lets look at one simple example to understand the class:</p>
+<pre><code language="language-dart" class="language-dart">class MyUseCase extends UseCase&lt;MyEntity&gt; {
+  MyUseCase()
+      : super(entity: MyEntity(), outputFilters: {
+          MyUIOutput: (MyEntity e) =&gt; MyUIOutput(data: e.data),
+        }, inputFilters: {
+          MyInput: (MyInput i, MyEntity e) =&gt; e.copyWith(data: i.data),
+        });
+}
+</code></pre>
+<p>A typical Use Case will need to create an Entity. The output filters attribute lets you set up a list of possible &#34;channels&#34; that Presenters can use to subscribe to.</p>
+<p>Here, MyUseCase has only one output, so the Presenter only needs to listen to MyUIOutput instances, which will be generated when the Presenter is created and any time the Entity <strong>data</strong> field changes.</p>
+<p>Notice that the filter is a Map of the type of the Output and a function that receives the current Entity instance. It is intended to do it this way so its easier to isolate the code and help the developer think on simple terms and avoid having complex method calls.</p>
+<p>Outputs are meant to only hold a subset of the data available in the Entity, and the way the Presenter and UseCase communication works internally, a new Output is <strong>only</strong> generated if the fields used for its construction chage. In this example, the Use Case can alter the Entity, but if the <strong>data</strong> field remains the same, no new Output is created.</p>
+<p>Input filters work in a similar way. If a Gateway is attached to a Use Case, it produces a specific type of Input. This class allows a Gateway to send a MyInput instance, which will be used by the input filter anonymous method to create a new version of the Entity based on the data received.</p>
+<p>So this means that a MyInput instance is received, it will trigger a Entity change on the data field, and thus generate a new MyUIOuput.</p>
+<p>Entities can be changed at any time in other methods inside the Use Case, as in here:</p>
+<pre><code language="language-dart" class="language-dart">  // Method inside the Use Case
+
+  void updateAmount(double newAmount){
+    if (entity.isAmountValid(newAmount))
+      entity = entity.merge(amount: newAmount);
+    else
+      entity = entity.merge(error: Errors.invalidAmount);
+  }
+</code></pre>
+<p>The <strong>entity</strong> attribute is available in any UseCase. Each time we need to change at least one field, we need to replace the whole instance. If this is not done, the Use Case will not generate any Output, since it behaves like a ValueNotifier</p>
+<h2 is-upgraded>Outputs for Presenters and Gateways</h2>
+<p>Use Cases have no knowledge of the world of the ouside layers. They only create Outputs that can be listened by anything. That is why you have to keep the implementation independant from any assumption about the data.</p>
+<p>For example, an Output can contain data that will be stored in a database, visualized on a screen, or sent to a service. Only the external layers will determine where the data goes and how it is used.</p>
+<p>There are two ways the Use Case sends out Outputs. We already reviewed the output filters, which generate them after the entity changes.</p>
+<p>But to create outputs on demand and wait for some kind of response from the outside layers, we use the following:</p>
+<pre><code language="language-dart" class="language-dart">  void fetchUserData(){
+    await request(FetchUserDataOutput(), onSuccess: (UserDataInput input) {
+      return entity.merge(
+          name: input.name);
+    }, onFailure: (_) {
+      return entity.merge(error: Error.dataFetchError);
+    });
+  }
+</code></pre>
+<p>The request method creates a Future where the instance of <strong>FetchUserDataOuput</strong> is published. If no one is listening to this specific type of output, an error is thrown. During development you might attach dummy Gateways to help you complete the Use Case behavior without the need to write any outside code.</p>
+<p>The request has two callbacks, for success and failures respectively.</p>
+<aside class="special"><p> Failures are similar to Flutter Errors, the difference is that Failures are a controlled way to catch problems caused in the Clean Framework components. Its up to the developers to create custom instances of the failures to set up analytics calls or log the issues. </p>
+</aside>
+<aside class="warning"><p> We try to discourage the usage of try/catch blocks and exceptions inside Clean Framework components. Developers should try to follow our intended ways to handle errors while writting code as null safe as possible. </p>
+</aside>
+<p>Notice how the onSuccess callback is receiving an Input. Remember UseCase communicates with the external layer only with Inputs and Outputs. When outside data needs to come inside the class, it has to be through an Input.</p>
+<p>We have already done the Presenter implementation, and now you have a bit more understanding on how it connects to the Use Case. As long as you plan correctly which Outputs will be used on the output filter and by the Presenter, then everything will be handled internally.</p>
+<p>Gateways connections will be explained on the next section of the Codelab.</p>
+<h2 is-upgraded>Inputs for Presenters and Gateways</h2>
+<p>When Gateways and Presenters need to send Inputs to the Use Case, both can use this method:</p>
+<pre><code language="language-dart" class="language-dart">  useCase.setInput&lt;MyInput&gt;(MyInput(&#39;foo&#39;));
+</code></pre>
+<p>Gateways do this for you internally, but Presenters are free to use this method at anytime instead of calling a specific method on the UseCase.</p>
+<aside class="special"><p> Inputs are better than calling methods since you don&#39;t require any knowledge on the Use Case implemetation, as we demonstrated on the previous section. If the feature is very simple, you can opt to use methods directly to have less code overall. </p>
+</aside>
+<h2 is-upgraded>Testing and Coding Use Cases</h2>
+<p>Now we are ready to continue the feature implementation we started on the previous section. Let&#39;s start with the test for the third Gherkin scenario:</p>
+<h3 is-upgraded>test/features/add_machine/presentation/add_machine_ui_test.dart</h3>
+<pre><code language="language-dart" class="language-dart">  /// Given I have entered a number on the Add Machine feature
+  /// When I write another number and press &#34;Add&#34;
+  /// Then the total shown will be the sum of both numbers.
+  uiTest(
+    &#39;AddMachineUI unit test - Scenario 3&#39;,
+    context: ProvidersContext(),
+    builder: () =&gt; AddMachineUI(provider: addMachineUseCaseProvider),
+    verify: (tester) async {
+      final numberField = find.byKey(Key(&#39;NumberField&#39;));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, &#39;15&#39;);
+
+      final addButton = find.byKey(Key(&#39;AddButton&#39;));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      final sumTotalWidget = find.byKey(Key(&#39;SumTotalWidget&#39;));
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;15&#39;)),
+          findsOneWidget);
+
+      await tester.enterText(numberField, &#39;7&#39;);
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text(&#39;22&#39;)),
+          findsOneWidget);
+    },
+  );
+
+  // Replace the provider with these lines:
+  final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; StaticUseCase([
+      AddMachineUIOutput(total: 0),
+      AddMachineUIOutput(total: 15),
+      AddMachineUIOutput(total: 22),
+    ]));
+</code></pre>
+<p>This is basically a copy/paste of the previous test, the only needed change is the use case fake now returning an additional output.</p>
+<p>Once we have this test coded and passing, its time for some major refactoring on all three tests, since now we want to use a production-worthy use case. Let&#39;s add the new Entity and Use Case into their corresponding place inside the domain folder:</p>
+<h3 is-upgraded>lib/features/add_machine/domain/add_machine_add_entity.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineEntity extends Entity {
+  final int total;
+
+  AddMachineEntity(this.total);
+
+  @override
+  List&lt;Object?&gt; get props =&gt; [total];
+}
+</code></pre>
+<h3 is-upgraded>lib/features/add_machine/domain/add_machine_use_case.dart</h3>
+<pre><code language="language-dart" class="language-dart">class AddMachineUseCase extends UseCase&lt;AddMachineEntity&gt; {
+  AddMachineUseCase()
+      : super(entity: AddMachineEntity(0), outputFilters: {
+          AddMachineUIOutput: (AddMachineEntity e) =&gt;
+              AddMachineUIOutput(total: e.total),
+        }, inputFilters: {
+          AddMachineAddNumberInput:
+              (AddMachineAddNumberInput i, AddMachineEntity e) =&gt;
+                  AddMachineEntity(i.number + e.total),
+        });
+}
+</code></pre>
+<h3 is-upgraded>test/features/add_machine/presentation/add_machine_ui_test.dart</h3>
+<pre><code language="language-dart" class="language-dart">// rest of code above, this is the only change:
+final addMachineUseCaseProvider = UseCaseProvider((_) =&gt; AddMachineUseCase());
+</code></pre>
+<p>After these changes, all 3 tests pass as normal, very easy refactor, right?</p>
+<p>Congratulations if you made it until this point, on the next section we will plug-in a Gateway,</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Adapter Layer: Gateways" duration="0">
+        <p>We already learned part of this layer componets with the Presenter and View Model. The only thing left to learn here are the Gateways, which handle Outputs used as requests, and create Inputs to be processed by the Use Case.</p>
+<p class="image-container"><img alt="Adapter Layer Components" src="img/2072d7c7b0cca78e.png"></p>
+<p>Let&#39;s look at a simple example first:</p>
+<pre><code language="language-dart" class="language-dart">class MyGateway extends Gateway&lt;MyOutput,
+    MyRequest, MyResponse, MyInput&gt; {
+  LastLoginDateGateway({ProvidersContext? context, UseCaseProvider? provider})
+      : super(
+            context: context ?? providersContext,
+            provider: provider ?? lastLoginUseCaseProvider);
+
+  @override
+  MyRequest buildRequest(MyOutput output) {
+    return MyRequest(data: output.data);
+  }
+
+  @override
+  MyInput onSuccess(covariant FirebaseSuccessResponse response) {
+    return MyInput(data: response.data);
+  }
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput();
+  }
+}
+
+final myGatewayProvider = GatewayProvider&lt;MyGateway&gt;(
+  (_) =&gt; MyGateway(),
+);
+</code></pre>
+<p>In a very similar role to a Presenter, the Gateways are translators, take Outputs and create Requests, passing the data, and when the data is received as a Response, then translate it into a valid Input.</p>
+<p>This is the way we create a bridge between very specific libraries and dependencies and the agnostic Domain layer. Gateways exist on a 1 to 1 relationship for every type of Output that is lauched as part of a request from the Use Case.</p>
+<p>Since they are created at the start of the execution through a Provider, keep in mind that a <em>loader</em> of providers help you ensure an instance of the Gateway exists before attempting to create requests.</p>
+<p>The implementation makes the intent very clear: when the Output is launched, it triggers the <strong>onSuccess</strong> method to create a Request, which in turns gets launched to any External Interface that is listening to those types of requests.</p>
+<p>When the Response is launched by the External Interface, it could come back as a succesful or failed response. On each case, the Gateway generates the proper Input, which is pushed into the Use Case immediately.</p>
+<p>These Gateways create a circuit that is thread-blocking. For when you want to create a request that doesn&#39;t require an immediate response, you can use another type of Gateway:</p>
+<pre><code language="language-dart" class="language-dart">class MyGateway extends WatcherGateway&lt;MyOutput,
+    MyRequest, MyResponse, MyInput&gt; {
+      // rest of the code is the same
+    }
+</code></pre>
+<p>When extending the WatcherGateway, the External Interface connected to this Gateway will be able to send a stream of Responses. Each time a Response is received, the <strong>onSuccess</strong> method will be invoked, so a new Input gets created.</p>
+<p>The Use Case in this case will need to setup a proper input filter to allow the Inputs to change the Entity multiple times.</p>
+<p>For WatcherGateways, the <strong>onFailure</strong> method happens when the subscription could not be set for some reason. For example, for Firebase style dependencies, it could happen when attempting to create the connection for the stream of data.</p>
+<h2 is-upgraded>Testing and Coding the Gateway</h2>
+<p>TBD</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="External Interface Layer" duration="10">
+        <p>The final piece of the Framework is the most flexible one, since it work as a wrapper for any external dependency code from libraries and modules. If coded properly, they will protect you from dependencies migrations and version upgrades.</p>
+<p class="image-container"><img alt="External Interface Components" src="img/a79555228fb3f4c6.png"></p>
+<p>As usual, let&#39;s study the example first:</p>
+<pre><code language="language-dart" class="language-dart">class TestInterface extends ExternalInterface&lt;TestRequest, TestResponse&gt; {
+  TestInterface(GatewayProvider provider)
+      : super([() =&gt; provider.getGateway(context)]);
+
+  @override
+  void handleRequest() {
+    // For normal Gateways
+    on&lt;FutureTestRequest&gt;(
+      (request, send) async {
+        await Future.delayed(Duration(milliseconds: 100));
+        send(Right(TestResponse(&#39;success&#39;)));
+      },
+    );
+
+    // For WatcherGateways
+    on&lt;StreamTestRequest&gt;(
+      (request, send) async {
+        final stream = Stream.periodic(
+          Duration(milliseconds: 100),
+          (count) =&gt; count,
+        );
+
+        final subscription = stream.listen(
+          (count) =&gt; send(Right(TestResponse(count.toString()))),
+        );
+
+        await Future.delayed(Duration(milliseconds: 500));
+        subscription.cancel();
+      },
+    );
+  }
+}
+</code></pre>
+<p>First let&#39;s understand the constructor. It requires a list of Gateway references, which are normally retrieved from providers. During tests, you can add the object reference direcly.</p>
+<p>When the External Interface gets created by its Provider, this connection will attach the object to the mechanism that the Gateway uses to send Requests.</p>
+<p>The <strong>handleRequest</strong> method will have one or multiple calls of the <strong>on</strong> method, each one associated to a Request Type. These types must extend from the Response type specified on the generics class declaration.</p>
+<p>Each of the <strong>on</strong> calls will send back an <em>Either</em> instance, where the <em>Right</em> value is a <strong>SuccessResponse</strong>, and the <em>Left</em> is a <strong>FailureResponse</strong>.</p>
+<p>External Interfaces are meant to listen to groups of Requests that use the same dependency. Clean Framework has default implementations of external interfaces for Firebase, GraphQL and REST services, ready to be used in any application, you just need to create the providers using them.</p>
+<h2 is-upgraded>Testing and Coding the External Interface</h2>
+<p>TBD</p>
 
 
       </google-codelab-step>

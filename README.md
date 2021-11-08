@@ -1,6 +1,7 @@
+# clean_framework
+
 [![Coverage](https://codecov.io/gh/MattHamburger/clean_framework/branch/main/graph/badge.svg)](https://codecov.io/gh/MattHamburger/clean_framework)
 
-# clean_framework
 Flutter implementation of Clean Architecture, inspired on the guidelines created by Uncle Bob.
 
 see http://www.amazon.com/dp/0134494164/
@@ -21,7 +22,7 @@ Add this to your package's pubspec.yaml file:
 
 ```
 dependencies:
-    clean_framework: ^1.0.0
+    clean_framework: ^1.1.3
 ```
 
 ## Install it 
