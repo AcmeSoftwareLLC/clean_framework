@@ -35,14 +35,23 @@ void main() {
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
-          linkException: NetworkException(uri: Uri()),
+          linkException: NetworkException(
+            message: 'message',
+            uri: Uri.parse('https://acmesoftware.com'),
+          ),
         ),
       ),
     );
 
     expectLater(
       () => service.request(method: GraphQLMethod.query, document: ''),
-      throwsA(isA<GraphQLNetworkException>()),
+      throwsA(
+        isA<GraphQLNetworkException>().having(
+          (e) => e.toString(),
+          'string representation',
+          'GraphQlNetworkException: message; uri = https://acmesoftware.com',
+        ),
+      ),
     );
   });
 
@@ -55,14 +64,52 @@ void main() {
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
-          linkException: ServerException(),
+          linkException: ServerException(
+            parsedResponse: Response(data: {'status': 403}),
+          ),
         ),
       ),
     );
 
     expectLater(
       () => service.request(method: GraphQLMethod.query, document: ''),
-      throwsA(isA<GraphQLServerException>()),
+      throwsA(
+        isA<GraphQLServerException>().having(
+          (e) => e.toString(),
+          'string representation',
+          'GraphQLServerException{originalException: null, errorData: {status: 403}}',
+        ),
+      ),
+    );
+  });
+
+  test('GraphQLService query with operation exception', () async {
+    // for coverage purposes
+    GraphQLService(link: '');
+
+    final service = GraphQLService(link: '', client: mock);
+
+    when(() => mock.query(any())).thenAnswer(
+      (_) async => exceptionResult(
+        OperationException(
+          graphqlErrors: [GraphQLError(message: 'failure')],
+        ),
+      ),
+    );
+
+    expectLater(
+      () => service.request(method: GraphQLMethod.query, document: ''),
+      throwsA(
+        isA<GraphQLOperationException>().having(
+          (e) => e.error,
+          'error',
+          isA<GraphQLOperationError>().having(
+            (e) => e.message,
+            'message',
+            'failure',
+          ),
+        ),
+      ),
     );
   });
 
