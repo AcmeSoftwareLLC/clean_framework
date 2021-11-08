@@ -48,6 +48,8 @@ class GraphQLExternalInterface
       return FailureResponse(/*Operational Error Type*/);
     } else if (error is GraphQLNetworkException) {
       return FailureResponse(/*Network Error Type*/);
+    } else if (error is GraphQLServerException) {
+      return FailureResponse(/*Server Error Type*/);
     }
     return FailureResponse();
   }

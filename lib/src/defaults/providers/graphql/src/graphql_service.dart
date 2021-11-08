@@ -1,3 +1,4 @@
+import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:graphql/client.dart';
 
@@ -49,6 +50,11 @@ class GraphQLService extends NetworkService {
         throw GraphQLNetworkException(
           message: linkException.message,
           uri: linkException.uri,
+        );
+      } else if (linkException is ServerException) {
+        throw GraphQLServerException(
+          originalException: linkException.originalException,
+          errorData: linkException.parsedResponse?.data,
         );
       }
 
@@ -136,4 +142,14 @@ class GraphQLNetworkException {
   String toString() {
     return 'GraphQlNetworkException: $message; uri = $uri';
   }
+}
+
+class GraphQLServerException {
+  GraphQLServerException({
+    required this.originalException,
+    required this.errorData,
+  });
+
+  final Object? originalException;
+  final Map<String, dynamic>? errorData;
 }
