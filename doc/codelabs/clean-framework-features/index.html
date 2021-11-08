@@ -1,0 +1,287 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Clean Framework Features</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="clean-framework-features"
+                  title="Clean Framework Features"
+                  environment="web"
+                  feedback-link="https://github.com/MattHamburger/clean_framework/issues">
+    
+      <google-codelab-step label="Overview" duration="2">
+        <p>Features provides a  way to dynamically show or hide entire UI components. The main advantage of doing this is to have a reliable mechanism to control segments on an app that has been already published via services. That way, if a new component has a major bug, any new screens using that component can be disabled remotely.</p>
+<p>This system also allows the developers to have multiple versions of the same component live in the app. This allows QA engineers to compare the behavoir of the two components without having to compare two different builds.</p>
+<p>Since the architecture of the Clean Framework, we have always called these components &#34;Features&#34;. A feature for us is a set of UI components and usecases that encapsulates a specific user function. For example, a Login Feature might have multiple screens where the user enter credentials, tries to recover a forgotten password or tries to login using Biometrics. All the pieces of UI that show these screens, the usecases that control the data flows, and the services attached to them, are considered one single Feature.</p>
+<p>The way the app knows how to control the features is by stablishing a relationship between the features and a set of States. These states dictate if the feature is shown or is hidden, for example.</p>
+<p>To stablish this relationship, we can use a specific REST service that returns a JSON where a state is assigned to each feature. This can be also a FireBase node update, or even we can save that JSON on the build config files to not require an external connection.</p>
+<p>On this Codelab we will review how you can create a Feature and how it interacts with the other framework components.</p>
+<h2 is-upgraded>Requirements</h2>
+<ul>
+<li>A Flutter project that includes a version of the clean framework library superior to 1.0.0 (https://pub.dev/packages/clean_framework/install).</li>
+<li>Undestanding of the basic architecture structure used for Clean Framework Components (as reviewed on the Introduction to Clean Framework codelab).</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Project Setup" duration="15">
+        <p>The first step to start adding features is to define precisely how many features you will have and choosing their names. Features tend to have a name that helps anyone easily detect what&#39;s the purpose of the feature. Good names are Login, Deposits, History, Balance, etc.</p>
+<p>Create a file inside your root folder and create a global instance of the Feature class for each feature, like this:</p>
+<h2 is-upgraded>features.dart</h2>
+<pre><code language="language-dart" class="language-dart">import &#39;package:clean_framework/clean_framework.dart&#39;;
+
+const loginFeature = Feature(name: &#39;login&#39;);
+</code></pre>
+<p>Positive : Note that the name attribute will be referenced later when using a service to determine the behavior of the feature. This name will be used inside the JSON of that service</p>
+<p>The Feature class supports adding version numbers to Feature instances, in case you decide they are useful for your project, for example you could have a Login v1.0 and 2.0 alive at the same time in the build, and showing one in production while the other is only visible on a debug build. For this codelab we don&#39;t need it so that parameter is not specified.</p>
+<p>Once we have a couple of features defined in this way, we can decide how many states we will use for each feature on this project. Clean Framework provides a default Feature States enum:</p>
+<h2 is-upgraded>clean_framework/defaults/feature_states.dart</h2>
+<pre><code language="language-dart" class="language-dart">enum FeatureState { hidden, visible }
+</code></pre>
+<p>The minimal use case for any feature would be to be able to hide and show them. But you can define your own enum to add additional intermediate or even special states.</p>
+<p>The framework allows you to specify anything as a state. Instead of enums, you could be using a hierarchy of classes, use Freezed, or only use Strings to keep things simple. We prefer the use of enums since its not easy to provide a wrong value, but if you are familiar with the Freezed library, that&#39;s an excellent way to manage a set of possible states, with the added benefit of having a superior implementation to state selection.</p>
+<p>For the purpose of this codelab, lets add a new enum to our previous file like this:</p>
+<h2 is-upgraded>features.dart</h2>
+<pre><code language="language-dart" class="language-dart">import &#39;package:clean_framework/clean_framework.dart&#39;;
+
+final loginFeature = Feature(name: &#39;login&#39;);
+
+enum FeatureState { hidden, enabled, maintenance }
+</code></pre>
+<p>Here we decided to change the name of one of the states, and add another one that we will use to make a feature be shown in gray and have a &#34;On maintenance&#34; message. Not very practical but useful for the purpose of learning.</p>
+<p>Positive : The features file will contain all overrides to the feature base classes, but if you want to create separate files, feel free to do so</p>
+<p>Finally, we need to create a class that defines how this new FeatureState enum is used when parsing the JSON used to retrieve the states for our features. We will add it on the same file:</p>
+<h2 is-upgraded>features.dart</h2>
+<pre><code language="language-dart" class="language-dart">import &#39;package:clean_framework/clean_framework.dart&#39;;
+
+final loginFeature = Feature(name: &#39;login&#39;);
+
+enum FeatureState { hidden, enabled, maintenance }
+
+class MyFeatureMapper extends FeatureMapper&lt;FeatureState&gt; {
+  static const Map&lt;String, FeatureState&gt; _jsonStateToFeatureStateMap = {
+    &#39;HIDDEN&#39;: FeatureState.hidden,
+    &#39;ENABLED&#39;: FeatureState.enabled,
+    &#39;MAINTENANCE&#39;: FeatureState.maintenance,
+  };
+
+  @override
+  FeatureState parseState(String state) {
+    return _jsonStateToFeatureStateMap[state] ?? defaultState;
+  }
+
+  @override
+  get defaultState =&gt; FeatureState.hidden;
+}
+</code></pre>
+<p>Lets review the key points about this class:</p>
+<ol type="1">
+<li>It extends from the abstract class FeatureMapper. On the Generics tag, we specify our own enum name.</li>
+<li>It overrides parseState. This method is invoked everytime the JSON is parsing an entry where a feature name and a state exist. The purpose of the method is to be able to &#34;convert&#34; the strig representation of the state into a single value of our enum.</li>
+<li>It overrides default state, where we also define which value of our enum is the default one. Default values are used when the parser is unable to map correctly the string representation of states, when a feature name doesn&#39;t exist or when trying to retrieve states for a feature that is not defined.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Feature Provider" duration="5">
+        <p>In order for us to have access to the state of the features in any part of our code, we will use a special provider class. The instance of this provider will have global access but will be managed by a container, so don&#39;t be worried about memory misusage.</p>
+<p>Lets create another file in the root folder, called providers:</p>
+<h2 is-upgraded>providers.dart</h2>
+<pre><code language="language-dart" class="language-dart">import &#39;package:clean_framework/clean_framework.dart&#39;;
+import &#39;package:clean_framework_example/features.dart&#39;;
+import &#39;features.dart&#39;;
+
+final featureStatesProvider =
+    FeatureStateProvider&lt;FeatureState, MyFeatureMapper&gt;(
+        (_) =&gt; MyFeatureMapper());
+</code></pre>
+<p>This instance creates a FeatureStateProvider that uses our recently created class and enum, MyFeatureMapper and FeatureState. The only parameter to the constructor is a callback that creates an instance of the mapper as well.</p>
+<p>When you run the app, this provider will be created and you will be able to check the state of any feature defined in your code. The initial states for all the features will be the default one, since we have not loaded any values yet.</p>
+<p>You will have to decide when is a good moment to do this, and how you will achieve this. Clean Framework provides some default classes that simplify this process, but you have the freedom to create your own custom made process.</p>
+<p>The scope for this codelab is to only explain how to create and use Features, so a custom loader won&#39;t be explained here. Please check the catalog of codelabs to see if one that explains this in detail is added in the future.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="AppContainersProvider" duration="5">
+        <p>The following step to complete our Feature implementation is to create a global container that will manage the feature provider, letting us retrieve our feature map anywhere in the code.</p>
+<p>We will have to make the following changes on our main app file:</p>
+<h2 is-upgraded>main.dart</h2>
+<pre><code language="language-dart" class="language-dart">...
+
+final providersContext = ProvidersContext();
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AppProvidersContainer(
+      providersContext: providersContext,
+      onBuild: (context, _) {
+        providersContext().read(featureStatesProvider.featuresMap).load({
+          &#39;features&#39;: [
+            {&#39;name&#39;: &#39;login&#39;, &#39;state&#39;: &#39;ENABLED&#39;},
+          ]
+        });
+      },
+      child: MaterialApp(
+        // Material App implementation  
+      );
+    );
+  }
+}
+</code></pre>
+<p>The key points about these changes are:</p>
+<ol type="1">
+<li>We create a global ProvidersContext instance. This will allow the retrieval of the provider from code outside the UI context. If your app is simple and doesn&#39;t need this, you can skip this line and let the AppProvidersContainer create its own reference.</li>
+<li>Wrap the MaterialApp with an AppProvidersContainer parent, which has an optional field for an external context. Also as an optional field you can define an onBuild callback to execute code whenever the widget is getting built. This is useful in this example since we want to load our JSON when the app starts.</li>
+<li>Note how we use the providersContext callable reference to read the provider and obtain the mapper, which in turn is used to load the JSON. This is only one way we can use the provider to achieve the same result, your implementation could be more complicated (REST, Firebase, file system, etc.).</li>
+<li>Understand the structure of the JSON to load the states. The names and states of each feature must match the ones we created previously, or that entry is ignored.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="FeatureWidget" duration="5">
+        <p>And finally, the last step is to wrap our feature code into a special widget, as follows:</p>
+<h2 is-upgraded>lib/features/login_feature_widget.dart</h2>
+<pre><code language="language-dart" class="language-dart">class LoginFeatureWidget extends FeatureWidget&lt;FeatureState&gt; {
+  LoginFeatureWidget()
+      : super(
+          feature: loginFeature,
+          provider: featureStatesProvider(),
+        );
+  @override
+  Widget builder(BuildContext context, FeatureState currentState) {
+    switch (currentState) {
+      case FeatureState.enabled:
+        return LoginWidget();
+      default:
+        return HiddenFeature();
+    }
+  }
+}
+</code></pre>
+<ol type="1">
+<li>The new widget extends from FeatureWidget, which is a descendant of StatelessWidget, where we won&#39;t override the build method, as we normally do, but we use the &#34;builder&#34; method. The difference is that here we have available another parameter, which is the current state the feature I am referencing in the constructor.</li>
+<li>The constructor also provides a reference to the instance of the feature states provider we created at the beginning.</li>
+<li>Once the widget gets built, it will internally use the provider to extract the current state for the feature, in this case, the login feature.</li>
+<li>The builder is used to choose what UI code will be returned depending on the current state.</li>
+<li>When the feature state is &#34;enabled&#34; then a normal bloc provider with the presenter is created. If this lines of code are unfamiliar please refer to the basic clean framework documentation or codelabs.</li>
+<li>HiddenFeature is a simple stateless widget with an empty container. It is part of the default classes of the clean framework for optional use.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Running the App" duration="2">
+        <p>Now that we have all the needed pieces together we can confirm that everything is in order if we execute the app in our emulator. Of course, the expected result is to have our feature shown as always, so basically nothing changed. But if we change the JSON value state for HIDDEN on the login feature, then the UI should show nothing.</p>
+<p>If you want to experiment further, create a UI compoment (button, menu item, etc) that invokes the feature provider to load the JSON again with different values, so you can confirm that everytime that is done, the UI reloads to reflect the latest state.</p>
+<p>On a production app, it would be a nice idea to have a way to retrieve the JSON from an external source, that way, we can control the visibility of the widgets on all apps with a single change on a centralized service.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tests for Features" duration="10">
+        <p>Given that the Clean Framework relies heavily on unit tests as part of a critical guideline for any project, we cannot end the codelab without explaining how to test these new components.</p>
+<p>We have included a couple of helper classes and methods to simplify the code when writing unit tests or widget tests.</p>
+<p>Let&#39;s review an example unit test:</p>
+<h2 is-upgraded>test/integration/features/login_feature_widget_test.dart</h2>
+<pre><code language="language-dart" class="language-dart">void main() {
+  testWidgets(
+      &#39;LoginFeatureWidget hidden, then visible with load, then hide again&#39;,
+      (tester) async {
+    final featureTester = FeatureTester&lt;FeatureState&gt;(featureStatesProvider);
+
+    final testWidget = MaterialApp(
+        home: Column(
+      children: [
+        LoginFeatureWidget(),
+        ElevatedButton(
+          key: Key(&#39;loadButton&#39;),
+          child: Text(&#39;load&#39;),
+          onPressed: () {
+            featureTester.featuresMap.load({
+              &#39;features&#39;: [
+                {&#39;name&#39;: &#39;example&#39;, &#39;version&#39;: &#39;1.0&#39;, &#39;state&#39;: &#39;ACTIVE&#39;},
+              ]
+            });
+          },
+        ),
+        ElevatedButton(
+          key: Key(&#39;hideButton&#39;),
+          child: Text(&#39;hide&#39;),
+          onPressed: () {
+            featureTester.featuresMap.append({
+              &#39;features&#39;: [
+                {&#39;name&#39;: &#39;example&#39;, &#39;version&#39;: &#39;1.0&#39;, &#39;state&#39;: &#39;HIDDEN&#39;},
+              ]
+            });
+          },
+        )
+      ],
+    ));
+
+    await featureTester.pumpWidget(tester, testWidget);
+
+    expect(find.byType(LoginFeatureWidget), findsOneWidget);
+    expect(find.byType(LoginWidget), findsNothing);
+    expect(find.byKey(Key(&#39;hidden&#39;)), findsOneWidget);
+
+    await tester.tap(find.byKey(Key(&#39;loadButton&#39;)));
+    await tester.pump();
+
+    expect(find.byType(LoginWidget), findsOneWidget);
+    expect(find.byKey(Key(&#39;hidden&#39;)), findsNothing);
+
+    await tester.tap(find.byKey(Key(&#39;hideButton&#39;)));
+    await tester.pump();
+
+    expect(find.byType(LoginWidget), findsNothing);
+    expect(find.byKey(Key(&#39;hidden&#39;)), findsOneWidget);
+
+    featureTester.dispose();
+  });
+}
+</code></pre>
+<p>There is a lot of code here, lets see the key parts:</p>
+<ol type="1">
+<li>FeatureTester is created at the beginning of the test. It will reference the existing provider. This allows the creation of a custom providers context that only works for this test. Please remember to dispose of this instance at the end of every test. This will allow having multiple tests with separate contexts and running them in any order.</li>
+<li>The feature tester reference then is used to pump the widget in the test. It receives the reference to the base tester variable and the widget to pump.</li>
+<li>Notice how the test widget includes two buttons that load the JSON again, letting us test the widget visibility. We do that by confirming the LoginWidget was rendered instead of the empty container, and viceversa.</li>
+</ol>
+<p>Positive : The feature tester can be used on unit tests where no UI needs to be tested. You can use it to create a providers context and then manipulate the existing providers.</p>
+<p>When coding more complex integration tests, the provider context should be the same one that is used when the app is executed, naturally. It&#39;s up to the developer to determine how the JSON is injected in the test. For example, if a REST mock server is used, then the JSON needs to exist there.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
