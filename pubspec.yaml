@@ -16,17 +16,17 @@ dependencies:
   flutter_test:
     sdk: flutter
 
-  riverpod: ^1.0.0-dev.10
-  flutter_riverpod: ^1.0.0-dev.10
+  riverpod: ^1.0.0
+  flutter_riverpod: ^1.0.0
   equatable: ^2.0.3
   http: ^0.13.4
   meta: ^1.7.0
-  either_dart: ^0.1.3
-  go_router: ^2.2.0
+  either_dart: ^0.1.4
+  go_router: ^2.2.4
 
   # For default implementations:
   graphql: ^5.0.0
-  cloud_firestore: ^2.5.4
+  cloud_firestore: ^3.1.0
 
 
 dev_dependencies:
