@@ -152,4 +152,9 @@ class GraphQLServerException {
 
   final Object? originalException;
   final Map<String, dynamic>? errorData;
+
+  @override
+  String toString() {
+    return 'GraphQLServerException{originalException: $originalException, errorData: $errorData}';
+  }
 }
