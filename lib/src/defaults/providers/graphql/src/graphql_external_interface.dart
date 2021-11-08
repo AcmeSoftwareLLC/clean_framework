@@ -4,7 +4,6 @@ import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_respo
 import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:either_dart/either.dart';
 
 class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
@@ -21,34 +20,35 @@ class GraphQLExternalInterface
   void handleRequest() {
     on<QueryGraphQLRequest>(
       (request, send) async {
-        try {
-          final data = await _graphQLService.request(
-            method: GraphQLMethod.query,
-            document: request.document,
-            variables: request.variables,
-          );
-          send(Right(GraphQLSuccessResponse(data: data)));
-        } catch (e) {
-          // log the details on the exception here
-          send(Left(FailureResponse()));
-        }
+        final data = await _graphQLService.request(
+          method: GraphQLMethod.query,
+          document: request.document,
+          variables: request.variables,
+        );
+
+        send(GraphQLSuccessResponse(data: data));
       },
     );
     on<MutationGraphQLRequest>(
       (request, send) async {
-        try {
-          final data = await _graphQLService.request(
-            method: GraphQLMethod.mutation,
-            document: request.document,
-            variables: request.variables,
-          );
+        final data = await _graphQLService.request(
+          method: GraphQLMethod.mutation,
+          document: request.document,
+          variables: request.variables,
+        );
 
-          send(Right(GraphQLSuccessResponse(data: data)));
-        } catch (e) {
-          // log the details on the exception here
-          send(Left(FailureResponse()));
-        }
+        send(GraphQLSuccessResponse(data: data));
       },
     );
+  }
+
+  @override
+  FailureResponse onError(Object error) {
+    if (error is GraphQLOperationException) {
+      return FailureResponse(/*Operational Error Type*/);
+    } else if (error is GraphQLNetworkException) {
+      return FailureResponse(/*Network Error Type*/);
+    }
+    return FailureResponse();
   }
 }

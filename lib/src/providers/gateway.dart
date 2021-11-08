@@ -34,7 +34,7 @@ abstract class Gateway<O extends Output, R extends Request,
   }
 
   S onSuccess(covariant P response);
-  FailureInput onFailure(FailureResponse failureResponse);
+  FailureInput onFailure(covariant FailureResponse failureResponse);
   R buildRequest(O output);
 }
 

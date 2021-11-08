@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:either_dart/either.dart';
 
@@ -26,6 +27,8 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 
   void handleRequest();
 
+  FailureResponse onError(Object error);
+
   void on<E extends R>(
     RequestHandler<E, S> handler,
   ) {
@@ -33,30 +36,40 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
       (e) async {
         final request = e.request as E;
 
-        if (e is _StreamRequestCompleter) {
-          final event = e as _StreamRequestCompleter<R, S>;
-          handler(request, (result) {
-            result.fold(
-              (failure) => event.complete(Left(failure)),
-              (success) {
-                if (!event.isCompleted) event.complete(Right(success));
-                event.emitSuccess(success);
-              },
-            );
-          });
-        } else {
-          await handler(request, e.complete);
+        try {
+          if (e is _StreamRequestCompleter) {
+            final event = e as _StreamRequestCompleter<R, S>;
+
+            final handlerCall = handler(request, (response) {
+              if (!event.isCompleted) event.complete(response);
+              event.emitSuccess(response);
+            });
+            if (handlerCall is Future) {
+              handlerCall.catchError(
+                (error) => e.completeFailure(_onError(error, request)),
+              );
+            }
+          } else {
+            await handler(request, e.complete);
+          }
+        } catch (error) {
+          e.completeFailure(_onError(error, request));
         }
       },
     );
   }
+
+  FailureResponse _onError(Object error, R request) {
+    log(error.toString(), name: '${request.runtimeType}');
+    return onError(error);
+  }
+
+  Never sendError(Object error) => throw error;
 }
 
 typedef GatewayConnection<G extends Gateway> = G Function();
 
-typedef ResponseSender<S extends SuccessResponse> = void Function(
-  Either<FailureResponse, S> response,
-);
+typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
 typedef RequestHandler<E extends Request, S extends SuccessResponse>
     = FutureOr<void> Function(E request, ResponseSender<S> send);
@@ -71,7 +84,11 @@ class _RequestCompleter<R extends Request, S extends SuccessResponse> {
 
   bool get isCompleted => _completer.isCompleted;
 
-  void complete(Either<FailureResponse, S> value) => _completer.complete(value);
+  void complete(S success) => _completer.complete(Right(success));
+
+  void completeFailure(FailureResponse failure) {
+    _completer.complete(Left(failure));
+  }
 }
 
 class _StreamRequestCompleter<R extends Request, S extends SuccessResponse>
