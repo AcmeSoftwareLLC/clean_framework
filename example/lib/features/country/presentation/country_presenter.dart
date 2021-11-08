@@ -38,4 +38,13 @@ class CountryPresenter
       fetchCountries: useCase.fetchCountries,
     );
   }
+
+  @override
+  void onOutputUpdate(BuildContext context, CountryUIOutput output) {
+    if (output.errorMessage.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(output.errorMessage)),
+      );
+    }
+  }
 }

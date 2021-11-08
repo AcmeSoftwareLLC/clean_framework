@@ -27,6 +27,7 @@ abstract class Presenter<V extends ViewModel, O extends Output,
 class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     extends ConsumerState<Presenter<V, O, U>> {
   U? _useCase;
+  O? _previousOutput;
 
   @override
   WidgetRef get ref => context as WidgetRef;
@@ -47,7 +48,13 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   Widget build(BuildContext context) {
     final output = widget.subscribe(ref);
 
-    _afterLayout(() => widget.onOutputUpdate(context, output));
+    _afterLayout(() {
+      if (_previousOutput != output) {
+        widget.onOutputUpdate(context, output);
+        _previousOutput = output;
+      }
+    });
+
     return widget.builder(widget.createViewModel(_useCase!, output));
   }
 
