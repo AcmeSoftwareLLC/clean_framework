@@ -45,12 +45,21 @@ class GraphQLExternalInterface
   @override
   FailureResponse onError(Object error) {
     if (error is GraphQLOperationException) {
-      return FailureResponse(/*Operational Error Type*/);
+      return GraphQLFailureResponse(type: GraphQLFailureType.operation);
     } else if (error is GraphQLNetworkException) {
-      return FailureResponse(/*Network Error Type*/);
+      return GraphQLFailureResponse(
+        type: GraphQLFailureType.network,
+        message: error.message ?? '',
+        errorData: {'url': error.uri.toString()},
+      );
     } else if (error is GraphQLServerException) {
-      return FailureResponse(/*Server Error Type*/);
+      return GraphQLFailureResponse(
+        type: GraphQLFailureType.server,
+        message: error.originalException.toString(),
+        errorData: error.errorData ?? {},
+      );
     }
-    return FailureResponse();
+
+    return UnknownFailureResponse(error);
   }
 }

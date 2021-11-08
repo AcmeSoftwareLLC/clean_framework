@@ -5,3 +5,13 @@ class GraphQLSuccessResponse extends SuccessResponse {
 
   GraphQLSuccessResponse({required this.data});
 }
+
+class GraphQLFailureResponse extends FailureResponse<GraphQLFailureType> {
+  GraphQLFailureResponse({
+    required GraphQLFailureType type,
+    String message = '',
+    Map<String, Object?> errorData = const {},
+  }) : super(type: type, message: message, errorData: errorData);
+}
+
+enum GraphQLFailureType { operation, network, server }

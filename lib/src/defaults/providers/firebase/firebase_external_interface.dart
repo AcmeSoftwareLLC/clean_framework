@@ -29,7 +29,7 @@ class FirebaseExternalInterface
   @override
   FailureResponse onError(Object error) {
     if (error is FirebaseFailureResponse) return error;
-    return NoContentFirebaseFailureResponse();
+    return UnknownFailureResponse(error);
   }
 
   void _withFirebaseReadIdRequest(
@@ -38,7 +38,7 @@ class FirebaseExternalInterface
   ) async {
     final content = await _client.read(path: request.path, id: request.id);
     if (content.isEmpty) {
-      sendError(NoContentFirebaseFailureResponse());
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
       send(FirebaseSuccessResponse(content));
     }
@@ -50,7 +50,7 @@ class FirebaseExternalInterface
   ) async {
     final content = await _client.readAll(path: request.path);
     if (content.isEmpty) {
-      sendError(NoContentFirebaseFailureResponse());
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
       send(FirebaseSuccessResponse(content));
     }
@@ -66,7 +66,7 @@ class FirebaseExternalInterface
       content: request.toJson(),
     );
     if (id.isEmpty) {
-      sendError(NoContentFirebaseFailureResponse());
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
       send(FirebaseSuccessResponse({'id': id}));
     }

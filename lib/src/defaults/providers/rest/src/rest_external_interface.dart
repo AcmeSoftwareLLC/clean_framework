@@ -36,8 +36,6 @@ class RestExternalInterface
 
   @override
   FailureResponse onError(Object error) {
-    return FailureResponse();
+    return FailureResponse(type: 0);
   }
 }
-
-class RequestNotRecognizedFailureResponse extends FailureResponse {}
