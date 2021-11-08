@@ -74,7 +74,7 @@ void uiTest(
 void useCaseTest<U extends UseCase, O extends Output>(
   String description, {
   required ProvidersContext context,
-  required U Function(ProviderRefBase) build,
+  required U Function(Ref) build,
   required FutureOr<void> Function(U) execute,
   FutureOr<void> Function(UseCaseProvider)? setup,
   Iterable Function()? expect,
