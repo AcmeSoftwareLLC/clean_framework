@@ -24,13 +24,22 @@ void main() {
     final gateway = GatewayFake(UseCaseFake());
 
     GraphQLExternalInterface(
-        link: '',
-        gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({}));
+      link: '',
+      gatewayConnections: [() => gateway],
+      graphQLService: GraphQLServiceFake({}),
+    );
 
     final result = await gateway.transport(SuccessfulRequest());
     expect(result.isLeft, isTrue);
-    expect(result.left, FailureResponse());
+
+    expect(
+      result.left,
+      isA<UnknownFailureResponse>().having(
+        (r) => r.message,
+        'message',
+        'service exception',
+      ),
+    );
   });
 
   test('GraphQLExternalInterface success with mutation', () async {
@@ -56,7 +65,7 @@ void main() {
 
     final result = await gateway.transport(MutationRequest());
     expect(result.isLeft, isTrue);
-    expect(result.left, FailureResponse());
+    expect(result.left, UnknownFailureResponse());
   });
 }
 
@@ -68,10 +77,11 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
   GraphQLServiceFake(this._json);
 
   @override
-  Future<Map<String, dynamic>> request(
-      {required GraphQLMethod method,
-      required String document,
-      Map<String, dynamic>? variables}) async {
+  Future<Map<String, dynamic>> request({
+    required GraphQLMethod method,
+    required String document,
+    Map<String, dynamic>? variables,
+  }) async {
     if (_json.isEmpty) throw 'service exception';
     return _json;
   }

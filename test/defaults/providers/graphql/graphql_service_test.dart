@@ -5,11 +5,13 @@ import 'package:mocktail/mocktail.dart';
 
 void main() {
   final mock = GraphQLClientMock();
+
   setUpAll(() {
     registerFallbackValue(mock);
     registerFallbackValue(QueryOptionsMock());
     registerFallbackValue(MutationOptionsMock());
   });
+
   test('GraphQLService success query', () async {
     // for coverage purposes
     GraphQLService(link: '');
@@ -24,30 +26,44 @@ void main() {
     expect(response, {'foo': 'bar'});
   });
 
-  test('GraphQLService query with exception', () async {
+  test('GraphQLService query with network exception', () async {
     // for coverage purposes
     GraphQLService(link: '');
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query(any())).thenAnswer((_) async => exceptionResult);
+    when(() => mock.query(any())).thenAnswer(
+      (_) async => exceptionResult(
+        OperationException(
+          linkException: NetworkException(uri: Uri()),
+        ),
+      ),
+    );
 
     expectLater(
-        () => service.request(method: GraphQLMethod.query, document: ''),
-        throwsA(isA<ExternalGraphQLServiceException>()));
+      () => service.request(method: GraphQLMethod.query, document: ''),
+      throwsA(isA<GraphQLNetworkException>()),
+    );
   });
 
-  test('GraphQLService query with no content', () async {
+  test('GraphQLService query with server exception', () async {
     // for coverage purposes
     GraphQLService(link: '');
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query(any())).thenAnswer((_) async => emptyResult);
+    when(() => mock.query(any())).thenAnswer(
+      (_) async => exceptionResult(
+        OperationException(
+          linkException: ServerException(),
+        ),
+      ),
+    );
 
     expectLater(
-        () => service.request(method: GraphQLMethod.query, document: ''),
-        throwsA(isA<NullDataGraphQLServiceException>()));
+      () => service.request(method: GraphQLMethod.query, document: ''),
+      throwsA(isA<GraphQLServerException>()),
+    );
   });
 
   test('GraphQLService success mutation', () async {
@@ -60,32 +76,44 @@ void main() {
     expect(response, {'foo': 'bar'});
   });
 
-  test('GraphQLService mutation with exception', () async {
+  test('GraphQLService mutation with network exception', () async {
     // for coverage purposes
     GraphQLService(link: '');
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.mutate(any())).thenAnswer((_) async => exceptionResult);
+    when(() => mock.mutate(any())).thenAnswer(
+      (_) async => exceptionResult(
+        OperationException(
+          linkException: NetworkException(uri: Uri()),
+        ),
+      ),
+    );
 
     expectLater(
-        () => service.request(method: GraphQLMethod.mutation, document: ''),
-        throwsA(isA<ExternalGraphQLServiceException>()));
-    expect(ExternalGraphQLServiceException('').toString(), isNotEmpty);
+      () => service.request(method: GraphQLMethod.mutation, document: ''),
+      throwsA(isA<GraphQLNetworkException>()),
+    );
   });
 
-  test('GraphQLService mutation with no content', () async {
+  test('GraphQLService mutation with server exception', () async {
     // for coverage purposes
     GraphQLService(link: '');
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.mutate(any())).thenAnswer((_) async => emptyResult);
+    when(() => mock.mutate(any())).thenAnswer(
+      (_) async => exceptionResult(
+        OperationException(
+          linkException: ServerException(),
+        ),
+      ),
+    );
 
     expectLater(
-        () => service.request(method: GraphQLMethod.mutation, document: ''),
-        throwsA(isA<NullDataGraphQLServiceException>()));
-    expect(NullDataGraphQLServiceException().toString(), isNotEmpty);
+      () => service.request(method: GraphQLMethod.mutation, document: ''),
+      throwsA(isA<GraphQLServerException>()),
+    );
   });
 }
 
@@ -95,10 +123,14 @@ class QueryOptionsMock extends Mock implements QueryOptions {}
 
 class MutationOptionsMock extends Mock implements MutationOptions {}
 
-final successResult =
-    QueryResult(source: QueryResultSource.network, data: {'foo': 'bar'});
+final successResult = QueryResult(
+  source: QueryResultSource.network,
+  data: {'foo': 'bar'},
+);
 
-final exceptionResult = QueryResult(
-    source: QueryResultSource.network, exception: OperationException());
-
-final emptyResult = QueryResult(source: QueryResultSource.network);
+QueryResult exceptionResult(OperationException exception) {
+  return QueryResult(
+    source: QueryResultSource.network,
+    exception: exception,
+  );
+}
