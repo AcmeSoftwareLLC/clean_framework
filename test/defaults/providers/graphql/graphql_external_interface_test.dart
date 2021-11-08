@@ -11,9 +11,10 @@ void main() {
     GraphQLExternalInterface(link: '', gatewayConnections: []);
 
     GraphQLExternalInterface(
-        link: '',
-        gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({'foo': 'bar'}));
+      link: '',
+      gatewayConnections: [() => gateway],
+      graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+    );
 
     final result = await gateway.transport(SuccessfulRequest());
     expect(result.isRight, isTrue);
@@ -46,9 +47,10 @@ void main() {
     final gateway = GatewayFake(UseCaseFake());
 
     GraphQLExternalInterface(
-        link: '',
-        gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({'foo': 'bar'}));
+      link: '',
+      gatewayConnections: [() => gateway],
+      graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+    );
 
     final result = await gateway.transport(MutationRequest());
     expect(result.isRight, isTrue);
@@ -65,7 +67,14 @@ void main() {
 
     final result = await gateway.transport(MutationRequest());
     expect(result.isLeft, isTrue);
-    expect(result.left, UnknownFailureResponse());
+    expect(
+      result.left,
+      isA<UnknownFailureResponse>().having(
+        (r) => r.message,
+        'message',
+        'service exception',
+      ),
+    );
   });
 }
 
