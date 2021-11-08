@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework_defaults.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/tests/gateway_fake.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -178,6 +179,32 @@ void main() {
     final firebaseClient = FirebaseClientFake({});
     firebaseClient.createQuery('fake', (_) => _);
     firebaseClient.clearQuery();
+    firebaseClient.dispose();
+  });
+
+  test('FirebaseExternalInterface read with unknown exception', () async {
+    firebaseClient = FirebaseClientFake({});
+
+    final gateWay =
+        GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
+    FirebaseExternalInterface(
+      firebaseClient: FirebaseClientFake({}, 'exception message'),
+      gatewayConnections: [() => gateWay],
+    );
+
+    final result = await gateWay.transport(
+      FirebaseReadIdRequest(path: 'fake path', id: 'foo'),
+    );
+    expect(result.isLeft, isTrue);
+    expect(
+      result.left,
+      isA<UnknownFailureResponse>().having(
+        (r) => r.message,
+        'message',
+        'exception message',
+      ),
+    );
+
     firebaseClient.dispose();
   });
 }
