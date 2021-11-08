@@ -121,7 +121,9 @@ class GraphQLOperationError {
   final Map<String, dynamic>? extensions;
 }
 
-class GraphQLOperationException {
+abstract class GraphQLServiceException {}
+
+class GraphQLOperationException implements GraphQLServiceException {
   GraphQLOperationException({required this.errors});
 
   final Iterable<GraphQLOperationError> errors;
@@ -129,7 +131,7 @@ class GraphQLOperationException {
   GraphQLOperationError? get error => errors.isEmpty ? null : errors.first;
 }
 
-class GraphQLNetworkException {
+class GraphQLNetworkException implements GraphQLServiceException {
   GraphQLNetworkException({
     required this.message,
     required this.uri,
@@ -144,7 +146,7 @@ class GraphQLNetworkException {
   }
 }
 
-class GraphQLServerException {
+class GraphQLServerException implements GraphQLServiceException {
   GraphQLServerException({
     required this.originalException,
     required this.errorData,

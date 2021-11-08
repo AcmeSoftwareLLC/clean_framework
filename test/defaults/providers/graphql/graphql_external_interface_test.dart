@@ -4,86 +4,163 @@ import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('GraphQLExternalInterface success response', () async {
-    final gateway = GatewayFake(UseCaseFake());
+  group('GraphQLExternalInterface | ', () {
+    test('success response', () async {
+      final gateway = GatewayFake(UseCaseFake());
 
-    // For coverage purposes
-    GraphQLExternalInterface(link: '', gatewayConnections: []);
+      // For coverage purposes
+      GraphQLExternalInterface(link: '', gatewayConnections: []);
 
-    GraphQLExternalInterface(
-      link: '',
-      gatewayConnections: [() => gateway],
-      graphQLService: GraphQLServiceFake({'foo': 'bar'}),
-    );
-
-    final result = await gateway.transport(SuccessfulRequest());
-    expect(result.isRight, isTrue);
-    expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
-  });
-
-  test('GraphQLExternalInterface failure response', () async {
-    final gateway = GatewayFake(UseCaseFake());
-
-    GraphQLExternalInterface(
-      link: '',
-      gatewayConnections: [() => gateway],
-      graphQLService: GraphQLServiceFake({}),
-    );
-
-    final result = await gateway.transport(SuccessfulRequest());
-    expect(result.isLeft, isTrue);
-
-    expect(
-      result.left,
-      isA<UnknownFailureResponse>().having(
-        (r) => r.message,
-        'message',
-        'service exception',
-      ),
-    );
-  });
-
-  test('GraphQLExternalInterface success with mutation', () async {
-    final gateway = GatewayFake(UseCaseFake());
-
-    GraphQLExternalInterface(
-      link: '',
-      gatewayConnections: [() => gateway],
-      graphQLService: GraphQLServiceFake({'foo': 'bar'}),
-    );
-
-    final result = await gateway.transport(MutationRequest());
-    expect(result.isRight, isTrue);
-    expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
-  });
-
-  test('GraphQLExternalInterface failure with mutation', () async {
-    final gateway = GatewayFake(UseCaseFake());
-
-    GraphQLExternalInterface(
+      GraphQLExternalInterface(
         link: '',
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({}));
+        graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+      );
 
-    final result = await gateway.transport(MutationRequest());
-    expect(result.isLeft, isTrue);
-    expect(
-      result.left,
-      isA<UnknownFailureResponse>().having(
-        (r) => r.message,
-        'message',
-        'service exception',
-      ),
-    );
+      final result = await gateway.transport(SuccessfulRequest());
+      expect(result.isRight, isTrue);
+      expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
+    });
+
+    test('failure response', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake({}),
+      );
+
+      final result = await gateway.transport(SuccessfulRequest());
+      expect(result.isLeft, isTrue);
+
+      expect(
+        result.left,
+        isA<UnknownFailureResponse>().having(
+          (r) => r.message,
+          'message',
+          'service exception',
+        ),
+      );
+    });
+
+    test('success with mutation', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isRight, isTrue);
+      expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
+    });
+
+    test('failure with mutation', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake({}),
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isLeft, isTrue);
+      expect(
+        result.left,
+        isA<UnknownFailureResponse>().having(
+          (r) => r.message,
+          'message',
+          'service exception',
+        ),
+      );
+    });
+
+    test('operation exception', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake.exception(
+          GraphQLOperationException(errors: []),
+        ),
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isLeft, isTrue);
+      expect(
+        result.left,
+        GraphQLFailureResponse(type: GraphQLFailureType.operation),
+      );
+    });
+
+    test('network exception', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake.exception(
+          GraphQLNetworkException(
+            message: 'no internet',
+            uri: Uri.parse('https://acmesoftware.com'),
+          ),
+        ),
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isLeft, isTrue);
+      expect(
+        result.left,
+        GraphQLFailureResponse(
+          type: GraphQLFailureType.network,
+          message: 'no internet',
+          errorData: {'url': 'https://acmesoftware.com'},
+        ),
+      );
+    });
+
+    test('server exception', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: '',
+        gatewayConnections: [() => gateway],
+        graphQLService: GraphQLServiceFake.exception(
+          GraphQLServerException(
+            originalException: FormatException(),
+            errorData: const {},
+          ),
+        ),
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isLeft, isTrue);
+      expect(
+        result.left,
+        GraphQLFailureResponse(
+          type: GraphQLFailureType.server,
+          message: 'FormatException',
+        ),
+      );
+    });
   });
 }
 
 class GraphQLServiceFake extends Fake implements GraphQLService {
-  Map<String, dynamic> _json;
+  GraphQLServiceFake(this._json)
+      : _exception = _json.isEmpty ? 'service exception' : null;
 
-  set response(Map<String, dynamic> newJson) => _json = newJson;
+  GraphQLServiceFake.exception(GraphQLServiceException exception)
+      : _exception = exception,
+        _json = const {};
 
-  GraphQLServiceFake(this._json);
+  final Map<String, dynamic> _json;
+  final Object? _exception;
 
   @override
   Future<Map<String, dynamic>> request({
@@ -91,7 +168,7 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
     required String document,
     Map<String, dynamic>? variables,
   }) async {
-    if (_json.isEmpty) throw 'service exception';
+    if (_exception != null) throw _exception!;
     return _json;
   }
 }
