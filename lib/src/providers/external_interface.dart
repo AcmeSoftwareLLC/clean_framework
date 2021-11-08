@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
+import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:either_dart/either.dart';
 
 import 'gateway.dart';
@@ -59,12 +59,14 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     );
   }
 
-  FailureResponse _onError(Object error, R request) {
-    log(error.toString(), name: '${request.runtimeType}');
-    return onError(error);
-  }
-
   Never sendError(Object error) => throw error;
+
+  FailureResponse _onError(Object error, R request) {
+    CleanFrameworkObserver.instance.onExternalError(this, request, error);
+    final failure = onError(error);
+    CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
+    return failure;
+  }
 }
 
 typedef GatewayConnection<G extends Gateway> = G Function();

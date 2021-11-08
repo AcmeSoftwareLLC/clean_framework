@@ -25,17 +25,23 @@ abstract class Gateway<O extends Output, R extends Request,
     );
   }
 
+  S onSuccess(covariant P response);
+  FailureInput onFailure(covariant FailureResponse failureResponse);
+  R buildRequest(O output);
+
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
-      (failureResponse) => Left(onFailure(failureResponse)),
+      (failureResponse) => Left(_onFailure(failureResponse)),
       (response) => Right(onSuccess(response)),
     );
   }
 
-  S onSuccess(covariant P response);
-  FailureInput onFailure(covariant FailureResponse failureResponse);
-  R buildRequest(O output);
+  FailureInput _onFailure(FailureResponse failureResponse) {
+    final failureInput = onFailure(failureResponse);
+    CleanFrameworkObserver.instance.onFailureInput(failureInput);
+    return failureInput;
+  }
 }
 
 abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
