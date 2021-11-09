@@ -1,3 +1,4 @@
+import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
@@ -77,23 +78,6 @@ class AppRouter<R extends Object> {
   /// The current location of the router.
   String get location => _router.location;
 
-  void _initInnerRouter() {
-    _router = GoRouter(
-      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
-      errorPageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
-        );
-      },
-      initialLocation: initialLocation,
-      debugLogDiagnostics: _enableLogging,
-      redirect: _redirect == null
-          ? null
-          : (state) => _redirect!(AppRouteState._fromGoRouteState(state)),
-    );
-  }
-
   /// Navigates to specified [route].
   ///
   /// Arguments can be passed to the specified route in three ways:
@@ -172,6 +156,27 @@ class AppRouter<R extends Object> {
   /// Resets the router by creating a new instance of underlying router.
   @visibleForTesting
   void reset() => _initInnerRouter();
+
+  void _initInnerRouter() {
+    _router = GoRouter(
+      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
+      errorPageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
+        );
+      },
+      initialLocation: initialLocation,
+      debugLogDiagnostics: _enableLogging,
+      redirect: _redirect == null
+          ? null
+          : (state) => _redirect!(AppRouteState._fromGoRouteState(state)),
+    )..addListener(_onLocationChanged);
+  }
+
+  void _onLocationChanged() {
+    CleanFrameworkObserver.instance.onLocationChanged(location);
+  }
 }
 
 /// A declarative mapping between a route name, a route path and a builder.

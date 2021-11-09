@@ -23,8 +23,11 @@ void main() {
   test('RestGateway failure response', () async {
     final useCase = UseCaseFake();
     final gateway = TestGateway(useCase);
-    gateway.transport = (request) async =>
-        Left<FailureResponse, RestSuccessResponse>(FailureResponse());
+    gateway.transport = (request) async {
+      return Left<FailureResponse, RestSuccessResponse>(
+        FailureResponse<Object>(type: 0),
+      );
+    };
 
     await useCase.doFakeRequest(TestOutput());
     expect(useCase.entity, EntityFake(value: 'failure'));

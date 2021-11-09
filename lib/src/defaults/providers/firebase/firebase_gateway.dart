@@ -6,10 +6,11 @@ import 'firebase_responses.dart';
 
 abstract class FirebaseGateway<O extends Output, R extends FirebaseRequest,
     S extends SuccessInput> extends Gateway<O, R, FirebaseSuccessResponse, S> {
-  FirebaseGateway(
-      {required ProvidersContext context, required UseCaseProvider provider})
-      : super(context: context, provider: provider);
+  FirebaseGateway({
+    required ProvidersContext context,
+    required UseCaseProvider provider,
+  }) : super(context: context, provider: provider);
 
   @override
-  FailureInput onFailure(failureResponse) => FailureInput();
+  FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
 }

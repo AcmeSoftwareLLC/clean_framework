@@ -22,8 +22,11 @@ void main() {
   test('GraphQLGateway failure response', () async {
     final useCase = UseCaseFake();
     final gateway = TestGateway(useCase);
-    gateway.transport = (request) async =>
-        Left<FailureResponse, GraphQLSuccessResponse>(FailureResponse());
+    gateway.transport = (request) async {
+      return Left<FailureResponse, GraphQLSuccessResponse>(
+        GraphQLFailureResponse(type: GraphQLFailureType.operation),
+      );
+    };
 
     await useCase.doFakeRequest(TestOutput());
     expect(useCase.entity, EntityFake(value: 'failure'));

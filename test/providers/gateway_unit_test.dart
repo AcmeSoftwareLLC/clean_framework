@@ -25,7 +25,9 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     var gateway = TestDirectGateway(provider);
 
-    gateway.transport = (request) async => Left(FailureResponse());
+    gateway.transport = (request) async {
+      return Left(UnknownFailureResponse());
+    };
 
     await useCase.doFakeRequest(TestDirectOutput('123'));
 
@@ -53,7 +55,7 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     var gateway = TestYieldGateway(provider);
 
-    gateway.transport = (request) async => Left(FailureResponse());
+    gateway.transport = (request) async => Left(UnknownFailureResponse());
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 

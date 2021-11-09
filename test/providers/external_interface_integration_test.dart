@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
+import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/gateway_provider.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
@@ -76,13 +75,13 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
     on<FutureTestRequest>(
       (request, send) async {
         await Future.delayed(Duration(milliseconds: 100));
-        send(Right(TestResponse('success')));
+        send(TestResponse('success'));
       },
     );
     on<FailedRequest>(
       (request, send) async {
         await Future.delayed(Duration(milliseconds: 100));
-        send(Left(FailureResponse()));
+        sendError(FailureResponse(type: 'test'));
       },
     );
     on<StreamTestRequest>(
@@ -93,13 +92,18 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
         );
 
         final subscription = stream.listen(
-          (count) => send(Right(TestResponse(count.toString()))),
+          (count) => send(TestResponse(count.toString())),
         );
 
         await Future.delayed(Duration(milliseconds: 500));
         subscription.cancel();
       },
     );
+  }
+
+  @override
+  FailureResponse<Object> onError(Object error) {
+    return UnknownFailureResponse(error);
   }
 }
 

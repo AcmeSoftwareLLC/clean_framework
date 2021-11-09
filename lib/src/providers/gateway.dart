@@ -25,17 +25,23 @@ abstract class Gateway<O extends Output, R extends Request,
     );
   }
 
+  S onSuccess(covariant P response);
+  FailureInput onFailure(covariant FailureResponse failureResponse);
+  R buildRequest(O output);
+
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
-      (failureResponse) => Left(onFailure(failureResponse)),
+      (failureResponse) => Left(_onFailure(failureResponse)),
       (response) => Right(onSuccess(response)),
     );
   }
 
-  S onSuccess(covariant P response);
-  FailureInput onFailure(FailureResponse failureResponse);
-  R buildRequest(O output);
+  FailureInput _onFailure(FailureResponse failureResponse) {
+    final failureInput = onFailure(failureResponse);
+    CleanFrameworkObserver.instance.onFailureInput(failureInput);
+    return failureInput;
+  }
 }
 
 abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
@@ -49,10 +55,15 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
   })  : _subscriberUseCase = subscriberUseCase,
         _publisherUseCase = publisherUseCase {
     _subscriberUseCase.subscribe(
-        SUBSCRIBER_OUTPUT,
-        (SUBSCRIBER_OUTPUT output) async =>
-            Right<FailureInput, SUBSCRIBER_INPUT>(
-                onResponse(_publisherUseCase.getOutput<PUBLISHER_OUTPUT>())));
+      SUBSCRIBER_OUTPUT,
+      (SUBSCRIBER_OUTPUT output) {
+        return Right<FailureInput, SUBSCRIBER_INPUT>(
+          onResponse(
+            _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
+          ),
+        );
+      },
+    );
   }
 
   SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
@@ -99,11 +110,22 @@ class SuccessResponse extends Response {
   List<Object?> get props => [];
 }
 
-class FailureResponse extends Response {
-  const FailureResponse();
+class FailureResponse<T extends Object> extends Response {
+  const FailureResponse({
+    required this.type,
+    this.message = '',
+    this.errorData = const {},
+  });
+
+  final T type;
+  final String message;
+  final Map<String, Object?> errorData;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [type, message, errorData];
 }
 
-class RequestNotRecognizedFailureResponse extends FailureResponse {}
+class UnknownFailureResponse extends FailureResponse<int> {
+  UnknownFailureResponse([Object? error])
+      : super(type: 0, message: error.toString());
+}

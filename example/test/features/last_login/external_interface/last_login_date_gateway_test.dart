@@ -33,7 +33,7 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     var gateway = LastLoginDateGateway(context: context, provider: provider);
 
-    gateway.transport = (request) async => Left(FailureResponse());
+    gateway.transport = (request) async => Left(UnknownFailureResponse());
 
     await useCase.doFakeRequest(LastLoginDateOutput());
 

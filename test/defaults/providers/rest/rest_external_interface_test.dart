@@ -32,7 +32,7 @@ void main() {
 
     final result = await gateWay.transport(TestRequest());
     expect(result.isLeft, isTrue);
-    expect(result.left, FailureResponse());
+    expect(result.left, FailureResponse<Object>(type: 0));
   });
 }
 
