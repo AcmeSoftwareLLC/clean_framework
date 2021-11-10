@@ -6,7 +6,7 @@ class GraphQLSuccessResponse extends SuccessResponse {
   GraphQLSuccessResponse({required this.data});
 }
 
-class GraphQLFailureResponse extends FailureResponse<GraphQLFailureType> {
+class GraphQLFailureResponse extends TypedFailureResponse<GraphQLFailureType> {
   GraphQLFailureResponse({
     required GraphQLFailureType type,
     String message = '',

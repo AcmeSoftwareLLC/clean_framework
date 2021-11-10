@@ -64,7 +64,7 @@ class TestInterface extends ExternalInterface {
   }
 
   @override
-  FailureResponse<Object> onError(Object error) {
+  FailureResponse onError(Object error) {
     return UnknownFailureResponse(error);
   }
 }

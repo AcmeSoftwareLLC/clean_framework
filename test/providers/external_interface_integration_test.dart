@@ -81,7 +81,7 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
     on<FailedRequest>(
       (request, send) async {
         await Future.delayed(Duration(milliseconds: 100));
-        sendError(FailureResponse(type: 'test'));
+        sendError(TypedFailureResponse(type: 'test'));
       },
     );
     on<StreamTestRequest>(
@@ -102,7 +102,7 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   }
 
   @override
-  FailureResponse<Object> onError(Object error) {
+  FailureResponse onError(Object error) {
     return UnknownFailureResponse(error);
   }
 }
