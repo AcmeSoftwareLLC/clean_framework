@@ -110,22 +110,29 @@ class SuccessResponse extends Response {
   List<Object?> get props => [];
 }
 
-class FailureResponse<T extends Object> extends Response {
-  const FailureResponse({
+abstract class FailureResponse extends Response {
+  const FailureResponse({this.message = ''});
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class TypedFailureResponse<T extends Object> extends FailureResponse {
+  const TypedFailureResponse({
     required this.type,
-    this.message = '',
     this.errorData = const {},
-  });
+    String message = '',
+  }) : super(message: message);
 
   final T type;
-  final String message;
   final Map<String, Object?> errorData;
 
   @override
   List<Object?> get props => [type, message, errorData];
 }
 
-class UnknownFailureResponse extends FailureResponse<int> {
-  UnknownFailureResponse([Object? error])
-      : super(type: 0, message: error.toString());
+class UnknownFailureResponse extends FailureResponse {
+  UnknownFailureResponse([Object? error]) : super(message: error.toString());
 }

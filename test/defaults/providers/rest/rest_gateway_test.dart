@@ -25,7 +25,7 @@ void main() {
     final gateway = TestGateway(useCase);
     gateway.transport = (request) async {
       return Left<FailureResponse, RestSuccessResponse>(
-        FailureResponse<Object>(type: 0),
+        UnknownFailureResponse(),
       );
     };
 

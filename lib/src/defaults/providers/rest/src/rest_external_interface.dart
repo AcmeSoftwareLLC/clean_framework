@@ -36,6 +36,6 @@ class RestExternalInterface
 
   @override
   FailureResponse onError(Object error) {
-    return FailureResponse(type: 0);
+    return UnknownFailureResponse();
   }
 }
