@@ -896,7 +896,158 @@ For WatcherGateways, the **onFailure** method happens when the subscription coul
 
 ### Testing and Coding the Gateway
 
-TBD
+Let's go back to the code of the Add Machine app we used on the previous section. The only scenario we have to code is the one that confirms the number is reset everytime you open the app.
+
+Creating a test for that is trivial, since we can either add an integration test that does the steps, or create a setup idential to a state where the app has closed the feature.
+
+But none of this will require us to write a Gateway or External Interface, so we will need to modify the requirements. Let's assume that the stakeholders found it was more helpful if we retrieved the previous calculated total each time with opened the feature.
+
+This change will require that the apps "remembers" the last total in some way, which will easily require an External Interface. We don't have to decide right now how we are going to store the number. It is more important to finish the implementation the simplest way possible, which is to keep the number in memory inside the External Interface.
+
+Right now we will only care about our Gateway, and how the Use Case will talk to it. So before we jump into the code, lets code the test that needs to pass:
+
+#### test/features/add_machine/presentation/add_machine_ui_test.dart
+```dart
+  /// Given I have added one or more numbers on the Add Machine feature
+  /// When I navigate away and open the feature again
+  /// Then the total shown is the previous total that was shown.
+
+uiTest(
+    'AddMachineUI unit test - Scenario 4',
+    context: context,
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
+    setup: () {
+      final gateway = AddMachineGetTotalGateway(
+          context: context, provider: addMachineUseCaseProvider);
+      gateway.transport =
+          (request) async => Right(AddMachineGetTotalResponse(740));
+
+      final gatewayProvider = GatewayProvider((_) => gateway);
+      gatewayProvider.getGateway(context);
+    },
+    verify: (tester) async {
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')),
+          findsOneWidget);
+    },
+  );
+
+//...
+final context = ProvidersContext();
+final addMachineUseCaseProvider = UseCaseProvider((_) => AddMachineUseCase());
+
+```
+
+This time we use another type of helper, **ProviderTester** is a bit more flexible, since it can be used to test components that are not UI objects, while still providing a providers context.
+
+Here we are assuming we will have a Home widget that loads our feature UI, and shows us the total. We have to make the app now show that number instead of a 0. This number will be created by the Gateway for now, later we will move it to the External Interface.
+
+<aside class="positive">
+When adding gateways on tests, we can directly "connect" the transport method so we can insert whatever response we need for the test.
+</aside>
+
+Now, lets jump into the Gateway code:
+
+#### lib/features/add_machine/external_interface/add_machine_get_total_gateway.dart
+```dart
+class AddMachineGetTotalGateway extends Gateway<
+    AddMachineGetTotalOutput,
+    AddMachineGetTotalRequest,
+    AddMachineGetTotalResponse,
+    AddMachineGetTotalInput> {
+  AddMachineGetTotalGateway({
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) : super(context: context, provider: provider, useCase: useCase);
+
+  @override
+  buildRequest(AddMachineGetTotalOutput output) {
+    return AddMachineGetTotalRequest();
+  }
+
+  @override
+  FailureInput onFailure(covariant FailureResponse failureResponse) {
+    throw UnimplementedError();
+  }
+
+  @override
+  onSuccess(covariant AddMachineGetTotalResponse response) {
+    return AddMachineGetTotalInput(response.number);
+  }
+}
+
+class AddMachineGetTotalRequest extends Request {}
+
+class AddMachineGetTotalResponse extends SuccessResponse {
+  final int number;
+
+  AddMachineGetTotalResponse(this.number);
+}
+```
+
+As we learned previously, our Gateway will be associated only with a **AddMachineGetTotalOutput**, which will get translated into a **AddMachineGetTotalRequest** object. The output doesn't send any extra data, so our Request is also empty.
+
+The **AddMachineGetTotalResponse** will hold the preserved number that we retrieve on the External Interface, so the Gateway needs to get it on a successful response and produce a valid **AddMachineGetTotalInput** that the Use Case can process.
+
+And with this code, the only thing we need to do is make the UseCase do a request to actually retrieve the number:
+
+#### lib/features/add_machine/domain/add_machine_use_case.dart
+```dart
+class AddMachineUseCase extends UseCase<AddMachineEntity> {
+  AddMachineUseCase()
+      : super(entity: AddMachineEntity(0), outputFilters: {
+          AddMachineUIOutput: (AddMachineEntity e) =>
+              AddMachineUIOutput(total: e.total),
+        }, inputFilters: {
+          AddMachineAddNumberInput:
+              (AddMachineAddNumberInput i, AddMachineEntity e) =>
+                  AddMachineEntity(i.number + e.total),
+        }) {
+    onCreate();
+  }
+
+  void onCreate() {
+    request(AddMachineGetTotalOutput(),
+        onSuccess: (AddMachineGetTotalInput input) {
+          return AddMachineEntity(input.number);
+        },
+        onFailure: (_) => entity);
+  }
+}
+```
+
+Here we are adding a way to trigger a request. This **onCreate** method will be used by the Presenter once the UI is built, as follows:
+
+#### lib/features/add_machine/presentation/add_machine_presenter.dart
+```dart
+class AddMachinePresenter extends Presenter<AddMachineViewModel,
+    AddMachineUIOutput, AddMachineUseCase> {
+  AddMachinePresenter({
+    required UseCaseProvider provider,
+    required PresenterBuilder<AddMachineViewModel> builder,
+  }) : super(provider: provider, builder: builder);
+
+  @override
+  AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
+      total: output.total.toString(),
+      onAddNumber: (number) => _onAddNumber(useCase, number));
+
+  void _onAddNumber(useCase, String number) {
+    useCase.setInput<AddMachineAddNumberInput>(
+        AddMachineAddNumberInput(int.parse(number)));
+  }
+
+  @override
+  void onLayoutReady(context, AddMachineUseCase useCase) => useCase.onCreate();
+}
+```
+
+To be able to use a specific Use Case, we had to include the name of the class in the generics declaration.
+
+With the **onLayoutReady** override we are able to call any method on the use case the first time the UI is built.
+
+If all these changes are correct and the new test passes, congratulations! You now have attached a custom Gateway to your feature!
+
 
 ## External Interface Layer
 
@@ -955,7 +1106,274 @@ External Interfaces are meant to listen to groups of Requests that use the same 
 
 ### Testing and Coding the External Interface
 
-TBD
+For the final changes on our Add Machine app, we will move the code for the static number in the Gateway to the External Interface. There are no further chages on the current tests, but as an exercise you can add an integration test that confirms the last scenario by adding a way to navigate to the feature, pop out, then open it again to confirm the number is preserved.
+
+This is the remaining code:
+
+#### lib/features/add_machine/external_interface/add_machine_external_interface.dart
+```dart
+class AddMachineExternalInterface
+    extends ExternalInterface<Request, AddMachineGetTotalResponse> {
+  int _savedNumber;
+
+  AddMachineExternalInterface({
+    required List<GatewayConnection> gatewayConnections,
+    int number = 0,
+  })  : _savedNumber = number,
+        super(gatewayConnections);
+
+  @override
+  void handleRequest() {
+    on<AddMachineGetTotalRequest>((request, send) {
+      send(AddMachineGetTotalResponse(_savedNumber));
+    });
+
+    on<AddMachineSetTotalRequest>((request, send) {
+      _savedNumber = request.number;
+      send(AddMachineGetTotalResponse(_savedNumber));
+    });
+  }
+
+  @override
+  FailureResponse onError(Object error) {
+    // left empty, enhance as an exercise later
+    return UnknownFailureResponse();
+  }
+}
+```
+
+See how now we handle two types of request, one to just get the saved total, and the other to modify the total before sending the current value. This requires the creation of another Gateway and request, as follows:
+
+
+#### lib/features/add_machine/external_interface/add_machine_set_total_gateway.dart
+```dart
+class AddMachineSetTotalGateway extends Gateway<
+    AddMachineSetTotalOutput,
+    AddMachineSetTotalRequest,
+    AddMachineGetTotalResponse,
+    AddMachineGetTotalInput> {
+  AddMachineSetTotalGateway({
+    ProvidersContext? context,
+    UseCaseProvider? provider,
+    UseCase? useCase,
+  }) : super(context: context, provider: provider, useCase: useCase);
+
+  @override
+  buildRequest(AddMachineSetTotalOutput output) {
+    return AddMachineSetTotalRequest(output.number);
+  }
+
+  @override
+  FailureInput onFailure(covariant FailureResponse failureResponse) {
+    throw UnimplementedError();
+  }
+
+  @override
+  onSuccess(covariant AddMachineGetTotalResponse response) {
+    return AddMachineGetTotalInput(response.number);
+  }
+}
+
+class AddMachineSetTotalRequest extends Request {
+  final int number;
+
+  AddMachineSetTotalRequest(this.number);
+}
+```
+
+And here are the changes for the rest of components:
+
+#### lib/features/add_machine/domain/add_machine_use_case.dart
+```dart
+class AddMachineUseCase extends UseCase<AddMachineEntity> {
+  AddMachineUseCase()
+      : super(entity: AddMachineEntity(0), outputFilters: {
+          AddMachineUIOutput: (AddMachineEntity e) =>
+              AddMachineUIOutput(total: e.total),
+        }) {
+    onCreate();
+  }
+
+  void onAddNumber(int number) async {
+    await request(AddMachineSetTotalOutput(number + entity.total),
+        onSuccess: (AddMachineGetTotalInput input) {
+      return AddMachineEntity(input.number);
+    }, onFailure: (_) {
+      return entity;
+    });
+  }
+
+  void onCreate() async {
+    await request(AddMachineGetTotalOutput(),
+        onSuccess: (AddMachineGetTotalInput input) {
+          return AddMachineEntity(input.number);
+        },
+        onFailure: (_) => entity);
+  }
+}
+```
+
+#### lib/features/add_machine/presentation/add_machine_presenter.dart
+```dart
+class AddMachinePresenter extends Presenter<AddMachineViewModel,
+    AddMachineUIOutput, AddMachineUseCase> {
+  AddMachinePresenter({
+    required UseCaseProvider provider,
+    required PresenterBuilder<AddMachineViewModel> builder,
+  }) : super(provider: provider, builder: builder);
+
+  @override
+  AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
+      total: output.total.toString(),
+      onAddNumber: (number) => _onAddNumber(useCase, number));
+
+  void _onAddNumber(AddMachineUseCase useCase, String number) {
+    useCase.onAddNumber(int.parse(number));
+  }
+
+  @override
+  void onLayoutReady(context, AddMachineUseCase useCase) => useCase.onCreate();
+}
+```
+
+The main change is that now the Use Case uses a specific method to handle the request to change the saved number, instead of using an input filter.
+
+And finally, some minor corrections to all the tests, just to enable all the providers:
+
+```dart
+final context = ProvidersContext();
+late UseCaseProvider addMachineUseCaseProvider;
+late GatewayProvider getTotalGatewayProvider;
+late GatewayProvider setTotalGatewayProvider;
+late ExternalInterfaceProvider externalInterfaceProvider;
+
+void main() {
+  final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
+
+  void setup() {
+    addMachineUseCaseProvider = UseCaseProvider((_) => AddMachineUseCase());
+    getTotalGatewayProvider = GatewayProvider<AddMachineGetTotalGateway>((_) =>
+        AddMachineGetTotalGateway(
+            context: context, provider: addMachineUseCaseProvider));
+    setTotalGatewayProvider = GatewayProvider<AddMachineSetTotalGateway>((_) =>
+        AddMachineSetTotalGateway(
+            context: context, provider: addMachineUseCaseProvider));
+
+    externalInterfaceProvider = ExternalInterfaceProvider((_) =>
+        AddMachineExternalInterface(
+            gatewayConnections: <GatewayConnection<Gateway>>[
+              () => getTotalGatewayProvider.getGateway(context),
+              () => setTotalGatewayProvider.getGateway(context),
+            ]));
+    getTotalGatewayProvider.getGateway(context);
+    setTotalGatewayProvider.getGateway(context);
+    externalInterfaceProvider.getExternalInterface(context);
+  }
+
+  /// Given I have navigated to the Add Machine feature
+  /// Then I will see the Add Machine screen
+  /// And the total shown will be 0.
+  uiTest(
+    'AddMachineUI unit test - Scenario 1',
+    context: context,
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
+    setup: setup,
+    verify: (tester) async {
+      expect(find.text('Add Machine'), findsOneWidget);
+
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')),
+          findsOneWidget);
+    },
+  );
+
+  /// Given I opened the Add Machine feature
+  /// When I write a number on the number field
+  /// And I press the "Add" button
+  /// Then the total shown will be the entered number.
+  uiTest(
+    'AddMachineUI unit test - Scenario 2',
+    context: context,
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
+    setup: setup,
+    verify: (tester) async {
+      final numberField = find.byKey(Key('NumberField'));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, '15');
+
+      final addButton = find.byKey(Key('AddButton'));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
+
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
+          findsOneWidget);
+    },
+  );
+
+  /// Given I have entered a number on the Add Machine feature
+  /// When I write another number and press "Add"
+  /// Then the total shown will be the sum of both numbers.
+  uiTest(
+    'AddMachineUI unit test - Scenario 3',
+    context: context,
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
+    setup: setup,
+    verify: (tester) async {
+      final numberField = find.byKey(Key('NumberField'));
+      expect(numberField, findsOneWidget);
+
+      await tester.enterText(numberField, '15');
+
+      final addButton = find.byKey(Key('AddButton'));
+      expect(addButton, findsOneWidget);
+
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      expect(sumTotalWidget, findsOneWidget);
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
+          findsOneWidget);
+
+      await tester.enterText(numberField, '7');
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('22')),
+          findsOneWidget);
+    },
+  );
+
+  /// Given I have added one or more numbers on the Add Machine feature
+  /// When I navigate away and open the feature again
+  /// Then the total shown is the previous total that was shown.
+  uiTest(
+    'AddMachineUI unit test - Scenario 4',
+    context: context,
+    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
+    setup: () {
+      setup();
+
+      final gateway = setTotalGatewayProvider.getGateway(context);
+
+      // We add a pre-existent request, so by the time the UI is build,
+      // the use case already has this value
+      gateway.transport(AddMachineSetTotalRequest(740));
+    },
+    verify: (tester) async {
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')),
+          findsOneWidget);
+    },
+  );
+}
+```
 
 
 
