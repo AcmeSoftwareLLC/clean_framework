@@ -223,6 +223,7 @@ class AppRoute<R extends Object> {
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
+          name: state.name,
           child: builder(context, AppRouteState._fromGoRouteState(state)),
         );
       },
