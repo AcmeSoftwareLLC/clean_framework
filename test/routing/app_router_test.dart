@@ -527,7 +527,13 @@ void main() {
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, state) {
+            expect(
+              state.error.toString(),
+              contains('No route param with "c" key was passed'),
+            );
+            return Page404();
+          },
         );
         await pumpApp(tester);
 
@@ -536,15 +542,6 @@ void main() {
 
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
-
-        expect(
-          tester.takeException(),
-          isA<AssertionError>().having(
-            (e) => e.message,
-            'error message',
-            'No route param with "c" key was passed',
-          ),
-        );
       },
     );
 
