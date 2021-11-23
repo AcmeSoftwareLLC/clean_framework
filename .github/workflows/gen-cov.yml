@@ -1,6 +1,6 @@
 name: Analyze, Run Tests & Generate Coverage
 
-on: push
+on: [push, pull_request]
 
 jobs:
   gen-cov:
