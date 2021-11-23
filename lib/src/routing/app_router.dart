@@ -47,10 +47,13 @@ class AppRouter<R extends Object> {
     bool enableLogging = false,
     this.initialLocation = '/',
     AppRouterRedirect? redirect,
+    TransitionBuilder? navigatorBuilder,
+    this.observers,
   })  : _routes = routes,
         _errorBuilder = errorBuilder,
         _enableLogging = enableLogging,
-        _redirect = redirect {
+        _redirect = redirect,
+        _navigatorBuilder = navigatorBuilder {
     _initInnerRouter();
   }
 
@@ -59,6 +62,10 @@ class AppRouter<R extends Object> {
   final RouteWidgetBuilder _errorBuilder;
   final bool _enableLogging;
   final AppRouterRedirect? _redirect;
+  final TransitionBuilder? _navigatorBuilder;
+
+  /// NavigatorObserver used to receive change notifications when navigation changes.
+  final List<NavigatorObserver>? observers;
 
   /// The initial location for the router.
   ///
@@ -167,6 +174,8 @@ class AppRouter<R extends Object> {
         );
       },
       initialLocation: initialLocation,
+      observers: observers,
+      navigatorBuilder: _navigatorBuilder,
       debugLogDiagnostics: _enableLogging,
       redirect: _redirect == null
           ? null
