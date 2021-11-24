@@ -36,12 +36,12 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     if (_useCase == null) {
       _useCase = widget._provider.getUseCase(ref) as U;
       widget.onLayoutReady(context, _useCase!);
-      widget._provider.listen<O>(ref, _onOutputChanged);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    widget._provider.listen<O>(ref, _onOutputChanged);
     final output = widget.subscribe(ref);
     return widget.builder(widget.createViewModel(_useCase!, output));
   }
