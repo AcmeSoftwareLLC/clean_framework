@@ -1,5 +1,6 @@
 # 1.1.4 Support for adding Navigator Observers and Builder
 - Added `observers` and `navigatorBuilder` to **AppRouter**.
+- Improved duplication handling logic for `onOutputUpdate`.
 
 # 1.1.3 Upgraded to stable version of `riverpod`
 - `riverpod` version upgraded to `^1.0.0`
