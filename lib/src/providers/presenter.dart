@@ -1,6 +1,5 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Presenter<V extends ViewModel, O extends Output,
@@ -27,39 +26,28 @@ abstract class Presenter<V extends ViewModel, O extends Output,
 class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     extends ConsumerState<Presenter<V, O, U>> {
   U? _useCase;
-  O? _previousOutput;
 
   @override
   WidgetRef get ref => context as WidgetRef;
 
   @override
-  void initState() {
-    super.initState();
-    _afterLayout(() => widget.onLayoutReady(context, _useCase!));
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _useCase ??= widget._provider.getUseCase(ref) as U;
+    if (_useCase == null) {
+      _useCase = widget._provider.getUseCase(ref) as U;
+      widget.onLayoutReady(context, _useCase!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    widget._provider.listen<O>(ref, _onOutputChanged);
     final output = widget.subscribe(ref);
-
-    _afterLayout(() {
-      if (_previousOutput != output) {
-        widget.onOutputUpdate(context, output);
-        _previousOutput = output;
-      }
-    });
-
     return widget.builder(widget.createViewModel(_useCase!, output));
   }
 
-  void _afterLayout(void Function() fn) {
-    SchedulerBinding.instance!.addPostFrameCallback((_) => fn());
+  void _onOutputChanged(O? previous, O next) {
+    if (previous != next) widget.onOutputUpdate(context, next);
   }
 }
 
