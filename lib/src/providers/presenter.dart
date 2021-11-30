@@ -1,5 +1,6 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Presenter<V extends ViewModel, O extends Output,
@@ -31,12 +32,17 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   WidgetRef get ref => context as WidgetRef;
 
   @override
+  void initState() {
+    super.initState();
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      widget.onLayoutReady(context, _useCase!);
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_useCase == null) {
-      _useCase = widget._provider.getUseCase(ref) as U;
-      widget.onLayoutReady(context, _useCase!);
-    }
+    _useCase ??= widget._provider.getUseCase(ref) as U;
   }
 
   @override
