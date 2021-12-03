@@ -1,3 +1,4 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
@@ -5,9 +6,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  final router = AppRouter(
+    routes: [
+      AppRoute(
+        name: 'test',
+        path: '/',
+        builder: (_, __) => TestUI(),
+      ),
+    ],
+    errorBuilder: (_, __) => Container(),
+  );
+
+  setupUITest(
+    context: ProvidersContext(),
+    router: router,
+  );
+
+  uiTest(
+    'LastLogin using router',
+    postFrame: (tester) async {
+      await tester.pump();
+    },
+    verify: (tester) async {
+      expect(find.byType(type<PresenterFake>()), findsOneWidget);
+      expect(find.text('bar'), findsOneWidget);
+    },
+    wrapWithMaterialApp: true,
+    screenSize: Size(800, 600),
+  );
+
   uiTest(
     'LastLogin',
-    context: ProvidersContext(),
     builder: () => TestUI(),
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);

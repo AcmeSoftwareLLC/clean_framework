@@ -3,10 +3,13 @@ import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
 import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  setupUITest(context: providersContext, router: router);
+
   final gateway = countryGatewayProvider.getGateway(providersContext);
 
   gateway.transport = (request) async {
@@ -41,7 +44,6 @@ void main() {
   group('CountryUI tests :: ', () {
     uiTest(
       'lists countries for default continent',
-      context: providersContext,
       builder: () => CountryUI(),
       verify: (tester) async {
         final listTileFinder = find.byType(ListTile);
@@ -86,9 +88,55 @@ void main() {
     );
 
     uiTest(
+      'tapping on country tile should navigate to detail page',
+      verify: (tester) async {
+        router.to(Routes.countries);
+        await tester.pumpAndSettle();
+
+        final listTileFinder = find.byType(ListTile);
+
+        expect(listTileFinder, findsNWidgets(2));
+
+        final nepalTileFinder = listTileFinder.first;
+        final japanTileFinder = listTileFinder.last;
+
+        await tester.tap(nepalTileFinder);
+        await tester.pumpAndSettle();
+
+        expect(
+          find.descendant(
+            of: find.byType(AppBar),
+            matching: find.text('Nepal'),
+          ),
+          findsOneWidget,
+        );
+
+        expect(router.location, '/countries/Nepal?capital=Kathmandu');
+
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+
+        await tester.tap(japanTileFinder);
+        await tester.pumpAndSettle();
+
+        expect(
+          find.descendant(
+            of: find.byType(AppBar),
+            matching: find.text('Japan'),
+          ),
+          findsOneWidget,
+        );
+
+        expect(router.location, '/countries/Japan?capital=Tokyo');
+      },
+    );
+
+    uiTest(
       'switching continent shows countries for the switched continent',
-      context: providersContext,
       builder: () => CountryUI(),
+      postFrame: (tester) async {
+        await tester.pump();
+      },
       verify: (tester) async {
         final listTileFinder = find.byType(ListTile);
         expect(listTileFinder, findsNWidgets(2));

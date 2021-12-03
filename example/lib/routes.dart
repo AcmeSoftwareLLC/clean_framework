@@ -9,6 +9,7 @@ enum Routes {
   home,
   lastLogin,
   countries,
+  countryDetail,
   randomCat,
 }
 
@@ -28,6 +29,22 @@ final router = AppRouter<Routes>(
           name: Routes.countries,
           path: 'countries',
           builder: (context, state) => CountryUI(),
+          routes: [
+            AppRoute(
+              name: Routes.countryDetail,
+              path: ':country',
+              builder: (context, state) {
+                return Scaffold(
+                  appBar: AppBar(
+                    title: Text(state.getParam('country')),
+                  ),
+                  body: Center(
+                    child: Text(state.queryParams['capital'].toString()),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         AppRoute(
           name: Routes.randomCat,
