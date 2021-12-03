@@ -62,7 +62,7 @@ class AppRouter<R extends Object> {
   final RouteWidgetBuilder _errorBuilder;
   final bool _enableLogging;
   final AppRouterRedirect? _redirect;
-  final TransitionBuilder? _navigatorBuilder;
+  TransitionBuilder? _navigatorBuilder;
 
   /// NavigatorObserver used to receive change notifications when navigation changes.
   final List<NavigatorObserver>? observers;
@@ -160,6 +160,12 @@ class AppRouter<R extends Object> {
     return () => _router.removeListener(listener);
   }
 
+  /// Overrides the provided navigatorBuilder for tests.
+  @visibleForTesting
+  set navigatorBuilder(TransitionBuilder? builder) {
+    _navigatorBuilder = builder;
+  }
+
   /// Resets the router by creating a new instance of underlying router.
   @visibleForTesting
   void reset() => _initInnerRouter();
@@ -175,7 +181,9 @@ class AppRouter<R extends Object> {
       },
       initialLocation: initialLocation,
       observers: observers,
-      navigatorBuilder: _navigatorBuilder,
+      navigatorBuilder: (context, child) {
+        return _navigatorBuilder?.call(context, child) ?? child!;
+      },
       debugLogDiagnostics: _enableLogging,
       redirect: _redirect == null
           ? null
