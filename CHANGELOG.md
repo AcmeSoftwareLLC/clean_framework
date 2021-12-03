@@ -1,6 +1,9 @@
 # 1.1.4 Support for adding Navigator Observers and Builder
 - Added `observers` and `navigatorBuilder` to **AppRouter**.
 - Improved duplication handling logic for `onOutputUpdate`.
+- Added `postFrame` callback to **uiTest**, which overrides the default `pumpAndSettle`. Fixes [#31](https://github.com/MattHamburger/clean_framework/issues/31).
+- Added `router` argument to **uiTest** to enable navigating between routes inside the test block.
+- Added `setupUITest()` method to setup provider context and router for all the subsequent **uiTest**s.
 
 # 1.1.3 Upgraded to stable version of `riverpod`
 - `riverpod` version upgraded to `^1.0.0`
