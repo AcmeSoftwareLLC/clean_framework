@@ -13,8 +13,9 @@ Type type<T extends Object>() => T;
 void uiTest(
   String description, {
   required ProvidersContext context,
-  required UI Function() builder,
   required WidgetTesterCallback verify,
+  UI Function()? builder,
+  AppRouter? router,
   FutureOr<void> Function()? setup,
   bool wrapWithMaterialApp = true,
   bool? skip,
@@ -26,6 +27,12 @@ void uiTest(
   Size? screenSize,
   Iterable<LocalizationsDelegate>? localizationDelegates,
 }) {
+  assert(
+    () {
+      return builder != null || router != null;
+    }(),
+    'Provide either "builder" or "router".',
+  );
   assert(
     () {
       return localizationDelegates == null || wrapWithMaterialApp;
@@ -43,19 +50,32 @@ void uiTest(
 
       await setup?.call();
 
-      final scopedWidget = UncontrolledProviderScope(
-        container: context(),
-        child: builder(),
-      );
+      Widget child;
+      if (wrapWithMaterialApp) {
+        if (router == null) {
+          child = MaterialApp(
+            home: UncontrolledProviderScope(
+              container: context(),
+              child: builder!(),
+            ),
+            localizationsDelegates: localizationDelegates,
+          );
+        } else {
+          child = MaterialApp.router(
+            routeInformationParser: router.informationParser,
+            routerDelegate: router.delegate,
+            localizationsDelegates: localizationDelegates,
+          );
+        }
+      } else {
+        child = UncontrolledProviderScope(
+          container: context(),
+          child: builder!(),
+        );
+      }
 
-      await tester.pumpWidget(
-        wrapWithMaterialApp
-            ? MaterialApp(
-                home: scopedWidget,
-                localizationsDelegates: localizationDelegates,
-              )
-            : scopedWidget,
-      );
+      await tester.pumpWidget(child);
+
       await tester.pumpAndSettle();
       await verify(tester);
 
