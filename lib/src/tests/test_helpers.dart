@@ -1,3 +1,5 @@
+//ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
+
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
@@ -7,17 +9,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 
+@visibleForTesting
 Type type<T extends Object>() => T;
+
+_UITestConfig? _uiTestConfig;
+
+@visibleForTesting
+void setupUITest({
+  required ProvidersContext context,
+  required AppRouter router,
+}) {
+  _uiTestConfig = _UITestConfig(
+    context: context,
+    router: router,
+  );
+}
+
+class _UITestConfig {
+  _UITestConfig({
+    required this.context,
+    required this.router,
+  });
+
+  final ProvidersContext context;
+  final AppRouter router;
+}
 
 @isTest
 void uiTest(
   String description, {
-  required ProvidersContext context,
   required WidgetTesterCallback verify,
+  ProvidersContext? context,
   UI Function()? builder,
   AppRouter? router,
   FutureOr<void> Function()? setup,
+  FutureOr<void> Function(WidgetTester)? postFrame,
   bool wrapWithMaterialApp = true,
+  Duration? pumpDuration,
   bool? skip,
   Timeout? timeout,
   Duration? initialTimeout,
@@ -29,15 +57,31 @@ void uiTest(
 }) {
   assert(
     () {
-      return builder != null || router != null;
+      return localizationDelegates == null || wrapWithMaterialApp;
+    }(),
+    'Need to wrap with MaterialApp if overriding localization delegates is required',
+  );
+
+  final _router = router ?? _uiTestConfig?.router;
+  final _context = context ?? _uiTestConfig?.context;
+
+  assert(
+    () {
+      return builder != null || _router != null;
     }(),
     'Provide either "builder" or "router".',
   );
   assert(
     () {
-      return localizationDelegates == null || wrapWithMaterialApp;
+      return _router == null || wrapWithMaterialApp;
     }(),
-    'Need to wrap with MaterialApp if overriding localization delegates is required',
+    '"router" should not be passed when wrapWithMaterialApp is false',
+  );
+  assert(
+    () {
+      return _context != null;
+    }(),
+    'Either pass "context" or call "setupUITest()" before test block.',
   );
 
   testWidgets(
@@ -50,33 +94,37 @@ void uiTest(
 
       await setup?.call();
 
+      Widget _scopedChild(Widget child) {
+        return UncontrolledProviderScope(container: _context!(), child: child);
+      }
+
       Widget child;
       if (wrapWithMaterialApp) {
-        if (router == null) {
-          child = MaterialApp(
-            home: UncontrolledProviderScope(
-              container: context(),
-              child: builder!(),
-            ),
+        if (builder == null) {
+          _router!.navigatorBuilder = (_, nav) => _scopedChild(nav!);
+          child = MaterialApp.router(
+            routeInformationParser: _router.informationParser,
+            routerDelegate: _router.delegate,
             localizationsDelegates: localizationDelegates,
           );
         } else {
-          child = MaterialApp.router(
-            routeInformationParser: router.informationParser,
-            routerDelegate: router.delegate,
+          child = MaterialApp(
+            home: _scopedChild(builder()),
             localizationsDelegates: localizationDelegates,
           );
         }
       } else {
-        child = UncontrolledProviderScope(
-          container: context(),
-          child: builder!(),
-        );
+        child = _scopedChild(builder!());
       }
 
-      await tester.pumpWidget(child);
+      await tester.pumpWidget(child, pumpDuration);
 
-      await tester.pumpAndSettle();
+      if (postFrame == null) {
+        await tester.pumpAndSettle();
+      } else {
+        await postFrame(tester);
+      }
+
       await verify(tester);
 
       if (screenSize != null) window.clearPhysicalSizeTestValue();
