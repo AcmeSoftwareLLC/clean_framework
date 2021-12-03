@@ -21,8 +21,18 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   }
 
   O subscribe<O extends Output>(WidgetRef ref) {
+    return ref.watch(_listenForOutputChange(ref));
+  }
+
+  void listen<O extends Output>(WidgetRef ref, void Function(O?, O) listener) {
+    ref.listen<O>(_listenForOutputChange(ref), listener);
+  }
+
+  AlwaysAliveProviderListenable<O> _listenForOutputChange<O extends Output>(
+    WidgetRef ref,
+  ) {
     final useCase = getUseCase(ref);
-    return ref.watch(_provider.select((e) => useCase.getOutput()));
+    return _provider.select((e) => useCase.getOutput());
   }
 }
 

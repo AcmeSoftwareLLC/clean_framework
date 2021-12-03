@@ -9,17 +9,26 @@ import 'package:flutter_test/flutter_test.dart';
 final provider = UseCaseProvider((_) => TestUseCase());
 void main() {
   testWidgets('Presenter initial load', (tester) async {
-    await ProviderTester().pumpWidget(
-      tester,
-      MaterialApp(
-        home: TestPresenter(builder: (TestViewModel viewModel) {
-          return Text(viewModel.foo, key: Key('foo'));
-        }),
-      ),
+    final presenter = TestPresenter(
+      builder: (TestViewModel viewModel) {
+        return Text(viewModel.foo, key: Key('foo'));
+      },
     );
 
+    await ProviderTester().pumpWidget(tester, MaterialApp(home: presenter));
+
     expect(find.byKey(Key('foo')), findsOneWidget);
-    expect(find.text('BAR'), findsOneWidget);
+    expect(find.text('INITIAL'), findsOneWidget);
+
+    await tester.pump();
+    expect(find.text('A'), findsOneWidget);
+
+    expect(presenter.outputUpdateLogs, ['a']);
+
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('B'), findsOneWidget);
+
+    expect(presenter.outputUpdateLogs, ['a', 'b']);
   });
 }
 
@@ -27,16 +36,39 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
   TestPresenter({required PresenterBuilder<TestViewModel> builder})
       : super(provider: provider, builder: builder);
 
+  final List<String> outputUpdateLogs = [];
+
+  @override
+  void onLayoutReady(BuildContext context, TestUseCase useCase) {
+    super.onLayoutReady(context, useCase);
+    useCase.fetch();
+  }
+
   @override
   TestViewModel createViewModel(_, output) => TestViewModel.fromOutput(output);
+
+  @override
+  void onOutputUpdate(BuildContext context, TestOutput output) {
+    super.onOutputUpdate(context, output);
+    outputUpdateLogs.add(output.foo);
+  }
 }
 
 class TestUseCase extends UseCase<EntityFake> {
-  TestUseCase() : super(entity: EntityFake());
+  TestUseCase()
+      : super(
+          entity: EntityFake(),
+          outputFilters: {
+            TestOutput: (EntityFake entity) => TestOutput(entity.value),
+          },
+        );
 
-  @override
-  O getOutput<O extends Output>() {
-    return TestOutput('bar') as O;
+  Future<void> fetch() async {
+    entity = EntityFake(value: 'a');
+
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    entity = EntityFake(value: 'b');
   }
 }
 
