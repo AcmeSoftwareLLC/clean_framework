@@ -1,6 +1,4 @@
-import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:either_dart/either.dart';
 
 import 'firebase_client.dart';
 import 'firebase_requests.dart';
@@ -28,15 +26,21 @@ class FirebaseExternalInterface
     on<FirebaseWatchAllRequest>(_withFirebaseWatchAllRequest);
   }
 
+  @override
+  FailureResponse onError(Object error) {
+    if (error is FirebaseFailureResponse) return error;
+    return UnknownFailureResponse(error);
+  }
+
   void _withFirebaseReadIdRequest(
     FirebaseReadIdRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final content = await _client.read(path: request.path, id: request.id);
     if (content.isEmpty) {
-      send(Left(NoContentFirebaseFailureResponse()));
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
-      send(Right(FirebaseSuccessResponse(content)));
+      send(FirebaseSuccessResponse(content));
     }
   }
 
@@ -46,9 +50,9 @@ class FirebaseExternalInterface
   ) async {
     final content = await _client.readAll(path: request.path);
     if (content.isEmpty) {
-      send(Left(NoContentFirebaseFailureResponse()));
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
-      send(Right(FirebaseSuccessResponse(content)));
+      send(FirebaseSuccessResponse(content));
     }
   }
 
@@ -62,9 +66,9 @@ class FirebaseExternalInterface
       content: request.toJson(),
     );
     if (id.isEmpty) {
-      send(Left(NoContentFirebaseFailureResponse()));
+      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
     } else {
-      send(Right(FirebaseSuccessResponse({'id': id})));
+      send(FirebaseSuccessResponse({'id': id}));
     }
   }
 
@@ -77,7 +81,7 @@ class FirebaseExternalInterface
       id: request.id,
       content: request.toJson(),
     );
-    send(Right(FirebaseSuccessResponse({})));
+    send(FirebaseSuccessResponse({}));
   }
 
   void _withFirebaseDeleteRequest(
@@ -85,7 +89,7 @@ class FirebaseExternalInterface
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     await _client.delete(path: request.path, id: request.id);
-    send(Right(FirebaseSuccessResponse({})));
+    send(FirebaseSuccessResponse({}));
   }
 
   void _withFirebaseWatchIdRequest(
@@ -94,7 +98,7 @@ class FirebaseExternalInterface
   ) {
     final featureStream = _client.watch(path: request.path, id: request.id);
     featureStream.listen(
-      (model) => send(Right(FirebaseSuccessResponse(model))),
+      (model) => send(FirebaseSuccessResponse(model)),
     );
   }
 
@@ -104,7 +108,7 @@ class FirebaseExternalInterface
   ) {
     final featureStream = _client.watchAll(path: request.path);
     featureStream.listen(
-      (model) => send(Right(FirebaseSuccessResponse(model))),
+      (model) => send(FirebaseSuccessResponse(model)),
     );
   }
 }

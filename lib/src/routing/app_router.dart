@@ -1,3 +1,4 @@
+import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:meta/meta.dart';
@@ -46,10 +47,13 @@ class AppRouter<R extends Object> {
     bool enableLogging = false,
     this.initialLocation = '/',
     AppRouterRedirect? redirect,
+    TransitionBuilder? navigatorBuilder,
+    this.observers,
   })  : _routes = routes,
         _errorBuilder = errorBuilder,
         _enableLogging = enableLogging,
-        _redirect = redirect {
+        _redirect = redirect,
+        _navigatorBuilder = navigatorBuilder {
     _initInnerRouter();
   }
 
@@ -58,6 +62,10 @@ class AppRouter<R extends Object> {
   final RouteWidgetBuilder _errorBuilder;
   final bool _enableLogging;
   final AppRouterRedirect? _redirect;
+  TransitionBuilder? _navigatorBuilder;
+
+  /// NavigatorObserver used to receive change notifications when navigation changes.
+  final List<NavigatorObserver>? observers;
 
   /// The initial location for the router.
   ///
@@ -76,23 +84,6 @@ class AppRouter<R extends Object> {
 
   /// The current location of the router.
   String get location => _router.location;
-
-  void _initInnerRouter() {
-    _router = GoRouter(
-      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
-      errorPageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
-        );
-      },
-      initialLocation: initialLocation,
-      debugLogDiagnostics: _enableLogging,
-      redirect: _redirect == null
-          ? null
-          : (state) => _redirect!(AppRouteState._fromGoRouteState(state)),
-    );
-  }
 
   /// Navigates to specified [route].
   ///
@@ -169,9 +160,40 @@ class AppRouter<R extends Object> {
     return () => _router.removeListener(listener);
   }
 
+  /// Overrides the provided navigatorBuilder for tests.
+  @visibleForTesting
+  set navigatorBuilder(TransitionBuilder? builder) {
+    _navigatorBuilder = builder;
+  }
+
   /// Resets the router by creating a new instance of underlying router.
   @visibleForTesting
   void reset() => _initInnerRouter();
+
+  void _initInnerRouter() {
+    _router = GoRouter(
+      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
+      errorPageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: _errorBuilder(context, AppRouteState._fromGoRouteState(state)),
+        );
+      },
+      initialLocation: initialLocation,
+      observers: observers,
+      navigatorBuilder: (context, child) {
+        return _navigatorBuilder?.call(context, child) ?? child!;
+      },
+      debugLogDiagnostics: _enableLogging,
+      redirect: _redirect == null
+          ? null
+          : (state) => _redirect!(AppRouteState._fromGoRouteState(state)),
+    )..addListener(_onLocationChanged);
+  }
+
+  void _onLocationChanged() {
+    CleanFrameworkObserver.instance.onLocationChanged(location);
+  }
 }
 
 /// A declarative mapping between a route name, a route path and a builder.
@@ -209,6 +231,7 @@ class AppRoute<R extends Object> {
       pageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
+          name: state.name,
           child: builder(context, AppRouteState._fromGoRouteState(state)),
         );
       },

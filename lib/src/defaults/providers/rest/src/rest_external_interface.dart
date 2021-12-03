@@ -3,7 +3,6 @@ import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.d
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:either_dart/either.dart';
 
 class RestExternalInterface
     extends ExternalInterface<RestRequest, RestSuccessResponse> {
@@ -25,19 +24,18 @@ class RestExternalInterface
   void handleRequest() {
     on<RestRequest>(
       (request, send) async {
-        try {
-          final data = await _restService.request(
-            method: request.method,
-            path: request.path,
-            data: request.data,
-          );
-          send(Right(RestSuccessResponse(data: data)));
-        } on RestServiceFailure {
-          send(Left(FailureResponse()));
-        }
+        final data = await _restService.request(
+          method: request.method,
+          path: request.path,
+          data: request.data,
+        );
+        send(RestSuccessResponse(data: data));
       },
     );
   }
-}
 
-class RequestNotRecognizedFailureResponse extends FailureResponse {}
+  @override
+  FailureResponse onError(Object error) {
+    return UnknownFailureResponse();
+  }
+}

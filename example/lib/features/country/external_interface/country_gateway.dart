@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework_defaults.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework_example/features/country/domain/country_use_case.dart';
 import 'package:clean_framework_example/providers.dart';
 
@@ -16,11 +15,6 @@ class CountryGateway extends GraphQLGateway<CountryGatewayOutput,
     return CountryRequest(
       continentCode: output.continentCode,
     );
-  }
-
-  @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'test');
   }
 
   @override

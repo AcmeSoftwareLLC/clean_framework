@@ -1,12 +1,17 @@
+# 1.1.4 Support for adding Navigator Observers and Builder
+- Added `observers` and `navigatorBuilder` to **AppRouter**.
+- Improved duplication handling logic for `onOutputUpdate`.
+- Added `postFrame` callback to **uiTest**, which overrides the default `pumpAndSettle`. Fixes [#31](https://github.com/MattHamburger/clean_framework/issues/31).
+- Added `router` argument to **uiTest** to enable navigating between routes inside the test block.
+- Added `setupUITest()` method to setup provider context and router for all the subsequent **uiTest**s.
+
 # 1.1.3 Upgraded to stable version of `riverpod`
 - `riverpod` version upgraded to `^1.0.0`
 
 # 1.1.2 Introduction Codelab
-
 - Added the Introduction to Clean Framework Codelab under the docs folder. The codelab is also published, see the public link on the README file.
 
 # 1.1.1 Mixed External Interface and Router
-
 - Merged into one class the Direct and Watcher External Interfaces, this is a breaking change for any class using this ancestor. The [onTransport] method is replaced by [handleRequest]. Please refer to the code example and tests to understand the migration effort.
 
 - Added a new Router based on the library Go Router. This default is much easier to use and can be overridden during tests. Please refer to the code example for usage.

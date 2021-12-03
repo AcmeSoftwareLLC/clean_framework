@@ -12,7 +12,7 @@ abstract class GraphQLGateway<O extends Output, R extends GraphQLRequest,
   }) : super(context: context, provider: provider, useCase: useCase);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput();
+  FailureInput onFailure(GraphQLFailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
   }
 }

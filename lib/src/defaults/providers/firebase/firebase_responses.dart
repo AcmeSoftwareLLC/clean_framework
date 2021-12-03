@@ -8,8 +8,13 @@ class FirebaseSuccessResponse extends SuccessResponse {
   List<Object?> get props => [json];
 }
 
-abstract class FirebaseFailureResponse extends FailureResponse {}
+class FirebaseFailureResponse
+    extends TypedFailureResponse<FirebaseFailureType> {
+  FirebaseFailureResponse({
+    required FirebaseFailureType type,
+    String message = '',
+    Map<String, Object?> errorData = const {},
+  }) : super(type: type, message: message, errorData: errorData);
+}
 
-class NoContentFirebaseFailureResponse extends FirebaseFailureResponse {}
-
-class WriteFirebaseFailureResponse extends FirebaseFailureResponse {}
+enum FirebaseFailureType { noContent }

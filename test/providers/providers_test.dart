@@ -59,8 +59,13 @@ class TestInterface extends ExternalInterface {
   @override
   void handleRequest() {
     on((request, send) {
-      send(Right(TestResponse()));
+      send(TestResponse());
     });
+  }
+
+  @override
+  FailureResponse onError(Object error) {
+    return UnknownFailureResponse(error);
   }
 }
 

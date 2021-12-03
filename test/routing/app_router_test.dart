@@ -527,7 +527,13 @@ void main() {
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, state) {
+            expect(
+              state.error.toString(),
+              contains('No route param with "c" key was passed'),
+            );
+            return Page404();
+          },
         );
         await pumpApp(tester);
 
@@ -536,15 +542,6 @@ void main() {
 
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
-
-        expect(
-          tester.takeException(),
-          isA<AssertionError>().having(
-            (e) => e.message,
-            'error message',
-            'No route param with "c" key was passed',
-          ),
-        );
       },
     );
 
@@ -713,6 +710,72 @@ void main() {
         removeListener();
       },
     );
+
+    testWidgets(
+      'navigation observers',
+      (tester) async {
+        final observer = TestNavigatorObserver();
+
+        testRouter = AppRouter(
+          observers: [observer],
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.to(Routes.detail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.detail,
+              path: '/detail',
+              builder: (_, __) => OnTapPage(
+                id: 'Detail',
+                onTap: (context) => testRouter.to(Routes.moreDetail),
+              ),
+            ),
+            AppRoute(
+              name: Routes.moreDetail,
+              path: '/more-detail',
+              builder: (_, __) => OnTapPage(id: 'More Detail'),
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(observer.removedRoute, isNull);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(observer.removedRoute, Routes.home.toString());
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        expect(testRouter.location, '/detail');
+
+        // to Routes.moreDetail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(observer.removedRoute, Routes.detail.toString());
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/more-detail');
+      },
+    );
   });
 }
 
@@ -760,5 +823,14 @@ class Page404 extends StatelessWidget {
         child: Text('404'),
       ),
     );
+  }
+}
+
+class TestNavigatorObserver extends NavigatorObserver {
+  String? removedRoute;
+
+  @override
+  void didRemove(Route route, Route? previousRoute) {
+    removedRoute = (route.settings as MaterialPage).name;
   }
 }

@@ -34,7 +34,9 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   @override
   void initState() {
     super.initState();
-    _afterLayout(() => widget.onLayoutReady(context, _useCase!));
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
+      widget.onLayoutReady(context, _useCase!);
+    });
   }
 
   @override
@@ -45,14 +47,13 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   @override
   Widget build(BuildContext context) {
+    widget._provider.listen<O>(ref, _onOutputChanged);
     final output = widget.subscribe(ref);
-
-    _afterLayout(() => widget.onOutputUpdate(context, output));
     return widget.builder(widget.createViewModel(_useCase!, output));
   }
 
-  void _afterLayout(void Function() fn) {
-    SchedulerBinding.instance!.addPostFrameCallback((_) => fn());
+  void _onOutputChanged(O? previous, O next) {
+    if (previous != next) widget.onOutputUpdate(context, next);
   }
 }
 

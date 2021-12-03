@@ -29,8 +29,9 @@ void main() {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
         (_) => TestUseCase(TestEntity(foo: 'bar')));
     var gateway = TestDirectGateway(provider);
-    gateway.transport = (request) async =>
-        Left<FailureResponse, TestResponse>(FailureResponse());
+    gateway.transport = (request) async {
+      return Left<FailureResponse, TestResponse>(UnknownFailureResponse());
+    };
 
     final TestUseCase useCase = provider.getUseCaseFromContext(context);
 

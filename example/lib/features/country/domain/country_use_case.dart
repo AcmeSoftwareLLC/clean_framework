@@ -24,6 +24,7 @@ class CountryUseCase extends UseCase<CountryEntity> {
                 countries: e.countries,
                 continents: e.continents,
                 selectedContinentId: e.selectedContinentId,
+                errorMessage: e.errorMessage,
               );
             },
           },
@@ -33,7 +34,7 @@ class CountryUseCase extends UseCase<CountryEntity> {
     String? continentId,
     bool isRefresh = false,
   }) async {
-    if (!isRefresh) entity = entity.merge(isLoading: true);
+    if (!isRefresh) entity = entity.merge(isLoading: true, errorMessage: '');
 
     final _continentId = continentId ?? entity.selectedContinentId;
 
@@ -43,8 +44,12 @@ class CountryUseCase extends UseCase<CountryEntity> {
         countries: successInput.countries,
         isLoading: false,
         continentId: _continentId,
+        errorMessage: '',
       ),
-      onFailure: (failure) => entity.merge(isLoading: false),
+      onFailure: (failure) => entity.merge(
+        isLoading: false,
+        errorMessage: failure.message,
+      ),
     );
   }
 }
@@ -55,16 +60,24 @@ class CountryUIOutput extends Output {
     required this.countries,
     required this.continents,
     required this.selectedContinentId,
+    required this.errorMessage,
   });
 
   final bool isLoading;
   final List<CountryInput> countries;
   final Map<String, String> continents;
   final String selectedContinentId;
+  final String errorMessage;
 
   @override
   List<Object?> get props {
-    return [isLoading, countries, continents, selectedContinentId];
+    return [
+      isLoading,
+      countries,
+      continents,
+      selectedContinentId,
+      errorMessage,
+    ];
   }
 }
 
