@@ -10,6 +10,8 @@ abstract class RestRequest extends Request {
   String get path;
 
   Map<String, dynamic> get data => {};
+
+  Map<String, String> get headers => {};
 }
 
 abstract class GetRestRequest extends RestRequest {
