@@ -1,7 +1,6 @@
 import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meta/meta.dart';
 
 /// Signature for router's `builder` and `errorBuilder` callback.
 typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
