@@ -100,7 +100,7 @@ void uiTest(
       Widget child;
       if (wrapWithMaterialApp) {
         if (builder == null) {
-          _router!.navigatorBuilder = (_, nav) => _scopedChild(nav!);
+          _router!.navigatorBuilder = (_, __, nav) => _scopedChild(nav);
           child = MaterialApp.router(
             routeInformationParser: _router.informationParser,
             routerDelegate: _router.delegate,
