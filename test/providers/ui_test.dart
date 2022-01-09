@@ -16,6 +16,18 @@ void main() {
     errorBuilder: (_, __) => Container(),
   );
 
+  uiTest(
+    'LastLogin without setup',
+    builder: () => TestUI(),
+    context: ProvidersContext(),
+    verify: (tester) async {
+      expect(find.byType(type<PresenterFake>()), findsOneWidget);
+      expect(find.text('bar'), findsOneWidget);
+    },
+    wrapWithMaterialApp: false,
+    screenSize: Size(800, 600),
+  );
+
   setupUITest(
     context: ProvidersContext(),
     router: router,
@@ -49,12 +61,16 @@ void main() {
 class TestUI extends UI<TestViewModel> {
   @override
   Widget build(BuildContext context, TestViewModel viewModel) {
-    return Text(viewModel.foo);
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Text(viewModel.foo),
+    );
   }
 
   @override
   Presenter<ViewModel, Output, UseCase<Entity>> create(
-      PresenterBuilder<TestViewModel> builder) {
+    PresenterBuilder<TestViewModel> builder,
+  ) {
     return PresenterFake(builder: builder);
   }
 }
@@ -62,7 +78,9 @@ class TestUI extends UI<TestViewModel> {
 class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
   PresenterFake({required PresenterBuilder<TestViewModel> builder})
       : super(
-            builder: builder, provider: UseCaseProvider((_) => UseCaseFake()));
+          builder: builder,
+          provider: UseCaseProvider((_) => UseCaseFake()),
+        );
 
   @override
   TestOutput subscribe(_) => TestOutput('bar');

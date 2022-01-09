@@ -132,7 +132,7 @@ class TypedFailureResponse<T extends Object> extends FailureResponse {
   final Map<String, Object?> errorData;
 
   @override
-  List<Object?> get props => [type, message, errorData];
+  List<Object?> get props => [...super.props, type, errorData];
 }
 
 class UnknownFailureResponse extends FailureResponse {
