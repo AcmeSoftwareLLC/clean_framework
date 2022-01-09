@@ -26,6 +26,21 @@ void main() {
     expect(response, {'foo': 'bar'});
   });
 
+  test('GraphQLService success query with tokenBuilder', () async {
+    // for coverage purposes
+    GraphQLService(link: '', tokenBuilder: () async => 'test-token');
+
+    final service = GraphQLService(link: '', client: mock);
+
+    when(() => mock.query(any())).thenAnswer((_) async => successResult);
+
+    final response = await service.request(
+      method: GraphQLMethod.query,
+      document: '',
+    );
+    expect(response, {'foo': 'bar'});
+  });
+
   test('GraphQLService query with network exception', () async {
     // for coverage purposes
     GraphQLService(link: '');
