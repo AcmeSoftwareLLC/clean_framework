@@ -28,6 +28,7 @@ class RestExternalInterface
           method: request.method,
           path: request.path,
           data: request.data,
+          headers: request.headers,
         );
         send(RestSuccessResponse(data: data));
       },

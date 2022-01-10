@@ -1,31 +1,39 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:graphql/client.dart';
 
+typedef GraphQLTokenBuilder = FutureOr<String?> Function();
+
 class GraphQLService extends NetworkService {
   late final GraphQLClient _client;
 
-  GraphQLService(
-      {required String link,
-      Map<String, String>? headers,
-      GraphQLClient? client})
-      : super(baseUrl: link, headers: headers) {
-    if (client != null) {
-      _client = client;
-      return;
-    }
+  GraphQLService({
+    required String link,
+    GraphQLTokenBuilder? tokenBuilder,
+    String? authHeaderKey,
+    Map<String, String> headers = const {},
+    GraphQLClient? client,
+  }) : super(baseUrl: link, headers: headers) {
+    if (client == null) {
+      final httpLink = HttpLink(link, defaultHeaders: headers);
 
-    final httpLink = HttpLink(link);
-    Link _link;
+      Link _link;
+      if (tokenBuilder == null) {
+        _link = httpLink;
+      } else {
+        final authLink = AuthLink(
+          getToken: tokenBuilder,
+          headerKey: authHeaderKey ?? 'Authorization',
+        );
+        _link = authLink.concat(httpLink);
+      }
 
-    if (headers != null && headers.containsKey('Authorization')) {
-      final authLink = AuthLink(getToken: () => headers['Authorization']);
-      _link = authLink.concat(httpLink);
+      _client = GraphQLClient(link: _link, cache: GraphQLCache());
     } else {
-      _link = httpLink;
+      _client = client;
     }
-
-    _client = GraphQLClient(link: _link, cache: GraphQLCache());
   }
 
   Future<Map<String, dynamic>> request({

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';

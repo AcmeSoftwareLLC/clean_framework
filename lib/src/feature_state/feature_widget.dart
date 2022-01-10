@@ -1,9 +1,9 @@
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/src/feature_state/feature_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'feature.dart';
+import 'feature_mapper.dart';
+import 'feature_state_provider.dart';
 
 /// For each feature entry point, a FeatureWidget instance is used to control
 /// the visibility and behavior of the children. One FeatureWidget could have

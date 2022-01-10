@@ -48,7 +48,6 @@ void uiTest(
   Duration? pumpDuration,
   bool? skip,
   Timeout? timeout,
-  Duration? initialTimeout,
   bool semanticsEnabled = true,
   TestVariant<Object?> variant = const DefaultTestVariant(),
   dynamic tags,
@@ -101,7 +100,7 @@ void uiTest(
       Widget child;
       if (wrapWithMaterialApp) {
         if (builder == null) {
-          _router!.navigatorBuilder = (_, nav) => _scopedChild(nav!);
+          _router!.navigatorBuilder = (_, __, nav) => _scopedChild(nav);
           child = MaterialApp.router(
             routeInformationParser: _router.informationParser,
             routerDelegate: _router.delegate,
@@ -131,7 +130,6 @@ void uiTest(
     },
     skip: skip,
     timeout: timeout,
-    initialTimeout: initialTimeout,
     semanticsEnabled: semanticsEnabled,
     variant: variant,
     tags: tags,

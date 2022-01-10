@@ -12,8 +12,17 @@ class GraphQLExternalInterface
   GraphQLExternalInterface({
     required String link,
     required List<GatewayConnection<Gateway>> gatewayConnections,
+    GraphQLTokenBuilder? tokenBuilder,
+    String? authHeaderKey,
+    Map<String, String> headers = const {},
     GraphQLService? graphQLService,
-  })  : _graphQLService = graphQLService ?? GraphQLService(link: link),
+  })  : _graphQLService = graphQLService ??
+            GraphQLService(
+              link: link,
+              tokenBuilder: tokenBuilder,
+              authHeaderKey: authHeaderKey,
+              headers: headers,
+            ),
         super(gatewayConnections);
 
   @override

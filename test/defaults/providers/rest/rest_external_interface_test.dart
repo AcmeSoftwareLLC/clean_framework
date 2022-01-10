@@ -51,6 +51,7 @@ class RestServiceFake extends Fake implements RestService {
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
+    Map<String, dynamic> headers = const {},
     Client? client,
   }) async {
     if (_response.isEmpty) throw RestServiceFailure();

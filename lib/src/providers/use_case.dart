@@ -1,10 +1,10 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
-import 'package:either_dart/either.dart';
 
 import 'entity.dart';
+import 'view_model.dart';
 
 abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   // TODO Replace with a proper implementation like Freezed

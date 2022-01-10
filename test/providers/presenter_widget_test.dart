@@ -1,9 +1,6 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
-import 'package:clean_framework/src/tests/use_case_fake.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final provider = UseCaseProvider((_) => TestUseCase());

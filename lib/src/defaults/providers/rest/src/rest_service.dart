@@ -13,6 +13,9 @@ class RestService extends NetworkService {
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
+    Map<String, String> headers = const {
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
     Client? client,
   }) async {
     final _client = client ?? Client();
@@ -22,11 +25,13 @@ class RestService extends NetworkService {
       uri = uri.replace(queryParameters: data);
     }
 
-    final request = Request(method.rawString, uri);
-    request.bodyFields = data.cast<String, String>();
-    request.headers.addAll(headers!);
-
     try {
+      final request = Request(method.rawString, uri);
+      request.headers
+        ..addAll(this.headers!)
+        ..addAll(headers);
+      request.body = jsonEncode(data);
+
       final response = await Response.fromStream(await _client.send(request));
 
       if (response.statusCode != 200) throw RestServiceFailure();
