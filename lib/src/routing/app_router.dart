@@ -1,13 +1,19 @@
 import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meta/meta.dart';
 
 /// Signature for router's `builder` and `errorBuilder` callback.
 typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
 
 /// Signature for router's `redirect` callback.
 typedef AppRouterRedirect = String? Function(AppRouteState);
+
+/// Signature of the navigatorBuilder callback.
+typedef AppRouterNavigatorBuilder = Widget Function(
+  BuildContext context,
+  AppRouteState state,
+  Widget child,
+);
 
 /// The router class providing high level interface for Navigator 2 APIs,
 /// backed by [go_router](https://pub.dev/packages/go_router).
@@ -47,7 +53,7 @@ class AppRouter<R extends Object> {
     bool enableLogging = false,
     this.initialLocation = '/',
     AppRouterRedirect? redirect,
-    TransitionBuilder? navigatorBuilder,
+    AppRouterNavigatorBuilder? navigatorBuilder,
     this.observers,
   })  : _routes = routes,
         _errorBuilder = errorBuilder,
@@ -62,7 +68,7 @@ class AppRouter<R extends Object> {
   final RouteWidgetBuilder _errorBuilder;
   final bool _enableLogging;
   final AppRouterRedirect? _redirect;
-  TransitionBuilder? _navigatorBuilder;
+  AppRouterNavigatorBuilder? _navigatorBuilder;
 
   /// NavigatorObserver used to receive change notifications when navigation changes.
   final List<NavigatorObserver>? observers;
@@ -162,7 +168,7 @@ class AppRouter<R extends Object> {
 
   /// Overrides the provided navigatorBuilder for tests.
   @visibleForTesting
-  set navigatorBuilder(TransitionBuilder? builder) {
+  set navigatorBuilder(AppRouterNavigatorBuilder? builder) {
     _navigatorBuilder = builder;
   }
 
@@ -181,8 +187,13 @@ class AppRouter<R extends Object> {
       },
       initialLocation: initialLocation,
       observers: observers,
-      navigatorBuilder: (context, child) {
-        return _navigatorBuilder?.call(context, child) ?? child!;
+      navigatorBuilder: (context, state, child) {
+        final navigatorChild = _navigatorBuilder?.call(
+          context,
+          AppRouteState._fromGoRouteState(state),
+          child,
+        );
+        return navigatorChild ?? child;
       },
       debugLogDiagnostics: _enableLogging,
       redirect: _redirect == null

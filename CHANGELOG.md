@@ -1,3 +1,12 @@
+# 1.1.5 Added more configuration options for Rest and GraphQL external interfaces
+- Added `tokenBuilder` and `authHeaderKey` for **GraphQLExternalInterface**.
+- Added `headers` in rest requests.
+- Now Map<String, dynamic> can be sent in POST request using content types other than url-encoded. (Previously, only url-encoded POST request were supported).
+- Added `application/json` as default content type for all rest requests and `utf-8` as default encoding.
+- Removed `intitialTimeout` from **uiTest** as it's been deprecated.
+- Added route state to navigator builder.
+- Upgraded dependencies.
+
 # 1.1.4 Support for adding Navigator Observers and Builder
 - Added `observers` and `navigatorBuilder` to **AppRouter**.
 - Improved duplication handling logic for `onOutputUpdate`.

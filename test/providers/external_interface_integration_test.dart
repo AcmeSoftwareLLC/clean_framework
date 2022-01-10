@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:clean_framework/src/providers/gateway_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
