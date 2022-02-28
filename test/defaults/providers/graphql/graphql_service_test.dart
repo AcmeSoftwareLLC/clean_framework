@@ -188,11 +188,13 @@ class MutationOptionsMock extends Mock implements MutationOptions {}
 final successResult = QueryResult(
   source: QueryResultSource.network,
   data: {'foo': 'bar'},
+  parserFn: (data) => data,
 );
 
 QueryResult exceptionResult(OperationException exception) {
   return QueryResult(
     source: QueryResultSource.network,
     exception: exception,
+    parserFn: (data) => data,
   );
 }
