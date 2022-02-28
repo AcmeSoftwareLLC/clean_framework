@@ -7,8 +7,8 @@ homepage: https://acmesoftware.com/
 repository: https://github.com/MattHamburger/clean_framework
 
 environment:
-  sdk: '>=2.13.0 <3.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=2.16.0 <3.0.0'
+  flutter: '>=1.17.0'
 
 dependencies:
   flutter:
@@ -22,11 +22,11 @@ dependencies:
   http: ^0.13.4
   meta: ^1.7.0
   either_dart: ^0.1.4
-  go_router: ^3.0.0
+  go_router: ^3.0.2
 
   # For default implementations:
-  graphql: ^5.0.0
-  cloud_firestore: ^3.1.5
+  graphql: ^5.0.1
+  cloud_firestore: ^3.1.10
 
 dev_dependencies:
   test: ^1.16.2
