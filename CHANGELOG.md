@@ -1,3 +1,8 @@
+# 1.1.6 Added `didUpdatePresenter` & upgraded dependencies
+- Added `didUpdatePresenter` to **Presenter**.
+- Upgraded dependencies.
+- Migrated example app to Android v2 embedding.
+
 # 1.1.5 Added more configuration options for Rest and GraphQL external interfaces
 - Added `tokenBuilder` and `authHeaderKey` for **GraphQLExternalInterface**.
 - Added `headers` in rest requests.
