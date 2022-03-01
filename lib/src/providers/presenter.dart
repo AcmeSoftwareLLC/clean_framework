@@ -14,11 +14,24 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   @override
   _PresenterState<V, O, U> createState() => _PresenterState<V, O, U>();
 
+  @protected
   V createViewModel(U useCase, O output);
 
+  /// Called when this presenter is inserted into the tree.
+  @protected
+  void onLayoutReady(BuildContext context, U useCase) {}
+
+  /// Called whenever the [output] updates.
+  @protected
   void onOutputUpdate(BuildContext context, O output) {}
 
-  void onLayoutReady(BuildContext context, U useCase) {}
+  /// Called whenever the presenter configuration changes.
+  @protected
+  void didUpdatePresenter(
+    BuildContext context,
+    covariant Presenter<V, O, U> old,
+    U useCase,
+  ) {}
 
   @visibleForTesting
   O subscribe(WidgetRef ref) => _provider.subscribe<O>(ref);
@@ -43,6 +56,12 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _useCase ??= widget._provider.getUseCase(ref) as U;
+  }
+
+  @override
+  void didUpdateWidget(covariant Presenter<V, O, U> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.didUpdatePresenter(context, oldWidget, _useCase!);
   }
 
   @override

@@ -16,12 +16,14 @@ class GraphQLExternalInterface
     String? authHeaderKey,
     Map<String, String> headers = const {},
     GraphQLService? graphQLService,
+    Duration? timeout,
   })  : _graphQLService = graphQLService ??
             GraphQLService(
               link: link,
               tokenBuilder: tokenBuilder,
               authHeaderKey: authHeaderKey,
               headers: headers,
+              timeout: timeout,
             ),
         super(gatewayConnections);
 
@@ -33,6 +35,7 @@ class GraphQLExternalInterface
           method: GraphQLMethod.query,
           document: request.document,
           variables: request.variables,
+          timeout: request.timeout,
         );
 
         send(GraphQLSuccessResponse(data: data));
@@ -44,6 +47,7 @@ class GraphQLExternalInterface
           method: GraphQLMethod.mutation,
           document: request.document,
           variables: request.variables,
+          timeout: request.timeout,
         );
 
         send(GraphQLSuccessResponse(data: data));
@@ -66,6 +70,11 @@ class GraphQLExternalInterface
         type: GraphQLFailureType.server,
         message: error.originalException.toString(),
         errorData: error.errorData ?? {},
+      );
+    } else if (error is GraphQLTimeoutException) {
+      return GraphQLFailureResponse(
+        type: GraphQLFailureType.timeout,
+        message: 'Connection Timeout',
       );
     }
 
