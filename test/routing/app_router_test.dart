@@ -617,6 +617,7 @@ void main() {
           errorBuilder: (_, __) => Page404(),
           redirect: (state) {
             if (state.location == '/detail') return '/more-detail';
+            return null;
           },
         );
         await pumpApp(tester);

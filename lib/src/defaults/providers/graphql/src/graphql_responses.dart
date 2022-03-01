@@ -14,4 +14,4 @@ class GraphQLFailureResponse extends TypedFailureResponse<GraphQLFailureType> {
   }) : super(type: type, message: message, errorData: errorData);
 }
 
-enum GraphQLFailureType { operation, network, server }
+enum GraphQLFailureType { operation, network, server, timeout }
