@@ -7,14 +7,13 @@ import 'package:graphql/client.dart';
 typedef GraphQLTokenBuilder = FutureOr<String?> Function();
 
 class GraphQLService extends NetworkService {
-  late final GraphQLClient _client;
-
   GraphQLService({
     required String link,
     GraphQLTokenBuilder? tokenBuilder,
     String? authHeaderKey,
     Map<String, String> headers = const {},
     GraphQLClient? client,
+    this.timeout,
   }) : super(baseUrl: link, headers: headers) {
     if (client == null) {
       final httpLink = HttpLink(link, defaultHeaders: headers);
@@ -36,16 +35,22 @@ class GraphQLService extends NetworkService {
     }
   }
 
+  late final GraphQLClient _client;
+  final Duration? timeout;
+
   Future<Map<String, dynamic>> request({
     required GraphQLMethod method,
     required String document,
     Map<String, dynamic>? variables,
+    Duration? timeout,
   }) async {
+    final _timeout = timeout ?? this.timeout;
+
     switch (method) {
       case GraphQLMethod.query:
-        return _handleExceptions(await _query(document, variables));
+        return _handleExceptions(await _query(document, variables, _timeout));
       case GraphQLMethod.mutation:
-        return _handleExceptions(await _mutate(document, variables));
+        return _handleExceptions(await _mutate(document, variables, _timeout));
     }
   }
 
@@ -79,23 +84,36 @@ class GraphQLService extends NetworkService {
   Future<QueryResult> _query(
     String doc,
     Map<String, dynamic>? variables,
+    Duration? timeout,
   ) {
     final options = QueryOptions(
       document: gql(doc),
       variables: variables ?? {},
     );
-    return _client.query(options);
+
+    return _timedOut(_client.query(options), timeout);
   }
 
   Future<QueryResult> _mutate(
     String doc,
     Map<String, dynamic>? variables,
+    Duration? timeout,
   ) {
     final options = MutationOptions(
       document: gql(doc),
       variables: variables ?? {},
     );
-    return _client.mutate(options);
+
+    return _timedOut(_client.mutate(options), timeout);
+  }
+
+  Future<QueryResult> _timedOut<T>(
+    Future<QueryResult> request,
+    Duration? timeout,
+  ) async {
+    if (timeout == null) return request;
+
+    return request.timeout(timeout);
   }
 }
 
