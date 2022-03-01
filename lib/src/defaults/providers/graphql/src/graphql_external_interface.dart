@@ -72,7 +72,10 @@ class GraphQLExternalInterface
         errorData: error.errorData ?? {},
       );
     } else if (error is GraphQLTimeoutException) {
-      return GraphQLFailureResponse(type: GraphQLFailureType.timeout);
+      return GraphQLFailureResponse(
+        type: GraphQLFailureType.timeout,
+        message: 'Connection Timeout',
+      );
     }
 
     return UnknownFailureResponse(error);
