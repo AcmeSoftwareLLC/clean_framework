@@ -46,11 +46,19 @@ class GraphQLService extends NetworkService {
   }) async {
     final _timeout = timeout ?? this.timeout;
 
-    switch (method) {
-      case GraphQLMethod.query:
-        return _handleExceptions(await _query(document, variables, _timeout));
-      case GraphQLMethod.mutation:
-        return _handleExceptions(await _mutate(document, variables, _timeout));
+    try {
+      switch (method) {
+        case GraphQLMethod.query:
+          return _handleExceptions(
+            await _query(document, variables, _timeout),
+          );
+        case GraphQLMethod.mutation:
+          return _handleExceptions(
+            await _mutate(document, variables, _timeout),
+          );
+      }
+    } on TimeoutException {
+      throw GraphQLTimeoutException();
     }
   }
 
@@ -186,3 +194,5 @@ class GraphQLServerException implements GraphQLServiceException {
     return 'GraphQLServerException{originalException: $originalException, errorData: $errorData}';
   }
 }
+
+class GraphQLTimeoutException implements GraphQLServiceException {}
