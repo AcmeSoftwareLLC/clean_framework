@@ -148,6 +148,26 @@ void main() {
         ),
       );
     });
+
+    test('timeout exception', () async {
+      final gateway = GatewayFake(UseCaseFake());
+
+      GraphQLExternalInterface(
+        link: 'https://acmesoftware.com',
+        gatewayConnections: [() => gateway],
+        timeout: Duration.zero,
+      );
+
+      final result = await gateway.transport(MutationRequest());
+      expect(result.isLeft, isTrue);
+      expect(
+        result.left,
+        GraphQLFailureResponse(
+          type: GraphQLFailureType.timeout,
+          message: 'Connection Timeout',
+        ),
+      );
+    });
   });
 }
 

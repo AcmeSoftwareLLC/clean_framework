@@ -90,6 +90,7 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
     TestPresenter old,
     TestUseCase useCase,
   ) {
+    super.didUpdatePresenter(context, old, useCase);
     didUpdatePresenterLogs.add(PresenterData(old.count, count));
   }
 }
