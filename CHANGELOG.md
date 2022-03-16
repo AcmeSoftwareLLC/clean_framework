@@ -1,3 +1,5 @@
+# 1.1.7 Fixed issue with Form URLEncoded request body format
+
 # 1.1.6 Added `didUpdatePresenter` & upgraded dependencies
 - Added `didUpdatePresenter` to **Presenter**.
 - Added `timeout` support for GraphQL requests.  
