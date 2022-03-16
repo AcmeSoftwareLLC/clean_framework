@@ -1,3 +1,6 @@
+# 1.2.0 Fixed issue with Form URLEncoded request body format
+- [**Breaking**] Upgraded `mockoon` to **v0.3.0**
+
 # 1.1.6 Added `didUpdatePresenter` & upgraded dependencies
 - Added `didUpdatePresenter` to **Presenter**.
 - Added `timeout` support for GraphQL requests.  

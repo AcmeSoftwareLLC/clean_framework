@@ -11,6 +11,60 @@ void main() {
     registerFallbackValue(BaseRequestMock());
     registerFallbackValue(StreamedResponseMock());
   });
+
+  test(
+    'RestService | correct request for form url encoded POST request',
+    () async {
+      final service = RestService(baseUrl: 'https://fake.com');
+      final client = ClientFake();
+
+      await service.request(
+        method: RestMethod.post,
+        path: 'test',
+        client: client,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        data: {'foo': 'bar'},
+      );
+
+      expect(
+        client.request.headers,
+        {'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'},
+      );
+      expect(client.request.method, 'POST');
+      expect(client.request.url.toString(), 'https://fake.com/test');
+
+      expect(client.request.bodyFields, {'foo': 'bar'});
+      expect(client.request.body, 'foo=bar');
+    },
+  );
+
+  test('RestService | correct request for json POST request', () async {
+    final service = RestService(baseUrl: 'https://fake.com');
+    final client = ClientFake();
+
+    await service.request(
+      method: RestMethod.post,
+      path: 'test',
+      client: client,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {'foo': 'bar'},
+    );
+
+    expect(
+      client.request.headers,
+      {'Content-Type': 'application/json; charset=utf-8'},
+    );
+    expect(client.request.method, 'POST');
+    expect(client.request.url.toString(), 'https://fake.com/test');
+
+    expect(() => client.request.bodyFields, throwsStateError);
+    expect(client.request.body, '{"foo":"bar"}');
+  });
+
   test('RestService success', () async {
     final content = {"foo": "bar"};
     final service = RestService(baseUrl: 'http://fake.com');
@@ -101,3 +155,17 @@ class ClientMock extends Mock implements Client {}
 class StreamedResponseMock extends Mock implements StreamedResponse {}
 
 class BaseRequestMock extends Mock implements BaseRequest {}
+
+class ClientFake extends Fake implements Client {
+  late final Request request;
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) async {
+    this.request = request as Request;
+    final contentBytes = jsonEncode({'foo': 'bar'}).codeUnits;
+    return StreamedResponse(Stream.value(contentBytes), 200);
+  }
+
+  @override
+  void close() {}
+}

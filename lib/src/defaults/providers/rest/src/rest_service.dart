@@ -30,7 +30,12 @@ class RestService extends NetworkService {
       request.headers
         ..addAll(this.headers!)
         ..addAll(headers);
-      request.body = jsonEncode(data);
+
+      if (headers['Content-Type'] == 'application/x-www-form-urlencoded') {
+        request.bodyFields = data.map((k, v) => MapEntry(k, v.toString()));
+      } else {
+        request.body = jsonEncode(data);
+      }
 
       final response = await Response.fromStream(await _client.send(request));
 
