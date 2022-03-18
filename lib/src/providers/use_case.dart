@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   final Map<Type, Function> _inputFilters;
 
   final Map<Type, Function> _requestSubscriptions = {};
+  final Map<String, Timer> _debounceTimers = {};
 
   UseCase({
     required E entity,
@@ -23,6 +26,10 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
 
   @override
   void dispose() {
+    for (final debounceTimer in _debounceTimers.values) {
+      debounceTimer.cancel();
+    }
+    _debounceTimers.clear();
     super.dispose();
   }
 
@@ -32,6 +39,40 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
 
   @protected
   set entity(newEntity) => super.state = newEntity;
+
+  @protected
+  FutureOr<T> debounce<T>({
+    required FutureOr<T> Function() action,
+    required String tag,
+    Duration duration = const Duration(milliseconds: 300),
+  }) async {
+    final timer = _debounceTimers[tag];
+    if (timer?.isActive ?? false) timer!.cancel();
+
+    if (timer == null) {
+      _debounceTimers[tag] = Timer(
+        duration,
+        () {
+          _debounceTimers.remove(tag);
+        },
+      );
+
+      return action();
+    } else {
+      timer.cancel();
+
+      final actionCompleter = Completer<T>();
+      _debounceTimers[tag] = Timer(
+        duration,
+        () {
+          actionCompleter.complete(action());
+          _debounceTimers.remove(tag);
+        },
+      );
+
+      return actionCompleter.future;
+    }
+  }
 
   O getOutput<O extends Output>() {
     final filter = _outputFilters[O];
