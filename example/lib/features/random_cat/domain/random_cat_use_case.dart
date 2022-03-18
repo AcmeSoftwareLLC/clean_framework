@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework_providers.dart';
 
 import 'random_cat_entity.dart';
@@ -18,16 +20,22 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
         );
 
   Future<void> fetch() async {
-    entity = entity.merge(isLoading: true);
+    return debounce(
+      action: () {
+        entity = entity.merge(isLoading: true);
 
-    return request<RandomCatGatewayOutput, RandomCatSuccessInput>(
-      RandomCatGatewayOutput(),
-      onSuccess: (successInput) => entity.merge(
-        isLoading: false,
-        id: successInput.id,
-        url: successInput.url,
-      ),
-      onFailure: (failure) => entity.merge(isLoading: false),
+        return request<RandomCatGatewayOutput, RandomCatSuccessInput>(
+          RandomCatGatewayOutput(),
+          onSuccess: (successInput) => entity.merge(
+            isLoading: false,
+            id: successInput.id,
+            url: successInput.url,
+          ),
+          onFailure: (failure) => entity.merge(isLoading: false),
+        );
+      },
+      tag: 'fetch',
+      duration: const Duration(milliseconds: 500),
     );
   }
 }
