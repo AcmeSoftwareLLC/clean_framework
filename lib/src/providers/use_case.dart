@@ -47,7 +47,6 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
     Duration duration = const Duration(milliseconds: 300),
   }) async {
     final timer = _debounceTimers[tag];
-    if (timer?.isActive ?? false) timer!.cancel();
 
     if (timer == null) {
       _debounceTimers[tag] = Timer(
