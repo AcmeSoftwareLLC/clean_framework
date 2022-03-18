@@ -42,7 +42,8 @@ class RestService extends NetworkService {
       final statusCode = response.statusCode;
       if (statusCode < 200 || statusCode > 299) throw RestServiceFailure();
 
-      final resultData = jsonDecode(response.body);
+      final resBody = response.body;
+      final resultData = resBody.isEmpty ? resBody : jsonDecode(resBody);
 
       if (resultData is Map<String, dynamic>) return resultData;
       return {'data': resultData};
