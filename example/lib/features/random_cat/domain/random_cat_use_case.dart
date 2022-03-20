@@ -21,10 +21,10 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
 
   Future<void> fetch() async {
     return debounce(
-      action: () {
+      action: () async {
         entity = entity.merge(isLoading: true);
 
-        request<RandomCatGatewayOutput, RandomCatSuccessInput>(
+        await request<RandomCatGatewayOutput, RandomCatSuccessInput>(
           RandomCatGatewayOutput(),
           onSuccess: (successInput) => entity.merge(
             isLoading: false,
@@ -36,6 +36,7 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
       },
       tag: 'fetch',
       duration: const Duration(milliseconds: 500),
+      immediate: true,
     );
   }
 }
