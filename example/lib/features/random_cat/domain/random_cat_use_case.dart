@@ -24,7 +24,7 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
       action: () {
         entity = entity.merge(isLoading: true);
 
-        return request<RandomCatGatewayOutput, RandomCatSuccessInput>(
+        request<RandomCatGatewayOutput, RandomCatSuccessInput>(
           RandomCatGatewayOutput(),
           onSuccess: (successInput) => entity.merge(
             isLoading: false,

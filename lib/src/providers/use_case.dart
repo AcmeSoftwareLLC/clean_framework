@@ -40,37 +40,33 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   @protected
   set entity(newEntity) => super.state = newEntity;
 
+  /// Executes the [action] so that it will only be executed
+  /// when there is no further repeated actions with same [tag]
+  /// in a given frame of [duration].
+  ///
+  /// If [immediate] is false, then then first action will also be debounced.
   @protected
-  FutureOr<T> debounce<T>({
-    required FutureOr<T> Function() action,
+  void debounce({
+    required void Function() action,
     required String tag,
     Duration duration = const Duration(milliseconds: 300),
+    bool immediate = true,
   }) async {
     final timer = _debounceTimers[tag];
 
-    if (timer == null) {
-      _debounceTimers[tag] = Timer(
-        duration,
-        () {
-          _debounceTimers.remove(tag);
-        },
-      );
+    final timerPending = timer?.isActive ?? false;
+    final canExecute = immediate && !timerPending;
 
-      return action();
-    } else {
-      timer.cancel();
+    timer?.cancel();
+    _debounceTimers[tag] = Timer(
+      duration,
+      () {
+        _debounceTimers.remove(tag);
+        if (!immediate) action();
+      },
+    );
 
-      final actionCompleter = Completer<T>();
-      _debounceTimers[tag] = Timer(
-        duration,
-        () {
-          actionCompleter.complete(action());
-          _debounceTimers.remove(tag);
-        },
-      );
-
-      return actionCompleter.future;
-    }
+    if (canExecute) action();
   }
 
   O getOutput<O extends Output>() {
@@ -109,6 +105,23 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
     final Either<FailureInput, S> either = await callback(output);
     entity = either.fold(onFailure, onSuccess);
   }
+}
+
+class Debounce {
+  Debounce(this.timer) : startedAt = DateTime.now();
+
+  final Timer timer;
+  final DateTime startedAt;
+
+  bool get isActive => timer.isActive;
+
+  Duration get elapsed {
+    return Duration(
+      milliseconds: DateTime.now().millisecond - startedAt.millisecond,
+    );
+  }
+
+  void cancel() => timer.cancel();
 }
 
 typedef InputCallback = void Function<I extends Input>(I input);
