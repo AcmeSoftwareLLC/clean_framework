@@ -107,23 +107,6 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   }
 }
 
-class Debounce {
-  Debounce(this.timer) : startedAt = DateTime.now();
-
-  final Timer timer;
-  final DateTime startedAt;
-
-  bool get isActive => timer.isActive;
-
-  Duration get elapsed {
-    return Duration(
-      milliseconds: DateTime.now().millisecond - startedAt.millisecond,
-    );
-  }
-
-  void cancel() => timer.cancel();
-}
-
 typedef InputCallback = void Function<I extends Input>(I input);
 
 typedef InputProcessor<I extends Input, E extends Entity> = E Function(
