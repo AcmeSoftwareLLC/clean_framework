@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:clean_framework/clean_framework_providers.dart';
 
 import 'random_cat_entity.dart';
