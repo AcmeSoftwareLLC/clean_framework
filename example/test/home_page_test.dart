@@ -97,7 +97,8 @@ void main() {
         // pumpAndSettle times out here; as the page has non-deterministic loading indicator
         // so pumping each frame individually
         await tester.pump();
-        await tester.pump();
+        // Debounce of 500ms
+        await tester.pump(const Duration(milliseconds: 500));
 
         expect(find.byType(RandomCatUI), findsOneWidget);
       },

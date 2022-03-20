@@ -1,13 +1,15 @@
-# 1.2.0 Fixed issue with Form URLEncoded request body format
+# [1.2.0] - Mar 20, 2022
+- Added `debounce` method to **UseCase**.
+- Fixed issue with Form URLEncoded request body format.
 - [**Breaking**] Upgraded `mockoon` to **v0.3.0**
 
-# 1.1.6 Added `didUpdatePresenter` & upgraded dependencies
+# [1.1.6] - Mar 1, 2022
 - Added `didUpdatePresenter` to **Presenter**.
 - Added `timeout` support for GraphQL requests.  
 - Upgraded dependencies.
 - Migrated example app to Android v2 embedding.
 
-# 1.1.5 Added more configuration options for Rest and GraphQL external interfaces
+# [1.1.5] - Jan 10, 2022
 - Added `tokenBuilder` and `authHeaderKey` for **GraphQLExternalInterface**.
 - Added `headers` in rest requests.
 - Now Map<String, dynamic> can be sent in POST request using content types other than url-encoded. (Previously, only url-encoded POST request were supported).
@@ -16,7 +18,7 @@
 - Added route state to navigator builder.
 - Upgraded dependencies.
 
-# 1.1.4 Support for adding Navigator Observers and Builder
+# [1.1.4] - Dec 8, 2021
 - Added `observers` and `navigatorBuilder` to **AppRouter**.
 - Improved duplication handling logic for `onOutputUpdate`.
 - Added `postFrame` callback to **uiTest**, which overrides the default `pumpAndSettle`. Fixes [#31](https://github.com/MattHamburger/clean_framework/issues/31).
