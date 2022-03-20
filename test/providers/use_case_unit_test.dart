@@ -105,6 +105,8 @@ void main() {
     await Future.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(4));
+
+    useCase.dispose();
   });
 
   test('UseCase debounce test without immediate', () async {
@@ -154,6 +156,8 @@ void main() {
     await Future.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(4));
+
+    useCase.dispose();
   });
 }
 
