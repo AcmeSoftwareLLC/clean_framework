@@ -30,13 +30,20 @@ class RestService extends NetworkService {
       request.headers
         ..addAll(this.headers!)
         ..addAll(headers);
-      request.body = jsonEncode(data);
+
+      if (headers['Content-Type'] == 'application/x-www-form-urlencoded') {
+        request.bodyFields = data.map((k, v) => MapEntry(k, v.toString()));
+      } else {
+        request.body = jsonEncode(data);
+      }
 
       final response = await Response.fromStream(await _client.send(request));
 
-      if (response.statusCode != 200) throw RestServiceFailure();
+      final statusCode = response.statusCode;
+      if (statusCode < 200 || statusCode > 299) throw RestServiceFailure();
 
-      final resultData = jsonDecode(response.body);
+      final resBody = response.body;
+      final resultData = resBody.isEmpty ? resBody : jsonDecode(resBody);
 
       if (resultData is Map<String, dynamic>) return resultData;
       return {'data': resultData};

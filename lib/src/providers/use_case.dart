@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   final Map<Type, Function> _inputFilters;
 
   final Map<Type, Function> _requestSubscriptions = {};
+  final Map<String, Timer> _debounceTimers = {};
 
   UseCase({
     required E entity,
@@ -23,6 +26,10 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
 
   @override
   void dispose() {
+    for (final debounceTimer in _debounceTimers.values) {
+      debounceTimer.cancel();
+    }
+    _debounceTimers.clear();
     super.dispose();
   }
 
@@ -32,6 +39,35 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
 
   @protected
   set entity(newEntity) => super.state = newEntity;
+
+  /// Executes the [action] so that it will only be executed
+  /// when there is no further repeated actions with same [tag]
+  /// in a given frame of [duration].
+  ///
+  /// If [immediate] is false, then then first action will also be debounced.
+  @protected
+  void debounce({
+    required void Function() action,
+    required String tag,
+    Duration duration = const Duration(milliseconds: 300),
+    bool immediate = true,
+  }) async {
+    final timer = _debounceTimers[tag];
+
+    final timerPending = timer?.isActive ?? false;
+    final canExecute = immediate && !timerPending;
+
+    timer?.cancel();
+    _debounceTimers[tag] = Timer(
+      duration,
+      () {
+        _debounceTimers.remove(tag);
+        if (!immediate) action();
+      },
+    );
+
+    if (canExecute) action();
+  }
 
   O getOutput<O extends Output>() {
     final filter = _outputFilters[O];

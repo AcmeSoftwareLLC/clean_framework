@@ -65,6 +65,100 @@ void main() {
 
     useCase.dispose();
   });
+
+  test('UseCase debounce test with immediate', () async {
+    final useCase = DebouncedUseCase(immediate: true);
+
+    int getCount() => useCase.entity.count;
+
+    useCase.increment();
+    expect(getCount(), equals(1));
+
+    await Future.delayed(const Duration(milliseconds: 110));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 90));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 75));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 50));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 60));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 105));
+    useCase.increment();
+    expect(getCount(), equals(3));
+
+    await Future.delayed(const Duration(milliseconds: 95));
+    useCase.increment();
+    expect(getCount(), equals(3));
+
+    await Future.delayed(const Duration(milliseconds: 105));
+    useCase.increment();
+    expect(getCount(), equals(4));
+
+    useCase.dispose();
+  });
+
+  test('UseCase debounce test without immediate', () async {
+    final useCase = DebouncedUseCase(immediate: false);
+
+    int getCount() => useCase.entity.count;
+
+    useCase.increment();
+    expect(getCount(), equals(0));
+
+    await Future.delayed(const Duration(milliseconds: 40));
+    useCase.increment();
+    expect(getCount(), equals(0));
+
+    await Future.delayed(const Duration(milliseconds: 100));
+    useCase.increment();
+    expect(getCount(), equals(1));
+
+    await Future.delayed(const Duration(milliseconds: 110));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 90));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 75));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 50));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 60));
+    useCase.increment();
+    expect(getCount(), equals(2));
+
+    await Future.delayed(const Duration(milliseconds: 105));
+    useCase.increment();
+    expect(getCount(), equals(3));
+
+    await Future.delayed(const Duration(milliseconds: 95));
+    useCase.increment();
+    expect(getCount(), equals(3));
+
+    await Future.delayed(const Duration(milliseconds: 105));
+    useCase.increment();
+    expect(getCount(), equals(4));
+
+    useCase.dispose();
+  });
 }
 
 class TestUseCase extends UseCase<TestEntity> {
@@ -136,4 +230,35 @@ class TestOutput extends Output {
 
   @override
   List<Object?> get props => [foo];
+}
+
+class DebouncedUseCase extends UseCase<DebouncedEntity> {
+  DebouncedUseCase({required this.immediate})
+      : super(entity: DebouncedEntity(count: 0));
+
+  final bool immediate;
+
+  void increment() {
+    return debounce(
+      action: () {
+        entity = entity.merge(count: entity.count + 1);
+      },
+      tag: 'increment',
+      duration: const Duration(milliseconds: 100),
+      immediate: immediate,
+    );
+  }
+}
+
+class DebouncedEntity extends Entity {
+  DebouncedEntity({required this.count});
+
+  final int count;
+
+  @override
+  List<Object?> get props => [count];
+
+  DebouncedEntity merge({int? count}) {
+    return DebouncedEntity(count: count ?? this.count);
+  }
 }
