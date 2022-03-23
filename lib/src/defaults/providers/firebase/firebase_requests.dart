@@ -29,7 +29,7 @@ class FirebaseReadIdRequest extends FirebaseRequest {
 }
 
 class FirebaseWriteRequest extends FirebaseRequest {
-  final String id;
+  final String? id;
   FirebaseWriteRequest({required String path, required this.id})
       : super(path: path);
 }
