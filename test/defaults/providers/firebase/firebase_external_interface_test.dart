@@ -95,6 +95,21 @@ void main() {
     firebaseClient.dispose();
   });
 
+  test('FirebaseExternalInterface write request without id', () async {
+    final firebaseClient = FirebaseClientFake(testContent);
+    final gateWay =
+        GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
+    FirebaseExternalInterface(
+        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+
+    final result =
+        await gateWay.transport(FirebaseWriteRequest(path: 'fake path'));
+    expect(result.isRight, isTrue);
+    expect(result.right, FirebaseSuccessResponse({'id': 'id'}));
+
+    firebaseClient.dispose();
+  });
+
   test('FirebaseExternalInterface update request', () async {
     final gateWay =
         GatewayFake<FirebaseUpdateRequest, FirebaseSuccessResponse>();
