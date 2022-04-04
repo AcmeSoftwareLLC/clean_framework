@@ -29,8 +29,8 @@ class FirebaseReadIdRequest extends FirebaseRequest {
 }
 
 class FirebaseWriteRequest extends FirebaseRequest {
-  final String id;
-  FirebaseWriteRequest({required String path, required this.id})
+  final String? id;
+  FirebaseWriteRequest({required String path, this.id})
       : super(path: path);
 }
 
