@@ -1,3 +1,6 @@
+# [1.2.1] - Apr 05, 2022
+- Added `uiTestWidgetBuilder`.
+
 # [1.2.0] - Mar 20, 2022
 - Added `debounce` method to **UseCase**.
 - Fixed issue with Form URLEncoded request body format.
