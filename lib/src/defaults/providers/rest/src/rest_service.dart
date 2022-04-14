@@ -40,7 +40,8 @@ class RestService extends NetworkService {
       final response = await Response.fromStream(await _client.send(request));
 
       final statusCode = response.statusCode;
-      if (statusCode < 200 || statusCode > 299) throw RestServiceFailure();
+      if (statusCode < 200 || statusCode > 299)
+        throw RestServiceFailure(code: response.statusCode);
 
       final resBody = response.body;
       final resultData = resBody.isEmpty ? resBody : jsonDecode(resBody);
@@ -73,4 +74,8 @@ class RestService extends NetworkService {
   }
 }
 
-class RestServiceFailure {}
+class RestServiceFailure {
+  final int code;
+
+  RestServiceFailure({this.code = 0});
+}
