@@ -24,7 +24,7 @@ class RestExternalInterface
 
   @override
   void handleRequest() {
-    on<RestRequest>(
+    on<JsonRestRequest>(
       (request, send) async {
         final data = await _restService.request(
           method: request.method,
