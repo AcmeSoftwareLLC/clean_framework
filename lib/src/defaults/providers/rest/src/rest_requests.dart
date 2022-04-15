@@ -21,11 +21,11 @@ abstract class BinaryDataRestRequest extends RestRequest {
   String get src => '';
 }
 
-abstract class BinaryDataPostRestRequest extends RestRequest {
+abstract class BinaryDataPostRestRequest extends BinaryDataRestRequest {
   BinaryDataPostRestRequest() : super(RestMethod.post);
 }
 
-abstract class BinaryDataPutRestRequest extends RestRequest {
+abstract class BinaryDataPutRestRequest extends BinaryDataRestRequest {
   BinaryDataPutRestRequest() : super(RestMethod.put);
 }
 
