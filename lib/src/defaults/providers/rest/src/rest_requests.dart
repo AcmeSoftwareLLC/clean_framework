@@ -14,6 +14,21 @@ abstract class RestRequest extends Request {
   Map<String, String> get headers => {};
 }
 
+abstract class BinaryDataRestRequest extends RestRequest {
+  BinaryDataRestRequest(this.method) : super(method);
+  final RestMethod method;
+
+  List<int> get binaryData => [];
+}
+
+abstract class BinaryDataPostRestRequest extends RestRequest {
+  BinaryDataPostRestRequest() : super(RestMethod.post);
+}
+
+abstract class BinaryDataPutRestRequest extends RestRequest {
+  BinaryDataPutRestRequest() : super(RestMethod.put);
+}
+
 abstract class GetRestRequest extends RestRequest {
   GetRestRequest() : super(RestMethod.get);
 

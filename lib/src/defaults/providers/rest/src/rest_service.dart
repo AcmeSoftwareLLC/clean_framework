@@ -40,13 +40,15 @@ class RestService extends NetworkService {
       final response = await Response.fromStream(await _client.send(request));
 
       final statusCode = response.statusCode;
-      if (statusCode < 200 || statusCode > 299) throw RestServiceFailure();
+      final resData = parseResponse(response);
 
-      final resBody = response.body;
-      final resultData = resBody.isEmpty ? resBody : jsonDecode(resBody);
-
-      if (resultData is Map<String, dynamic>) return resultData;
-      return {'data': resultData};
+      if (statusCode < 200 || statusCode > 299)
+        throw InvalidResponseRestServiceFailure(
+          path: uri.path,
+          error: resData,
+          statusCode: statusCode,
+        );
+      return resData;
 
       //TODO Enable the types of error we should consider later:
       // } on SocketException {
@@ -57,10 +59,56 @@ class RestService extends NetworkService {
       //   print("Bad response format 👎");
     } catch (e) {
       //print(e);
-      throw RestServiceFailure();
+      throw RestServiceFailure(e.toString());
     } finally {
       _client.close();
     }
+  }
+
+  Future<Map<String, dynamic>> binaryRequest({
+    required RestMethod method,
+    required String path,
+    required List<int> data,
+    Map<String, String> headers = const {},
+    Client? client,
+  }) async {
+    final _client = client ?? Client();
+    var uri = _pathToUri(path);
+
+    try {
+      final request = Request(method.rawString, uri);
+      request.headers
+        ..addAll(this.headers!)
+        ..addAll(headers);
+
+      request.bodyBytes = data;
+
+      final response = await Response.fromStream(await _client.send(request));
+
+      final statusCode = response.statusCode;
+      final resData = parseResponse(response);
+
+      if (statusCode < 200 || statusCode > 299)
+        throw InvalidResponseRestServiceFailure(
+          path: uri.path,
+          error: resData,
+          statusCode: statusCode,
+        );
+      return resData;
+    } catch (e) {
+      throw RestServiceFailure(e.toString());
+    } finally {
+      _client.close();
+    }
+  }
+
+  Map<String, dynamic> parseResponse(Response response) {
+    final resBody = response.body;
+    final resData = resBody.isEmpty ? resBody : jsonDecode(resBody);
+    if (resData is Map<String, dynamic>)
+      return resData;
+    else
+      return {'data': resData};
   }
 
   Uri _pathToUri(String path) {
@@ -73,4 +121,20 @@ class RestService extends NetworkService {
   }
 }
 
-class RestServiceFailure {}
+class RestServiceFailure {
+  final String? message;
+
+  RestServiceFailure([this.message]);
+}
+
+class InvalidResponseRestServiceFailure extends RestServiceFailure {
+  final String path;
+  final int statusCode;
+  final Map<String, dynamic> error;
+
+  InvalidResponseRestServiceFailure({
+    required this.path,
+    required this.error,
+    required this.statusCode,
+  });
+}

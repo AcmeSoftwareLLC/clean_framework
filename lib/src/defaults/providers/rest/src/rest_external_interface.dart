@@ -33,10 +33,39 @@ class RestExternalInterface
         send(RestSuccessResponse(data: data));
       },
     );
+    on<BinaryDataRestRequest>(
+      (request, send) async {
+        final data = await _restService.binaryRequest(
+          method: request.method,
+          path: request.path,
+          data: request.binaryData,
+          headers: request.headers,
+        );
+        send(RestSuccessResponse(data: data));
+      },
+    );
   }
 
   @override
   FailureResponse onError(Object error) {
+    if (error is InvalidResponseRestServiceFailure)
+      return HttpFailureResponse(
+        path: error.path,
+        statusCode: error.statusCode,
+        error: error.error,
+      );
     return UnknownFailureResponse();
   }
+}
+
+class HttpFailureResponse extends FailureResponse {
+  final String path;
+  final int statusCode;
+  final Map<String, dynamic> error;
+
+  HttpFailureResponse({
+    required this.path,
+    required this.error,
+    required this.statusCode,
+  });
 }
