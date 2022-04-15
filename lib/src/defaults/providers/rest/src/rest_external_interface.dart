@@ -54,6 +54,8 @@ class RestExternalInterface
         statusCode: error.statusCode,
         error: error.error,
       );
+    if (error is RestServiceFailure)
+      return UnknownFailureResponse(error.message);
     return UnknownFailureResponse();
   }
 }
