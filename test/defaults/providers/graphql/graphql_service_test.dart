@@ -19,7 +19,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query<dynamic>(any())).thenAnswer(
+    when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
     );
 
@@ -27,6 +27,7 @@ void main() {
       method: GraphQLMethod.query,
       document: '',
     );
+
     expect(response, {'foo': 'bar'});
   });
 
@@ -36,7 +37,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query<dynamic>(any())).thenAnswer(
+    when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
     );
 
@@ -53,7 +54,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query<dynamic>(any())).thenAnswer(
+    when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
           linkException: NetworkException(
@@ -82,11 +83,11 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query<dynamic>(any())).thenAnswer(
+    when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
           linkException: ServerException(
-            parsedResponse: Response(data: {'status': 403}),
+            parsedResponse: Response(data: {'status': 403}, response: {}),
           ),
         ),
       ),
@@ -110,7 +111,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.query<dynamic>(any())).thenAnswer(
+    when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
           graphqlErrors: [GraphQLError(message: 'failure')],
@@ -137,8 +138,7 @@ void main() {
   test('GraphQLService success mutation', () async {
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.mutate<dynamic>(any()))
-        .thenAnswer((_) async => successResult);
+    when(() => mock.mutate(any())).thenAnswer((_) async => successResult);
 
     final response = await service.request(
       method: GraphQLMethod.mutation,
@@ -153,7 +153,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.mutate<dynamic>(any())).thenAnswer(
+    when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
           linkException: NetworkException(uri: Uri()),
@@ -173,7 +173,7 @@ void main() {
 
     final service = GraphQLService(link: '', client: mock);
 
-    when(() => mock.mutate<dynamic>(any())).thenAnswer(
+    when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(
         OperationException(
           linkException: ServerException(),
@@ -194,14 +194,14 @@ class QueryOptionsMock extends Mock implements QueryOptions {}
 
 class MutationOptionsMock extends Mock implements MutationOptions {}
 
-final successResult = QueryResult(
+final successResult = QueryResult.internal(
   source: QueryResultSource.network,
   data: {'foo': 'bar'},
   parserFn: (data) => data,
 );
 
 QueryResult<dynamic> exceptionResult(OperationException exception) {
-  return QueryResult(
+  return QueryResult.internal(
     source: QueryResultSource.network,
     exception: exception,
     parserFn: (data) => data,
