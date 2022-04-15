@@ -18,7 +18,7 @@ abstract class BinaryDataRestRequest extends RestRequest {
   BinaryDataRestRequest(this.method) : super(method);
   final RestMethod method;
 
-  List<int> get binaryData => [];
+  String get src => '';
 }
 
 abstract class BinaryDataPostRestRequest extends RestRequest {

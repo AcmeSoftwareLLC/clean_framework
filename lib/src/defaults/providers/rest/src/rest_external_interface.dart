@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_requests.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
@@ -35,10 +37,11 @@ class RestExternalInterface
     );
     on<BinaryDataRestRequest>(
       (request, send) async {
+        final binaryData = File(request.src).readAsBytesSync();
         final data = await _restService.binaryRequest(
           method: request.method,
           path: request.path,
-          data: request.binaryData,
+          data: binaryData,
           headers: request.headers,
         );
         send(RestSuccessResponse(data: data));
