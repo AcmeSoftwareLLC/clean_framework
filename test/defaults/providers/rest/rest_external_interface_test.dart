@@ -39,7 +39,13 @@ void main() {
 
     final result = await gateWay.transport(TestRequest());
     expect(result.isLeft, isTrue);
-    expect(result.left, isA<UnknownFailureResponse>());
+    expect(
+      result.left,
+      isA<HttpFailureResponse>()
+          .having((err) => err.statusCode, 'statusCode', 400)
+          .having((err) => err.error, 'error', {'error': 'Bad Request'}).having(
+              (err) => err.path, 'path', 'http://fake.com'),
+    );
   });
 
   test('RestExternalInterface binary data request success response', () async {
@@ -110,7 +116,7 @@ void main() {
       isA<HttpFailureResponse>()
           .having((err) => err.statusCode, 'statusCode', 400)
           .having((err) => err.error, 'error', {'error': 'Bad Request'}).having(
-              (err) => err.path, 'path', 'test/test_file.txt'),
+              (err) => err.path, 'path', 'http://fake.com'),
     );
   });
 
@@ -153,7 +159,12 @@ class RestServiceFake extends Fake implements RestService {
     Map<String, dynamic> headers = const {},
     Client? client,
   }) async {
-    if (_response.isEmpty) throw RestServiceFailure();
+    if (_response.isEmpty)
+      throw InvalidResponseRestServiceFailure(
+        error: {'error': 'Bad Request'},
+        statusCode: 400,
+        path: path,
+      );
     return {'foo': 'bar'};
   }
 
@@ -170,7 +181,7 @@ class RestServiceFake extends Fake implements RestService {
       throw InvalidResponseRestServiceFailure(
         error: {'error': 'Bad Request'},
         statusCode: 400,
-        path: 'test/test_file.txt',
+        path: path,
       );
     return {'foo': 'bar'};
   }
