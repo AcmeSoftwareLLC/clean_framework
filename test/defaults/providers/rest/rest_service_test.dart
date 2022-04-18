@@ -130,7 +130,7 @@ void main() {
   });
 
   test('RestService server error', () async {
-    final content = {};
+    final content = {'error': 'testError'};
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
@@ -145,8 +145,13 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     expectLater(
-        service.request(method: RestMethod.get, path: '/', client: client),
-        throwsA(isA<RestServiceFailure>()));
+        service.request(method: RestMethod.post, path: 'test', client: client),
+        throwsA(
+          isA<InvalidResponseRestServiceFailure>()
+              .having((res) => res.statusCode, 'statusCode', 500)
+              .having((res) => res.path, 'path', 'http://fake.com/test')
+              .having((res) => res.error, 'error', content),
+        ));
   });
 
   test('RestService binary request success', () async {
