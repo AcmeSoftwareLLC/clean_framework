@@ -116,7 +116,7 @@ void main() {
       isA<HttpFailureResponse>()
           .having((err) => err.statusCode, 'statusCode', 400)
           .having((err) => err.error, 'error', {'error': 'Bad Request'}).having(
-              (err) => err.path, 'path', 'test/test_file.txt'),
+              (err) => err.path, 'path', 'http://fake.com'),
     );
   });
 
