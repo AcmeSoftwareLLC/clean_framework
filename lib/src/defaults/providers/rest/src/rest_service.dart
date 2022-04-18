@@ -42,12 +42,13 @@ class RestService extends NetworkService {
       final statusCode = response.statusCode;
       final resData = parseResponse(response);
 
-      if (statusCode < 200 || statusCode > 299)
+      if (statusCode < 200 || statusCode > 299) {
         throw InvalidResponseRestServiceFailure(
           path: uri.toString(),
           error: resData,
           statusCode: statusCode,
         );
+      }
       return resData;
 
       //TODO Enable the types of error we should consider later:
@@ -90,12 +91,13 @@ class RestService extends NetworkService {
       final statusCode = response.statusCode;
       final resData = parseResponse(response);
 
-      if (statusCode < 200 || statusCode > 299)
+      if (statusCode < 200 || statusCode > 299) {
         throw InvalidResponseRestServiceFailure(
           path: uri.toString(),
           error: resData,
           statusCode: statusCode,
         );
+      }
       return resData;
     } on InvalidResponseRestServiceFailure {
       rethrow;

@@ -88,7 +88,8 @@ void main() {
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      isA<UnknownFailureResponse>(),
+      isA<UnknownFailureResponse>()
+          .having((err) => err.message, 'message', isNotEmpty),
     );
   });
 
@@ -134,6 +135,9 @@ class TestBinaryPostRequest extends BinaryDataPostRestRequest {
 class TestBinaryPutRequest extends BinaryDataPutRestRequest {
   @override
   String get path => 'http://fake.com';
+
+  @override
+  String get src => '';
 }
 
 class RestServiceFake extends Fake implements RestService {

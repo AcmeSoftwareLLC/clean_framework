@@ -22,7 +22,7 @@ abstract class BinaryDataRestRequest extends RestRequest {
   BinaryDataRestRequest(this.method) : super(method);
   final RestMethod method;
 
-  String get src => '';
+  String get src;
 }
 
 abstract class BinaryDataPostRestRequest extends BinaryDataRestRequest {

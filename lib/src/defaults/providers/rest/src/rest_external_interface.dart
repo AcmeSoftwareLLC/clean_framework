@@ -51,14 +51,16 @@ class RestExternalInterface
 
   @override
   FailureResponse onError(Object error) {
-    if (error is InvalidResponseRestServiceFailure)
+    if (error is InvalidResponseRestServiceFailure) {
       return HttpFailureResponse(
         path: error.path,
         statusCode: error.statusCode,
         error: error.error,
       );
-    if (error is RestServiceFailure)
+    }
+    if (error is RestServiceFailure) {
       return UnknownFailureResponse(error.message);
+    }
     return UnknownFailureResponse(error.toString());
   }
 }
