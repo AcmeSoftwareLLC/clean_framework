@@ -9,12 +9,31 @@ abstract class RestRequest extends Request {
 
   String get path;
 
-  Map<String, dynamic> get data => {};
-
   Map<String, String> get headers => {};
 }
 
-abstract class GetRestRequest extends RestRequest {
+abstract class JsonRestRequest extends RestRequest {
+  JsonRestRequest(method) : super(method);
+
+  Map<String, dynamic> get data => {};
+}
+
+abstract class BinaryDataRestRequest extends RestRequest {
+  BinaryDataRestRequest(this.method) : super(method);
+  final RestMethod method;
+
+  String get src;
+}
+
+abstract class BinaryDataPostRestRequest extends BinaryDataRestRequest {
+  BinaryDataPostRestRequest() : super(RestMethod.post);
+}
+
+abstract class BinaryDataPutRestRequest extends BinaryDataRestRequest {
+  BinaryDataPutRestRequest() : super(RestMethod.put);
+}
+
+abstract class GetRestRequest extends JsonRestRequest {
   GetRestRequest() : super(RestMethod.get);
 
   Map<String, dynamic> get params => {};
@@ -24,18 +43,18 @@ abstract class GetRestRequest extends RestRequest {
   Map<String, dynamic> get data => params;
 }
 
-abstract class PostRestRequest extends RestRequest {
+abstract class PostRestRequest extends JsonRestRequest {
   PostRestRequest() : super(RestMethod.post);
 }
 
-abstract class PutRestRequest extends RestRequest {
+abstract class PutRestRequest extends JsonRestRequest {
   PutRestRequest() : super(RestMethod.put);
 }
 
-abstract class PatchRestRequest extends RestRequest {
+abstract class PatchRestRequest extends JsonRestRequest {
   PatchRestRequest() : super(RestMethod.patch);
 }
 
-abstract class DeleteRestRequest extends RestRequest {
+abstract class DeleteRestRequest extends JsonRestRequest {
   DeleteRestRequest() : super(RestMethod.delete);
 }
