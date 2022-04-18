@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_requests.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
+
+import '../../../../utilities/file.dart';
 
 class RestExternalInterface
     extends ExternalInterface<RestRequest, RestSuccessResponse> {
@@ -59,7 +59,7 @@ class RestExternalInterface
       );
     if (error is RestServiceFailure)
       return UnknownFailureResponse(error.message);
-    return UnknownFailureResponse();
+    return UnknownFailureResponse(error.toString());
   }
 }
 

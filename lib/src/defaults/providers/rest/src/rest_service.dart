@@ -44,7 +44,7 @@ class RestService extends NetworkService {
 
       if (statusCode < 200 || statusCode > 299)
         throw InvalidResponseRestServiceFailure(
-          path: uri.path,
+          path: uri.toString(),
           error: resData,
           statusCode: statusCode,
         );
@@ -57,6 +57,8 @@ class RestService extends NetworkService {
       //   print("Couldn't find the post 😱");
       // } on FormatException {
       //   print("Bad response format 👎");
+    } on InvalidResponseRestServiceFailure {
+      rethrow;
     } catch (e) {
       //print(e);
       throw RestServiceFailure(e.toString());
@@ -90,11 +92,13 @@ class RestService extends NetworkService {
 
       if (statusCode < 200 || statusCode > 299)
         throw InvalidResponseRestServiceFailure(
-          path: uri.path,
+          path: uri.toString(),
           error: resData,
           statusCode: statusCode,
         );
       return resData;
+    } on InvalidResponseRestServiceFailure {
+      rethrow;
     } catch (e) {
       throw RestServiceFailure(e.toString());
     } finally {
@@ -105,10 +109,8 @@ class RestService extends NetworkService {
   Map<String, dynamic> parseResponse(Response response) {
     final resBody = response.body;
     final resData = resBody.isEmpty ? resBody : jsonDecode(resBody);
-    if (resData is Map<String, dynamic>)
-      return resData;
-    else
-      return {'data': resData};
+    if (resData is Map<String, dynamic>) return resData;
+    return {'data': resData};
   }
 
   Uri _pathToUri(String path) {

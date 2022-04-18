@@ -148,6 +148,71 @@ void main() {
         service.request(method: RestMethod.get, path: '/', client: client),
         throwsA(isA<RestServiceFailure>()));
   });
+
+  test('RestService binary request success', () async {
+    final content = {"foo": "bar"};
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+    final streamedResponse = StreamedResponseMock();
+    final byteStream = ByteStream.fromBytes(
+        Uint8List.fromList((json.encode(content).codeUnits)));
+
+    when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
+    when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
+    when(() => streamedResponse.statusCode).thenReturn(200);
+    when(() => streamedResponse.headers).thenReturn({});
+    when(() => streamedResponse.isRedirect).thenReturn(false);
+    when(() => streamedResponse.persistentConnection).thenReturn(false);
+
+    final result = await service.binaryRequest(
+      method: RestMethod.post,
+      path: '/',
+      client: client,
+      data: [],
+    );
+
+    expect(result, {'foo': 'bar'});
+
+    //for coverage purposes, we test a real Client
+    expectLater(
+        service.binaryRequest(
+          method: RestMethod.post,
+          path: '/',
+          data: [],
+        ),
+        throwsA(isA<RestServiceFailure>()));
+  });
+
+  test('RestService binary request server error', () async {
+    final content = {'error': 'testError'};
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+    final streamedResponse = StreamedResponseMock();
+    final byteStream = ByteStream.fromBytes(
+        Uint8List.fromList((json.encode(content).codeUnits)));
+
+    when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
+    when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
+    when(() => streamedResponse.statusCode).thenReturn(500);
+    when(() => streamedResponse.headers).thenReturn({});
+    when(() => streamedResponse.isRedirect).thenReturn(false);
+    when(() => streamedResponse.persistentConnection).thenReturn(false);
+
+    expectLater(
+      service.binaryRequest(
+        method: RestMethod.post,
+        path: 'test',
+        client: client,
+        data: [],
+      ),
+      throwsA(
+        isA<InvalidResponseRestServiceFailure>()
+            .having((res) => res.statusCode, 'statusCode', 500)
+            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.error, 'error', content),
+      ),
+    );
+  });
 }
 
 class ClientMock extends Mock implements Client {}
