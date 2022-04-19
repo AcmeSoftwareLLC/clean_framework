@@ -41,7 +41,7 @@ void main() {
       final mockDocRef = MockDocumentReference<_Json>();
       when(() => mock.collection(path)).thenReturn(mockCollectionRef);
       when(() => mockCollectionRef.doc(any())).thenReturn(mockDocRef);
-      when(() => mockDocRef.set(any())).thenAnswer((_) async {});
+      when(() => mockDocRef.set(any(), any())).thenAnswer((_) async {});
 
       final id = await client.write(
         path: path,
@@ -52,7 +52,7 @@ void main() {
       verifyInOrder([
         () => mock.collection(path),
         () => mockCollectionRef.doc('my-id'),
-        () => mockDocRef.set({'name': 'Sarbagya Dhaubanjar'}),
+        () => mockDocRef.set({'name': 'Sarbagya Dhaubanjar'}, any()),
       ]);
 
       expect(id, 'my-id');

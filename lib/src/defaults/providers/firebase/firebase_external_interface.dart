@@ -64,6 +64,7 @@ class FirebaseExternalInterface
       path: request.path,
       id: request.id,
       content: request.toJson(),
+      merge: request.merge,
     );
     if (id.isEmpty) {
       sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
