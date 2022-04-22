@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
+import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:graphql/client.dart';
 
 typedef GraphQLTokenBuilder = FutureOr<String?> Function();
@@ -28,6 +29,8 @@ class GraphQLService extends NetworkService {
         );
         _link = authLink.concat(httpLink);
       }
+
+      _link = GraphQLLoggerLink.withParent(_link);
 
       _client = GraphQLClient(link: _link, cache: GraphQLCache());
     } else {
