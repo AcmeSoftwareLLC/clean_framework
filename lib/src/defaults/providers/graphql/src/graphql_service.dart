@@ -18,6 +18,7 @@ class GraphQLService extends NetworkService {
   }) : super(baseUrl: link, headers: headers) {
     if (client == null) {
       final httpLink = HttpLink(link, defaultHeaders: headers);
+      final headerKey = authHeaderKey ?? 'Authorization';
 
       Link _link;
       if (tokenBuilder == null) {
@@ -25,12 +26,23 @@ class GraphQLService extends NetworkService {
       } else {
         final authLink = AuthLink(
           getToken: tokenBuilder,
-          headerKey: authHeaderKey ?? 'Authorization',
+          headerKey: headerKey,
         );
         _link = authLink.concat(httpLink);
       }
 
-      _link = GraphQLLoggerLink.withParent(_link);
+      final loggerLink = GraphQLLoggerLink(
+        endpoint: baseUrl,
+        getHeaders: () async {
+          final token = await tokenBuilder?.call();
+          return {
+            if (token != null) headerKey: token,
+            ...headers,
+          };
+        },
+      );
+
+      _link = loggerLink.concat(_link);
 
       _client = GraphQLClient(link: _link, cache: GraphQLCache());
     } else {

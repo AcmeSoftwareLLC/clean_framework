@@ -6,9 +6,17 @@ import 'package:gql/language.dart';
 int _lineWidth = 100;
 
 class GraphQLLoggerLink extends Link {
+  GraphQLLoggerLink({
+    required this.endpoint,
+    required this.getHeaders,
+  });
+
+  final String endpoint;
+  final Future<Map<String, String>> Function() getHeaders;
+
   @override
   Stream<Response> request(Request request, [NextLink? forward]) {
-    _RequestLogger(request: request);
+    _logRequest(request);
 
     return forward!(request).map((response) {
       print(response);
@@ -16,20 +24,37 @@ class GraphQLLoggerLink extends Link {
     });
   }
 
-  static Link withParent(Link parent) {
-    return Link.concat(GraphQLLoggerLink(), parent);
+  Future<void> _logRequest(Request request) async {
+    final headers = await getHeaders();
+    _RequestLogger(endpoint: endpoint, request: request, headers: headers);
   }
 }
 
 class _RequestLogger {
-  _RequestLogger({required this.request}) {
-    _printHeader('REQUEST', 'https://google.com');
+  _RequestLogger({
+    required this.endpoint,
+    required this.request,
+    required this.headers,
+  }) {
+    _printHeader('REQUEST', endpoint);
     _printQuery();
     _printVariables();
+    _printHeaders();
     _printFooter();
   }
 
+  final String endpoint;
   final Request request;
+  final Map<String, String> headers;
+
+  void _printHeaders() {
+    if (headers.isNotEmpty) {
+      final rawHeaders = headers.entries.map((e) => '${e.key}: ${e.value}');
+
+      _printCategory('Headers');
+      _print(rawHeaders.join('\n'));
+    }
+  }
 
   void _printQuery() {
     final document = request.operation.document;
