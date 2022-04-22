@@ -93,7 +93,7 @@ void _printCategory(String data) {
 
 void _printHeader(String data, String value) {
   print('\n');
-  print('╔╣ $data ╾ $value');
+  print('╔╣ $data ╠═ $value');
   _printGap();
 }
 
