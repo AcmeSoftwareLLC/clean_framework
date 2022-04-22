@@ -85,7 +85,13 @@ class _ResponseLogger {
     required this.response,
   }) {
     _printHeader('RESPONSE', endpoint);
-    _printData();
+
+    final errors = response.errors ?? [];
+    if (errors.isEmpty) {
+      _printData();
+    } else {
+      _printErrors();
+    }
     _printFooter();
   }
 
@@ -98,6 +104,19 @@ class _ResponseLogger {
 
     _printCategory('Data');
     _print(rawData);
+  }
+
+  void _printErrors() {
+    final errors = response.errors!;
+    for (var i = 1; i <= errors.length; i++) {
+      _printCategory('Error $i');
+
+      final error = errors[i - 1];
+      final extensions = JsonEncoder.withIndent('  ').convert(error.extensions);
+
+      _print(error.message);
+      _print(extensions);
+    }
   }
 }
 
