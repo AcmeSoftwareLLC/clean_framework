@@ -18,10 +18,13 @@ class GraphQLLoggerLink extends Link {
   Stream<Response> request(Request request, [NextLink? forward]) {
     _logRequest(request);
 
-    return forward!(request).map((response) {
-      print(response);
-      return response;
-    });
+    return forward!(request).map(_responseMapper);
+  }
+
+  Response _responseMapper(Response response) {
+    _ResponseLogger(endpoint: endpoint, response: response);
+
+    return response;
   }
 
   Future<void> _logRequest(Request request) async {
@@ -73,6 +76,28 @@ class _RequestLogger {
 
     _printCategory('Variables');
     _print(rawVariables);
+  }
+}
+
+class _ResponseLogger {
+  _ResponseLogger({
+    required this.endpoint,
+    required this.response,
+  }) {
+    _printHeader('RESPONSE', endpoint);
+    _printData();
+    _printFooter();
+  }
+
+  final String endpoint;
+  final Response response;
+
+  void _printData() {
+    final data = response.data;
+    final rawData = JsonEncoder.withIndent('  ').convert(data);
+
+    _printCategory('Data');
+    _print(rawData);
   }
 }
 
