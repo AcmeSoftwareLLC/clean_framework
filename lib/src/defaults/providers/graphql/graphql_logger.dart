@@ -38,7 +38,7 @@ class _RequestLogger {
       '',
     );
 
-    _printCategory('  Query  ');
+    _printCategory(request.isQuery ? 'Query' : 'Mutation');
     _print(rawDocument);
   }
 
