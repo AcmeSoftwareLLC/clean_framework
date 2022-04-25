@@ -13,10 +13,15 @@ class RestLoggerClient {
     if (kDebugMode) {
       _RequestLogger(request: request);
 
-      final response = await _send(request);
+      try {
+        final response = await _send(request);
 
-      _ResponseLogger(response: response);
-      return response;
+        _ResponseLogger(response: response);
+        return response;
+      } catch (e, s) {
+        _ErrorResponseLogger(url: request.url, error: e, stackTrace: s);
+        rethrow;
+      }
     }
 
     return _send(request);
@@ -114,5 +119,34 @@ class _ResponseLogger extends NetworkLogger {
       printCategory('Raw Body');
       printInLines(body);
     }
+  }
+}
+
+class _ErrorResponseLogger extends NetworkLogger {
+  _ErrorResponseLogger({
+    required this.url,
+    required this.error,
+    required this.stackTrace,
+  });
+
+  final Uri url;
+  final Object error;
+  final StackTrace stackTrace;
+
+  @override
+  void initialize() {
+    printHeader(
+      'RESPONSE (Error)',
+      url.replace(queryParameters: {}).toString(),
+    );
+    _printError();
+    printFooter();
+  }
+
+  void _printError() {
+    printCategory(error.runtimeType.toString());
+    printInLines(error.toString());
+    printGap();
+    printInLines(stackTrace.toString());
   }
 }

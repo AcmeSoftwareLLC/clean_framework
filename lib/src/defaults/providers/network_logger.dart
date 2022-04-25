@@ -26,20 +26,20 @@ abstract class NetworkLogger {
     for (final line in lines) {
       print('║  $line');
     }
-    _printGap();
+    printGap();
   }
 
   void printCategory(String data) {
     final width = (_lineWidth - data.length - 5) ~/ 2;
     final divider = '${'┄' * width}';
     print('╟$divider $data $divider');
-    _printGap();
+    printGap();
   }
 
   void printHeader(String data, String value) {
     print('\n');
     print('╔╣ $data ╠═ $value');
-    _printGap();
+    printGap();
   }
 
   void printFooter() {
@@ -47,7 +47,7 @@ abstract class NetworkLogger {
     print('\n');
   }
 
-  void _printGap() {
+  void printGap() {
     print('║');
   }
 }
