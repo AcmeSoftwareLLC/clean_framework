@@ -1,3 +1,12 @@
+# [1.2.1] - Apr 25, 2022
+- Added `merge` property to **FirebaseWriteRequest**.
+- Made `id` in **FirebaseWriteRequest** optional.
+- Added loggers for GraphQL and REST services. The logs can be disabled with the following snippet.
+
+```dart
+CleanFrameworkObserver.instance = CleanFrameworkObserver(enableNetworkLogs: false);
+```
+
 # [1.2.0] - Mar 20, 2022
 - Added `debounce` method to **UseCase**.
 - Fixed issue with Form URLEncoded request body format.
