@@ -70,15 +70,21 @@ class _RequestLogger extends NetworkLogger {
       '',
     );
 
-    printCategory(request.isQuery ? 'Query' : 'Mutation');
-    printInLines(rawDocument);
+    if (document.definitions.isEmpty) {
+      printCategory('Connection Timeout');
+    } else {
+      printCategory(request.isQuery ? 'Query' : 'Mutation');
+      printInLines(rawDocument);
+    }
   }
 
   void _printVariables() {
     final variables = request.variables;
 
-    printCategory('Variables');
-    printInLines(prettyMap(variables));
+    if (variables.isNotEmpty) {
+      printCategory('Variables');
+      printInLines(prettyMap(variables));
+    }
   }
 }
 
