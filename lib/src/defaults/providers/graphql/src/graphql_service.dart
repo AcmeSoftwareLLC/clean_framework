@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
+import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:graphql/client.dart';
@@ -9,42 +10,20 @@ typedef GraphQLTokenBuilder = FutureOr<String?> Function();
 
 class GraphQLService extends NetworkService {
   GraphQLService({
-    required String link,
+    required String endpoint,
     GraphQLTokenBuilder? tokenBuilder,
     String? authHeaderKey,
     Map<String, String> headers = const {},
     GraphQLClient? client,
     this.timeout,
-  }) : super(baseUrl: link, headers: headers) {
+  }) : super(baseUrl: endpoint, headers: headers) {
     if (client == null) {
-      final httpLink = HttpLink(link, defaultHeaders: headers);
-      final headerKey = authHeaderKey ?? 'Authorization';
-
-      Link _link;
-      if (tokenBuilder == null) {
-        _link = httpLink;
-      } else {
-        final authLink = AuthLink(
-          getToken: tokenBuilder,
-          headerKey: headerKey,
-        );
-        _link = authLink.concat(httpLink);
-      }
-
-      final loggerLink = GraphQLLoggerLink(
-        endpoint: baseUrl,
-        getHeaders: () async {
-          final token = await tokenBuilder?.call();
-          return {
-            if (token != null) headerKey: token,
-            ...headers,
-          };
-        },
+      final link = _createLink(
+        authHeaderKey: authHeaderKey,
+        tokenBuilder: tokenBuilder,
       );
 
-      _link = loggerLink.concat(_link);
-
-      _client = GraphQLClient(link: _link, cache: GraphQLCache());
+      _client = GraphQLClient(link: link, cache: GraphQLCache());
     } else {
       _client = client;
     }
@@ -75,6 +54,48 @@ class GraphQLService extends NetworkService {
     } on TimeoutException {
       throw GraphQLTimeoutException();
     }
+  }
+
+  Link _createLink({
+    required String? authHeaderKey,
+    required GraphQLTokenBuilder? tokenBuilder,
+  }) {
+    final _headers = headers ?? {};
+    final httpLink = HttpLink(baseUrl, defaultHeaders: _headers);
+    final headerKey = authHeaderKey ?? 'Authorization';
+
+    Link _link;
+    if (tokenBuilder == null) {
+      _link = httpLink;
+    } else {
+      final authLink = AuthLink(
+        getToken: tokenBuilder,
+        headerKey: headerKey,
+      );
+      _link = authLink.concat(httpLink);
+    }
+
+    // Attach GraphQL Logger only in debug mode
+    assert(() {
+      if (CleanFrameworkObserver.instance.enableNetworkLogs) {
+        final loggerLink = GraphQLLoggerLink(
+          endpoint: baseUrl,
+          getHeaders: () async {
+            final token = await tokenBuilder?.call();
+            return {
+              if (token != null) headerKey: token,
+              ..._headers,
+            };
+          },
+        );
+
+        _link = loggerLink.concat(_link);
+      }
+
+      return true;
+    }());
+
+    return _link;
   }
 
   Map<String, dynamic> _handleExceptions(QueryResult result) {

@@ -39,18 +39,15 @@ class GraphQLLoggerLink extends Link {
   }
 }
 
-abstract class _InternalLogger {
-  _InternalLogger() {
-    assert(() {
-      initialize();
-      return true;
-    }());
+abstract class _Logger {
+  _Logger() {
+    initialize();
   }
 
   void initialize();
 }
 
-class _RequestLogger extends _InternalLogger {
+class _RequestLogger extends _Logger {
   _RequestLogger({
     required this.endpoint,
     required this.request,
@@ -99,7 +96,7 @@ class _RequestLogger extends _InternalLogger {
   }
 }
 
-class _ResponseLogger extends _InternalLogger {
+class _ResponseLogger extends _Logger {
   _ResponseLogger({
     required this.endpoint,
     required this.response,
