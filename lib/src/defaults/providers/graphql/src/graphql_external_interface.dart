@@ -19,7 +19,7 @@ class GraphQLExternalInterface
     Duration? timeout,
   })  : _graphQLService = graphQLService ??
             GraphQLService(
-              link: link,
+              endpoint: link,
               tokenBuilder: tokenBuilder,
               authHeaderKey: authHeaderKey,
               headers: headers,

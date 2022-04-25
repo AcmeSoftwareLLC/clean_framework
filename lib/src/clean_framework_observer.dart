@@ -5,6 +5,13 @@ import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/use_case.dart';
 
 class CleanFrameworkObserver {
+  CleanFrameworkObserver({
+    this.enableNetworkLogs = true,
+  });
+
+  /// Enables network logs.
+  final bool enableNetworkLogs;
+
   static CleanFrameworkObserver instance = CleanFrameworkObserver();
 
   void onExternalError(
