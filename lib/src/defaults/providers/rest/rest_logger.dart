@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:clean_framework/src/defaults/providers/network_logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
@@ -35,7 +37,51 @@ class _RequestLogger extends NetworkLogger {
   final Request request;
 
   @override
-  void initialize() {}
+  void initialize() {
+    printHeader('REQUEST', request.url.replace(queryParameters: {}).toString());
+    _printParams();
+    _printPayload();
+    _printHeaders();
+    printFooter();
+  }
+
+  void _printParams() {
+    final params = request.url.queryParameters;
+
+    if (params.isNotEmpty) {
+      printCategory('Query Parameters');
+      printInLines(prettyMap(params));
+    }
+  }
+
+  void _printPayload() {
+    if (request.headers['Content-Type'] ==
+        'application/x-www-form-urlencoded') {
+      printCategory('Form Fields');
+      printInLines(prettyMap(request.bodyFields));
+    } else {
+      try {
+        final payload = jsonDecode(request.body);
+
+        if (payload.isNotEmpty) {
+          printCategory('Payload');
+          printInLines(prettyMap(payload));
+        }
+      } catch (_) {
+        printCategory('Bytes');
+        printInLines(request.bodyBytes.toString());
+      }
+    }
+  }
+
+  void _printHeaders() {
+    final headers = request.headers;
+
+    if (headers.isNotEmpty) {
+      printCategory('Headers');
+      printInLines(prettyHeaders(headers));
+    }
+  }
 }
 
 class _ResponseLogger extends NetworkLogger {

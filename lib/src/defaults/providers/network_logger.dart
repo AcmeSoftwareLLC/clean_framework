@@ -13,6 +13,14 @@ abstract class NetworkLogger {
 
   void initialize();
 
+  String prettyHeaders(Map<String, String> headers) {
+    return headers.entries.map((e) => '${e.key}: ${e.value}').join('/n');
+  }
+
+  String prettyMap(Map<String, dynamic> map) {
+    return JsonEncoder.withIndent('  ').convert(map);
+  }
+
   void printInLines(String data) {
     final lines = LineSplitter().convert(data);
     for (final line in lines) {

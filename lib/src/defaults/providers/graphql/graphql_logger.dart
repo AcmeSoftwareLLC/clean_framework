@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clean_framework/src/defaults/providers/network_logger.dart';
 import 'package:graphql/client.dart';
 import 'package:gql/language.dart';
@@ -60,10 +58,8 @@ class _RequestLogger extends NetworkLogger {
 
   void _printHeaders() {
     if (headers.isNotEmpty) {
-      final rawHeaders = headers.entries.map((e) => '${e.key}: ${e.value}');
-
       printCategory('Headers');
-      printInLines(rawHeaders.join('\n'));
+      printInLines(prettyHeaders(headers));
     }
   }
 
@@ -80,10 +76,9 @@ class _RequestLogger extends NetworkLogger {
 
   void _printVariables() {
     final variables = request.variables;
-    final rawVariables = JsonEncoder.withIndent('  ').convert(variables);
 
     printCategory('Variables');
-    printInLines(rawVariables);
+    printInLines(prettyMap(variables));
   }
 }
 
@@ -111,10 +106,11 @@ class _ResponseLogger extends NetworkLogger {
 
   void _printData() {
     final data = response.data;
-    final rawData = JsonEncoder.withIndent('  ').convert(data);
 
-    printCategory('Data');
-    printInLines(rawData);
+    if (data != null) {
+      printCategory('Data');
+      printInLines(prettyMap(data));
+    }
   }
 
   void _printErrors() {
@@ -123,10 +119,10 @@ class _ResponseLogger extends NetworkLogger {
       printCategory('Error $i');
 
       final error = errors[i - 1];
-      final extensions = JsonEncoder.withIndent('  ').convert(error.extensions);
+      final extensions = error.extensions ?? {};
 
       printInLines(error.message);
-      printInLines(extensions);
+      printInLines(prettyMap(extensions));
     }
   }
 }
