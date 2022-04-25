@@ -92,5 +92,27 @@ class _ResponseLogger extends NetworkLogger {
   final Response response;
 
   @override
-  void initialize() {}
+  void initialize() {
+    printHeader(
+      'RESPONSE (${response.statusCode})',
+      response.request?.url.replace(queryParameters: {}).toString() ?? '',
+    );
+    _printBody();
+    printFooter();
+  }
+
+  void _printBody() {
+    final body = response.body;
+
+    try {
+      final _data = body.isEmpty ? body : jsonDecode(body);
+      final data = _data is Map<String, dynamic> ? _data : {'data': _data};
+
+      printCategory('Body');
+      printInLines(prettyMap(data));
+    } catch (_) {
+      printCategory('Raw Body');
+      printInLines(body);
+    }
+  }
 }
