@@ -30,7 +30,4 @@ class RandomCatGateway extends RestGateway<RandomCatGatewayOutput,
 class RandomCatRequest extends GetRestRequest {
   @override
   String get path => 'catapi/rest/';
-
-  @override
-  Map<String, dynamic> get params => {'a': 'b', 'c': 'd'};
 }
