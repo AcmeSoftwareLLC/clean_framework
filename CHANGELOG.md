@@ -1,4 +1,5 @@
 # [1.2.1] - Apr 25, 2022
+- Added `uiTestWidgetBuilder`.
 - Added `merge` property to **FirebaseWriteRequest**.
 - Made `id` in **FirebaseWriteRequest** optional.
 - Added loggers for GraphQL and REST services. The logs can be disabled with the following snippet.
