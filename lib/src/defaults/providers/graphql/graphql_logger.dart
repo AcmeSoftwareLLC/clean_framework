@@ -1,9 +1,8 @@
 import 'dart:convert';
 
+import 'package:clean_framework/src/defaults/providers/network_logger.dart';
 import 'package:graphql/client.dart';
 import 'package:gql/language.dart';
-
-int _lineWidth = 100;
 
 class GraphQLLoggerLink extends Link {
   GraphQLLoggerLink({
@@ -39,15 +38,7 @@ class GraphQLLoggerLink extends Link {
   }
 }
 
-abstract class _Logger {
-  _Logger() {
-    initialize();
-  }
-
-  void initialize();
-}
-
-class _RequestLogger extends _Logger {
+class _RequestLogger extends NetworkLogger {
   _RequestLogger({
     required this.endpoint,
     required this.request,
@@ -60,19 +51,19 @@ class _RequestLogger extends _Logger {
 
   @override
   void initialize() {
-    _printHeader('REQUEST', endpoint);
+    printHeader('REQUEST', endpoint);
     _printQuery();
     _printVariables();
     _printHeaders();
-    _printFooter();
+    printFooter();
   }
 
   void _printHeaders() {
     if (headers.isNotEmpty) {
       final rawHeaders = headers.entries.map((e) => '${e.key}: ${e.value}');
 
-      _printCategory('Headers');
-      _print(rawHeaders.join('\n'));
+      printCategory('Headers');
+      printInLines(rawHeaders.join('\n'));
     }
   }
 
@@ -83,20 +74,20 @@ class _RequestLogger extends _Logger {
       '',
     );
 
-    _printCategory(request.isQuery ? 'Query' : 'Mutation');
-    _print(rawDocument);
+    printCategory(request.isQuery ? 'Query' : 'Mutation');
+    printInLines(rawDocument);
   }
 
   void _printVariables() {
     final variables = request.variables;
     final rawVariables = JsonEncoder.withIndent('  ').convert(variables);
 
-    _printCategory('Variables');
-    _print(rawVariables);
+    printCategory('Variables');
+    printInLines(rawVariables);
   }
 }
 
-class _ResponseLogger extends _Logger {
+class _ResponseLogger extends NetworkLogger {
   _ResponseLogger({
     required this.endpoint,
     required this.response,
@@ -107,7 +98,7 @@ class _ResponseLogger extends _Logger {
 
   @override
   void initialize() {
-    _printHeader('RESPONSE', endpoint);
+    printHeader('RESPONSE', endpoint);
 
     final errors = response.errors ?? [];
     if (errors.isEmpty) {
@@ -115,57 +106,27 @@ class _ResponseLogger extends _Logger {
     } else {
       _printErrors();
     }
-    _printFooter();
+    printFooter();
   }
 
   void _printData() {
     final data = response.data;
     final rawData = JsonEncoder.withIndent('  ').convert(data);
 
-    _printCategory('Data');
-    _print(rawData);
+    printCategory('Data');
+    printInLines(rawData);
   }
 
   void _printErrors() {
     final errors = response.errors!;
     for (var i = 1; i <= errors.length; i++) {
-      _printCategory('Error $i');
+      printCategory('Error $i');
 
       final error = errors[i - 1];
       final extensions = JsonEncoder.withIndent('  ').convert(error.extensions);
 
-      _print(error.message);
-      _print(extensions);
+      printInLines(error.message);
+      printInLines(extensions);
     }
   }
-}
-
-void _print(String data) {
-  final lines = LineSplitter().convert(data);
-  for (final line in lines) {
-    print('║  $line');
-  }
-  _printGap();
-}
-
-void _printCategory(String data) {
-  final width = (_lineWidth - data.length - 5) ~/ 2;
-  final divider = '${'┄' * width}';
-  print('╟$divider $data $divider');
-  _printGap();
-}
-
-void _printHeader(String data, String value) {
-  print('\n');
-  print('╔╣ $data ╠═ $value');
-  _printGap();
-}
-
-void _printFooter() {
-  print('╚${'═' * _lineWidth}');
-  print('\n');
-}
-
-void _printGap() {
-  print('║');
 }

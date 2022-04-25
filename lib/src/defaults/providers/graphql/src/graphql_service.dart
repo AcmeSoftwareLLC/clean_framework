@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
-import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:graphql/client.dart';
@@ -77,20 +76,18 @@ class GraphQLService extends NetworkService {
 
     // Attach GraphQL Logger only in debug mode
     assert(() {
-      if (CleanFrameworkObserver.instance.enableNetworkLogs) {
-        final loggerLink = GraphQLLoggerLink(
-          endpoint: baseUrl,
-          getHeaders: () async {
-            final token = await tokenBuilder?.call();
-            return {
-              if (token != null) headerKey: token,
-              ..._headers,
-            };
-          },
-        );
+      final loggerLink = GraphQLLoggerLink(
+        endpoint: baseUrl,
+        getHeaders: () async {
+          final token = await tokenBuilder?.call();
+          return {
+            if (token != null) headerKey: token,
+            ..._headers,
+          };
+        },
+      );
 
-        _link = loggerLink.concat(_link);
-      }
+      _link = loggerLink.concat(_link);
 
       return true;
     }());

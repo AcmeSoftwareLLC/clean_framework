@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:clean_framework/src/defaults/network_service.dart';
+import 'package:clean_framework/src/defaults/providers/rest/rest_logger.dart';
 import 'package:http/http.dart';
 
 class RestService extends NetworkService {
@@ -18,7 +19,8 @@ class RestService extends NetworkService {
     },
     Client? client,
   }) async {
-    final _client = client ?? Client();
+    final _client = RestLoggerClient(client ?? Client());
+
     var uri = _pathToUri(path);
 
     if (method == RestMethod.get) {
@@ -37,7 +39,7 @@ class RestService extends NetworkService {
         request.body = jsonEncode(data);
       }
 
-      final response = await Response.fromStream(await _client.send(request));
+      final response = await _client.send(request);
 
       final statusCode = response.statusCode;
       final resData = parseResponse(response);
