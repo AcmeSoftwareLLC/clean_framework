@@ -18,7 +18,7 @@ class GraphQLLoggerLink extends Link {
   Stream<Response> request(Request request, [NextLink? forward]) {
     _logRequest(request);
 
-    return forward!(request).map(_responseMapper);
+    return forward!(request).map(_responseMapper).handleError(_onError);
   }
 
   Response _responseMapper(Response response) {
@@ -30,6 +30,12 @@ class GraphQLLoggerLink extends Link {
   Future<void> _logRequest(Request request) async {
     final headers = await getHeaders();
     _RequestLogger(endpoint: endpoint, request: request, headers: headers);
+  }
+
+  void _onError(Object error) {
+    if (error is ServerException && error.parsedResponse != null) {
+      _ResponseLogger(endpoint: endpoint, response: error.parsedResponse!);
+    }
   }
 }
 
