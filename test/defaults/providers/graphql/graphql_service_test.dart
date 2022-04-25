@@ -14,10 +14,10 @@ void main() {
 
   test('GraphQLService success query', () async {
     // for coverage purposes
-    GraphQLService(link: '');
-    GraphQLService(link: '', headers: {'Authorization': 'bar'});
+    GraphQLService(endpoint: '');
+    GraphQLService(endpoint: '', headers: {'Authorization': 'bar'});
 
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
@@ -33,9 +33,13 @@ void main() {
 
   test('GraphQLService success query with tokenBuilder', () async {
     // for coverage purposes
-    GraphQLService(link: '', tokenBuilder: () async => 'test-token');
+    GraphQLService(endpoint: '', tokenBuilder: () => 'Bearer Token');
 
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(
+      endpoint: '',
+      client: mock,
+      tokenBuilder: () => 'Bearer token',
+    );
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
@@ -49,10 +53,7 @@ void main() {
   });
 
   test('GraphQLService query with network exception', () async {
-    // for coverage purposes
-    GraphQLService(link: '');
-
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -78,10 +79,7 @@ void main() {
   });
 
   test('GraphQLService query with server exception', () async {
-    // for coverage purposes
-    GraphQLService(link: '');
-
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -106,10 +104,7 @@ void main() {
   });
 
   test('GraphQLService query with operation exception', () async {
-    // for coverage purposes
-    GraphQLService(link: '');
-
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -136,7 +131,7 @@ void main() {
   });
 
   test('GraphQLService success mutation', () async {
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.mutate(any())).thenAnswer((_) async => successResult);
 
@@ -149,9 +144,9 @@ void main() {
 
   test('GraphQLService mutation with network exception', () async {
     // for coverage purposes
-    GraphQLService(link: '');
+    GraphQLService(endpoint: '');
 
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -169,9 +164,9 @@ void main() {
 
   test('GraphQLService mutation with server exception', () async {
     // for coverage purposes
-    GraphQLService(link: '');
+    GraphQLService(endpoint: '');
 
-    final service = GraphQLService(link: '', client: mock);
+    final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(

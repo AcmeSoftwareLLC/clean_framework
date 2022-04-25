@@ -16,6 +16,7 @@ class FirebaseClient {
     required Map<String, dynamic> content,
     String? id,
     BatchKey? batchKey,
+    bool merge = false,
   }) async {
     if (batchKey != null) {
       batchKey._batch.set(
@@ -29,7 +30,10 @@ class FirebaseClient {
       final docRef = await _fireStore.collection(path).add(content);
       return docRef.id;
     }
-    await _fireStore.collection(path).doc(id).set(content);
+    await _fireStore
+        .collection(path)
+        .doc(id)
+        .set(content, SetOptions(merge: merge));
     return id;
   }
 

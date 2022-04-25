@@ -63,6 +63,7 @@ class FirebaseClientFake implements FirebaseClient {
     required Map<String, dynamic> content,
     String? id,
     BatchKey? batchKey,
+    bool merge = false,
   }) async {
     return _content.isNotEmpty ? 'id' : '';
   }

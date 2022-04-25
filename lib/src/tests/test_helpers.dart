@@ -35,6 +35,18 @@ class _UITestConfig {
   final AppRouter router;
 }
 
+/// Can be used to wrap the test widget with other widgets.
+///
+/// uiTestWidgetBuilder = (child) {
+///   return Internationalization(
+///     locale: Locale('ne', 'NP'),
+///     child: child,
+///   );
+/// }
+///
+@visibleForTesting
+Widget Function(Widget child) uiTestWidgetBuilder = (child) => child;
+
 @isTest
 void uiTest(
   String description, {
@@ -94,7 +106,9 @@ void uiTest(
       await setup?.call();
 
       Widget _scopedChild(Widget child) {
-        return UncontrolledProviderScope(container: _context!(), child: child);
+        return uiTestWidgetBuilder(
+          UncontrolledProviderScope(container: _context!(), child: child),
+        );
       }
 
       Widget child;
