@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'dart:convert';
 
 import 'package:clean_framework/src/defaults/providers/network_logger.dart';

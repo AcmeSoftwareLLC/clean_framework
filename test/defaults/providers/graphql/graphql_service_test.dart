@@ -33,9 +33,13 @@ void main() {
 
   test('GraphQLService success query with tokenBuilder', () async {
     // for coverage purposes
-    GraphQLService(endpoint: '', tokenBuilder: () async => 'test-token');
+    GraphQLService(endpoint: '', tokenBuilder: () => 'Bearer Token');
 
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService(
+      endpoint: '',
+      client: mock,
+      tokenBuilder: () => 'Bearer token',
+    );
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
@@ -49,9 +53,6 @@ void main() {
   });
 
   test('GraphQLService query with network exception', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-
     final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
@@ -78,9 +79,6 @@ void main() {
   });
 
   test('GraphQLService query with server exception', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-
     final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
@@ -106,9 +104,6 @@ void main() {
   });
 
   test('GraphQLService query with operation exception', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-
     final service = GraphQLService(endpoint: '', client: mock);
 
     when(() => mock.query(any())).thenAnswer(
