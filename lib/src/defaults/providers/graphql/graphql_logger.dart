@@ -39,22 +39,36 @@ class GraphQLLoggerLink extends Link {
   }
 }
 
-class _RequestLogger {
+abstract class _InternalLogger {
+  _InternalLogger() {
+    assert(() {
+      initialize();
+      return true;
+    }());
+  }
+
+  void initialize();
+}
+
+class _RequestLogger extends _InternalLogger {
   _RequestLogger({
     required this.endpoint,
     required this.request,
     required this.headers,
-  }) {
+  });
+
+  final String endpoint;
+  final Request request;
+  final Map<String, String> headers;
+
+  @override
+  void initialize() {
     _printHeader('REQUEST', endpoint);
     _printQuery();
     _printVariables();
     _printHeaders();
     _printFooter();
   }
-
-  final String endpoint;
-  final Request request;
-  final Map<String, String> headers;
 
   void _printHeaders() {
     if (headers.isNotEmpty) {
@@ -85,11 +99,17 @@ class _RequestLogger {
   }
 }
 
-class _ResponseLogger {
+class _ResponseLogger extends _InternalLogger {
   _ResponseLogger({
     required this.endpoint,
     required this.response,
-  }) {
+  });
+
+  final String endpoint;
+  final Response response;
+
+  @override
+  void initialize() {
     _printHeader('RESPONSE', endpoint);
 
     final errors = response.errors ?? [];
@@ -100,9 +120,6 @@ class _ResponseLogger {
     }
     _printFooter();
   }
-
-  final String endpoint;
-  final Response response;
 
   void _printData() {
     final data = response.data;
