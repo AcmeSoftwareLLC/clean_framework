@@ -153,7 +153,9 @@ class TestUseCase extends UseCase<TestEntity> {
   Future<void> fetchStateFromOtherUseCase() async {
     await request<TestDirectOutput, TestSuccessInput>(TestDirectOutput(''),
         onFailure: (_) => entity,
-        onSuccess: (input) => entity.merge(foo: input.foo));
+        onSuccess: (input) {
+          return entity.merge(foo: input.foo);
+        });
   }
 }
 
