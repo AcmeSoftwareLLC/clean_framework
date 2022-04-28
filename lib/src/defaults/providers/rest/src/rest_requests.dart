@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:meta/meta.dart';
@@ -18,11 +20,26 @@ abstract class JsonRestRequest extends RestRequest {
   Map<String, dynamic> get data => {};
 }
 
+abstract class BinaryDataSrcRestRequest extends RestRequest {
+  BinaryDataSrcRestRequest(this.method) : super(method);
+  final RestMethod method;
+
+  String get src;
+}
+
+abstract class BinaryDataSrcPostRestRequest extends BinaryDataSrcRestRequest {
+  BinaryDataSrcPostRestRequest() : super(RestMethod.post);
+}
+
+abstract class BinaryDataSrcPutRestRequest extends BinaryDataSrcRestRequest {
+  BinaryDataSrcPutRestRequest() : super(RestMethod.put);
+}
+
 abstract class BinaryDataRestRequest extends RestRequest {
   BinaryDataRestRequest(this.method) : super(method);
   final RestMethod method;
 
-  String get src;
+  Uint8List get binaryData;
 }
 
 abstract class BinaryDataPostRestRequest extends BinaryDataRestRequest {
