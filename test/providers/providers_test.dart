@@ -37,16 +37,23 @@ void main() {
     final provider = UseCaseProvider((_) => TestUseCase(TestEntity()));
     final gatewayProvider =
         GatewayProvider((_) => TestGateway(TestUseCase(TestEntity())));
+    final bridgeGatewayProvider = BridgeGatewayProvider((_) =>
+        TestBridgeGateway(
+            subscriberUseCase: TestUseCase(TestEntity()),
+            publisherUseCase: TestUseCase(TestEntity())));
     final externalInterfaceProvider =
         ExternalInterfaceProvider((_) => TestInterface());
 
     final useCase = TestUseCase(TestEntity());
     final gateway = TestGateway(useCase);
+    final bridgeGateway = TestBridgeGateway(
+        subscriberUseCase: useCase, publisherUseCase: useCase);
     final externalInterface = TestInterface();
 
     final context = ProvidersContext([
       provider.overrideWith(useCase),
       gatewayProvider.overrideWith(gateway),
+      bridgeGatewayProvider.overrideWith(bridgeGateway),
       externalInterfaceProvider.overrideWith(externalInterface),
     ]);
 
@@ -54,6 +61,7 @@ void main() {
     expect(gatewayProvider.getGateway(context), gateway);
     expect(externalInterfaceProvider.getExternalInterface(context),
         externalInterface);
+    expect(bridgeGatewayProvider.getBridgeGateway(context), bridgeGateway);
     context.dispose();
   });
 }
