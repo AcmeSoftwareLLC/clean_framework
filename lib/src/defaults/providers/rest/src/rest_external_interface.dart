@@ -35,13 +35,24 @@ class RestExternalInterface
         send(RestSuccessResponse(data: data));
       },
     );
-    on<BinaryDataRestRequest>(
+    on<BinaryDataSrcRestRequest>(
       (request, send) async {
         final binaryData = File(request.src).readAsBytesSync();
         final data = await _restService.binaryRequest(
           method: request.method,
           path: request.path,
           data: binaryData,
+          headers: request.headers,
+        );
+        send(RestSuccessResponse(data: data));
+      },
+    );
+    on<BinaryDataRestRequest>(
+      (request, send) async {
+        final data = await _restService.binaryRequest(
+          method: request.method,
+          path: request.path,
+          data: request.binaryData,
           headers: request.headers,
         );
         send(RestSuccessResponse(data: data));
