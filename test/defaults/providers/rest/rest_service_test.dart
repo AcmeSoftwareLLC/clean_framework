@@ -30,7 +30,7 @@ void main() {
 
       expect(
         client.request.headers,
-        {'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'},
+        {'content-type': 'application/x-www-form-urlencoded'},
       );
       expect(client.request.method, 'POST');
       expect(client.request.url.toString(), 'https://fake.com/test');
@@ -56,7 +56,7 @@ void main() {
 
     expect(
       client.request.headers,
-      {'Content-Type': 'application/json; charset=utf-8'},
+      {'content-type': 'application/json'},
     );
     expect(client.request.method, 'POST');
     expect(client.request.url.toString(), 'https://fake.com/test');
