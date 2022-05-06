@@ -29,15 +29,16 @@ class RestService extends NetworkService {
 
     try {
       final request = Request(method.rawString, uri);
-      request.headers
-        ..addAll(this.headers!)
-        ..addAll(headers);
 
       if (headers['Content-Type'] == 'application/x-www-form-urlencoded') {
         request.bodyFields = data.map((k, v) => MapEntry(k, v.toString()));
       } else {
         request.body = jsonEncode(data);
       }
+
+      request.headers
+        ..addAll(this.headers!)
+        ..addAll(headers);
 
       final response = await _client.send(request);
 
@@ -82,11 +83,12 @@ class RestService extends NetworkService {
 
     try {
       final request = Request(method.rawString, uri);
+
+      request.bodyBytes = data;
+
       request.headers
         ..addAll(this.headers!)
         ..addAll(headers);
-
-      request.bodyBytes = data;
 
       final response = await Response.fromStream(await _client.send(request));
 
