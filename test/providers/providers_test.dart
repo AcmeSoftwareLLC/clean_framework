@@ -1,6 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/providers/bridge_gateway_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
