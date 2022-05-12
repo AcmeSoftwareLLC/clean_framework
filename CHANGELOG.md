@@ -1,3 +1,11 @@
+# [1.3.0] - May 12, 2022
+- Added `BridgeGatewayProvider`
+- Fixed issue with content-type being appended with charset.
+- [**Breaking**] Added separate constructor for providing custom `GraphQLService` to `GraphQLExternalInterface`.
+- [**Breaking**] Token should be passed using `GraphQLToken` instead of `GraphQLTokenBuilder`.
+- Added passing fetch policy to GraphQL requests.
+- Added support to modify cache implementation for `GraphQLExternalInterface`.
+
 # [1.2.1] - Apr 25, 2022
 - Added `uiTestWidgetBuilder`.
 - Added `merge` property to **FirebaseWriteRequest**.
