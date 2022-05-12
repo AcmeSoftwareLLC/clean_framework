@@ -37,6 +37,7 @@ class GraphQLService extends NetworkService {
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    FetchPolicy? fetchPolicy,
   }) async {
     final _timeout = timeout ?? this.timeout;
 
@@ -44,11 +45,11 @@ class GraphQLService extends NetworkService {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(document, variables, _timeout),
+            await _query(document, variables, _timeout, fetchPolicy),
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(document, variables, _timeout),
+            await _mutate(document, variables, _timeout, fetchPolicy),
           );
       }
     } on TimeoutException {
@@ -122,11 +123,12 @@ class GraphQLService extends NetworkService {
     String doc,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    FetchPolicy? fetchPolicy,
   ) {
     final options = QueryOptions(
       document: gql(doc),
       variables: variables ?? {},
-      fetchPolicy: FetchPolicy.cacheOnly,
+      fetchPolicy: fetchPolicy,
     );
 
     return _timedOut(_client.query(options), timeout);
@@ -136,10 +138,12 @@ class GraphQLService extends NetworkService {
     String doc,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    FetchPolicy? fetchPolicy,
   ) {
     final options = MutationOptions(
       document: gql(doc),
       variables: variables ?? {},
+      fetchPolicy: fetchPolicy,
     );
 
     return _timedOut(_client.mutate(options), timeout);
