@@ -7,35 +7,39 @@ import 'package:clean_framework/src/providers/gateway.dart';
 
 class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
-  final GraphQLService _graphQLService;
-
   GraphQLExternalInterface({
     required String link,
     required List<GatewayConnection<Gateway>> gatewayConnections,
-    GraphQLTokenBuilder? tokenBuilder,
-    String? authHeaderKey,
+    GraphQLToken? token,
+    GraphQLPersistence persistence = const GraphQLPersistence(),
     Map<String, String> headers = const {},
-    GraphQLService? graphQLService,
     Duration? timeout,
-  })  : _graphQLService = graphQLService ??
-            GraphQLService(
-              endpoint: link,
-              tokenBuilder: tokenBuilder,
-              authHeaderKey: authHeaderKey,
-              headers: headers,
-              timeout: timeout,
-            ),
+  })  : service = GraphQLService(
+          endpoint: link,
+          token: token,
+          persistence: persistence,
+          headers: headers,
+          timeout: timeout,
+        ),
         super(gatewayConnections);
+
+  final GraphQLService service;
+
+  GraphQLExternalInterface.withService({
+    required List<GatewayConnection<Gateway>> gatewayConnections,
+    required this.service,
+  }) : super(gatewayConnections);
 
   @override
   void handleRequest() {
     on<QueryGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
+        final data = await service.request(
           method: GraphQLMethod.query,
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
+          fetchPolicy: request.fetchPolicy,
         );
 
         send(GraphQLSuccessResponse(data: data));
@@ -43,11 +47,12 @@ class GraphQLExternalInterface
     );
     on<MutationGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
+        final data = await service.request(
           method: GraphQLMethod.mutation,
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
+          fetchPolicy: request.fetchPolicy,
         );
 
         send(GraphQLSuccessResponse(data: data));
