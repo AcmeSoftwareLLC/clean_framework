@@ -4,7 +4,7 @@
 - [**Breaking**] Added separate constructor for providing custom `GraphQLService` to `GraphQLExternalInterface`.
 - [**Breaking**] Token should be passed using `GraphQLToken` instead of `GraphQLTokenBuilder`.
 - Added passing fetch policy to GraphQL requests.
-- Added support to modify cache implementation for `GraphQLExternalInterface`.
+- Added support to modify persistence option for `GraphQLExternalInterface`.
 - Upgraded dependencies.
 - [**Breaking**] Bumped minimum Flutter version to `3.0.0`.
 

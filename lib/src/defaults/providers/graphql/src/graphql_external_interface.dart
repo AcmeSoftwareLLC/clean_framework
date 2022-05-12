@@ -4,7 +4,6 @@ import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_respo
 import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:graphql/client.dart';
 
 class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
@@ -12,13 +11,13 @@ class GraphQLExternalInterface
     required String link,
     required List<GatewayConnection<Gateway>> gatewayConnections,
     GraphQLToken? token,
-    GraphQLCache? cache,
+    GraphQLPersistence persistence = const GraphQLPersistence(),
     Map<String, String> headers = const {},
     Duration? timeout,
   })  : service = GraphQLService(
           endpoint: link,
           token: token,
-          cache: cache,
+          persistence: persistence,
           headers: headers,
           timeout: timeout,
         ),

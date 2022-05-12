@@ -9,27 +9,51 @@ class GraphQLService extends NetworkService {
     required String endpoint,
     GraphQLToken? token,
     Map<String, String> headers = const {},
-    GraphQLCache? cache,
+    GraphQLPersistence persistence = const GraphQLPersistence(),
     DefaultPolicies? defaultPolicies,
     this.timeout,
   }) : super(baseUrl: endpoint, headers: headers) {
     final link = _createLink(token: token);
 
-    _client = GraphQLClient(
+    _createClient(
       link: link,
+      persistence: persistence,
       defaultPolicies: defaultPolicies,
-      cache: cache ?? GraphQLCache(),
     );
   }
 
-  late final GraphQLClient _client;
+  final Completer<GraphQLClient> _clientCompleter = Completer();
   final Duration? timeout;
+  GraphQLClient? _graphQLClient;
 
   GraphQLService.withClient({
     required GraphQLClient client,
     this.timeout,
-  })  : _client = client,
+  })  : _graphQLClient = client,
         super(baseUrl: '', headers: const {});
+
+  Future<GraphQLClient> get _client async {
+    if (_graphQLClient == null) {
+      return _clientCompleter.future;
+    }
+
+    return _graphQLClient!;
+  }
+
+  Future<void> _createClient({
+    required Link link,
+    required GraphQLPersistence persistence,
+    required DefaultPolicies? defaultPolicies,
+  }) async {
+    final cache = await persistence.setup();
+    final client = GraphQLClient(
+      link: link,
+      defaultPolicies: defaultPolicies,
+      cache: cache,
+    );
+
+    _clientCompleter.complete(client);
+  }
 
   Future<Map<String, dynamic>> request({
     required GraphQLMethod method,
@@ -127,14 +151,14 @@ class GraphQLService extends NetworkService {
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
-  ) {
+  ) async {
     final options = QueryOptions(
       document: gql(doc),
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
     );
 
-    return _timedOut(_client.query(options), timeout);
+    return _timedOut((await _client).query(options), timeout);
   }
 
   Future<QueryResult> _mutate(
@@ -142,14 +166,14 @@ class GraphQLService extends NetworkService {
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
-  ) {
+  ) async {
     final options = MutationOptions(
       document: gql(doc),
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
     );
 
-    return _timedOut(_client.mutate(options), timeout);
+    return _timedOut((await _client).mutate(options), timeout);
   }
 
   Future<QueryResult> _timedOut<T>(
@@ -239,4 +263,10 @@ class GraphQLToken {
 
   final FutureOr<String?> Function() builder;
   final String key;
+}
+
+class GraphQLPersistence {
+  const GraphQLPersistence();
+
+  FutureOr<GraphQLCache> setup() => GraphQLCache();
 }
