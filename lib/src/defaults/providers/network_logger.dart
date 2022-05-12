@@ -14,7 +14,7 @@ abstract class NetworkLogger {
   void initialize();
 
   String prettyHeaders(Map<String, String> headers) {
-    return headers.entries.map((e) => '${e.key}: ${e.value}').join('/n');
+    return headers.entries.map((e) => '${e.key}: ${e.value}').join('\n');
   }
 
   String prettyMap(Map<String, dynamic> map) {

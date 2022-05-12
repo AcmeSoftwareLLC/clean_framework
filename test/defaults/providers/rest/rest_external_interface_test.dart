@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/src/tests/gateway_fake.dart';
@@ -48,16 +50,32 @@ void main() {
     );
   });
 
-  test('RestExternalInterface binary data request success response', () async {
+  test('RestExternalInterface binary data src request success response',
+      () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final gateWay = GatewayFake<TestBinaryPostRequest, RestSuccessResponse>();
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
     RestExternalInterface(
         restService: restService,
         baseUrl: '',
         gatewayConnections: [() => gateWay]);
 
-    final result = await gateWay.transport(TestBinaryPostRequest());
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
+    expect(result.isRight, isTrue);
+    expect(result.right, RestSuccessResponse(data: testContent));
+  });
+
+  test('RestExternalInterface binary data request success response', () async {
+    final testContent = {'foo': 'bar'};
+    final restService = RestServiceFake(testContent);
+    final gateWay =
+        GatewayFake<TestBinaryDataPutRequest, RestSuccessResponse>();
+    RestExternalInterface(
+        restService: restService,
+        baseUrl: '',
+        gatewayConnections: [() => gateWay]);
+    final result = await gateWay.transport(TestBinaryDataPutRequest());
     expect(result.isRight, isTrue);
     expect(result.right, RestSuccessResponse(data: testContent));
   });
@@ -65,13 +83,14 @@ void main() {
   test('RestExternalInterface binary data request rest service failure',
       () async {
     final restService = RestServiceFake({});
-    final gateWay = GatewayFake<TestBinaryPostRequest, RestSuccessResponse>();
+    final gateWay =
+        GatewayFake<TestBinaryDataPostRequest, RestSuccessResponse>();
     RestExternalInterface(
         restService: restService,
         baseUrl: '',
         gatewayConnections: [() => gateWay]);
 
-    final result = await gateWay.transport(TestBinaryPostRequest());
+    final result = await gateWay.transport(TestBinaryDataPostRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -81,16 +100,16 @@ void main() {
   });
 
   test(
-      'RestExternalInterface binary data request rest service failure on invalid file path',
+      'RestExternalInterface binary data src request rest service failure on invalid file path',
       () async {
     final restService = RestServiceFake({});
-    final gateWay = GatewayFake<TestBinaryPutRequest, RestSuccessResponse>();
+    final gateWay = GatewayFake<TestBinarySrcPutRequest, RestSuccessResponse>();
     RestExternalInterface(
         restService: restService,
         baseUrl: '',
         gatewayConnections: [() => gateWay]);
 
-    final result = await gateWay.transport(TestBinaryPutRequest());
+    final result = await gateWay.transport(TestBinarySrcPutRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -100,16 +119,39 @@ void main() {
   });
 
   test(
-      'RestExternalInterface binary data request invalid response service failure',
+      'RestExternalInterface binary data src request invalid response service failure',
       () async {
     final restService = RestServiceFake({'statusCode': 400});
-    final gateWay = GatewayFake<TestBinaryPostRequest, RestSuccessResponse>();
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
     RestExternalInterface(
         restService: restService,
         baseUrl: '',
         gatewayConnections: [() => gateWay]);
 
-    final result = await gateWay.transport(TestBinaryPostRequest());
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
+    expect(result.isLeft, isTrue);
+    expect(
+      result.left,
+      isA<HttpFailureResponse>()
+          .having((err) => err.statusCode, 'statusCode', 400)
+          .having((err) => err.error, 'error', {'error': 'Bad Request'}).having(
+              (err) => err.path, 'path', 'http://fake.com'),
+    );
+  });
+
+  test(
+      'RestExternalInterface binary data request invalid response service failure',
+      () async {
+    final restService = RestServiceFake({'statusCode': 400});
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
+    RestExternalInterface(
+        restService: restService,
+        baseUrl: '',
+        gatewayConnections: [() => gateWay]);
+
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -130,7 +172,7 @@ class TestRequest extends GetRestRequest {
   String get path => 'http://fake.com';
 }
 
-class TestBinaryPostRequest extends BinaryDataPostRestRequest {
+class TestBinarySrcPostRequest extends BinaryDataSrcPostRestRequest {
   @override
   String get path => 'http://fake.com';
 
@@ -138,12 +180,28 @@ class TestBinaryPostRequest extends BinaryDataPostRestRequest {
   String get src => 'test/test_file.txt';
 }
 
-class TestBinaryPutRequest extends BinaryDataPutRestRequest {
+class TestBinarySrcPutRequest extends BinaryDataSrcPutRestRequest {
   @override
   String get path => 'http://fake.com';
 
   @override
   String get src => '';
+}
+
+class TestBinaryDataPostRequest extends BinaryDataPostRestRequest {
+  @override
+  String get path => 'http://fake.com';
+
+  @override
+  Uint8List get binaryData => Uint8List.fromList([]);
+}
+
+class TestBinaryDataPutRequest extends BinaryDataPutRestRequest {
+  @override
+  String get path => 'http://fake.com';
+
+  @override
+  Uint8List get binaryData => Uint8List.fromList([]);
 }
 
 class RestServiceFake extends Fake implements RestService {
