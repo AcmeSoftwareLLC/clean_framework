@@ -38,6 +38,7 @@ class GraphQLExternalInterface
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
+          fetchPolicy: request.fetchPolicy,
         );
 
         send(GraphQLSuccessResponse(data: data));
@@ -50,6 +51,7 @@ class GraphQLExternalInterface
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
+          fetchPolicy: request.fetchPolicy,
         );
 
         send(GraphQLSuccessResponse(data: data));

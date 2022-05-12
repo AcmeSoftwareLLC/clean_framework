@@ -37,19 +37,21 @@ class GraphQLService extends NetworkService {
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
-    FetchPolicy? fetchPolicy,
+    GraphQLFetchPolicy? fetchPolicy,
   }) async {
     final _timeout = timeout ?? this.timeout;
+    final policy =
+        fetchPolicy == null ? null : FetchPolicy.values[fetchPolicy.index];
 
     try {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(document, variables, _timeout, fetchPolicy),
+            await _query(document, variables, _timeout, policy),
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(document, variables, _timeout, fetchPolicy),
+            await _mutate(document, variables, _timeout, policy),
           );
       }
     } on TimeoutException {
