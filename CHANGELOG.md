@@ -5,6 +5,8 @@
 - [**Breaking**] Token should be passed using `GraphQLToken` instead of `GraphQLTokenBuilder`.
 - Added passing fetch policy to GraphQL requests.
 - Added support to modify cache implementation for `GraphQLExternalInterface`.
+- Upgraded dependencies.
+- [**Breaking**] Bumped minimum Flutter version to `3.0.0`.
 
 # [1.2.1] - Apr 25, 2022
 - Added `uiTestWidgetBuilder`.
