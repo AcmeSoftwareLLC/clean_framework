@@ -78,10 +78,12 @@ class GraphQLService extends NetworkService {
       final loggerLink = GraphQLLoggerLink(
         endpoint: baseUrl,
         getHeaders: () async {
+          // coverage:ignore-start
           return {
             if (token != null) token.key: await token.builder() ?? '',
             ..._headers,
           };
+          // coverage:ignore-end
         },
       );
 

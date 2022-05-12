@@ -26,6 +26,7 @@ void main() {
     final response = await service.request(
       method: GraphQLMethod.query,
       document: '',
+      fetchPolicy: GraphQLFetchPolicy.cacheFirst,
     );
 
     expect(response, {'foo': 'bar'});
