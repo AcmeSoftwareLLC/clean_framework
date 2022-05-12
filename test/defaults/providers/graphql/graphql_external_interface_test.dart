@@ -181,6 +181,7 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    GraphQLFetchPolicy? fetchPolicy,
   }) async {
     if (_exception != null) throw _exception!;
     return _json;
