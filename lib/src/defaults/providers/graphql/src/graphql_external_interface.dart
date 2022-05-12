@@ -15,7 +15,7 @@ class GraphQLExternalInterface
     GraphQLCache? cache,
     Map<String, String> headers = const {},
     Duration? timeout,
-  })  : _graphQLService = GraphQLService(
+  })  : service = GraphQLService(
           endpoint: link,
           token: token,
           cache: cache,
@@ -24,19 +24,18 @@ class GraphQLExternalInterface
         ),
         super(gatewayConnections);
 
-  final GraphQLService _graphQLService;
+  final GraphQLService service;
 
   GraphQLExternalInterface.withService({
     required List<GatewayConnection<Gateway>> gatewayConnections,
-    required GraphQLService service,
-  })  : _graphQLService = service,
-        super(gatewayConnections);
+    required this.service,
+  }) : super(gatewayConnections);
 
   @override
   void handleRequest() {
     on<QueryGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
+        final data = await service.request(
           method: GraphQLMethod.query,
           document: request.document,
           variables: request.variables,
@@ -49,7 +48,7 @@ class GraphQLExternalInterface
     );
     on<MutationGraphQLRequest>(
       (request, send) async {
-        final data = await _graphQLService.request(
+        final data = await service.request(
           method: GraphQLMethod.mutation,
           document: request.document,
           variables: request.variables,
