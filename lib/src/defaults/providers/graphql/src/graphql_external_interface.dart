@@ -7,23 +7,27 @@ import 'package:clean_framework/src/providers/gateway.dart';
 
 class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
-  final GraphQLService _graphQLService;
-
   GraphQLExternalInterface({
     required String link,
     required List<GatewayConnection<Gateway>> gatewayConnections,
     GraphQLToken? token,
-    String? authHeaderKey,
     Map<String, String> headers = const {},
     GraphQLService? graphQLService,
     Duration? timeout,
-  })  : _graphQLService = graphQLService ??
-            GraphQLService(
-              endpoint: link,
-              token: token,
-              headers: headers,
-              timeout: timeout,
-            ),
+  })  : _graphQLService = GraphQLService(
+          endpoint: link,
+          token: token,
+          headers: headers,
+          timeout: timeout,
+        ),
+        super(gatewayConnections);
+
+  final GraphQLService _graphQLService;
+
+  GraphQLExternalInterface.withService({
+    required List<GatewayConnection<Gateway>> gatewayConnections,
+    required GraphQLService service,
+  })  : _graphQLService = service,
         super(gatewayConnections);
 
   @override
