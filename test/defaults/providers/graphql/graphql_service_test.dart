@@ -17,7 +17,7 @@ void main() {
     GraphQLService(endpoint: '');
     GraphQLService(endpoint: '', headers: {'Authorization': 'bar'});
 
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
@@ -33,13 +33,12 @@ void main() {
 
   test('GraphQLService success query with tokenBuilder', () async {
     // for coverage purposes
-    GraphQLService(endpoint: '', tokenBuilder: () => 'Bearer Token');
-
-    final service = GraphQLService(
+    GraphQLService(
       endpoint: '',
-      client: mock,
-      tokenBuilder: () => 'Bearer token',
+      token: GraphQLToken(builder: () => 'Bearer Token'),
     );
+
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => successResult,
@@ -53,7 +52,7 @@ void main() {
   });
 
   test('GraphQLService query with network exception', () async {
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -79,7 +78,7 @@ void main() {
   });
 
   test('GraphQLService query with server exception', () async {
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -104,7 +103,7 @@ void main() {
   });
 
   test('GraphQLService query with operation exception', () async {
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.query(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -131,7 +130,7 @@ void main() {
   });
 
   test('GraphQLService success mutation', () async {
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.mutate(any())).thenAnswer((_) async => successResult);
 
@@ -146,7 +145,7 @@ void main() {
     // for coverage purposes
     GraphQLService(endpoint: '');
 
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(
@@ -166,7 +165,7 @@ void main() {
     // for coverage purposes
     GraphQLService(endpoint: '');
 
-    final service = GraphQLService(endpoint: '', client: mock);
+    final service = GraphQLService.withClient(client: mock);
 
     when(() => mock.mutate(any())).thenAnswer(
       (_) async => exceptionResult(

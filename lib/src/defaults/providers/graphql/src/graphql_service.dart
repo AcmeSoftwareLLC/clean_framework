@@ -5,31 +5,32 @@ import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:graphql/client.dart';
 
-typedef GraphQLTokenBuilder = FutureOr<String?> Function();
-
 class GraphQLService extends NetworkService {
   GraphQLService({
     required String endpoint,
-    GraphQLTokenBuilder? tokenBuilder,
-    String? authHeaderKey,
+    GraphQLToken? token,
     Map<String, String> headers = const {},
-    GraphQLClient? client,
+    GraphQLCache? cache,
+    DefaultPolicies? defaultPolicies,
     this.timeout,
   }) : super(baseUrl: endpoint, headers: headers) {
-    if (client == null) {
-      final link = _createLink(
-        authHeaderKey: authHeaderKey,
-        tokenBuilder: tokenBuilder,
-      );
+    final link = _createLink(token: token);
 
-      _client = GraphQLClient(link: link, cache: GraphQLCache());
-    } else {
-      _client = client;
-    }
+    _client = GraphQLClient(
+      link: link,
+      defaultPolicies: defaultPolicies,
+      cache: cache ?? GraphQLCache(),
+    );
   }
 
   late final GraphQLClient _client;
   final Duration? timeout;
+
+  GraphQLService.withClient({
+    required GraphQLClient client,
+    this.timeout,
+  })  : _client = client,
+        super(baseUrl: '', headers: const {});
 
   Future<Map<String, dynamic>> request({
     required GraphQLMethod method,
@@ -55,21 +56,17 @@ class GraphQLService extends NetworkService {
     }
   }
 
-  Link _createLink({
-    required String? authHeaderKey,
-    required GraphQLTokenBuilder? tokenBuilder,
-  }) {
+  Link _createLink({required GraphQLToken? token}) {
     final _headers = headers ?? {};
     final httpLink = HttpLink(baseUrl, defaultHeaders: _headers);
-    final headerKey = authHeaderKey ?? 'Authorization';
 
     Link _link;
-    if (tokenBuilder == null) {
+    if (token == null) {
       _link = httpLink;
     } else {
       final authLink = AuthLink(
-        getToken: tokenBuilder,
-        headerKey: headerKey,
+        getToken: token.builder,
+        headerKey: token.key,
       );
       _link = authLink.concat(httpLink);
     }
@@ -79,9 +76,8 @@ class GraphQLService extends NetworkService {
       final loggerLink = GraphQLLoggerLink(
         endpoint: baseUrl,
         getHeaders: () async {
-          final token = await tokenBuilder?.call() ?? '';
           return {
-            headerKey: token,
+            if (token != null) token.key: await token.builder() ?? '',
             ..._headers,
           };
         },
@@ -130,6 +126,7 @@ class GraphQLService extends NetworkService {
     final options = QueryOptions(
       document: gql(doc),
       variables: variables ?? {},
+      fetchPolicy: FetchPolicy.cacheOnly,
     );
 
     return _timedOut(_client.query(options), timeout);
@@ -229,3 +226,10 @@ class GraphQLServerException implements GraphQLServiceException {
 }
 
 class GraphQLTimeoutException implements GraphQLServiceException {}
+
+class GraphQLToken {
+  GraphQLToken({required this.builder, this.key = 'Authorization'});
+
+  final FutureOr<String?> Function() builder;
+  final String key;
+}

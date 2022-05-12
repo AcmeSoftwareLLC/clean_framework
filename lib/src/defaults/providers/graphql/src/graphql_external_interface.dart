@@ -12,7 +12,7 @@ class GraphQLExternalInterface
   GraphQLExternalInterface({
     required String link,
     required List<GatewayConnection<Gateway>> gatewayConnections,
-    GraphQLTokenBuilder? tokenBuilder,
+    GraphQLToken? token,
     String? authHeaderKey,
     Map<String, String> headers = const {},
     GraphQLService? graphQLService,
@@ -20,8 +20,7 @@ class GraphQLExternalInterface
   })  : _graphQLService = graphQLService ??
             GraphQLService(
               endpoint: link,
-              tokenBuilder: tokenBuilder,
-              authHeaderKey: authHeaderKey,
+              token: token,
               headers: headers,
               timeout: timeout,
             ),
