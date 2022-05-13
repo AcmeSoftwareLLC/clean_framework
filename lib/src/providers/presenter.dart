@@ -33,6 +33,10 @@ abstract class Presenter<V extends ViewModel, O extends Output,
     U useCase,
   ) {}
 
+  /// Called when this presenter is removed from the tree.
+  @protected
+  void onDestroy(U useCase) {}
+
   @visibleForTesting
   O subscribe(WidgetRef ref) => _provider.subscribe<O>(ref);
 }
@@ -73,6 +77,12 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   void _onOutputChanged(O? previous, O next) {
     if (previous != next) widget.onOutputUpdate(context, next);
+  }
+
+  @override
+  void dispose() {
+    widget.onDestroy(_useCase!);
+    super.dispose();
   }
 }
 
