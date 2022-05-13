@@ -51,7 +51,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       widget.onLayoutReady(context, _useCase!);
     });
   }

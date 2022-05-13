@@ -11,10 +11,9 @@ void main() {
       // For coverage purposes
       GraphQLExternalInterface(link: '', gatewayConnections: []);
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+        service: GraphQLServiceFake({'foo': 'bar'}),
       );
 
       final result = await gateway.transport(SuccessfulRequest());
@@ -25,10 +24,9 @@ void main() {
     test('failure response', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({}),
+        service: GraphQLServiceFake({}),
       );
 
       final result = await gateway.transport(SuccessfulRequest());
@@ -47,10 +45,9 @@ void main() {
     test('success with mutation', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({'foo': 'bar'}),
+        service: GraphQLServiceFake({'foo': 'bar'}),
       );
 
       final result = await gateway.transport(MutationRequest());
@@ -61,10 +58,9 @@ void main() {
     test('failure with mutation', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake({}),
+        service: GraphQLServiceFake({}),
       );
 
       final result = await gateway.transport(MutationRequest());
@@ -82,10 +78,9 @@ void main() {
     test('operation exception', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake.exception(
+        service: GraphQLServiceFake.exception(
           GraphQLOperationException(errors: []),
         ),
       );
@@ -101,10 +96,9 @@ void main() {
     test('network exception', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake.exception(
+        service: GraphQLServiceFake.exception(
           GraphQLNetworkException(
             message: 'no internet',
             uri: Uri.parse('https://acmesoftware.com'),
@@ -127,10 +121,9 @@ void main() {
     test('server exception', () async {
       final gateway = GatewayFake(UseCaseFake());
 
-      GraphQLExternalInterface(
-        link: '',
+      GraphQLExternalInterface.withService(
         gatewayConnections: [() => gateway],
-        graphQLService: GraphQLServiceFake.exception(
+        service: GraphQLServiceFake.exception(
           GraphQLServerException(
             originalException: FormatException(),
             errorData: const {},
@@ -188,6 +181,7 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    GraphQLFetchPolicy? fetchPolicy,
   }) async {
     if (_exception != null) throw _exception!;
     return _json;

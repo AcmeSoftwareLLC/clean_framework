@@ -1,53 +1,80 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
-import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:graphql/client.dart';
-
-typedef GraphQLTokenBuilder = FutureOr<String?> Function();
 
 class GraphQLService extends NetworkService {
   GraphQLService({
     required String endpoint,
-    GraphQLTokenBuilder? tokenBuilder,
-    String? authHeaderKey,
+    GraphQLToken? token,
     Map<String, String> headers = const {},
-    GraphQLClient? client,
+    GraphQLPersistence persistence = const GraphQLPersistence(),
+    DefaultPolicies? defaultPolicies,
     this.timeout,
   }) : super(baseUrl: endpoint, headers: headers) {
-    if (client == null) {
-      final link = _createLink(
-        authHeaderKey: authHeaderKey,
-        tokenBuilder: tokenBuilder,
-      );
+    final link = _createLink(token: token);
 
-      _client = GraphQLClient(link: link, cache: GraphQLCache());
-    } else {
-      _client = client;
-    }
+    _createClient(
+      link: link,
+      persistence: persistence,
+      defaultPolicies: defaultPolicies,
+    );
   }
 
-  late final GraphQLClient _client;
+  final Completer<GraphQLClient> _clientCompleter = Completer();
   final Duration? timeout;
+  GraphQLClient? _graphQLClient;
+
+  GraphQLService.withClient({
+    required GraphQLClient client,
+    this.timeout,
+  })  : _graphQLClient = client,
+        super(baseUrl: '', headers: const {});
+
+  Future<GraphQLClient> get _client async {
+    if (_graphQLClient == null) {
+      return _clientCompleter.future;
+    }
+
+    return _graphQLClient!;
+  }
+
+  Future<void> _createClient({
+    required Link link,
+    required GraphQLPersistence persistence,
+    required DefaultPolicies? defaultPolicies,
+  }) async {
+    final cache = await persistence.setup();
+    final client = GraphQLClient(
+      link: link,
+      defaultPolicies: defaultPolicies,
+      cache: cache,
+    );
+
+    _clientCompleter.complete(client);
+  }
 
   Future<Map<String, dynamic>> request({
     required GraphQLMethod method,
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
+    GraphQLFetchPolicy? fetchPolicy,
   }) async {
     final _timeout = timeout ?? this.timeout;
+    final policy =
+        fetchPolicy == null ? null : FetchPolicy.values[fetchPolicy.index];
 
     try {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(document, variables, _timeout),
+            await _query(document, variables, _timeout, policy),
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(document, variables, _timeout),
+            await _mutate(document, variables, _timeout, policy),
           );
       }
     } on TimeoutException {
@@ -55,21 +82,17 @@ class GraphQLService extends NetworkService {
     }
   }
 
-  Link _createLink({
-    required String? authHeaderKey,
-    required GraphQLTokenBuilder? tokenBuilder,
-  }) {
+  Link _createLink({required GraphQLToken? token}) {
     final _headers = headers ?? {};
     final httpLink = HttpLink(baseUrl, defaultHeaders: _headers);
-    final headerKey = authHeaderKey ?? 'Authorization';
 
     Link _link;
-    if (tokenBuilder == null) {
+    if (token == null) {
       _link = httpLink;
     } else {
       final authLink = AuthLink(
-        getToken: tokenBuilder,
-        headerKey: headerKey,
+        getToken: token.builder,
+        headerKey: token.key,
       );
       _link = authLink.concat(httpLink);
     }
@@ -79,11 +102,12 @@ class GraphQLService extends NetworkService {
       final loggerLink = GraphQLLoggerLink(
         endpoint: baseUrl,
         getHeaders: () async {
-          final token = await tokenBuilder?.call() ?? '';
+          // coverage:ignore-start
           return {
-            headerKey: token,
+            if (token != null) token.key: await token.builder() ?? '',
             ..._headers,
           };
+          // coverage:ignore-end
         },
       );
 
@@ -126,26 +150,30 @@ class GraphQLService extends NetworkService {
     String doc,
     Map<String, dynamic>? variables,
     Duration? timeout,
-  ) {
+    FetchPolicy? fetchPolicy,
+  ) async {
     final options = QueryOptions(
       document: gql(doc),
       variables: variables ?? {},
+      fetchPolicy: fetchPolicy,
     );
 
-    return _timedOut(_client.query(options), timeout);
+    return _timedOut((await _client).query(options), timeout);
   }
 
   Future<QueryResult> _mutate(
     String doc,
     Map<String, dynamic>? variables,
     Duration? timeout,
-  ) {
+    FetchPolicy? fetchPolicy,
+  ) async {
     final options = MutationOptions(
       document: gql(doc),
       variables: variables ?? {},
+      fetchPolicy: fetchPolicy,
     );
 
-    return _timedOut(_client.mutate(options), timeout);
+    return _timedOut((await _client).mutate(options), timeout);
   }
 
   Future<QueryResult> _timedOut<T>(
@@ -229,3 +257,16 @@ class GraphQLServerException implements GraphQLServiceException {
 }
 
 class GraphQLTimeoutException implements GraphQLServiceException {}
+
+class GraphQLToken {
+  GraphQLToken({required this.builder, this.key = 'Authorization'});
+
+  final FutureOr<String?> Function() builder;
+  final String key;
+}
+
+class GraphQLPersistence {
+  const GraphQLPersistence();
+
+  FutureOr<GraphQLCache> setup() => GraphQLCache();
+}
