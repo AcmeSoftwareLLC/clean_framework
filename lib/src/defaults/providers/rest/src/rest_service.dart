@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/rest/rest_logger.dart';
@@ -10,7 +11,7 @@ class RestService extends NetworkService {
     Map<String, String> headers = const {},
   }) : super(baseUrl: baseUrl, headers: headers);
 
-  Future<Map<String, dynamic>> request({
+  Future<T> request<T extends Object>({
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
@@ -19,6 +20,7 @@ class RestService extends NetworkService {
     },
     Client? client,
   }) async {
+    print(T);
     final _client = RestLoggerClient(client ?? Client());
 
     var uri = _pathToUri(path);
@@ -43,16 +45,22 @@ class RestService extends NetworkService {
       final response = await _client.send(request);
 
       final statusCode = response.statusCode;
-      final resData = parseResponse(response);
 
       if (statusCode < 200 || statusCode > 299) {
         throw InvalidResponseRestServiceFailure(
           path: uri.toString(),
-          error: resData,
+          error: parseResponse(response),
           statusCode: statusCode,
         );
       }
-      return resData;
+      if (T == Map<String, dynamic>) {
+        final resData = parseResponse(response);
+        return resData as T;
+      } else if (T == Uint8List || T == List<int>) {
+        return response.bodyBytes as T;
+      } else {
+        throw StateError('The type $T is not supported by request');
+      }
 
       //TODO Enable the types of error we should consider later:
       // } on SocketException {
