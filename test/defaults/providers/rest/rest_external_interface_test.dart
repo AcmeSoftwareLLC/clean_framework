@@ -178,7 +178,11 @@ void main() {
     final result = await gateWay.transport(TestBytesRestRequest());
     expect(result.isRight, isTrue);
     expect(
-        result.right, BytesRestSuccessResponse(data: Uint8List.fromList([])));
+      result.right,
+      BytesRestSuccessResponse(
+        data: Uint8List.fromList([]),
+      ),
+    );
   });
 
   tearDown(() {
