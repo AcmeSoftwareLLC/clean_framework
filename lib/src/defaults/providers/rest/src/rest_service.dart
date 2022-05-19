@@ -20,7 +20,6 @@ class RestService extends NetworkService {
     },
     Client? client,
   }) async {
-    print(T);
     final _client = RestLoggerClient(client ?? Client());
 
     var uri = _pathToUri(path);
