@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:meta/meta.dart';
@@ -11,11 +12,19 @@ abstract class RestRequest extends Request {
 
   String get path;
 
+  Map<String, dynamic> get params => {};
+
   Map<String, String> get headers => {};
 }
 
 abstract class JsonRestRequest extends RestRequest {
   JsonRestRequest(method) : super(method);
+
+  Map<String, dynamic> get data => {};
+}
+
+abstract class BytesRestRequest extends RestRequest {
+  BytesRestRequest({required RestMethod method}) : super(method);
 
   Map<String, dynamic> get data => {};
 }
@@ -52,8 +61,6 @@ abstract class BinaryDataPutRestRequest extends BinaryDataRestRequest {
 
 abstract class GetRestRequest extends JsonRestRequest {
   GetRestRequest() : super(RestMethod.get);
-
-  Map<String, dynamic> get params => {};
 
   @nonVirtual
   @override
