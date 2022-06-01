@@ -81,7 +81,9 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   @override
   void dispose() {
-    widget.onDestroy(_useCase!);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      widget.onDestroy(_useCase!);
+    });
     super.dispose();
   }
 }
