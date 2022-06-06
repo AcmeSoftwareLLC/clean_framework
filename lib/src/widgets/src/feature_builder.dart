@@ -1,6 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/src/open_feature/open_feature.dart';
-import 'package:clean_framework/src/widgets/src/feature_scope.dart';
 import 'package:flutter/material.dart';
 
 typedef FeatureBuilderCallback<T extends Object> = Widget Function(
@@ -8,7 +6,7 @@ typedef FeatureBuilderCallback<T extends Object> = Widget Function(
   T,
 );
 
-class FeatureBuilder<T extends Object> extends StatelessWidget {
+class FeatureBuilder<T extends Object> extends StatefulWidget {
   FeatureBuilder({
     super.key,
     required this.flagKey,
@@ -25,47 +23,52 @@ class FeatureBuilder<T extends Object> extends StatelessWidget {
   final EvaluationContext? evaluationContext;
 
   @override
+  State<FeatureBuilder<T>> createState() => _FeatureBuilderState<T>();
+}
+
+class _FeatureBuilderState<T extends Object> extends State<FeatureBuilder<T>> {
+  @override
   Widget build(BuildContext context) {
     final client = FeatureScope.of(context).client;
 
     return FutureBuilder<T>(
-      initialData: defaultValue,
+      initialData: widget.defaultValue,
       future: _resolver(client),
       builder: (context, snapshot) {
-        return builder(context, snapshot.data!);
+        return widget.builder(context, snapshot.data!);
       },
     );
   }
 
   Future<T> _resolver(FeatureClient client) async {
     Future<Object> _future;
-    switch (valueType) {
+    switch (widget.valueType) {
       case FlagValueType.boolean:
         _future = client.getBooleanValue(
-          key: flagKey,
-          defaultValue: defaultValue as bool,
-          context: evaluationContext,
+          key: widget.flagKey,
+          defaultValue: widget.defaultValue as bool,
+          context: widget.evaluationContext,
         );
         break;
       case FlagValueType.string:
         _future = client.getStringValue(
-          key: flagKey,
-          defaultValue: defaultValue as String,
-          context: evaluationContext,
+          key: widget.flagKey,
+          defaultValue: widget.defaultValue as String,
+          context: widget.evaluationContext,
         );
         break;
       case FlagValueType.number:
         _future = client.getNumberValue(
-          key: flagKey,
-          defaultValue: defaultValue as num,
-          context: evaluationContext,
+          key: widget.flagKey,
+          defaultValue: widget.defaultValue as num,
+          context: widget.evaluationContext,
         );
         break;
       case FlagValueType.object:
         _future = client.getValue(
-          key: flagKey,
-          defaultValue: defaultValue,
-          context: evaluationContext,
+          key: widget.flagKey,
+          defaultValue: widget.defaultValue,
+          context: widget.evaluationContext,
         );
         break;
     }

@@ -1,13 +1,21 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/material.dart';
 
-class FeatureScope extends StatefulWidget {
+class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
   const FeatureScope({
     super.key,
+    required this.register,
     required this.child,
+    this.loader,
+    this.onLoaded,
   });
 
+  final T Function() register;
   final Widget child;
+  final Future<void> Function(T)? loader;
+  final VoidCallback? onLoaded;
 
   static _InheritedFeatureScope of(BuildContext context) {
     final _InheritedFeatureScope? result =
@@ -17,16 +25,29 @@ class FeatureScope extends StatefulWidget {
   }
 
   @override
-  State<FeatureScope> createState() => _FeatureScopeState();
+  State<FeatureScope<T>> createState() => _FeatureScopeState<T>();
 }
 
-class _FeatureScopeState extends State<FeatureScope> {
+class _FeatureScopeState<T extends FeatureProvider>
+    extends State<FeatureScope<T>> {
   late final FeatureClient _client;
 
   @override
   void initState() {
     super.initState();
+    final featureProvider = widget.register();
+
+    OpenFeature.instance.provider = featureProvider;
     _client = OpenFeature.instance.getClient();
+
+    _load(featureProvider);
+  }
+
+  Future<void> _load(T featureProvider) async {
+    if (widget.loader != null) {
+      await widget.loader!.call(featureProvider);
+      widget.onLoaded?.call();
+    }
   }
 
   @override

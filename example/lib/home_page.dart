@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       body: FeatureBuilder<String>(
         flagKey: 'exampleFeatures',
         valueType: FlagValueType.string,
-        defaultValue: 'all',
+        defaultValue: 'rest,firebase,graphql',
         evaluationContext: EvaluationContext(
           {'platform': defaultTargetPlatform.name},
         ),
@@ -30,7 +30,6 @@ class HomePage extends StatelessWidget {
                 title: 'Firebase',
                 iconData: Icons.local_fire_department_sharp,
                 route: Routes.lastLogin,
-                showDivider: false,
               ),
               _List(
                 enabled: enabledFeatures.contains('graphql'),
@@ -58,28 +57,29 @@ class _List extends StatelessWidget {
     required this.title,
     required this.iconData,
     required this.route,
-    this.showDivider = true,
   });
 
   final bool enabled;
   final String title;
   final IconData iconData;
   final Routes route;
-  final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
-    if (!enabled) return const SizedBox.shrink();
-
-    return Column(
-      children: [
-        ListTile(
-          title: Text(title),
-          leading: Icon(iconData),
-          onTap: () => router.to(route),
-        ),
-        if (showDivider) Divider(),
-      ],
+    return AnimatedSize(
+      duration: const Duration(seconds: 2),
+      child: enabled
+          ? Column(
+              children: [
+                ListTile(
+                  title: Text(title),
+                  leading: Icon(iconData),
+                  onTap: () => router.to(route),
+                ),
+                Divider(),
+              ],
+            )
+          : const SizedBox.shrink(),
     );
   }
 }
