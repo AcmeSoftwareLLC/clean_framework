@@ -32,7 +32,7 @@
           {
             "context": "platform",
             "op": "equals",
-            "value": "ios"
+            "value": "iOS"
           }
         ]
       },

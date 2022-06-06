@@ -7,6 +7,7 @@ import 'package:clean_framework/src/open_feature/open_feature.dart';
 import 'engine/open_feature_flags.dart';
 
 export 'engine/evaluation_engine.dart';
+export 'engine/open_feature_flags.dart';
 
 class JsonFeatureProvider implements FeatureProvider {
   JsonFeatureProvider({
