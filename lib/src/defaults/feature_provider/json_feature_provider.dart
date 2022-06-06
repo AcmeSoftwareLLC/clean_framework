@@ -1,12 +1,19 @@
 import 'dart:async';
 
+import 'package:clean_framework/src/defaults/feature_provider/engine/evaluation_engine.dart';
 import 'package:clean_framework/src/defaults/feature_provider/engine/json_evaluation_engine.dart';
 import 'package:clean_framework/src/open_feature/open_feature.dart';
 
 import 'engine/open_feature_flags.dart';
 
+export 'engine/evaluation_engine.dart';
+
 class JsonFeatureProvider implements FeatureProvider {
-  final JsonEvaluationEngine _engine = JsonEvaluationEngine();
+  JsonFeatureProvider({
+    EvaluationEngine engine = const JsonEvaluationEngine(),
+  }) : _engine = engine;
+
+  final EvaluationEngine _engine;
   final Completer<OpenFeatureFlags> _flagsCompleter = Completer();
 
   @override

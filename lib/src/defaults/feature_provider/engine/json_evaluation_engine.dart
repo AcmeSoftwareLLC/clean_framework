@@ -1,8 +1,12 @@
+import 'package:clean_framework/src/defaults/feature_provider/engine/evaluation_engine.dart';
 import 'package:clean_framework/src/open_feature/open_feature.dart';
 
 import 'open_feature_flags.dart';
 
-class JsonEvaluationEngine {
+class JsonEvaluationEngine implements EvaluationEngine {
+  const JsonEvaluationEngine();
+
+  @override
   ResolutionDetails<T> evaluate<T extends Object>({
     required OpenFeatureFlags flags,
     required String flagKey,
