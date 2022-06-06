@@ -8,45 +8,64 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Example Features'),
-      ),
-      body: FeatureBuilder<String>(
-        flagKey: 'exampleFeatures',
-        valueType: FlagValueType.string,
-        defaultValue: 'rest,firebase,graphql',
-        evaluationContext: EvaluationContext(
-          {'platform': defaultTargetPlatform.name},
-        ),
-        builder: (context, value) {
-          final enabledFeatures = value.split(',');
+    return FeatureBuilder<int>(
+      flagKey: 'color',
+      valueType: FlagValueType.number,
+      defaultValue: 0xFF0000FF,
+      builder: (context, colorValue) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Example Features'),
+            backgroundColor: Color(colorValue),
+          ),
+          body: FeatureBuilder<String>(
+            flagKey: 'exampleFeatures',
+            valueType: FlagValueType.string,
+            defaultValue: 'rest,firebase,graphql',
+            evaluationContext: EvaluationContext(
+              {'platform': defaultTargetPlatform.name},
+            ),
+            builder: (context, value) {
+              final enabledFeatures = value.split(',');
 
-          return ListView(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            children: [
-              _List(
-                enabled: enabledFeatures.contains('firebase'),
-                title: 'Firebase',
-                iconData: Icons.local_fire_department_sharp,
-                route: Routes.lastLogin,
-              ),
-              _List(
-                enabled: enabledFeatures.contains('graphql'),
-                title: 'GraphQL',
-                iconData: Icons.graphic_eq,
-                route: Routes.countries,
-              ),
-              _List(
-                enabled: enabledFeatures.contains('rest'),
-                title: 'Rest API',
-                iconData: Icons.sync_alt,
-                route: Routes.randomCat,
-              ),
-            ],
-          );
-        },
-      ),
+              return _ExampleFeature(enabledFeatures: enabledFeatures);
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ExampleFeature extends StatelessWidget {
+  const _ExampleFeature({required this.enabledFeatures});
+
+  final List<String> enabledFeatures;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      children: [
+        _List(
+          enabled: enabledFeatures.contains('firebase'),
+          title: 'Firebase',
+          iconData: Icons.local_fire_department_sharp,
+          route: Routes.lastLogin,
+        ),
+        _List(
+          enabled: enabledFeatures.contains('graphql'),
+          title: 'GraphQL',
+          iconData: Icons.graphic_eq,
+          route: Routes.countries,
+        ),
+        _List(
+          enabled: enabledFeatures.contains('rest'),
+          title: 'Rest API',
+          iconData: Icons.sync_alt,
+          route: Routes.randomCat,
+        ),
+      ],
     );
   }
 }
