@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +37,17 @@ class _FeatureBuilderState<T extends Object> extends State<FeatureBuilder<T>> {
       initialData: widget.defaultValue,
       future: _resolver(client),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          log(
+            'Resolution Error',
+            name: 'Feature Flag',
+            error: snapshot.error,
+            stackTrace: snapshot.stackTrace,
+          );
+
+          return widget.builder(context, widget.defaultValue);
+        }
+
         return widget.builder(context, snapshot.data!);
       },
     );
