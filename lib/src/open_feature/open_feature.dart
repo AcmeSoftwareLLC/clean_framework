@@ -1,3 +1,4 @@
+// coverage:ignore-file
 library open_feature;
 
 import 'src/core/feature_client.dart';

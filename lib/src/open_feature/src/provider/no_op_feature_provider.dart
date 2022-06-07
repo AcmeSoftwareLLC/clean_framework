@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import '../core/enums/reason.dart';
 import '../core/resolution_details.dart';
 import '../evaluation_context/evaluation_context.dart';

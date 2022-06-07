@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'package:clean_framework/src/defaults/feature_provider/engine/evaluation_engine.dart';
 import 'package:clean_framework/src/open_feature/open_feature.dart';
 

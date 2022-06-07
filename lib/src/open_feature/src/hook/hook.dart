@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'dart:async';
 
 import '../evaluation_context/evaluation_context.dart';

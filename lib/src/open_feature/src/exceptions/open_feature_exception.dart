@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import '../core/enums/error_code.dart';
 
 export '../core/enums/error_code.dart';

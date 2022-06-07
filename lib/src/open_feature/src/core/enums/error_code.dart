@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 enum ErrorCode {
   providerNotReady('PROVIDER_NOT_READY'),
   flagNotFound('FLAG_NOT_FOUND'),

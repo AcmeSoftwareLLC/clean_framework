@@ -13,6 +13,7 @@ class EvaluationContext extends MapMixin<String, Object> {
   final String? targetingKey;
   final Map<String, Object> _map;
 
+  // coverage:ignore-start
   @override
   Object? operator [](Object? key) => _map[key];
 
@@ -29,6 +30,7 @@ class EvaluationContext extends MapMixin<String, Object> {
 
   @override
   Object? remove(Object? key) => _map.remove(key);
+  // coverage:ignore-end
 
   EvaluationContext merge(EvaluationContext? other) {
     if (other == null) return this;

@@ -17,8 +17,10 @@ class JsonFeatureProvider implements FeatureProvider {
   final EvaluationEngine _engine;
   final Completer<OpenFeatureFlags> _flagsCompleter = Completer();
 
+  // coverage:ignore-start
   @override
   String get name => 'json';
+  // coverage:ignore-end
 
   @override
   Future<ResolutionDetails<bool>> resolveBooleanValue({

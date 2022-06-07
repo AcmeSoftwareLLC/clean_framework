@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'dart:collection';
 
 class HookHints<T extends Object> extends UnmodifiableMapBase<String, T> {

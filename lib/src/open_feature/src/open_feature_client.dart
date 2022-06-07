@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import '../open_feature.dart';
 import 'flag_evaluation/flag_evaluation_details.dart';
 

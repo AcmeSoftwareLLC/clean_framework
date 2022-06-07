@@ -67,6 +67,8 @@ class _InheritedFeatureScope extends InheritedWidget {
 
   final FeatureClient client;
 
+  // coverage:ignore-start
   @override
   bool updateShouldNotify(_InheritedFeatureScope old) => false;
+  // coverage:ignore-end
 }

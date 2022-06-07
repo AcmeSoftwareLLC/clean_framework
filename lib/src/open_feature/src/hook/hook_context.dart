@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import '../core/enums/flag_value_type.dart';
 import '../core/feature_client.dart';
 import '../evaluation_context/evaluation_context.dart';

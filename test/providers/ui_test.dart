@@ -20,6 +20,7 @@ void main() {
     'LastLogin without setup',
     builder: () => TestUI(),
     context: ProvidersContext(),
+    parentBuilder: (child) => Container(child: child),
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);
