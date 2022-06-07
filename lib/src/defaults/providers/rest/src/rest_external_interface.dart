@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_requests.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.dart';
 import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
@@ -26,13 +28,24 @@ class RestExternalInterface
   void handleRequest() {
     on<JsonRestRequest>(
       (request, send) async {
-        final data = await _restService.request(
+        final data = await _restService.request<Map<String, dynamic>>(
           method: request.method,
           path: request.path,
           data: request.data,
           headers: request.headers,
         );
-        send(RestSuccessResponse(data: data));
+        send(JsonRestSuccessResponse(data: data));
+      },
+    );
+    on<BytesRestRequest>(
+      (request, send) async {
+        final data = await _restService.request<Uint8List>(
+          method: request.method,
+          path: request.path,
+          data: request.data,
+          headers: request.headers,
+        );
+        send(BytesRestSuccessResponse(data: data));
       },
     );
     on<BinaryDataSrcRestRequest>(
@@ -44,7 +57,7 @@ class RestExternalInterface
           data: binaryData,
           headers: request.headers,
         );
-        send(RestSuccessResponse(data: data));
+        send(JsonRestSuccessResponse(data: data));
       },
     );
     on<BinaryDataRestRequest>(
@@ -55,7 +68,7 @@ class RestExternalInterface
           data: request.binaryData,
           headers: request.headers,
         );
-        send(RestSuccessResponse(data: data));
+        send(JsonRestSuccessResponse(data: data));
       },
     );
   }

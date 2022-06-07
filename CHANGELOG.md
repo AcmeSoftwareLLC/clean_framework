@@ -1,3 +1,7 @@
+# [1.3.1] - Jun 7, 2022
+- Added Feature Flag Management based on OpenFeature specs.
+- Added `FeatureBuilder` and `FeatureScope`.
+
 # [1.3.0] - May 12, 2022
 - Added `BridgeGatewayProvider`
 - Fixed issue with content-type being appended with charset.

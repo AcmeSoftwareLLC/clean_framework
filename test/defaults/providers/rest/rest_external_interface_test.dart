@@ -28,7 +28,7 @@ void main() {
 
     final result = await gateWay.transport(TestRequest());
     expect(result.isRight, isTrue);
-    expect(result.right, RestSuccessResponse(data: testContent));
+    expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
 
   test('RestExternalInterface connectivity failure', () async {
@@ -63,7 +63,7 @@ void main() {
 
     final result = await gateWay.transport(TestBinarySrcPostRequest());
     expect(result.isRight, isTrue);
-    expect(result.right, RestSuccessResponse(data: testContent));
+    expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
 
   test('RestExternalInterface binary data request success response', () async {
@@ -77,7 +77,7 @@ void main() {
         gatewayConnections: [() => gateWay]);
     final result = await gateWay.transport(TestBinaryDataPutRequest());
     expect(result.isRight, isTrue);
-    expect(result.right, RestSuccessResponse(data: testContent));
+    expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
 
   test('RestExternalInterface binary data request rest service failure',
@@ -162,9 +162,38 @@ void main() {
     );
   });
 
+  test('RestExternalInterface bytes rest request success response', () async {
+    // for coverage purposes:
+    RestExternalInterface(baseUrl: '', gatewayConnections: []);
+
+    final testContent = {'foo': 'bar'};
+    final restService = RestServiceFake(testContent);
+    final gateWay = GatewayFake<TestBytesRestRequest, RestSuccessResponse>();
+    RestExternalInterface(
+      restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
+    );
+
+    final result = await gateWay.transport(TestBytesRestRequest());
+    expect(result.isRight, isTrue);
+    expect(
+      result.right,
+      BytesRestSuccessResponse(
+        data: Uint8List.fromList([]),
+      ),
+    );
+  });
+
   tearDown(() {
     file.delete();
   });
+}
+
+class TestBytesRestRequest extends BytesRestRequest {
+  TestBytesRestRequest() : super(method: RestMethod.get);
+  @override
+  String get path => 'http://fake.com';
 }
 
 class TestRequest extends GetRestRequest {
@@ -206,24 +235,26 @@ class TestBinaryDataPutRequest extends BinaryDataPutRestRequest {
 
 class RestServiceFake extends Fake implements RestService {
   final Map<String, dynamic> _response;
+  final Uint8List byteResponse = Uint8List.fromList([]);
 
   RestServiceFake(this._response);
 
   @override
-  Future<Map<String, dynamic>> request({
+  Future<T> request<T extends Object>({
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
     Map<String, dynamic> headers = const {},
     Client? client,
   }) async {
+    if (T == Uint8List) return byteResponse as T;
     if (_response.isEmpty)
       throw InvalidResponseRestServiceFailure(
         error: {'error': 'Bad Request'},
         statusCode: 400,
         path: path,
       );
-    return {'foo': 'bar'};
+    return {'foo': 'bar'} as T;
   }
 
   @override

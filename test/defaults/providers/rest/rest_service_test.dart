@@ -18,7 +18,7 @@ void main() {
       final service = RestService(baseUrl: 'https://fake.com');
       final client = ClientFake();
 
-      await service.request(
+      await service.request<Map<String, dynamic>>(
         method: RestMethod.post,
         path: 'test',
         client: client,
@@ -44,7 +44,7 @@ void main() {
     final service = RestService(baseUrl: 'https://fake.com');
     final client = ClientFake();
 
-    await service.request(
+    await service.request<Map<String, dynamic>>(
       method: RestMethod.post,
       path: 'test',
       client: client,
@@ -80,13 +80,15 @@ void main() {
     when(() => streamedResponse.isRedirect).thenReturn(false);
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
-    final result = await service.request(
+    final result = await service.request<Map<String, dynamic>>(
         method: RestMethod.get, path: '/', client: client);
 
     expect(result, {'foo': 'bar'});
 
     //for coverage purposes, we test a real Client
-    expectLater(service.request(method: RestMethod.get, path: '/'),
+    expectLater(
+        service.request<Map<String, dynamic>>(
+            method: RestMethod.get, path: '/'),
         throwsA(isA<RestServiceFailure>()));
   });
 
@@ -107,7 +109,7 @@ void main() {
     when(() => streamedResponse.isRedirect).thenReturn(false);
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
-    final result = await service.request(
+    final result = await service.request<Map<String, dynamic>>(
         method: RestMethod.get, path: '/', client: client);
 
     expect(result, {
@@ -125,7 +127,8 @@ void main() {
         .thenThrow((_) async => ClientException('no connectivity'));
 
     expectLater(
-        service.request(method: RestMethod.get, path: '/', client: client),
+        service.request<Map<String, dynamic>>(
+            method: RestMethod.get, path: '/', client: client),
         throwsA(isA<RestServiceFailure>()));
   });
 
@@ -145,7 +148,8 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     expectLater(
-        service.request(method: RestMethod.post, path: 'test', client: client),
+        service.request<Map<String, dynamic>>(
+            method: RestMethod.post, path: 'test', client: client),
         throwsA(
           isA<InvalidResponseRestServiceFailure>()
               .having((res) => res.statusCode, 'statusCode', 500)
@@ -217,6 +221,62 @@ void main() {
             .having((res) => res.error, 'error', content),
       ),
     );
+  });
+
+  test('RestService success, binary bytes response', () async {
+    final content = {"foo": "bar"};
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+    final streamedResponse = StreamedResponseMock();
+    final byteStream = ByteStream.fromBytes(
+      Uint8List.fromList(
+        (json.encode(content).codeUnits),
+      ),
+    );
+
+    when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
+    when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
+    when(() => streamedResponse.statusCode).thenReturn(200);
+    when(() => streamedResponse.headers).thenReturn({});
+    when(() => streamedResponse.isRedirect).thenReturn(false);
+    when(() => streamedResponse.persistentConnection).thenReturn(false);
+
+    final result = await service.request<Uint8List>(
+        method: RestMethod.get, path: '/', client: client);
+
+    expect(
+      result,
+      Uint8List.fromList(
+        (json.encode(content).codeUnits),
+      ),
+    );
+  });
+
+  test('RestService success, unknown request type', () async {
+    final content = {"foo": "bar"};
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+    final streamedResponse = StreamedResponseMock();
+    final byteStream = ByteStream.fromBytes(
+      Uint8List.fromList(
+        (json.encode(content).codeUnits),
+      ),
+    );
+
+    when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
+    when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
+    when(() => streamedResponse.statusCode).thenReturn(200);
+    when(() => streamedResponse.headers).thenReturn({});
+    when(() => streamedResponse.isRedirect).thenReturn(false);
+    when(() => streamedResponse.persistentConnection).thenReturn(false);
+
+    expect(
+        service.request<String>(
+          method: RestMethod.get,
+          path: '/',
+          client: client,
+        ),
+        throwsA(TypeMatcher<RestServiceFailure>()));
   });
 }
 
