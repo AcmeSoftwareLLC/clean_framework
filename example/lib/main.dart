@@ -19,7 +19,8 @@ class ExampleApp extends StatelessWidget {
     return FeatureScope<AssetFeatureProvider>(
       register: () => AssetFeatureProvider(),
       loader: (featureProvider) async {
-        await Future.delayed(Duration(seconds: 5));
+        // To demonstrate the lazy update triggered by change in feature flags.
+        await Future.delayed(Duration(seconds: 2));
         await featureProvider.load('assets/flags.json');
       },
       onLoaded: () {
