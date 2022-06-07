@@ -7,6 +7,8 @@ import 'package:clean_framework_example/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../home_page_test.dart';
+
 void main() {
   setupUITest(context: providersContext, router: router);
 
@@ -89,6 +91,10 @@ void main() {
 
     uiTest(
       'tapping on country tile should navigate to detail page',
+      parentBuilder: (child) => FeatureScope(
+        register: () => FakeJsonFeatureProvider(),
+        child: child,
+      ),
       verify: (tester) async {
         router.to(Routes.countries);
         await tester.pumpAndSettle();
