@@ -110,6 +110,143 @@ void main() {
       expect(find.text('firebase,graphql,rest'), findsOneWidget);
     });
   });
+
+  group('FeatureBuilder tests || different value type ||', () {
+    testWidgets(
+      'boolean',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<FakeJsonFeatureProvider>(
+            register: () => FakeJsonFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<bool>(
+                  flagKey: 'boolean',
+                  valueType: FlagValueType.boolean,
+                  defaultValue: false,
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('true'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'boolean',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<FakeJsonFeatureProvider>(
+            register: () => FakeJsonFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<bool>(
+                  flagKey: 'boolean',
+                  valueType: FlagValueType.boolean,
+                  defaultValue: false,
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('true'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'number',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<FakeJsonFeatureProvider>(
+            register: () => FakeJsonFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<int>(
+                  flagKey: 'color',
+                  valueType: FlagValueType.number,
+                  defaultValue: 4285140397,
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('4294901760'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'object',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<FakeJsonFeatureProvider>(
+            register: () => FakeJsonFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<List>(
+                  flagKey: 'object',
+                  valueType: FlagValueType.object,
+                  defaultValue: [0, 0],
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('[1, 2]'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'shows default value on error',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<FakeJsonFeatureProvider>(
+            register: () => FakeJsonFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<List>(
+                  flagKey: 'object',
+                  valueType: FlagValueType.number,
+                  defaultValue: [0, 0],
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('[0, 0]'), findsOneWidget);
+      },
+    );
+  });
 }
 
 class FakeJsonFeatureProvider extends JsonFeatureProvider {
@@ -117,6 +254,24 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
     feed(OpenFeatureFlags.fromJson('''{
   "newTitle": {
     "state": "disabled"
+  },
+  "object": {
+    "returnType": "object",
+    "variants": {
+      "a": [1, 2],
+      "b": [2, 3]
+    },
+    "defaultVariant": "a",
+    "state": "enabled"
+  },
+  "boolean": {
+    "returnType": "boolean",
+    "variants": {
+      "a": true,
+      "b": false
+    },
+    "defaultVariant": "a",
+    "state": "enabled"
   },
   "color": {
     "returnType": "number",
