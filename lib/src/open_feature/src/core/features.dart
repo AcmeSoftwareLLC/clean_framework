@@ -1,6 +1,7 @@
 import '../evaluation_context/evaluation_context.dart';
 import '../flag_evaluation/flag_evaluation_details.dart';
 import '../flag_evaluation/flag_evaluation_options.dart';
+import 'enums.dart';
 
 abstract class Features {
   Future<FlagEvaluationDetails<bool>> getBooleanDetails({
@@ -99,6 +100,8 @@ abstract class Features {
     Future<FlagEvaluationDetails<T>> detailsFuture,
   ) async {
     final details = await detailsFuture;
+
+    if (details.reason == Reason.error) throw Exception(details.errorCode);
     return details.value;
   }
 }
