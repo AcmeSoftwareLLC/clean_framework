@@ -222,9 +222,10 @@ void main() {
             child: MaterialApp(
               builder: (context, child) {
                 return FeatureBuilder<List>(
-                  flagKey: 'object',
+                  flagKey: 'objects', // invalid key
                   defaultValue: [0, 0],
                   builder: (context, value) {
+                    print(value);
                     return Text(value.toString());
                   },
                 );
