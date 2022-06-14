@@ -1,4 +1,6 @@
-import 'package:feature_flag/home_page.dart';
+import 'package:clean_framework/clean_framework.dart';
+import 'package:feature_flag/asset_feature_provider.dart';
+import 'package:feature_flag/login_page.dart';
 import 'package:flutter/material.dart';
 
 class DemoApp extends StatelessWidget {
@@ -6,10 +8,14 @@ class DemoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Feature Flags Demo',
-      theme: ThemeData(useMaterial3: true),
-      home: const HomePage(),
+    return FeatureScope<AssetFeatureProvider>(
+      register: () => AssetFeatureProvider(),
+      loader: (featureProvider) => featureProvider.load('assets/flags.json'),
+      child: MaterialApp(
+        title: 'Feature Flags Demo',
+        theme: ThemeData(useMaterial3: true),
+        home: const LoginPage(),
+      ),
     );
   }
 }

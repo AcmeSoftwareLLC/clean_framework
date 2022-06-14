@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  clean_framework:
+    path: ../../
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -17,3 +20,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/flags.json
