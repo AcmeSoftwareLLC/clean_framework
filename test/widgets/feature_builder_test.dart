@@ -15,7 +15,6 @@ void main() {
             builder: (context, child) {
               return FeatureBuilder<String>(
                 flagKey: 'exampleFeatures',
-                valueType: FlagValueType.string,
                 defaultValue: 'rest',
                 builder: (context, value) {
                   return Text(value);
@@ -39,7 +38,6 @@ void main() {
             builder: (context, child) {
               return FeatureBuilder<String>(
                 flagKey: 'exampleFeatures',
-                valueType: FlagValueType.string,
                 defaultValue: 'rest',
                 builder: (context, value) {
                   return Text(value);
@@ -64,7 +62,6 @@ void main() {
             builder: (context, child) {
               return FeatureBuilder<String>(
                 flagKey: 'exampleFeatures',
-                valueType: FlagValueType.string,
                 defaultValue: 'rest',
                 evaluationContext: EvaluationContext(
                   {'platform': 'iOS'},
@@ -92,7 +89,6 @@ void main() {
             builder: (context, child) {
               return FeatureBuilder<String>(
                 flagKey: 'exampleFeatures',
-                valueType: FlagValueType.string,
                 defaultValue: 'rest',
                 evaluationContext: EvaluationContext(
                   {'platform': 'android'},
@@ -123,7 +119,6 @@ void main() {
               builder: (context, child) {
                 return FeatureBuilder<bool>(
                   flagKey: 'boolean',
-                  valueType: FlagValueType.boolean,
                   defaultValue: false,
                   builder: (context, value) {
                     return Text(value.toString());
@@ -150,7 +145,6 @@ void main() {
               builder: (context, child) {
                 return FeatureBuilder<bool>(
                   flagKey: 'boolean',
-                  valueType: FlagValueType.boolean,
                   defaultValue: false,
                   builder: (context, value) {
                     return Text(value.toString());
@@ -177,7 +171,6 @@ void main() {
               builder: (context, child) {
                 return FeatureBuilder<int>(
                   flagKey: 'color',
-                  valueType: FlagValueType.number,
                   defaultValue: 4285140397,
                   builder: (context, value) {
                     return Text(value.toString());
@@ -204,7 +197,6 @@ void main() {
               builder: (context, child) {
                 return FeatureBuilder<List>(
                   flagKey: 'object',
-                  valueType: FlagValueType.object,
                   defaultValue: [0, 0],
                   builder: (context, value) {
                     return Text(value.toString());
@@ -231,7 +223,6 @@ void main() {
               builder: (context, child) {
                 return FeatureBuilder<List>(
                   flagKey: 'object',
-                  valueType: FlagValueType.number,
                   defaultValue: [0, 0],
                   builder: (context, value) {
                     return Text(value.toString());

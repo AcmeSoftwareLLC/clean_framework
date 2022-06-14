@@ -10,7 +10,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FeatureBuilder<int>(
       flagKey: 'color',
-      valueType: FlagValueType.number,
       defaultValue: 0xFF0000FF,
       builder: (context, colorValue) {
         return Scaffold(
@@ -18,7 +17,6 @@ class HomePage extends StatelessWidget {
             title: FeatureBuilder<bool>(
               flagKey: 'newTitle',
               defaultValue: false,
-              valueType: FlagValueType.boolean,
               builder: (context, showNewTitle) {
                 return Text(
                   showNewTitle ? 'Feature Flags Demo' : 'Example Features',
@@ -29,7 +27,6 @@ class HomePage extends StatelessWidget {
           ),
           body: FeatureBuilder<String>(
             flagKey: 'exampleFeatures',
-            valueType: FlagValueType.string,
             defaultValue: 'rest,firebase,graphql',
             evaluationContext: EvaluationContext(
               {'platform': defaultTargetPlatform.name},
