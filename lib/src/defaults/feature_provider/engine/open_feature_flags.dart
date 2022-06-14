@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:clean_framework/src/open_feature/open_feature.dart';
 
 enum FlagState { enabled, disabled }
@@ -8,10 +6,6 @@ class OpenFeatureFlags {
   OpenFeatureFlags._(this._flags);
 
   final Map<String, FeatureFlag> _flags;
-
-  factory OpenFeatureFlags.fromJson(String json) {
-    return OpenFeatureFlags.fromMap(jsonDecode(json));
-  }
 
   factory OpenFeatureFlags.fromMap(Map<String, dynamic> map) {
     return OpenFeatureFlags._(

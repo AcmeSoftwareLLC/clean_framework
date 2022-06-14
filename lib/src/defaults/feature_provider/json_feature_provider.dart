@@ -90,7 +90,35 @@ class JsonFeatureProvider implements FeatureProvider {
     );
   }
 
-  void feed(OpenFeatureFlags flags) {
-    _flagsCompleter.complete(flags);
+  void feed(Map<String, dynamic> rawFlags) {
+    final flags = Map<String, dynamic>.of(rawFlags);
+
+    for (final flag in flags.entries) {
+      final flagObject = Map<String, dynamic>.from(flag.value);
+
+      if (!flagObject.containsKey('returnType')) {
+        flagObject['returnType'] = 'boolean';
+      }
+
+      if (!flagObject.containsKey('variants')) {
+        flagObject['variants'] = {'enabled': true, 'disabled': false};
+      }
+
+      if (!flagObject.containsKey('defaultVariant')) {
+        flagObject['defaultVariant'] = 'enabled';
+      }
+
+      if (!flagObject.containsKey('state')) {
+        flagObject['state'] = 'enabled';
+      }
+
+      if (!flagObject.containsKey('rules')) {
+        flagObject['rules'] = [];
+      }
+
+      flags[flag.key] = flagObject;
+    }
+
+    _flagsCompleter.complete(OpenFeatureFlags.fromMap(flags));
   }
 }

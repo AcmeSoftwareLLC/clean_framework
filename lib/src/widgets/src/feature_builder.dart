@@ -12,14 +12,12 @@ class FeatureBuilder<T extends Object> extends StatefulWidget {
   FeatureBuilder({
     super.key,
     required this.flagKey,
-    required this.valueType,
     required this.defaultValue,
     required this.builder,
     this.evaluationContext,
   });
 
   final String flagKey;
-  final FlagValueType valueType;
   final T defaultValue;
   final FeatureBuilderCallback<T> builder;
   final EvaluationContext? evaluationContext;
@@ -55,35 +53,33 @@ class _FeatureBuilderState<T extends Object> extends State<FeatureBuilder<T>> {
 
   Future<T> _resolver(FeatureClient client) async {
     Future<Object> _future;
-    switch (widget.valueType) {
-      case FlagValueType.boolean:
-        _future = client.getBooleanValue(
-          key: widget.flagKey,
-          defaultValue: widget.defaultValue as bool,
-          context: widget.evaluationContext,
-        );
-        break;
-      case FlagValueType.string:
-        _future = client.getStringValue(
-          key: widget.flagKey,
-          defaultValue: widget.defaultValue as String,
-          context: widget.evaluationContext,
-        );
-        break;
-      case FlagValueType.number:
-        _future = client.getNumberValue(
-          key: widget.flagKey,
-          defaultValue: widget.defaultValue as num,
-          context: widget.evaluationContext,
-        );
-        break;
-      case FlagValueType.object:
-        _future = client.getValue(
-          key: widget.flagKey,
-          defaultValue: widget.defaultValue,
-          context: widget.evaluationContext,
-        );
-        break;
+
+    final defaultValue = widget.defaultValue;
+
+    if (defaultValue is bool) {
+      _future = client.getBooleanValue(
+        key: widget.flagKey,
+        defaultValue: defaultValue,
+        context: widget.evaluationContext,
+      );
+    } else if (defaultValue is String) {
+      _future = client.getStringValue(
+        key: widget.flagKey,
+        defaultValue: defaultValue,
+        context: widget.evaluationContext,
+      );
+    } else if (defaultValue is num) {
+      _future = client.getNumberValue(
+        key: widget.flagKey,
+        defaultValue: widget.defaultValue as num,
+        context: widget.evaluationContext,
+      );
+    } else {
+      _future = client.getValue(
+        key: widget.flagKey,
+        defaultValue: defaultValue,
+        context: widget.evaluationContext,
+      );
     }
 
     return (await _future) as T;

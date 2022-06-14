@@ -123,58 +123,46 @@ Widget buildWidget(Widget widget) {
 
 class FakeJsonFeatureProvider extends JsonFeatureProvider {
   FakeJsonFeatureProvider() {
-    feed(OpenFeatureFlags.fromJson('''{
-  "newTitle": {
-    "state": "disabled"
-  },
-  "color": {
-    "returnType": "number",
-    "variants": {
-      "red": 4294901760,
-      "green": 4278255360,
-      "blue": 4278190335,
-      "purple": 4285140397
-    },
-    "defaultVariant": "red",
-    "state": "enabled"
-  },
-  "exampleFeatures": {
-    "returnType": "string",
-    "variants": {
-      "query": "firebase,graphql",
-      "restful": "graphql,rest",
-      "traditional": "rest",
-      "all": "firebase,graphql,rest"
-    },
-    "defaultVariant": "query",
-    "state": "enabled",
-    "rules": [
+    feed(
       {
-        "action": {
-          "variant": "restful"
+        "newTitle": {"state": "disabled"},
+        "color": {
+          "returnType": "number",
+          "variants": {
+            "red": 4294901760,
+            "green": 4278255360,
+            "blue": 4278190335,
+            "purple": 4285140397
+          },
+          "defaultVariant": "red",
+          "state": "enabled"
         },
-        "conditions": [
-          {
-            "context": "platform",
-            "op": "equals",
-            "value": "iOS"
-          }
-        ]
+        "exampleFeatures": {
+          "returnType": "string",
+          "variants": {
+            "query": "firebase,graphql",
+            "restful": "graphql,rest",
+            "traditional": "rest",
+            "all": "firebase,graphql,rest"
+          },
+          "defaultVariant": "query",
+          "state": "enabled",
+          "rules": [
+            {
+              "action": {"variant": "restful"},
+              "conditions": [
+                {"context": "platform", "op": "equals", "value": "iOS"}
+              ]
+            },
+            {
+              "action": {"variant": "all"},
+              "conditions": [
+                {"context": "platform", "op": "equals", "value": "android"}
+              ]
+            }
+          ]
+        }
       },
-      {
-        "action": {
-          "variant": "all"
-        },
-        "conditions": [
-          {
-            "context": "platform",
-            "op": "equals",
-            "value": "android"
-          }
-        ]
-      }
-    ]
-  }
-}'''));
+    );
   }
 }
