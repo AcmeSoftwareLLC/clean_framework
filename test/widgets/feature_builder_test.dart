@@ -237,7 +237,39 @@ void main() {
         expect(find.text('[0, 0]'), findsOneWidget);
       },
     );
+
+    testWidgets(
+      'default state is enabled',
+      (tester) async {
+        await tester.pumpWidget(
+          FeatureScope<NewTitleFeatureProvider>(
+            register: () => NewTitleFeatureProvider(),
+            loader: (featureProvider) async => featureProvider.load(),
+            child: MaterialApp(
+              builder: (context, child) {
+                return FeatureBuilder<bool>(
+                  flagKey: 'newTitle',
+                  defaultValue: false,
+                  builder: (context, value) {
+                    return Text(value.toString());
+                  },
+                );
+              },
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('true'), findsOneWidget);
+      },
+    );
   });
+}
+
+class NewTitleFeatureProvider extends JsonFeatureProvider {
+  void load() {
+    feed({"newTitle": {}});
+  }
 }
 
 class FakeJsonFeatureProvider extends JsonFeatureProvider {
