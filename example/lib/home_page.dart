@@ -15,7 +15,16 @@ class HomePage extends StatelessWidget {
       builder: (context, colorValue) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Example Features'),
+            title: FeatureBuilder<bool>(
+              flagKey: 'newTitle',
+              defaultValue: false,
+              valueType: FlagValueType.boolean,
+              builder: (context, showNewTitle) {
+                return Text(
+                  showNewTitle ? 'Feature Flags Demo' : 'Example Features',
+                );
+              },
+            ),
             backgroundColor: Color(colorValue),
           ),
           body: FeatureBuilder<String>(
