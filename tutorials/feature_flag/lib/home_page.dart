@@ -11,6 +11,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Feature Flags Demo'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -44,9 +45,9 @@ class HomePage extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 40),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(onPrimary: color),
                   child: const Text('LOG OUT'),
                 ),
