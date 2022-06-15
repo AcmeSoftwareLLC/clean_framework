@@ -8,43 +8,44 @@
       "red": 4294901760,
       "green": 4278255360,
       "blue": 4278190335,
-      "purple": 4285140397
+      "orange": 4294934352
     },
-    "defaultVariant": "red",
-    "state": "enabled"
-  },
-  "exampleFeatures": {
-    "returnType": "string",
-    "variants": {
-      "query": "firebase,graphql",
-      "restful": "graphql,rest",
-      "traditional": "rest",
-      "all": "firebase,graphql,rest"
-    },
-    "defaultVariant": "query",
+    "defaultVariant": "blue",
     "state": "enabled",
     "rules": [
       {
         "action": {
-          "variant": "restful"
+          "variant": "green"
         },
         "conditions": [
           {
-            "context": "platform",
-            "op": "equals",
-            "value": "iOS"
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.flag"
           }
         ]
       },
       {
         "action": {
-          "variant": "all"
+          "variant": "red"
         },
         "conditions": [
           {
-            "context": "platform",
-            "op": "equals",
-            "value": "android"
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.test"
+          }
+        ]
+      },
+      {
+        "action": {
+          "variant": "orange"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@example.com"
           }
         ]
       }
