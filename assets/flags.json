@@ -1,0 +1,54 @@
+{
+  "newTitle": {
+    "state": "enabled"
+  },
+  "color": {
+    "returnType": "number",
+    "variants": {
+      "red": 4294901760,
+      "green": 4278255360,
+      "blue": 4278190335,
+      "orange": 4294934352
+    },
+    "defaultVariant": "blue",
+    "state": "enabled",
+    "rules": [
+      {
+        "action": {
+          "variant": "green"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.flag"
+          }
+        ]
+      },
+      {
+        "action": {
+          "variant": "red"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.test"
+          }
+        ]
+      },
+      {
+        "action": {
+          "variant": "orange"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@example.com"
+          }
+        ]
+      }
+    ]
+  }
+}

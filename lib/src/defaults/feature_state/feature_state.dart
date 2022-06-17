@@ -1,1 +1,0 @@
-enum FeatureState { hidden, visible }
