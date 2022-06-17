@@ -11,8 +11,9 @@
         ["Get Familiar", "/codelabs/feature-flag/get-familiar"],
         ["Flag Schema", "/codelabs/feature-flag/flag-schema"],
         ["Feature Provider", "/codelabs/feature-flag/feature-provider"],
-        ["Feature Client", "/codelabs/feature-flag/feature-client"]
-
+        ["Feature Client", "/codelabs/feature-flag/feature-client"],
+        ["FeatureBuilder", "/codelabs/feature-flag/feature-builder"],
+        ["Using Flags in non-UI code", "/codelabs/feature-flag/non-ui=flag-resolution"]
       ]
     ]
   ]
