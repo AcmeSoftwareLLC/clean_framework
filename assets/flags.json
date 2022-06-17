@@ -50,5 +50,41 @@
         ]
       }
     ]
+  },
+  "increment": {
+    "returnType": "number",
+    "variants": {
+      "single": 1,
+      "double": 2,
+      "triple": 3
+    },
+    "defaultVariant": "single",
+    "state": "enabled",
+    "rules": [
+      {
+        "action": {
+          "variant": "double"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.flag"
+          }
+        ]
+      },
+      {
+        "action": {
+          "variant": "triple"
+        },
+        "conditions": [
+          {
+            "context": "email",
+            "op": "ends_with",
+            "value": "@feature.test"
+          }
+        ]
+      }
+    ]
   }
 }
