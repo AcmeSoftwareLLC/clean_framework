@@ -1,8 +1,15 @@
 {
-    "name": "Clean Framework",
-    "theme": "#36B9B9",
-    "sidebar": [
-      ["Home", "/"],
-      ["Another Page", "/another-page"]
+  "name": "Clean Framework Codelabs",
+  "theme": "#36B9B9",
+  "sidebar": [
+    ["Overview", "/"],
+    ["Installation", "/install"],
+    ["Feature Flags",
+      [
+        ["Introduction", "/codelabs/feature-flag/intro"],
+        ["Download Starter App", "/codelabs/feature-flag/starter"],
+        ["Get Familiar", "/codelabs/feature-flag/get-familiar"]
+      ]
     ]
-  }
+  ]
+}
