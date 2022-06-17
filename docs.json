@@ -10,7 +10,9 @@
         ["Download Starter App", "/codelabs/feature-flag/starter"],
         ["Get Familiar", "/codelabs/feature-flag/get-familiar"],
         ["Flag Schema", "/codelabs/feature-flag/flag-schema"],
-        ["Feature Provider", "/codelabs/feature-flag/feature-provider"]
+        ["Feature Provider", "/codelabs/feature-flag/feature-provider"],
+        ["Feature Client", "/codelabs/feature-flag/feature-client"]
+
       ]
     ]
   ]
