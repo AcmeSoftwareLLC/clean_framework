@@ -8,7 +8,8 @@
       [
         ["Introduction", "/codelabs/feature-flag/intro"],
         ["Download Starter App", "/codelabs/feature-flag/starter"],
-        ["Get Familiar", "/codelabs/feature-flag/get-familiar"]
+        ["Get Familiar", "/codelabs/feature-flag/get-familiar"],
+        ["Flag Schema", "/codelabs/feature-flag/flag-schema"]
       ]
     ]
   ]
