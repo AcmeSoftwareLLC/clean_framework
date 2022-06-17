@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:feature_flag/home_page.dart';
+import 'package:feature_flag/counter_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomePage(email: email),
+        builder: (context) => CounterPage(email: email),
       ),
     );
   }
