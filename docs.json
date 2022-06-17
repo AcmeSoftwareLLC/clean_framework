@@ -1,0 +1,20 @@
+{
+  "name": "Clean Framework Codelabs",
+  "theme": "#36B9B9",
+  "sidebar": [
+    ["Overview", "/"],
+    ["Installation", "/install"],
+    ["Feature Flags",
+      [
+        ["Introduction", "/codelabs/feature-flag/intro"],
+        ["Download Starter App", "/codelabs/feature-flag/starter"],
+        ["Get Familiar", "/codelabs/feature-flag/get-familiar"],
+        ["Flag Schema", "/codelabs/feature-flag/flag-schema"],
+        ["Feature Provider", "/codelabs/feature-flag/feature-provider"],
+        ["Feature Client", "/codelabs/feature-flag/feature-client"],
+        ["FeatureBuilder", "/codelabs/feature-flag/feature-builder"],
+        ["Using Flags in non-UI code", "/codelabs/feature-flag/non-ui=flag-resolution"]
+      ]
+    ]
+  ]
+}
