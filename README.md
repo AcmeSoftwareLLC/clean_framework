@@ -1,16 +1,12 @@
-# feature_flag
+#Download the codelab starter app
+### Option 1: Clone the starter codelab app from GitHub
 
-A project to demostrate implementation of Feature Flags evaluation using Open Feature Specification.
+To clone this codelab from GitHub, run the following commands:
 
-## Getting Started
+```
+git clone https://github.com/MattHamburger/clean_framework.git -b codelabs
+cd clean_framework
+```
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Option 2: Download the starter codelab app zip file
+[Download starter app](https://github.com/MattHamburger/clean_framework/raw/codelabs/clean_feature_flag.zip)
