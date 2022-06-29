@@ -1,3 +1,7 @@
+# [1.3.2] - Jun 29, 2022
+- Added `Deserializer` to help with deserializing JSON data.
+- Updated dependencies to latest version.
+
 # [1.3.1] - Jun 7, 2022
 - Added Feature Flag Management based on OpenFeature specs.
 - Added `FeatureBuilder` and `FeatureScope`.
