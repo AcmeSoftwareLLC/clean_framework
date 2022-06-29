@@ -14,13 +14,23 @@ void main() {
       expect(data.getInt('key'), 1);
     });
 
+    test('should return a int for string value', () {
+      final data = Deserializer({'key': '1'});
+      expect(data.getInt('key'), 1);
+    });
+
+    test('should return a double', () {
+      final data = Deserializer({'key': 1.0});
+      expect(data.getDouble('key'), 1.0);
+    });
+
     test('should return a double for int value', () {
       final data = Deserializer({'key': 1});
       expect(data.getDouble('key'), 1.0);
     });
 
-    test('should return a double', () {
-      final data = Deserializer({'key': 1.0});
+    test('should return a double for string value', () {
+      final data = Deserializer({'key': '1'});
       expect(data.getDouble('key'), 1.0);
     });
 
@@ -125,6 +135,77 @@ void main() {
         ],
       );
     });
+
+    test('should return an enum', () {
+      final data = Deserializer(
+        {'key': 'foo'},
+      );
+
+      expect(
+        data.getEnum<TestEnum>(
+          'key',
+          values: TestEnum.values,
+          defaultValue: TestEnum.baz,
+          matcher: (e) => e.name,
+        ),
+        TestEnum.foo,
+      );
+    });
+
+    test(
+        'should return an default enum if matcher could not match with the value',
+        () {
+      final data = Deserializer(
+        {'key': 'value'},
+      );
+
+      expect(
+        data.getEnum<TestEnum>(
+          'key',
+          values: TestEnum.values,
+          defaultValue: TestEnum.baz,
+          matcher: (e) => e.name,
+        ),
+        TestEnum.baz,
+      );
+    });
+
+    test('should return DateTime', () {
+      final data = Deserializer(
+        {'key': '2020-01-01'},
+      );
+
+      expect(
+        data.getDateTime('key'),
+        DateTime(2020, 1, 1),
+      );
+    });
+
+    test('should return default value for DateTime if parsing failed', () {
+      final data = Deserializer(
+        {'key': '2020-01.01'},
+      );
+
+      expect(
+        data.getDateTime('key', defaultValue: DateTime(2020, 2, 1)),
+        DateTime(2020, 2, 1),
+      );
+    });
+
+    test('nested deserializer', () {
+      final data = Deserializer(
+        {
+          'key': {'inner_key': 'Hello world!'}
+        },
+      );
+
+      final nestedData = data('key');
+
+      expect(
+        nestedData.getString('inner_key'),
+        'Hello world!',
+      );
+    });
   });
 }
 
@@ -153,3 +234,5 @@ class TestModel {
   @override
   int get hashCode => key.hashCode;
 }
+
+enum TestEnum { foo, bar, baz }
