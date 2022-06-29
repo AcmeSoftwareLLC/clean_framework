@@ -244,12 +244,8 @@ class AppRoute<R extends Object> {
       path: path,
       name: name.toString(),
       routes: routes.map((r) => r._toGoRoute()).toList(growable: false),
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          name: state.name,
-          child: builder(context, AppRouteState._fromGoRouteState(state)),
-        );
+      builder: (context, state) {
+        return builder(context, AppRouteState._fromGoRouteState(state));
       },
       redirect: (state) => redirect?.call(
         AppRouteState._fromGoRouteState(state),
@@ -263,7 +259,10 @@ class AppRouteState {
   /// Default constructor to configure an AppRouteState.
   AppRouteState({
     required this.location,
+    required this.subloc,
+    required this.name,
     this.path,
+    this.fullpath,
     Map<String, String> params = const {},
     this.queryParams = const {},
     this.extra,
@@ -273,8 +272,17 @@ class AppRouteState {
   /// The full location of the route
   final String location;
 
+  /// The location of this sub-route, e.g. /family/f2
+  final String subloc;
+
+  /// The optional name of the route.
+  final String? name;
+
   /// The specified path for the route as configures in [AppRoute].
   final String? path;
+
+  /// The full path to this sub-route, e.g. /family/:fid
+  final String? fullpath;
 
   /// The query parameters associated with the route.
   final Map<String, String> queryParams;
@@ -290,7 +298,10 @@ class AppRouteState {
   factory AppRouteState._fromGoRouteState(GoRouterState state) {
     return AppRouteState(
       location: state.location,
+      subloc: state.subloc,
+      name: state.name,
       path: state.path,
+      fullpath: state.fullpath,
       params: state.params,
       queryParams: state.queryParams,
       extra: state.extra,
