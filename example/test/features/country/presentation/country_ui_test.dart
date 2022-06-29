@@ -10,6 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../home_page_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setupUITest(context: providersContext, router: router);
 
   final gateway = countryGatewayProvider.getGateway(providersContext);
