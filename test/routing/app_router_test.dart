@@ -491,7 +491,7 @@ void main() {
         expect(testRouter.location, '/detail');
 
         testRouter.reset();
-        expect(testRouter.location, '/');
+        expect(testRouter.delegate.currentConfiguration, isEmpty);
 
         // Just resets the underlying router; no change in UI
         // Since this method is only intended for tests
@@ -785,6 +785,7 @@ Future<void> pumpApp(WidgetTester tester) {
     MaterialApp.router(
       routerDelegate: testRouter.delegate,
       routeInformationParser: testRouter.informationParser,
+      routeInformationProvider: testRouter.informationProvider,
     ),
   );
 }

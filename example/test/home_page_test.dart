@@ -116,6 +116,7 @@ Widget buildWidget(Widget widget) {
       child: MaterialApp.router(
         routeInformationParser: router.informationParser,
         routerDelegate: router.delegate,
+        routeInformationProvider: router.informationProvider,
       ),
     ),
   );

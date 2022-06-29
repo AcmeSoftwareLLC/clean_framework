@@ -119,6 +119,7 @@ void uiTest(
           child = MaterialApp.router(
             routeInformationParser: _router.informationParser,
             routerDelegate: _router.delegate,
+            routeInformationProvider: _router.informationProvider,
             localizationsDelegates: localizationDelegates,
           );
         } else {

@@ -80,12 +80,17 @@ class AppRouter<R extends Object> {
 
   /// A delegate that is used by the [Router] widget to build and configure a
   /// navigating widget.
-  RouterDelegate<Uri> get delegate => _router.routerDelegate;
+  RouterDelegate<Object> get delegate => _router.routerDelegate;
 
   /// A delegate that is used by the [Router] widget to parse a route information
   /// into a configuration of type T.
-  RouteInformationParser<Uri> get informationParser {
+  RouteInformationParser<Object> get informationParser {
     return _router.routeInformationParser;
+  }
+
+  /// The route information provider used by the inner router.
+  RouteInformationProvider get informationProvider {
+    return _router.routeInformationProvider;
   }
 
   /// The current location of the router.
