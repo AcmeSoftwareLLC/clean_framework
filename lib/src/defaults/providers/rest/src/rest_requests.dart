@@ -23,6 +23,12 @@ abstract class JsonRestRequest extends RestRequest {
   Map<String, dynamic> get data => {};
 }
 
+abstract class MultiPartRestRequest extends RestRequest {
+  MultiPartRestRequest(method) : super(method);
+
+  Map<String, dynamic> get data => {};
+}
+
 abstract class BytesRestRequest extends RestRequest {
   BytesRestRequest({required RestMethod method}) : super(method);
 
@@ -81,4 +87,8 @@ abstract class PatchRestRequest extends JsonRestRequest {
 
 abstract class DeleteRestRequest extends JsonRestRequest {
   DeleteRestRequest() : super(RestMethod.delete);
+}
+
+abstract class PostMultiPartRestRequest extends MultiPartRestRequest {
+  PostMultiPartRestRequest() : super(RestMethod.post);
 }

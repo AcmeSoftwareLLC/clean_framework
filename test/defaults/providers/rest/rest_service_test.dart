@@ -1,15 +1,102 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
+  final file = File('test/test_file.txt');
+
+  setUp(() async {
+    await file.create();
+  });
+
   setUpAll(() {
     registerFallbackValue(BaseRequestMock());
     registerFallbackValue(StreamedResponseMock());
+  });
+
+  test(
+    'RestService | correct request for multipart form POST request',
+    () async {
+      final service = RestService(baseUrl: 'https://fake.com');
+      final client = ClientFake();
+
+      await service.multipartRequest<Map<String, dynamic>>(
+        method: RestMethod.post,
+        path: 'multipart/test',
+        client: client,
+        data: {
+          'foo': 'bar',
+          'file': file,
+        },
+      );
+
+      expect(
+        client.multipartRequest.headers,
+        {'Content-Type': 'multipart/form-data'},
+      );
+      expect(client.multipartRequest.method, 'POST');
+      expect(client.multipartRequest.url.toString(),
+          'https://fake.com/multipart/test');
+
+      expect(client.multipartRequest.fields, {'foo': 'bar'});
+      expect(client.multipartRequest.files.length, 1);
+      expect(client.multipartRequest.files[0].length, await file.length());
+      expect(client.multipartRequest.files[0].field, 'file');
+      expect(client.multipartRequest.files[0].filename, 'test_file.txt');
+    },
+  );
+
+  test('RestService no connectivity for multipart request', () async {
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+
+    when(() => client.send(any()))
+        .thenThrow((_) async => ClientException('no connectivity'));
+
+    expectLater(
+        service.multipartRequest<Map<String, dynamic>>(
+            method: RestMethod.post, path: '/', client: client),
+        throwsA(isA<RestServiceFailure>()));
+
+    //for coverage purposes, we test a real Client
+    expectLater(
+        service.multipartRequest(
+          method: RestMethod.post,
+          path: '/',
+          data: {},
+        ),
+        throwsA(isA<RestServiceFailure>()));
+  });
+
+  test('RestService server error | multipart request', () async {
+    final content = {'error': 'testError'};
+    final service = RestService(baseUrl: 'http://fake.com');
+    final client = ClientMock();
+    final streamedResponse = StreamedResponseMock();
+    final byteStream = ByteStream.fromBytes(
+        Uint8List.fromList((json.encode(content).codeUnits)));
+
+    when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
+    when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
+    when(() => streamedResponse.statusCode).thenReturn(500);
+    when(() => streamedResponse.headers).thenReturn({});
+    when(() => streamedResponse.isRedirect).thenReturn(false);
+    when(() => streamedResponse.persistentConnection).thenReturn(false);
+
+    expectLater(
+        service.multipartRequest<Map<String, dynamic>>(
+            method: RestMethod.post, path: 'test', client: client),
+        throwsA(
+          isA<InvalidResponseRestServiceFailure>()
+              .having((res) => res.statusCode, 'statusCode', 500)
+              .having((res) => res.path, 'path', 'http://fake.com/test')
+              .having((res) => res.error, 'error', content),
+        ));
   });
 
   test(
@@ -278,6 +365,10 @@ void main() {
         ),
         throwsA(TypeMatcher<RestServiceFailure>()));
   });
+
+  tearDown(() {
+    file.delete();
+  });
 }
 
 class ClientMock extends Mock implements Client {}
@@ -288,10 +379,15 @@ class BaseRequestMock extends Mock implements BaseRequest {}
 
 class ClientFake extends Fake implements Client {
   late final Request request;
+  late final MultipartRequest multipartRequest;
 
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
-    this.request = request as Request;
+    if (request is Request) {
+      this.request = request;
+    } else if (request is MultipartRequest) {
+      this.multipartRequest = request;
+    }
     final contentBytes = jsonEncode({'foo': 'bar'}).codeUnits;
     return StreamedResponse(Stream.value(contentBytes), 200);
   }
