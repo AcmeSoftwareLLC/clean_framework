@@ -12,7 +12,7 @@ see http://www.amazon.com/dp/0134494164/
 
 [Introduction to Clean Framework](https://izj7qqsm1dorsnetlz95uq-on.drv.tw/codelabs/clean-framework-introduction/)
 
-[Features](https://izj7qqsm1dorsnetlz95uq-on.drv.tw/codelabs/clean-framework-features/)
+[Features Flags](https://docs.page/MattHamburger/clean_framework/codelabs/feature-flag/intro)
 
 # Installation 
 
@@ -22,7 +22,7 @@ Add this to your package's pubspec.yaml file:
 
 ```
 dependencies:
-    clean_framework: ^1.3.0
+    clean_framework: ^1.3.2
 ```
 
 ## Install it 
