@@ -19,13 +19,14 @@ dependencies:
   equatable: ^2.0.3
   http: ^0.13.4
   meta: '>=1.7.0 <1.8.0'
-  either_dart: ^0.1.4
-  go_router: ^4.1.0
+  either_dart: ^0.2.0
+  go_router: ^4.2.4
   gql: ^0.13.1
 
   # For default implementations:
+  cloud_firestore: ^3.4.3
+  firebase_core: ^1.20.0
   graphql: ^5.1.1
-  cloud_firestore: ^3.1.18
 
 dev_dependencies:
   mocktail: ^0.3.0
