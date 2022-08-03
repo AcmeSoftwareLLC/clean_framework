@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
 import 'package:clean_framework_example/features/last_login/presentation/last_login_ui.dart';
 import 'package:clean_framework_example/features/random_cat/presentation/random_cat_ui.dart';
@@ -107,12 +108,62 @@ void main() {
 }
 
 Widget buildWidget(Widget widget) {
-  return AppProvidersContainer(
-    providersContext: providersContext,
-    onBuild: (_, __) {},
-    child: MaterialApp.router(
-      routeInformationParser: router.informationParser,
-      routerDelegate: router.delegate,
+  return FeatureScope(
+    register: () => FakeJsonFeatureProvider(),
+    child: AppProvidersContainer(
+      providersContext: providersContext,
+      onBuild: (_, __) {},
+      child: MaterialApp.router(
+        routeInformationParser: router.informationParser,
+        routerDelegate: router.delegate,
+        routeInformationProvider: router.informationProvider,
+      ),
     ),
   );
+}
+
+class FakeJsonFeatureProvider extends JsonFeatureProvider {
+  FakeJsonFeatureProvider() {
+    feed(
+      {
+        "newTitle": {"state": "disabled"},
+        "color": {
+          "returnType": "number",
+          "variants": {
+            "red": 4294901760,
+            "green": 4278255360,
+            "blue": 4278190335,
+            "purple": 4285140397
+          },
+          "defaultVariant": "red",
+          "state": "enabled"
+        },
+        "exampleFeatures": {
+          "returnType": "string",
+          "variants": {
+            "query": "firebase,graphql",
+            "restful": "graphql,rest",
+            "traditional": "rest",
+            "all": "firebase,graphql,rest"
+          },
+          "defaultVariant": "query",
+          "state": "enabled",
+          "rules": [
+            {
+              "action": {"variant": "restful"},
+              "conditions": [
+                {"context": "platform", "op": "equals", "value": "iOS"}
+              ]
+            },
+            {
+              "action": {"variant": "all"},
+              "conditions": [
+                {"context": "platform", "op": "equals", "value": "android"}
+              ]
+            }
+          ]
+        }
+      },
+    );
+  }
 }

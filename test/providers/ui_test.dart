@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   final router = AppRouter(
     routes: [
       AppRoute(
@@ -20,6 +22,7 @@ void main() {
     'LastLogin without setup',
     builder: () => TestUI(),
     context: ProvidersContext(),
+    parentBuilder: (child) => Container(child: child),
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);

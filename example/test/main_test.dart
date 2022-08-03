@@ -18,7 +18,7 @@ void main() {
     await tester.pumpWidget(
       app.ExampleApp(),
     );
-    await tester.pump();
+    await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
 
     // Uncomment this to see the widget tree on the console
@@ -30,6 +30,6 @@ void main() {
         providersContext().read(featureStatesProvider.featuresMap);
 
     expect(featuresMap.defaultState, isA<FeatureState>());
-    expect(featuresMap.getStateFor(lastLoginFeature), FeatureState.active);
+    expect(featuresMap.getStateFor(lastLoginFeature), FeatureState.hidden);
   });
 }

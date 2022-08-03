@@ -65,6 +65,7 @@ void uiTest(
   dynamic tags,
   Size? screenSize,
   Iterable<LocalizationsDelegate>? localizationDelegates,
+  Widget Function(Widget)? parentBuilder,
 }) {
   assert(
     () {
@@ -118,6 +119,7 @@ void uiTest(
           child = MaterialApp.router(
             routeInformationParser: _router.informationParser,
             routerDelegate: _router.delegate,
+            routeInformationProvider: _router.informationProvider,
             localizationsDelegates: localizationDelegates,
           );
         } else {
@@ -130,7 +132,10 @@ void uiTest(
         child = _scopedChild(builder!());
       }
 
-      await tester.pumpWidget(child, pumpDuration);
+      await tester.pumpWidget(
+        parentBuilder == null ? child : parentBuilder(child),
+        pumpDuration,
+      );
 
       if (postFrame == null) {
         await tester.pumpAndSettle();

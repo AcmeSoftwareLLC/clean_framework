@@ -1,3 +1,12 @@
+# [1.3.2] - Jun 29, 2022
+- Added `Deserializer` to help with deserializing JSON data.
+- Updated dependencies to latest version.
+- [**Breaking**] Removed `valueType` from **FeatureBuilder**.
+
+# [1.3.1] - Jun 7, 2022
+- Added Feature Flag Management based on OpenFeature specs.
+- Added `FeatureBuilder` and `FeatureScope`.
+
 # [1.3.0] - May 12, 2022
 - Added `BridgeGatewayProvider`
 - Fixed issue with content-type being appended with charset.
