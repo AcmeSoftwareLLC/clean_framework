@@ -96,7 +96,7 @@ class RestService extends NetworkService {
     var uri = _pathToUri(path);
 
     try {
-      final request = MultipartRequest(method.rawString, uri);
+      final request = MultipartRequest(method.value, uri);
       for (final entry in data.entries) {
         final k = entry.key;
         final v = entry.value;
