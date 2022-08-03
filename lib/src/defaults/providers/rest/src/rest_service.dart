@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/defaults/providers/rest/rest_logger.dart';
 import 'package:http/http.dart';
+import 'package:path/path.dart';
+import '../../../../utilities/file.dart';
 
 ///
 class RestService extends NetworkService {
@@ -74,6 +76,66 @@ class RestService extends NetworkService {
       rethrow;
     } catch (e) {
       //print(e);
+      throw RestServiceFailure(e.toString());
+    } finally {
+      _client.close();
+    }
+  }
+
+  Future<Map<String, dynamic>> multipartRequest<T extends Object>({
+    required RestMethod method,
+    required String path,
+    Map<String, dynamic> data = const {},
+    Map<String, String> headers = const {
+      'Content-Type': 'multipart/form-data',
+    },
+    Client? client,
+  }) async {
+    final _client = client ?? Client();
+
+    var uri = _pathToUri(path);
+
+    try {
+      final request = MultipartRequest(method.value, uri);
+      for (final entry in data.entries) {
+        final k = entry.key;
+        final v = entry.value;
+        if (v is File) {
+          final stream = ByteStream(v.openRead()..cast());
+          final length = await v.length();
+          final multipartFile = MultipartFile(
+            k,
+            stream,
+            length,
+            filename: basename(v.path),
+          );
+
+          request.files.add(multipartFile);
+        } else {
+          request.fields[k] = v;
+        }
+      }
+      request.headers
+        ..addAll(this.headers!)
+        ..addAll(headers);
+
+      final streamedResponse = await _client.send(request);
+      final response = await Response.fromStream(streamedResponse);
+
+      final statusCode = streamedResponse.statusCode;
+      final resData = parseResponse(response);
+
+      if (statusCode < 200 || statusCode > 299) {
+        throw InvalidResponseRestServiceFailure(
+          path: uri.toString(),
+          error: resData,
+          statusCode: statusCode,
+        );
+      }
+      return resData;
+    } on InvalidResponseRestServiceFailure {
+      rethrow;
+    } catch (e) {
       throw RestServiceFailure(e.toString());
     } finally {
       _client.close();

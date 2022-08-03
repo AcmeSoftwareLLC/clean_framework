@@ -2,6 +2,7 @@
 - Added `push` method to the router.
 - Added `AppRouter.page` and `AppRouter.custom`.
 - Added `Deserializer` to help with deserializing JSON data.
+- Added support for form data and multipart request through `RestExternalInterface`.
 - Updated dependencies to latest version.
 - [**Breaking**] Removed `valueType` from **FeatureBuilder**.
 
