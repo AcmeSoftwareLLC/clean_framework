@@ -950,6 +950,59 @@ void main() {
         expect(find.text('Detail'), findsNothing);
       },
     );
+
+    testWidgets(
+      'by default custom routes has no transition',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(
+                  Routes.detail,
+                  params: {'a': '123'},
+                  queryParams: {'b': '456'},
+                  extra: 789,
+                ),
+              ),
+              routes: [
+                AppRoute.custom(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
   });
 }
 
