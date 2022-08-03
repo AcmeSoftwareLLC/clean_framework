@@ -756,7 +756,7 @@ void main() {
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
-        expect(observer.removedRoute, Routes.home.toString());
+        expect(observer.removedRoute, Routes.home.name);
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsOneWidget);
@@ -768,7 +768,7 @@ void main() {
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
-        expect(observer.removedRoute, Routes.detail.toString());
+        expect(observer.removedRoute, Routes.detail.name);
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsNothing);

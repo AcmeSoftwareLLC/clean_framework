@@ -9,6 +9,7 @@ typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
 /// Signature of the page builder callback for a matched AppRoute.
 typedef RoutePageBuilder = Page<void> Function(BuildContext, AppRouteState);
 
+/// Signature of the page transitions builder callback for a matched AppRoute.
 typedef RouteTransitionsBuilder = Widget Function(
   BuildContext context,
   Animation<double> animation,

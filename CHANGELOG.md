@@ -1,4 +1,6 @@
-# [1.3.2] - Jun 29, 2022
+# [1.4.0] - Aug 3, 2022
+- Added `push` method to the router.
+- Added `AppRouter.page` and `AppRouter.custom`.
 - Added `Deserializer` to help with deserializing JSON data.
 - Updated dependencies to latest version.
 - [**Breaking**] Removed `valueType` from **FeatureBuilder**.
