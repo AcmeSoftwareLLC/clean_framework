@@ -22,7 +22,7 @@ Add this to your package's pubspec.yaml file:
 
 ```
 dependencies:
-    clean_framework: ^1.3.2
+    clean_framework: ^1.4.0
 ```
 
 ## Install it 
