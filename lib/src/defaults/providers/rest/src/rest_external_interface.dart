@@ -37,6 +37,17 @@ class RestExternalInterface
         send(JsonRestSuccessResponse(data: data));
       },
     );
+    on<MultiPartRestRequest>(
+      (request, send) async {
+        final data = await _restService.multipartRequest(
+          method: request.method,
+          path: request.path,
+          data: request.data,
+          headers: request.headers,
+        );
+        send(JsonRestSuccessResponse(data: data));
+      },
+    );
     on<BytesRestRequest>(
       (request, send) async {
         final data = await _restService.request<Uint8List>(

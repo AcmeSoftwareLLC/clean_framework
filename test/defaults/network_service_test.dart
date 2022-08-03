@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('RestMethod', () {
-    expect(RestMethod.get.rawString, 'GET');
-    expect(RestMethod.post.rawString, 'POST');
-    expect(RestMethod.put.rawString, 'PUT');
-    expect(RestMethod.delete.rawString, 'DELETE');
-    expect(RestMethod.patch.rawString, 'PATCH');
+    expect(RestMethod.get.value, 'GET');
+    expect(RestMethod.post.value, 'POST');
+    expect(RestMethod.put.value, 'PUT');
+    expect(RestMethod.delete.value, 'DELETE');
+    expect(RestMethod.patch.value, 'PATCH');
   });
 
   test('NetworkService assert', () {
