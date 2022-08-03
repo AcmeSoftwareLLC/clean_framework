@@ -101,8 +101,13 @@ class RestService extends NetworkService {
         if (v is File) {
           final stream = ByteStream(v.openRead()..cast());
           final length = await v.length();
-          final multipartFile =
-              MultipartFile(k, stream, length, filename: basename(v.path));
+          final multipartFile = MultipartFile(
+            k,
+            stream,
+            length,
+            filename: basename(v.path),
+          );
+
           request.files.add(multipartFile);
         } else {
           request.fields[k] = v;

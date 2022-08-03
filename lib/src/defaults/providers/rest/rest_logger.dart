@@ -45,8 +45,10 @@ class _RequestLogger extends NetworkLogger {
 
   @override
   void initialize() {
-    printHeader('REQUEST (${request.method})',
-        request.url.replace(queryParameters: {}).toString());
+    printHeader(
+      'REQUEST (${request.method})',
+      request.url.replace(queryParameters: {}).toString(),
+    );
     _printParams();
     _printPayload();
     _printHeaders();
