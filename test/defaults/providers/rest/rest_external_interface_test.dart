@@ -50,6 +50,22 @@ void main() {
     );
   });
 
+  test('RestExternalInterface multipart request request success response',
+      () async {
+    final testContent = {'foo': 'bar'};
+    final restService = RestServiceFake(testContent);
+    final gateWay =
+        GatewayFake<TestPostMultipartRequest, RestSuccessResponse>();
+    RestExternalInterface(
+        restService: restService,
+        baseUrl: '',
+        gatewayConnections: [() => gateWay]);
+
+    final result = await gateWay.transport(TestPostMultipartRequest());
+    expect(result.isRight, isTrue);
+    expect(result.right, JsonRestSuccessResponse(data: testContent));
+  });
+
   test('RestExternalInterface binary data src request success response',
       () async {
     final testContent = {'foo': 'bar'};
@@ -201,6 +217,11 @@ class TestRequest extends GetRestRequest {
   String get path => 'http://fake.com';
 }
 
+class TestPostMultipartRequest extends PostMultiPartRestRequest {
+  @override
+  String get path => 'http://fake.com';
+}
+
 class TestBinarySrcPostRequest extends BinaryDataSrcPostRestRequest {
   @override
   String get path => 'http://fake.com';
@@ -263,6 +284,25 @@ class RestServiceFake extends Fake implements RestService {
     required String path,
     required List<int> data,
     Map<String, String> headers = const {},
+    Client? client,
+  }) async {
+    if (_response.isEmpty) throw RestServiceFailure('Something went wrong');
+    if (_response['statusCode'] == 400)
+      throw InvalidResponseRestServiceFailure(
+        error: {'error': 'Bad Request'},
+        statusCode: 400,
+        path: path,
+      );
+    return {'foo': 'bar'};
+  }
+
+  Future<Map<String, dynamic>> multipartRequest<T extends Object>({
+    required RestMethod method,
+    required String path,
+    Map<String, dynamic> data = const {},
+    Map<String, String> headers = const {
+      'Content-Type': 'multipart/form-data',
+    },
     Client? client,
   }) async {
     if (_response.isEmpty) throw RestServiceFailure('Something went wrong');

@@ -32,6 +32,7 @@ class ExampleApp extends StatelessWidget {
         child: MaterialApp.router(
           routeInformationParser: router.informationParser,
           routerDelegate: router.delegate,
+          routeInformationProvider: router.informationProvider,
           theme: ThemeData(
             pageTransitionsTheme: PageTransitionsTheme(
               builders: {

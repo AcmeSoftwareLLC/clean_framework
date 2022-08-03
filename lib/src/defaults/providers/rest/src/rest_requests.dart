@@ -18,7 +18,13 @@ abstract class RestRequest extends Request {
 }
 
 abstract class JsonRestRequest extends RestRequest {
-  JsonRestRequest(method) : super(method);
+  JsonRestRequest(super.method);
+
+  Map<String, dynamic> get data => {};
+}
+
+abstract class MultiPartRestRequest extends RestRequest {
+  MultiPartRestRequest(super.method);
 
   Map<String, dynamic> get data => {};
 }
@@ -30,8 +36,7 @@ abstract class BytesRestRequest extends RestRequest {
 }
 
 abstract class BinaryDataSrcRestRequest extends RestRequest {
-  BinaryDataSrcRestRequest(this.method) : super(method);
-  final RestMethod method;
+  BinaryDataSrcRestRequest(super.method);
 
   String get src;
 }
@@ -45,8 +50,7 @@ abstract class BinaryDataSrcPutRestRequest extends BinaryDataSrcRestRequest {
 }
 
 abstract class BinaryDataRestRequest extends RestRequest {
-  BinaryDataRestRequest(this.method) : super(method);
-  final RestMethod method;
+  BinaryDataRestRequest(super.method);
 
   Uint8List get binaryData;
 }
@@ -81,4 +85,8 @@ abstract class PatchRestRequest extends JsonRestRequest {
 
 abstract class DeleteRestRequest extends JsonRestRequest {
   DeleteRestRequest() : super(RestMethod.delete);
+}
+
+abstract class PostMultiPartRestRequest extends MultiPartRestRequest {
+  PostMultiPartRestRequest() : super(RestMethod.post);
 }

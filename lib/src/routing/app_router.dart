@@ -1,9 +1,21 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/src/clean_framework_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 /// Signature for router's `builder` and `errorBuilder` callback.
 typedef RouteWidgetBuilder = Widget Function(BuildContext, AppRouteState);
+
+/// Signature of the page builder callback for a matched AppRoute.
+typedef RoutePageBuilder = Page<void> Function(BuildContext, AppRouteState);
+
+/// Signature of the page transitions builder callback for a matched AppRoute.
+typedef RouteTransitionsBuilder = Widget Function(
+  BuildContext context,
+  Animation<double> animation,
+  Animation<double> secondaryAnimation,
+  Widget child,
+);
 
 /// Signature for router's `redirect` callback.
 typedef AppRouterRedirect = String? Function(AppRouteState);
@@ -80,12 +92,17 @@ class AppRouter<R extends Object> {
 
   /// A delegate that is used by the [Router] widget to build and configure a
   /// navigating widget.
-  RouterDelegate<Uri> get delegate => _router.routerDelegate;
+  RouterDelegate<Object> get delegate => _router.routerDelegate;
 
   /// A delegate that is used by the [Router] widget to parse a route information
   /// into a configuration of type T.
-  RouteInformationParser<Uri> get informationParser {
+  RouteInformationParser<Object> get informationParser {
     return _router.routeInformationParser;
+  }
+
+  /// The route information provider used by the inner router.
+  RouteInformationProvider get informationProvider {
+    return _router.routeInformationProvider;
   }
 
   /// The current location of the router.
@@ -123,7 +140,22 @@ class AppRouter<R extends Object> {
     Object? extra,
   }) {
     _router.goNamed(
-      route.toString().toLowerCase(),
+      route is Enum ? route.name : route.toString(),
+      params: params,
+      queryParams: queryParams,
+      extra: extra,
+    );
+  }
+
+  /// Navigates to specified [route] by maintaining route stack.
+  void push(
+    R route, {
+    Map<String, String> params = const {},
+    Map<String, String> queryParams = const {},
+    Object? extra,
+  }) {
+    _router.pushNamed(
+      route is Enum ? route.name : route.toString(),
       params: params,
       queryParams: queryParams,
       extra: extra,
@@ -178,7 +210,7 @@ class AppRouter<R extends Object> {
 
   void _initInnerRouter() {
     _router = GoRouter(
-      routes: _routes.map((r) => r._toGoRoute()).toList(growable: false),
+      routes: _routes,
       errorPageBuilder: (context, state) {
         return MaterialPage(
           key: state.pageKey,
@@ -207,50 +239,68 @@ class AppRouter<R extends Object> {
   }
 }
 
-/// A declarative mapping between a route name, a route path and a builder.
-class AppRoute<R extends Object> {
-  /// Default constructor to configure an AppRoute.
+class _AppRoute<R extends Object> extends GoRoute {
+  _AppRoute({
+    required R name,
+    required super.path,
+    RouteWidgetBuilder? builder,
+    RoutePageBuilder? pageBuilder,
+    super.routes,
+    super.redirect,
+  }) : super(
+          name: name is Enum ? name.name : name.toString(),
+          builder: (context, state) {
+            final child = builder?.call(
+              context,
+              AppRouteState._fromGoRouteState(state),
+            );
+
+            return child ?? const SizedBox.shrink();
+          },
+          pageBuilder: pageBuilder == null
+              ? null
+              : (context, state) {
+                  return pageBuilder(
+                    context,
+                    AppRouteState._fromGoRouteState(state),
+                  );
+                },
+        );
+}
+
+class AppRoute<R extends Object> extends _AppRoute<R> {
   AppRoute({
-    required this.name,
-    required this.path,
-    required this.builder,
-    this.routes = const [],
-    this.redirect,
+    required super.name,
+    required super.path,
+    required super.builder,
+    super.routes,
+    super.redirect,
   });
 
-  /// The name of the route.
-  final R name;
-
-  /// The path of the route which shows up in the browser's address bar.
-  final String path;
-
-  /// The widget builder which provides the [AppRouteState] for the particular route.
-  final RouteWidgetBuilder builder;
-
-  /// The list of children [routes].
-  final List<AppRoute> routes;
-
-  /// The redirection callback which can be configured to redirect to certain location
-  /// as per the [AppRouteState].
-  final AppRouterRedirect? redirect;
-
-  GoRoute _toGoRoute() {
-    return GoRoute(
-      path: path,
-      name: name.toString(),
-      routes: routes.map((r) => r._toGoRoute()).toList(growable: false),
-      pageBuilder: (context, state) {
-        return MaterialPage(
-          key: state.pageKey,
-          name: state.name,
-          child: builder(context, AppRouteState._fromGoRouteState(state)),
+  AppRoute.custom({
+    required super.name,
+    required super.path,
+    required RouteWidgetBuilder builder,
+    RouteTransitionsBuilder? transitionsBuilder,
+    super.routes,
+    super.redirect,
+  }) : super(
+          pageBuilder: (context, state) {
+            return CustomTransitionPage(
+              child: builder(context, state),
+              transitionsBuilder:
+                  transitionsBuilder ?? (_, __, ___, child) => child,
+            );
+          },
         );
-      },
-      redirect: (state) => redirect?.call(
-        AppRouteState._fromGoRouteState(state),
-      ),
-    );
-  }
+
+  AppRoute.page({
+    required super.name,
+    required super.path,
+    required RoutePageBuilder builder,
+    super.routes,
+    super.redirect,
+  }) : super(pageBuilder: builder);
 }
 
 /// The state associated with an [AppRoute].
@@ -258,7 +308,10 @@ class AppRouteState {
   /// Default constructor to configure an AppRouteState.
   AppRouteState({
     required this.location,
+    required this.subloc,
+    required this.name,
     this.path,
+    this.fullpath,
     Map<String, String> params = const {},
     this.queryParams = const {},
     this.extra,
@@ -268,8 +321,17 @@ class AppRouteState {
   /// The full location of the route
   final String location;
 
+  /// The location of this sub-route, e.g. /family/f2
+  final String subloc;
+
+  /// The optional name of the route.
+  final String? name;
+
   /// The specified path for the route as configures in [AppRoute].
   final String? path;
+
+  /// The full path to this sub-route, e.g. /family/:fid
+  final String? fullpath;
 
   /// The query parameters associated with the route.
   final Map<String, String> queryParams;
@@ -285,7 +347,10 @@ class AppRouteState {
   factory AppRouteState._fromGoRouteState(GoRouterState state) {
     return AppRouteState(
       location: state.location,
+      subloc: state.subloc,
+      name: state.name,
       path: state.path,
+      fullpath: state.fullpath,
       params: state.params,
       queryParams: state.queryParams,
       extra: state.extra,

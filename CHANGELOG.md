@@ -1,3 +1,11 @@
+# [1.4.0] - Aug 3, 2022
+- Added `push` method to the router.
+- Added `AppRouter.page` and `AppRouter.custom`.
+- Added `Deserializer` to help with deserializing JSON data.
+- Added support for form data and multipart request through `RestExternalInterface`.
+- Updated dependencies to latest version.
+- [**Breaking**] Removed `valueType` from **FeatureBuilder**.
+
 # [1.3.1] - Jun 7, 2022
 - Added Feature Flag Management based on OpenFeature specs.
 - Added `FeatureBuilder` and `FeatureScope`.

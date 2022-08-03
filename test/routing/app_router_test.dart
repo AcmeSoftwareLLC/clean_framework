@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -374,6 +375,59 @@ void main() {
     });
 
     testWidgets(
+      'navigating using push',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(
+                  Routes.detail,
+                  params: {'a': '123'},
+                  queryParams: {'b': '456'},
+                  extra: 789,
+                ),
+              ),
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
       'navigating using open',
       (tester) async {
         testRouter = AppRouter(
@@ -491,7 +545,7 @@ void main() {
         expect(testRouter.location, '/detail');
 
         testRouter.reset();
-        expect(testRouter.location, '/');
+        expect(testRouter.delegate.currentConfiguration, isEmpty);
 
         // Just resets the underlying router; no change in UI
         // Since this method is only intended for tests
@@ -756,7 +810,7 @@ void main() {
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
-        expect(observer.removedRoute, Routes.home.toString());
+        expect(observer.removedRoute, Routes.home.name);
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsOneWidget);
@@ -768,13 +822,185 @@ void main() {
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
-        expect(observer.removedRoute, Routes.detail.toString());
+        expect(observer.removedRoute, Routes.detail.name);
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsNothing);
         expect(find.text('More Detail'), findsOneWidget);
 
         expect(testRouter.location, '/more-detail');
+      },
+    );
+
+    testWidgets(
+      'using page builder',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute.page(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => CupertinoPage(
+                child: OnTapPage(
+                  id: 'Home',
+                  onTap: (context) => testRouter.push(
+                    Routes.detail,
+                    params: {'a': '123'},
+                    queryParams: {'b': '456'},
+                    extra: 789,
+                  ),
+                ),
+              ),
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        /// Cupertino page uses Slide transitions for in and out animation.
+        expect(find.byType(SlideTransition), findsNWidgets(2));
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'using custom transition',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute.custom(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(
+                  Routes.detail,
+                  params: {'a': '123'},
+                  queryParams: {'b': '456'},
+                  extra: 789,
+                ),
+              ),
+              transitionsBuilder: (context, animation, _, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              routes: [
+                AppRoute(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.byType(FadeTransition), findsOneWidget);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'by default custom routes has no transition',
+      (tester) async {
+        testRouter = AppRouter(
+          routes: [
+            AppRoute(
+              name: Routes.home,
+              path: '/',
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(
+                  Routes.detail,
+                  params: {'a': '123'},
+                  queryParams: {'b': '456'},
+                  extra: 789,
+                ),
+              ),
+              routes: [
+                AppRoute.custom(
+                  name: Routes.detail,
+                  path: 'detail/:a',
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value:
+                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+          errorBuilder: (_, __) => Page404(),
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
       },
     );
   });
@@ -785,6 +1011,7 @@ Future<void> pumpApp(WidgetTester tester) {
     MaterialApp.router(
       routerDelegate: testRouter.delegate,
       routeInformationParser: testRouter.informationParser,
+      routeInformationProvider: testRouter.informationProvider,
     ),
   );
 }
