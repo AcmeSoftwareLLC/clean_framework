@@ -9,7 +9,9 @@ import 'engine/open_feature_flags.dart';
 export 'engine/evaluation_engine.dart';
 export 'engine/open_feature_flags.dart';
 
+/// The feature provider with evaluates the provided JSON.
 class JsonFeatureProvider implements FeatureProvider {
+  /// Default constructor.
   JsonFeatureProvider({
     EvaluationEngine engine = const JsonEvaluationEngine(),
   }) : _engine = engine;
@@ -90,6 +92,7 @@ class JsonFeatureProvider implements FeatureProvider {
     );
   }
 
+  /// Sets the raw flags to be used by the provider.
   void feed(Map<String, dynamic> rawFlags) {
     final flags = Map<String, dynamic>.of(rawFlags);
 
