@@ -7,7 +7,9 @@ import 'package:http/http.dart';
 import 'package:path/path.dart';
 import '../../../../utilities/file.dart';
 
+///
 class RestService extends NetworkService {
+  /// Default constructor for [RestService].
   RestService({
     String baseUrl = '',
     Map<String, String> headers = const {},
@@ -31,7 +33,7 @@ class RestService extends NetworkService {
     }
 
     try {
-      final request = Request(method.rawString, uri);
+      final request = Request(method.value, uri);
 
       if (headers['Content-Type'] == 'application/x-www-form-urlencoded') {
         request.bodyFields = data.map((k, v) => MapEntry(k, v.toString()));
@@ -151,7 +153,7 @@ class RestService extends NetworkService {
     var uri = _pathToUri(path);
 
     try {
-      final request = Request(method.rawString, uri);
+      final request = Request(method.value, uri);
 
       request.bodyBytes = data;
 

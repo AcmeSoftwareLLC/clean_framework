@@ -1,4 +1,6 @@
+/// The Logger.
 abstract class Logger {
+  /// Sets the log [level].
   void setLogLevel(LogLevel level);
 
   /// Log a message at level [LogLevel.verbose].
@@ -20,4 +22,26 @@ abstract class Logger {
   void fatal(dynamic message, [dynamic error, StackTrace stackTrace]);
 }
 
-enum LogLevel { nothing, fatal, error, warning, info, debug, verbose }
+/// The log levels.
+enum LogLevel {
+  /// No logs.
+  nothing,
+
+  /// Fatal logs.
+  fatal,
+
+  /// Error logs.
+  error,
+
+  /// Warning logs.
+  warning,
+
+  /// Informational logs.
+  info,
+
+  /// Debug logs.
+  debug,
+
+  /// Verbose logs.
+  verbose,
+}
