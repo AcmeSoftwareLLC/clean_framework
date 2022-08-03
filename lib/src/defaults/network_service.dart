@@ -1,6 +1,7 @@
-// coverage:ignore-line
+// coverage:ignore-start
 /// The types of HTTP methods.
 enum RestMethod {
+// coverage:ignore-end
   /// GET
   get('GET'),
 
