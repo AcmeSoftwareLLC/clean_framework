@@ -10,7 +10,6 @@ import 'package:clean_framework_example/features/last_login/domain/last_login_us
 import 'package:clean_framework_example/features/last_login/external_interface/last_login_date_gateway.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'features.dart';
 import 'features/country/domain/country_entity.dart';
 import 'features/country/domain/country_use_case.dart';
 import 'features/country/external_interface/country_gateway.dart';
