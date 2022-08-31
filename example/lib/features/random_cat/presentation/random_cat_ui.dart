@@ -28,7 +28,7 @@ class RandomCatUI extends UI<RandomCatViewModel> {
               padding: const EdgeInsets.all(32),
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  primary: Colors.white,
+                  foregroundColor: Colors.white,
                   backgroundColor: Colors.white10,
                   side: BorderSide(color: Colors.white),
                 ),

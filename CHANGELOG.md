@@ -1,3 +1,6 @@
+# [1.4.1] - Aug 31, 2022
+- Bumped dependencies to their latest version.
+
 # [1.4.0] - Aug 3, 2022
 - Added `push` method to the router.
 - Added `AppRouter.page` and `AppRouter.custom`.
