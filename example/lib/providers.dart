@@ -4,7 +4,6 @@ import 'package:clean_framework/clean_framework_defaults.dart'
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 
-import 'package:clean_framework_example/features.dart';
 import 'package:clean_framework_example/features/last_login/domain/last_login_entity.dart';
 import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
 import 'package:clean_framework_example/features/last_login/external_interface/last_login_date_gateway.dart';
@@ -25,11 +24,6 @@ ProvidersContext get providersContext => _providersContext;
 void resetProvidersContext([ProvidersContext? context]) {
   _providersContext = context ?? ProvidersContext();
 }
-
-final featureStatesProvider =
-    FeatureStateProvider<FeatureState, ExampleFeatureMapper>(
-  (_) => ExampleFeatureMapper(),
-);
 
 final lastLoginUseCaseProvider =
     UseCaseProvider<LastLoginEntity, LastLoginUseCase>(
