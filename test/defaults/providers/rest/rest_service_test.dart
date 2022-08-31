@@ -367,7 +367,7 @@ void main() {
   });
 
   tearDown(() {
-    file.delete();
+    if (file.existsSync()) file.delete();
   });
 }
 
