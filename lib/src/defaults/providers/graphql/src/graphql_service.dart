@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
+import 'package:gql/ast.dart';
 import 'package:graphql/client.dart';
 
 class GraphQLService extends NetworkService {
@@ -55,7 +56,7 @@ class GraphQLService extends NetworkService {
     _clientCompleter.complete(client);
   }
 
-  Future<Map<String, dynamic>> request({
+  Future<GraphQLServiceResponse> request({
     required GraphQLMethod method,
     required String document,
     Map<String, dynamic>? variables,
@@ -66,15 +67,20 @@ class GraphQLService extends NetworkService {
     final policy =
         fetchPolicy == null ? null : FetchPolicy.values[fetchPolicy.index];
 
+    final doc = gql(document);
+    final hasStitching = _hasStitching(doc);
+
     try {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(document, variables, _timeout, policy),
+            await _query(doc, variables, _timeout, policy),
+            hasStitching: hasStitching,
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(document, variables, _timeout, policy),
+            await _mutate(doc, variables, _timeout, policy),
+            hasStitching: hasStitching,
           );
       }
     } on TimeoutException {
@@ -119,7 +125,12 @@ class GraphQLService extends NetworkService {
     return _link;
   }
 
-  Map<String, dynamic> _handleExceptions(QueryResult result) {
+  GraphQLServiceResponse _handleExceptions(
+    QueryResult result, {
+    required bool hasStitching,
+  }) {
+    Iterable<GraphQLOperationError> errors = [];
+
     if (result.hasException) {
       final operationException = result.exception!;
       final linkException = operationException.linkException;
@@ -136,24 +147,22 @@ class GraphQLService extends NetworkService {
         );
       }
 
-      throw GraphQLOperationException(
-        errors: operationException.graphqlErrors.map(
-          (e) => GraphQLOperationError.from(e),
-        ),
-      );
+      errors = operationException.graphqlErrors.map(GraphQLOperationError.from);
+
+      if (!hasStitching) throw GraphQLOperationException(errors: errors);
     }
 
-    return result.data!;
+    return GraphQLServiceResponse(data: result.data!, errors: errors);
   }
 
   Future<QueryResult> _query(
-    String doc,
+    DocumentNode document,
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
   ) async {
     final options = QueryOptions(
-      document: gql(doc),
+      document: document,
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
     );
@@ -162,13 +171,13 @@ class GraphQLService extends NetworkService {
   }
 
   Future<QueryResult> _mutate(
-    String doc,
+    DocumentNode document,
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
   ) async {
     final options = MutationOptions(
-      document: gql(doc),
+      document: document,
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
     );
@@ -184,6 +193,27 @@ class GraphQLService extends NetworkService {
 
     return request.timeout(timeout);
   }
+
+  bool _hasStitching(DocumentNode document) {
+    for (final definition in document.definitions) {
+      if (definition is OperationDefinitionNode &&
+          definition.selectionSet.selections.length > 2) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+class GraphQLServiceResponse {
+  GraphQLServiceResponse({
+    required this.data,
+    this.errors = const [],
+  });
+
+  final Map<String, dynamic> data;
+  final Iterable<GraphQLOperationError> errors;
 }
 
 class GraphQLOperationError {

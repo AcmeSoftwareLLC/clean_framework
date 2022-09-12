@@ -1,9 +1,14 @@
+import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 
 class GraphQLSuccessResponse extends SuccessResponse {
-  final Map<String, dynamic> data;
+  GraphQLSuccessResponse({
+    required this.data,
+    this.errors = const [],
+  });
 
-  GraphQLSuccessResponse({required this.data});
+  final Map<String, dynamic> data;
+  final Iterable<GraphQLOperationError> errors;
 }
 
 class GraphQLFailureResponse extends TypedFailureResponse<GraphQLFailureType> {
