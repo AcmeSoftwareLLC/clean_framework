@@ -1,3 +1,4 @@
+export 'src/graphql_error_policy.dart';
 export 'src/graphql_external_interface.dart';
 export 'src/graphql_fetch_policy.dart';
 export 'src/graphql_gateway.dart';

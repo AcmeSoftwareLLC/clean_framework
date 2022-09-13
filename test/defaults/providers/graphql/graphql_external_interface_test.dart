@@ -176,15 +176,20 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
   final Object? _exception;
 
   @override
-  Future<Map<String, dynamic>> request({
+  Future<GraphQLServiceResponse> request({
     required GraphQLMethod method,
     required String document,
     Map<String, dynamic>? variables,
     Duration? timeout,
     GraphQLFetchPolicy? fetchPolicy,
+    GraphQLErrorPolicy? errorPolicy,
   }) async {
     if (_exception != null) throw _exception!;
-    return _json;
+
+    return GraphQLServiceResponse(
+      data: _json,
+      errors: [],
+    );
   }
 }
 

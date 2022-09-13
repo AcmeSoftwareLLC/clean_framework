@@ -1,7 +1,17 @@
-# [1.4.1] - Aug 31, 2022
+# Changelog
+
+## 1.4.2
+**Sep 13, 2022**
+- Added support for GraphQL Schema Stitching.
+- Added support for changing GraphQL error policy in request level.
 - Bumped dependencies to their latest version.
 
-# [1.4.0] - Aug 3, 2022
+## 1.4.1
+**Aug 31, 2022**
+- Bumped dependencies to their latest version.
+
+## 1.4.0 
+**Aug 3, 2022**
 - Added `push` method to the router.
 - Added `AppRouter.page` and `AppRouter.custom`.
 - Added `Deserializer` to help with deserializing JSON data.
@@ -9,11 +19,13 @@
 - Updated dependencies to latest version.
 - [**Breaking**] Removed `valueType` from **FeatureBuilder**.
 
-# [1.3.1] - Jun 7, 2022
+## 1.3.1 
+**Jun 7, 2022**
 - Added Feature Flag Management based on OpenFeature specs.
 - Added `FeatureBuilder` and `FeatureScope`.
 
-# [1.3.0] - May 12, 2022
+## 1.3.0 
+**May 12, 2022**
 - Added `BridgeGatewayProvider`
 - Fixed issue with content-type being appended with charset.
 - [**Breaking**] Added separate constructor for providing custom `GraphQLService` to `GraphQLExternalInterface`.
@@ -23,7 +35,8 @@
 - Upgraded dependencies.
 - [**Breaking**] Bumped minimum Flutter version to `3.0.0`.
 
-# [1.2.1] - Apr 25, 2022
+## 1.2.1 
+**Apr 25, 2022**
 - Added `uiTestWidgetBuilder`.
 - Added `merge` property to **FirebaseWriteRequest**.
 - Made `id` in **FirebaseWriteRequest** optional.
@@ -33,7 +46,8 @@
 CleanFrameworkObserver.instance = CleanFrameworkObserver(enableNetworkLogs: false);
 ```
 
-# [1.2.0] - Mar 20, 2022
+## 1.2.0 
+**Mar 20, 2022**
 - Added `debounce` method to **UseCase**.
 - Fixed issue with Form URLEncoded request body format.
 - [**Breaking**] Upgraded `mockoon` to **v0.3.0**

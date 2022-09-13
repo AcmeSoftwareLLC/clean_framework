@@ -34,28 +34,35 @@ class GraphQLExternalInterface
   void handleRequest() {
     on<QueryGraphQLRequest>(
       (request, send) async {
-        final data = await service.request(
+        final response = await service.request(
           method: GraphQLMethod.query,
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
           fetchPolicy: request.fetchPolicy,
+          errorPolicy: request.errorPolicy,
         );
 
-        send(GraphQLSuccessResponse(data: data));
+        send(
+          GraphQLSuccessResponse(data: response.data, errors: response.errors),
+        );
       },
     );
+
     on<MutationGraphQLRequest>(
       (request, send) async {
-        final data = await service.request(
+        final response = await service.request(
           method: GraphQLMethod.mutation,
           document: request.document,
           variables: request.variables,
           timeout: request.timeout,
           fetchPolicy: request.fetchPolicy,
+          errorPolicy: request.errorPolicy,
         );
 
-        send(GraphQLSuccessResponse(data: data));
+        send(
+          GraphQLSuccessResponse(data: response.data, errors: response.errors),
+        );
       },
     );
   }

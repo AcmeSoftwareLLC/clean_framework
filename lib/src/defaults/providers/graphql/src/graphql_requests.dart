@@ -9,6 +9,8 @@ abstract class GraphQLRequest extends Request {
   Duration? get timeout => null;
 
   GraphQLFetchPolicy? get fetchPolicy => null;
+
+  GraphQLErrorPolicy? get errorPolicy => null;
 }
 
 abstract class QueryGraphQLRequest extends GraphQLRequest {}
