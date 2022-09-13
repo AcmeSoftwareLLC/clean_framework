@@ -103,12 +103,11 @@ class _ResponseLogger extends NetworkLogger {
   void initialize() {
     printHeader('RESPONSE', endpoint);
 
+    _printData();
+
     final errors = response.errors ?? [];
-    if (errors.isEmpty) {
-      _printData();
-    } else {
-      _printErrors();
-    }
+    if (errors.isNotEmpty) _printErrors();
+
     printFooter();
   }
 

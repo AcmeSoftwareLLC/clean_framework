@@ -69,17 +69,18 @@ class GraphQLService extends NetworkService {
 
     final doc = gql(document);
     final hasStitching = _hasStitching(doc);
+    final errorPolicy = hasStitching ? ErrorPolicy.all : ErrorPolicy.none;
 
     try {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(doc, variables, _timeout, policy),
+            await _query(doc, variables, _timeout, policy, errorPolicy),
             hasStitching: hasStitching,
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(doc, variables, _timeout, policy),
+            await _mutate(doc, variables, _timeout, policy, errorPolicy),
             hasStitching: hasStitching,
           );
       }
@@ -162,11 +163,13 @@ class GraphQLService extends NetworkService {
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
+    ErrorPolicy? errorPolicy,
   ) async {
     final options = QueryOptions(
       document: document,
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
+      errorPolicy: errorPolicy,
     );
 
     return _timedOut((await _client).query(options), timeout);
@@ -177,11 +180,13 @@ class GraphQLService extends NetworkService {
     Map<String, dynamic>? variables,
     Duration? timeout,
     FetchPolicy? fetchPolicy,
+    ErrorPolicy? errorPolicy,
   ) async {
     final options = MutationOptions(
       document: document,
       variables: variables ?? {},
       fetchPolicy: fetchPolicy,
+      errorPolicy: errorPolicy,
     );
 
     return _timedOut((await _client).mutate(options), timeout);
