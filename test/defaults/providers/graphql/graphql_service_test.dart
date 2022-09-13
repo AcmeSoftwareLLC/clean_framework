@@ -29,7 +29,7 @@ void main() {
       fetchPolicy: GraphQLFetchPolicy.cacheFirst,
     );
 
-    expect(response, {'foo': 'bar'});
+    expect(response.data, {'foo': 'bar'});
   });
 
   test('GraphQLService success query with tokenBuilder', () async {
@@ -49,7 +49,7 @@ void main() {
       method: GraphQLMethod.query,
       document: '',
     );
-    expect(response, {'foo': 'bar'});
+    expect(response.data, {'foo': 'bar'});
   });
 
   test('GraphQLService query with network exception', () async {
@@ -139,7 +139,7 @@ void main() {
       method: GraphQLMethod.mutation,
       document: '',
     );
-    expect(response, {'foo': 'bar'});
+    expect(response.data, {'foo': 'bar'});
   });
 
   test('GraphQLService mutation with network exception', () async {
