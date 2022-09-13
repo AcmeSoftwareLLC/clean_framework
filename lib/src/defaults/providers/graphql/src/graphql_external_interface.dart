@@ -40,6 +40,7 @@ class GraphQLExternalInterface
           variables: request.variables,
           timeout: request.timeout,
           fetchPolicy: request.fetchPolicy,
+          errorPolicy: request.errorPolicy,
         );
 
         send(
@@ -56,6 +57,7 @@ class GraphQLExternalInterface
           variables: request.variables,
           timeout: request.timeout,
           fetchPolicy: request.fetchPolicy,
+          errorPolicy: request.errorPolicy,
         );
 
         send(

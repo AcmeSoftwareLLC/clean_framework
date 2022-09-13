@@ -62,6 +62,7 @@ class GraphQLService extends NetworkService {
     Map<String, dynamic>? variables,
     Duration? timeout,
     GraphQLFetchPolicy? fetchPolicy,
+    GraphQLErrorPolicy? errorPolicy,
   }) async {
     final _timeout = timeout ?? this.timeout;
     final policy =
@@ -69,18 +70,22 @@ class GraphQLService extends NetworkService {
 
     final doc = gql(document);
     final hasStitching = _hasStitching(doc);
-    final errorPolicy = hasStitching ? ErrorPolicy.all : ErrorPolicy.none;
+    final errPolicy = errorPolicy == null
+        ? hasStitching
+            ? ErrorPolicy.all
+            : ErrorPolicy.none
+        : ErrorPolicy.values[errorPolicy.index];
 
     try {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(doc, variables, _timeout, policy, errorPolicy),
+            await _query(doc, variables, _timeout, policy, errPolicy),
             hasStitching: hasStitching,
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(doc, variables, _timeout, policy, errorPolicy),
+            await _mutate(doc, variables, _timeout, policy, errPolicy),
             hasStitching: hasStitching,
           );
       }
