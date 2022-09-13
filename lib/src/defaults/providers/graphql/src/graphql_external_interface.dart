@@ -88,8 +88,6 @@ class GraphQLExternalInterface
       );
     }
 
-    print('Stitching: $error');
-
     return UnknownFailureResponse(error);
   }
 }
