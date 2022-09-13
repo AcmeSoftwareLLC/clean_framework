@@ -12,173 +12,344 @@ void main() {
     registerFallbackValue(MutationOptionsMock());
   });
 
-  test('GraphQLService success query', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-    GraphQLService(endpoint: '', headers: {'Authorization': 'bar'});
+  group('GraphQLService tests |', () {
+    test('success query', () async {
+      // for coverage purposes
+      GraphQLService(endpoint: '');
+      GraphQLService(endpoint: '', headers: {'Authorization': 'bar'});
 
-    final service = GraphQLService.withClient(client: mock);
+      final service = GraphQLService.withClient(client: mock);
 
-    when(() => mock.query(any())).thenAnswer(
-      (_) async => successResult,
-    );
+      when(() => mock.query(any())).thenAnswer(
+        (_) async => successResult,
+      );
 
-    final response = await service.request(
-      method: GraphQLMethod.query,
-      document: '',
-      fetchPolicy: GraphQLFetchPolicy.cacheFirst,
-    );
+      final response = await service.request(
+        method: GraphQLMethod.query,
+        document: '',
+        fetchPolicy: GraphQLFetchPolicy.cacheFirst,
+      );
 
-    expect(response.data, {'foo': 'bar'});
-  });
+      expect(response.data, {'foo': 'bar'});
+    });
 
-  test('GraphQLService success query with tokenBuilder', () async {
-    // for coverage purposes
-    GraphQLService(
-      endpoint: '',
-      token: GraphQLToken(builder: () => 'Bearer Token'),
-    );
+    test('success query with tokenBuilder', () async {
+      // for coverage purposes
+      GraphQLService(
+        endpoint: '',
+        token: GraphQLToken(builder: () => 'Bearer Token'),
+      );
 
-    final service = GraphQLService.withClient(client: mock);
+      final service = GraphQLService.withClient(client: mock);
 
-    when(() => mock.query(any())).thenAnswer(
-      (_) async => successResult,
-    );
+      when(() => mock.query(any())).thenAnswer(
+        (_) async => successResult,
+      );
 
-    final response = await service.request(
-      method: GraphQLMethod.query,
-      document: '',
-    );
-    expect(response.data, {'foo': 'bar'});
-  });
+      final response = await service.request(
+        method: GraphQLMethod.query,
+        document: '',
+      );
+      expect(response.data, {'foo': 'bar'});
+    });
 
-  test('GraphQLService query with network exception', () async {
-    final service = GraphQLService.withClient(client: mock);
+    test('query with network exception', () async {
+      final service = GraphQLService.withClient(client: mock);
 
-    when(() => mock.query(any())).thenAnswer(
-      (_) async => exceptionResult(
-        OperationException(
-          linkException: NetworkException(
-            message: 'message',
-            uri: Uri.parse('https://acmesoftware.com'),
+      when(() => mock.query(any())).thenAnswer(
+        (_) async => exceptionResult(
+          OperationException(
+            linkException: NetworkException(
+              message: 'message',
+              uri: Uri.parse('https://acmesoftware.com'),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expectLater(
-      () => service.request(method: GraphQLMethod.query, document: ''),
-      throwsA(
-        isA<GraphQLNetworkException>().having(
-          (e) => e.toString(),
-          'string representation',
-          'GraphQlNetworkException: message; uri = https://acmesoftware.com',
-        ),
-      ),
-    );
-  });
-
-  test('GraphQLService query with server exception', () async {
-    final service = GraphQLService.withClient(client: mock);
-
-    when(() => mock.query(any())).thenAnswer(
-      (_) async => exceptionResult(
-        OperationException(
-          linkException: ServerException(
-            parsedResponse: Response(data: {'status': 403}, response: {}),
+      expectLater(
+        () => service.request(method: GraphQLMethod.query, document: ''),
+        throwsA(
+          isA<GraphQLNetworkException>().having(
+            (e) => e.toString(),
+            'string representation',
+            'GraphQlNetworkException: message; uri = https://acmesoftware.com',
           ),
         ),
-      ),
-    );
+      );
+    });
 
-    expectLater(
-      () => service.request(method: GraphQLMethod.query, document: ''),
-      throwsA(
-        isA<GraphQLServerException>().having(
-          (e) => e.toString(),
-          'string representation',
-          'GraphQLServerException{originalException: null, errorData: {status: 403}}',
-        ),
-      ),
-    );
-  });
+    test('query with server exception', () async {
+      final service = GraphQLService.withClient(client: mock);
 
-  test('GraphQLService query with operation exception', () async {
-    final service = GraphQLService.withClient(client: mock);
-
-    when(() => mock.query(any())).thenAnswer(
-      (_) async => exceptionResult(
-        OperationException(
-          graphqlErrors: [GraphQLError(message: 'failure')],
-        ),
-      ),
-    );
-
-    expectLater(
-      () => service.request(method: GraphQLMethod.query, document: ''),
-      throwsA(
-        isA<GraphQLOperationException>().having(
-          (e) => e.error,
-          'error',
-          isA<GraphQLOperationError>().having(
-            (e) => e.message,
-            'message',
-            'failure',
+      when(() => mock.query(any())).thenAnswer(
+        (_) async => exceptionResult(
+          OperationException(
+            linkException: ServerException(
+              parsedResponse: Response(data: {'status': 403}, response: {}),
+            ),
           ),
         ),
-      ),
-    );
-  });
+      );
 
-  test('GraphQLService success mutation', () async {
-    final service = GraphQLService.withClient(client: mock);
-
-    when(() => mock.mutate(any())).thenAnswer((_) async => successResult);
-
-    final response = await service.request(
-      method: GraphQLMethod.mutation,
-      document: '',
-    );
-    expect(response.data, {'foo': 'bar'});
-  });
-
-  test('GraphQLService mutation with network exception', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-
-    final service = GraphQLService.withClient(client: mock);
-
-    when(() => mock.mutate(any())).thenAnswer(
-      (_) async => exceptionResult(
-        OperationException(
-          linkException: NetworkException(uri: Uri()),
+      expectLater(
+        () => service.request(method: GraphQLMethod.query, document: ''),
+        throwsA(
+          isA<GraphQLServerException>().having(
+            (e) => e.toString(),
+            'string representation',
+            'GraphQLServerException{originalException: null, errorData: {status: 403}}',
+          ),
         ),
-      ),
-    );
+      );
+    });
 
-    expectLater(
-      () => service.request(method: GraphQLMethod.mutation, document: ''),
-      throwsA(isA<GraphQLNetworkException>()),
-    );
-  });
+    test('query with operation exception', () async {
+      final service = GraphQLService.withClient(client: mock);
 
-  test('GraphQLService mutation with server exception', () async {
-    // for coverage purposes
-    GraphQLService(endpoint: '');
-
-    final service = GraphQLService.withClient(client: mock);
-
-    when(() => mock.mutate(any())).thenAnswer(
-      (_) async => exceptionResult(
-        OperationException(
-          linkException: ServerException(),
+      when(() => mock.query(any())).thenAnswer(
+        (_) async => exceptionResult(
+          OperationException(
+            graphqlErrors: [GraphQLError(message: 'failure')],
+          ),
         ),
-      ),
+      );
+
+      expectLater(
+        () => service.request(method: GraphQLMethod.query, document: ''),
+        throwsA(
+          isA<GraphQLOperationException>().having(
+            (e) => e.error,
+            'error',
+            isA<GraphQLOperationError>().having(
+              (e) => e.message,
+              'message',
+              'failure',
+            ),
+          ),
+        ),
+      );
+    });
+
+    test('success mutation', () async {
+      final service = GraphQLService.withClient(client: mock);
+
+      when(() => mock.mutate(any())).thenAnswer((_) async => successResult);
+
+      final response = await service.request(
+        method: GraphQLMethod.mutation,
+        document: '',
+      );
+      expect(response.data, {'foo': 'bar'});
+    });
+
+    test('mutation with network exception', () async {
+      // for coverage purposes
+      GraphQLService(endpoint: '');
+
+      final service = GraphQLService.withClient(client: mock);
+
+      when(() => mock.mutate(any())).thenAnswer(
+        (_) async => exceptionResult(
+          OperationException(
+            linkException: NetworkException(uri: Uri()),
+          ),
+        ),
+      );
+
+      expectLater(
+        () => service.request(method: GraphQLMethod.mutation, document: ''),
+        throwsA(isA<GraphQLNetworkException>()),
+      );
+    });
+
+    test('mutation with server exception', () async {
+      // for coverage purposes
+      GraphQLService(endpoint: '');
+
+      final service = GraphQLService.withClient(client: mock);
+
+      when(() => mock.mutate(any())).thenAnswer(
+        (_) async => exceptionResult(
+          OperationException(
+            linkException: ServerException(),
+          ),
+        ),
+      );
+
+      expectLater(
+        () => service.request(method: GraphQLMethod.mutation, document: ''),
+        throwsA(isA<GraphQLServerException>()),
+      );
+    });
+
+    test('request with error policy', () async {
+      final service = GraphQLService.withClient(client: mock);
+
+      when(
+        () => mock.query(any()),
+      ).thenAnswer((_) async => successResult);
+
+      final response = await service.request(
+        method: GraphQLMethod.query,
+        document: '',
+        errorPolicy: GraphQLErrorPolicy.all,
+      );
+
+      expect(response.data, {'foo': 'bar'});
+
+      verify(
+        () => mock.query(
+          any(
+            that: isA<QueryOptions>().having(
+              (options) => options.errorPolicy,
+              'error policy',
+              ErrorPolicy.all,
+            ),
+          ),
+        ),
+      );
+    });
+
+    test('timeout exception', () async {
+      final service = GraphQLService.withClient(client: mock);
+
+      when(
+        () => mock.query(any()),
+      ).thenAnswer((_) async {
+        await Future.delayed(const Duration(milliseconds: 10));
+        return successResult;
+      });
+
+      expect(
+        () => service.request(
+          method: GraphQLMethod.query,
+          document: '',
+          errorPolicy: GraphQLErrorPolicy.all,
+          timeout: const Duration(milliseconds: 1),
+        ),
+        throwsA(isA<GraphQLTimeoutException>()),
+      );
+    });
+
+    test(
+      'request without stitched query sets error policy to none by default',
+      () async {
+        final service = GraphQLService.withClient(client: mock);
+
+        when(
+          () => mock.query(any()),
+        ).thenAnswer((_) async => successResult);
+
+        final document = '''
+query test {
+ foo {
+  	id
+ }
+}
+''';
+
+        final response = await service.request(
+          method: GraphQLMethod.query,
+          document: document,
+        );
+
+        expect(response.data, {'foo': 'bar'});
+
+        verify(
+          () => mock.query(
+            any(
+              that: isA<QueryOptions>().having(
+                (options) => options.errorPolicy,
+                'error policy',
+                ErrorPolicy.none,
+              ),
+            ),
+          ),
+        );
+      },
     );
 
-    expectLater(
-      () => service.request(method: GraphQLMethod.mutation, document: ''),
-      throwsA(isA<GraphQLServerException>()),
+    test(
+      'request with stitched query sets error policy to all by default',
+      () async {
+        final service = GraphQLService.withClient(client: mock);
+
+        when(
+          () => mock.query(any()),
+        ).thenAnswer((_) async => successResult);
+
+        final document = '''
+query test {
+ foo {
+  	id
+ }
+ 
+ bar {
+ 	id
+ }
+}
+''';
+
+        final response = await service.request(
+          method: GraphQLMethod.query,
+          document: document,
+        );
+
+        expect(response.data, {'foo': 'bar'});
+
+        verify(
+          () => mock.query(
+            any(
+              that: isA<QueryOptions>().having(
+                (options) => options.errorPolicy,
+                'error policy',
+                ErrorPolicy.all,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    test(
+      'request with stitched query do not throw operation exception',
+      () async {
+        final service = GraphQLService.withClient(client: mock);
+
+        when(
+          () => mock.query(any()),
+        ).thenAnswer(
+          (_) async => exceptionResult(
+            data: {'foo': 'bar'},
+            OperationException(
+              graphqlErrors: [
+                GraphQLError(message: 'something went wrong'),
+              ],
+            ),
+          ),
+        );
+
+        final document = '''
+query test {
+ foo {
+  	id
+ }
+ 
+ bar {
+ 	id
+ }
+}
+''';
+
+        final response = await service.request(
+          method: GraphQLMethod.query,
+          document: document,
+        );
+
+        expect(response.data, {'foo': 'bar'});
+        expect(response.errors.first.message, 'something went wrong');
+      },
     );
   });
 }
@@ -195,8 +366,12 @@ final successResult = QueryResult.internal(
   parserFn: (data) => data,
 );
 
-QueryResult<dynamic> exceptionResult(OperationException exception) {
+QueryResult<dynamic> exceptionResult(
+  OperationException exception, {
+  Map<String, dynamic>? data,
+}) {
   return QueryResult.internal(
+    data: data,
     source: QueryResultSource.network,
     exception: exception,
     parserFn: (data) => data,
