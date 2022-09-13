@@ -149,10 +149,12 @@ class GraphQLService extends NetworkService {
 
       errors = operationException.graphqlErrors.map(GraphQLOperationError.from);
 
-      if (!hasStitching) throw GraphQLOperationException(errors: errors);
+      if (result.data == null || !hasStitching) {
+        throw GraphQLOperationException(errors: errors);
+      }
     }
 
-    return GraphQLServiceResponse(data: result.data ?? {}, errors: errors);
+    return GraphQLServiceResponse(data: result.data!, errors: errors);
   }
 
   Future<QueryResult> _query(
