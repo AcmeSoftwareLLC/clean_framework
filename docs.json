@@ -4,6 +4,15 @@
   "sidebar": [
     ["Overview", "/"],
     ["Installation", "/install"],
+    ["Clean Framework Layers",[
+      ["Introduction","/codelabs/clean-framework/intro"],
+      ["Setup","/codelabs/clean-framework/setup"],
+      ["UI Layer","/codelabs/clean-framework/ui-layer"],
+      ["Domain Layer","/codelabs/clean-framework/domain-layer"],
+      ["Adaptive Layer","/codelabs/clean-framework/adaptive-layer"],
+      ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
+      ]
+    ],
     ["Feature Flags",
       [
         ["Introduction", "/codelabs/feature-flag/intro"],
