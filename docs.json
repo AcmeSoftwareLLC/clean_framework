@@ -1,9 +1,20 @@
 {
   "name": "Clean Framework Codelabs",
-  "theme": "#36B9B9",
+  "theme": "#0984E3",
+  "logo":"/assets/icon_logomark.png",
+  "logoDark":"/assets/icon_logomark_dark.png",
+  "favicon":"/assets/icon_logomark.png",
   "sidebar": [
-    ["Overview", "/"],
-    ["Installation", "/install"],
+    ["Installation", "/"],
+    ["Clean Framework Layers",[
+      ["Introduction","/codelabs/clean-framework/intro"],
+      ["Setup","/codelabs/clean-framework/setup"],
+      ["UI Layer","/codelabs/clean-framework/ui-layer"],
+      ["Domain Layer","/codelabs/clean-framework/domain-layer"],
+      ["Adaptive Layer","/codelabs/clean-framework/adaptive-layer"],
+      ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
+      ]
+    ],
     ["Feature Flags",
       [
         ["Introduction", "/codelabs/feature-flag/intro"],
@@ -16,6 +27,8 @@
         ["Using Flags in non-UI code", "/codelabs/feature-flag/non-ui-flag-resolution"],
         ["Writing tests", "/codelabs/feature-flag/test"]
       ]
-    ]
+    ],
+    ["Other Resources", "/resources"]
+
   ]
 }
