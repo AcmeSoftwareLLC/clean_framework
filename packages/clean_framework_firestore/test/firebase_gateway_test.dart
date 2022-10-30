@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/clean_framework_tests.dart';
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';

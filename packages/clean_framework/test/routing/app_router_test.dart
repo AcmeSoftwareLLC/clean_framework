@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
