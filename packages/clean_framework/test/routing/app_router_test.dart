@@ -1,4 +1,6 @@
-import 'package:clean_framework/clean_framework.dart';
+import 'dart:async';
+
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -557,6 +559,16 @@ void main() {
     testWidgets(
       'throws assertion error if querying key in not found in param',
       (tester) async {
+        final flutterErrorHandler = FlutterError.onError;
+        FlutterError.onError = (details) async {
+          await expectLater(
+            details.exception.toString(),
+            contains('No route param with "c" key was passed'),
+          );
+
+          FlutterError.onError = flutterErrorHandler;
+        };
+
         testRouter = AppRouter(
           routes: [
             AppRoute(

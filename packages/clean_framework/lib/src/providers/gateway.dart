@@ -1,10 +1,10 @@
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_core/clean_framework_core.dart';
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../app_providers_container.dart';
-import '../clean_framework_observer.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
@@ -94,12 +94,12 @@ typedef Transport<R extends Request, P extends SuccessResponse>
     = Future<Either<FailureResponse, P>> Function(R request);
 
 @immutable
-abstract class Request {
+abstract class Request implements RequestBase {
   const Request();
 }
 
 @immutable
-abstract class Response extends Equatable {
+abstract class Response extends Equatable implements ResponseBase {
   const Response();
   @override
   bool get stringify => true;

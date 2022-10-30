@@ -1,18 +1,15 @@
-import 'dart:developer';
+abstract class ExternalInterfaceBase {}
 
-import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:clean_framework/src/providers/use_case.dart';
+abstract class RequestBase {}
+
+abstract class ResponseBase {}
+
+abstract class InputBase {}
 
 /// The class to observe failures, route changes and other events.
 class CleanFrameworkObserver {
-  /// Default constructor.
-  CleanFrameworkObserver({
-    this.enableNetworkLogs = true,
-  });
-
   /// Enables network logs.
-  final bool enableNetworkLogs;
+  bool get enableNetworkLogs => true;
 
   /// Default instance of [CleanFrameworkObserver].
   ///
@@ -24,25 +21,20 @@ class CleanFrameworkObserver {
 
   /// Called when an [error] is thrown by [ExternalInterface] for the given [request].
   void onExternalError(
-    ExternalInterface externalInterface,
-    Request request,
+    covariant ExternalInterfaceBase externalInterface,
+    covariant RequestBase request,
     Object error,
-  ) {
-    log(
-      error.toString(),
-      name: '${externalInterface.runtimeType}[${request.runtimeType}]',
-    );
-  }
+  ) {}
 
   /// Called when a [failureResponse] occurs for the given [request].
   void onFailureResponse(
-    ExternalInterface externalInterface,
-    Request request,
-    FailureResponse failureResponse,
+    covariant ExternalInterfaceBase externalInterface,
+    covariant RequestBase request,
+    covariant ResponseBase failureResponse,
   ) {}
 
   /// Called when a [failure] occurs in a gateway.
-  void onFailureInput(FailureInput failure) {}
+  void onFailureInput(covariant InputBase failure) {}
 
   /// Called when [location] of the route changes.
   void onLocationChanged(String location) {}

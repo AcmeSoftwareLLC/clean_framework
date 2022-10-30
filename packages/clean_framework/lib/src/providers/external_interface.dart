@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/clean_framework_observer.dart';
+import 'package:clean_framework_core/clean_framework_core.dart';
 import 'package:either_dart/either.dart';
 
 import 'gateway.dart';
 
-abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
+abstract class ExternalInterface<R extends Request, S extends SuccessResponse>
+    implements ExternalInterfaceBase {
   ExternalInterface(List<GatewayConnection<Gateway>> gatewayConnections) {
     handleRequest();
     for (final connection in gatewayConnections) {
