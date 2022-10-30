@@ -12,7 +12,7 @@ class UseCaseFake<I extends SuccessInput> extends Fake
   UseCaseFake({this.output});
 
   EntityFake _entity = EntityFake();
-  late UseCaseSubscription subscription;
+  late Function subscription;
   I? successInput;
   final Output? output;
 
@@ -25,6 +25,7 @@ class UseCaseFake<I extends SuccessInput> extends Fake
     required EntityFake Function(S successInput) onSuccess,
     required EntityFake Function(FailureInput failureInput) onFailure,
   }) async {
+    // ignore: avoid_dynamic_calls
     final either = await subscription(output) as Either<FailureInput, S>;
     _entity = either.fold(
       (FailureInput failureInput) => onFailure(failureInput),
@@ -39,7 +40,7 @@ class UseCaseFake<I extends SuccessInput> extends Fake
 
   @override
   void subscribe(Type outputType, Function callback) {
-    subscription = callback as UseCaseSubscription;
+    subscription = callback;
   }
 
   Future<void> doFakeRequest<O extends Output>(O output) async {
