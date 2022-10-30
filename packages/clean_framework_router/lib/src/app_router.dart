@@ -1,4 +1,4 @@
-import 'package:clean_framework_core/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

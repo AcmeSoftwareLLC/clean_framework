@@ -9,9 +9,6 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework_core:
-    path:
-      ../clean_framework_core
   clean_framework_router:
     path:
       ../clean_framework_router

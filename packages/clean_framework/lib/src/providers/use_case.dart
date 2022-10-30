@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:clean_framework_core/clean_framework_core.dart';
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -126,7 +125,7 @@ abstract class Output extends Equatable {
 }
 
 @immutable
-abstract class Input implements InputBase {}
+abstract class Input {}
 
 class SuccessInput extends Input {}
 

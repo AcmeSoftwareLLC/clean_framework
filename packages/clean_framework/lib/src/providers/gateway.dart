@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_core/clean_framework_core.dart';
+import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -94,12 +94,12 @@ typedef Transport<R extends Request, P extends SuccessResponse>
     = Future<Either<FailureResponse, P>> Function(R request);
 
 @immutable
-abstract class Request implements RequestBase {
+abstract class Request {
   const Request();
 }
 
 @immutable
-abstract class Response extends Equatable implements ResponseBase {
+abstract class Response extends Equatable {
   const Response();
   @override
   bool get stringify => true;

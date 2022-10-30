@@ -1,17 +1,30 @@
 import 'dart:developer';
 
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_core/clean_framework_core.dart' as core;
+import 'package:clean_framework/src/providers/external_interface.dart';
+import 'package:clean_framework/src/providers/gateway.dart';
+import 'package:clean_framework/src/providers/use_case.dart';
 
-class CleanFrameworkObserver extends core.CleanFrameworkObserver {
-  CleanFrameworkObserver({this.enableNetworkLogs = true});
+/// The class to observe failures, route changes and other events.
+class CleanFrameworkObserver {
+  /// Default constructor.
+  CleanFrameworkObserver({
+    this.enableNetworkLogs = true,
+  });
 
-  @override
+  /// Enables network logs.
   final bool enableNetworkLogs;
 
-  @override
+  /// Default instance of [CleanFrameworkObserver].
+  ///
+  /// This can be changed in following way:
+  /// ```dart
+  /// CleanFrameworkObserver.instance = SubClassOfCleanFrameworkObserver();
+  /// ```
+  static CleanFrameworkObserver instance = CleanFrameworkObserver();
+
+  /// Called when an [error] is thrown by [ExternalInterface] for the given [request].
   void onExternalError(
-    ExternalInterface<Request, SuccessResponse> externalInterface,
+    ExternalInterface externalInterface,
     Request request,
     Object error,
   ) {
@@ -21,11 +34,16 @@ class CleanFrameworkObserver extends core.CleanFrameworkObserver {
     );
   }
 
-  static core.CleanFrameworkObserver get instance {
-    return core.CleanFrameworkObserver.instance;
-  }
+  /// Called when a [failureResponse] occurs for the given [request].
+  void onFailureResponse(
+    ExternalInterface externalInterface,
+    Request request,
+    FailureResponse failureResponse,
+  ) {}
 
-  static set instance(core.CleanFrameworkObserver observer) {
-    core.CleanFrameworkObserver.instance = observer;
-  }
+  /// Called when a [failure] occurs in a gateway.
+  void onFailureInput(FailureInput failure) {}
+
+  /// Called when [location] of the route changes.
+  void onLocationChanged(String location) {}
 }
