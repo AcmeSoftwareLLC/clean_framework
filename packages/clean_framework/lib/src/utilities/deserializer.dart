@@ -1,5 +1,7 @@
 class Deserializer {
-  Deserializer(this.map);
+  Deserializer(Object object)
+      : assert(object is Map, '\n\nThe provided object is not a Map.\n'),
+        map = Map.from(object as Map);
 
   final Map<String, dynamic> map;
 
