@@ -1,12 +1,11 @@
 import 'dart:async';
 
+import 'package:clean_framework_graphql/src/graphql_error_policy.dart';
+import 'package:clean_framework_graphql/src/graphql_fetch_policy.dart';
+import 'package:clean_framework_graphql/src/graphql_logger.dart';
+import 'package:clean_framework_graphql/src/graphql_method.dart';
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart';
-
-import 'graphql_error_policy.dart';
-import 'graphql_fetch_policy.dart';
-import 'graphql_logger.dart';
-import 'graphql_method.dart';
 
 class GraphQLService {
   GraphQLService({
@@ -26,6 +25,13 @@ class GraphQLService {
     );
   }
 
+  GraphQLService.withClient({
+    required GraphQLClient client,
+    this.timeout,
+  })  : endpoint = '',
+        headers = const {},
+        _graphQLClient = client;
+
   /// The GraphQL endpoint.
   final String endpoint;
 
@@ -36,13 +42,6 @@ class GraphQLService {
 
   final Completer<GraphQLClient> _clientCompleter = Completer();
   GraphQLClient? _graphQLClient;
-
-  GraphQLService.withClient({
-    required GraphQLClient client,
-    this.timeout,
-  })  : endpoint = '',
-        headers = const {},
-        _graphQLClient = client;
 
   Future<GraphQLClient> get _client async {
     if (_graphQLClient == null) {
@@ -75,7 +74,7 @@ class GraphQLService {
     GraphQLFetchPolicy? fetchPolicy,
     GraphQLErrorPolicy? errorPolicy,
   }) async {
-    final _timeout = timeout ?? this.timeout;
+    final resolvedTimeout = timeout ?? this.timeout;
     final policy =
         fetchPolicy == null ? null : FetchPolicy.values[fetchPolicy.index];
 
@@ -91,12 +90,12 @@ class GraphQLService {
       switch (method) {
         case GraphQLMethod.query:
           return _handleExceptions(
-            await _query(doc, variables, _timeout, policy, errPolicy),
+            await _query(doc, variables, resolvedTimeout, policy, errPolicy),
             hasStitching: hasStitching,
           );
         case GraphQLMethod.mutation:
           return _handleExceptions(
-            await _mutate(doc, variables, _timeout, policy, errPolicy),
+            await _mutate(doc, variables, resolvedTimeout, policy, errPolicy),
             hasStitching: hasStitching,
           );
       }
@@ -108,37 +107,40 @@ class GraphQLService {
   Link _createLink({required GraphQLToken? token}) {
     final httpLink = HttpLink(endpoint, defaultHeaders: headers);
 
-    Link _link;
+    Link link;
     if (token == null) {
-      _link = httpLink;
+      link = httpLink;
     } else {
       final authLink = AuthLink(
         getToken: token.builder,
         headerKey: token.key,
       );
-      _link = authLink.concat(httpLink);
+      link = authLink.concat(httpLink);
     }
 
     // Attach GraphQL Logger only in debug mode
-    assert(() {
-      final loggerLink = GraphQLLoggerLink(
-        endpoint: endpoint,
-        getHeaders: () async {
-          // coverage:ignore-start
-          return {
-            if (token != null) token.key: await token.builder() ?? '',
-            ...headers,
-          };
-          // coverage:ignore-end
-        },
-      );
+    assert(
+      () {
+        final loggerLink = GraphQLLoggerLink(
+          endpoint: endpoint,
+          getHeaders: () async {
+            // coverage:ignore-start
+            return {
+              if (token != null) token.key: await token.builder() ?? '',
+              ...headers,
+            };
+            // coverage:ignore-end
+          },
+        );
 
-      _link = loggerLink.concat(_link);
+        link = loggerLink.concat(link);
 
-      return true;
-    }());
+        return true;
+      }(),
+      '',
+    );
 
-    return _link;
+    return link;
   }
 
   GraphQLServiceResponse _handleExceptions(
@@ -187,7 +189,7 @@ class GraphQLService {
       errorPolicy: errorPolicy,
     );
 
-    return _timedOut((await _client).query(options), timeout);
+    return _timedOut<dynamic>((await _client).query(options), timeout);
   }
 
   Future<QueryResult> _mutate(
@@ -204,7 +206,7 @@ class GraphQLService {
       errorPolicy: errorPolicy,
     );
 
-    return _timedOut((await _client).mutate(options), timeout);
+    return _timedOut<dynamic>((await _client).mutate(options), timeout);
   }
 
   Future<QueryResult> _timedOut<T>(
@@ -304,7 +306,8 @@ class GraphQLServerException implements GraphQLServiceException {
 
   @override
   String toString() {
-    return 'GraphQLServerException{originalException: $originalException, errorData: $errorData}';
+    return 'GraphQLServerException{originalException: $originalException, '
+        'errorData: $errorData}';
   }
 }
 

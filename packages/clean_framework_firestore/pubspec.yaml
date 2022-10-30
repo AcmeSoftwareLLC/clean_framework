@@ -12,10 +12,10 @@ dependencies:
   clean_framework:
     path:
       ../clean_framework
-  flutter:
-    sdk: flutter
   cloud_firestore: ^4.0.3
   equatable: ^2.0.5
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

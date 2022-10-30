@@ -1,48 +1,46 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 
 class FirebaseRequest extends Request {
+  const FirebaseRequest({required this.path});
   final String path;
-
-  FirebaseRequest({required this.path});
 
   Map<String, dynamic> toJson() => {};
 }
 
 class FirebaseWatchAllRequest extends FirebaseRequest {
-  FirebaseWatchAllRequest({required String path}) : super(path: path);
+  const FirebaseWatchAllRequest({required super.path});
 }
 
 class FirebaseWatchIdRequest extends FirebaseRequest {
+  const FirebaseWatchIdRequest({required super.path, required this.id});
   final String id;
-  FirebaseWatchIdRequest({required String path, required this.id})
-      : super(path: path);
 }
 
 class FirebaseReadAllRequest extends FirebaseRequest {
-  FirebaseReadAllRequest({required String path}) : super(path: path);
+  const FirebaseReadAllRequest({required super.path});
 }
 
 class FirebaseReadIdRequest extends FirebaseRequest {
+  const FirebaseReadIdRequest({required super.path, required this.id});
   final String id;
-  FirebaseReadIdRequest({required String path, required this.id})
-      : super(path: path);
 }
 
 class FirebaseWriteRequest extends FirebaseRequest {
+  const FirebaseWriteRequest({
+    required super.path,
+    this.id,
+    this.merge = false,
+  });
   final String? id;
   final bool merge;
-  FirebaseWriteRequest({required String path, this.id, this.merge = false})
-      : super(path: path);
 }
 
 class FirebaseUpdateRequest extends FirebaseRequest {
+  const FirebaseUpdateRequest({required super.path, required this.id});
   final String id;
-  FirebaseUpdateRequest({required String path, required this.id})
-      : super(path: path);
 }
 
 class FirebaseDeleteRequest extends FirebaseRequest {
+  const FirebaseDeleteRequest({required super.path, required this.id});
   final String id;
-  FirebaseDeleteRequest({required String path, required this.id})
-      : super(path: path);
 }

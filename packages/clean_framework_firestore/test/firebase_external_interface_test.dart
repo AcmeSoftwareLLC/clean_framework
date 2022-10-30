@@ -15,42 +15,55 @@ void main() {
 
   test('FirebaseExternalInterface watch id request', () async {
     // to cover the internal initialize of FirebaseClient
-    expect(() => FirebaseExternalInterface(gatewayConnections: []),
-        throwsException);
+    expect(
+      () => FirebaseExternalInterface(gatewayConnections: []),
+      throwsException,
+    );
 
     final gateWay =
         WatcherGatewayFake<FirebaseWatchIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseWatchIdRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseWatchIdRequest(path: 'fake path', id: 'foo'));
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
 
-    if (gateWay.hasYielded.isCompleted)
+    if (gateWay.hasYielded.isCompleted) {
       expect(gateWay.successResponse, FirebaseSuccessResponse(testContent));
-    else
-      expectLater(gateWay.hasYielded.future,
-          completion(FirebaseSuccessResponse(testContent)));
+    } else {
+      await expectLater(
+        gateWay.hasYielded.future,
+        completion(FirebaseSuccessResponse(testContent)),
+      );
+    }
   });
 
   test('FirebaseExternalInterface watch all request', () async {
     final gateWay =
         WatcherGatewayFake<FirebaseWatchAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
-    final result =
-        await gateWay.transport(FirebaseWatchAllRequest(path: 'fake path'));
+    final result = await gateWay.transport(
+      const FirebaseWatchAllRequest(path: 'fake path'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
 
-    if (gateWay.hasYielded.isCompleted)
+    if (gateWay.hasYielded.isCompleted) {
       expect(gateWay.successResponse, FirebaseSuccessResponse(testContent));
-    else
-      expectLater(gateWay.hasYielded.future,
-          completion(FirebaseSuccessResponse(testContent)));
+    } else {
+      await expectLater(
+        gateWay.hasYielded.future,
+        completion(FirebaseSuccessResponse(testContent)),
+      );
+    }
 
     firebaseClient.dispose();
   });
@@ -59,10 +72,12 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
   });
@@ -71,10 +86,12 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
-    final result =
-        await gateWay.transport(FirebaseReadAllRequest(path: 'fake path'));
+    final result = await gateWay
+        .transport(const FirebaseReadAllRequest(path: 'fake path'));
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
   });
@@ -84,12 +101,14 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseWriteRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseWriteRequest(path: 'fake path', id: 'foo'));
     expect(result.isRight, isTrue);
-    expect(result.right, FirebaseSuccessResponse({'id': 'id'}));
+    expect(result.right, const FirebaseSuccessResponse({'id': 'id'}));
 
     firebaseClient.dispose();
   });
@@ -99,12 +118,14 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result =
-        await gateWay.transport(FirebaseWriteRequest(path: 'fake path'));
+        await gateWay.transport(const FirebaseWriteRequest(path: 'fake path'));
     expect(result.isRight, isTrue);
-    expect(result.right, FirebaseSuccessResponse({'id': 'id'}));
+    expect(result.right, const FirebaseSuccessResponse({'id': 'id'}));
 
     firebaseClient.dispose();
   });
@@ -113,24 +134,28 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseUpdateRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseUpdateRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseUpdateRequest(path: 'fake path', id: 'foo'));
     expect(result.isRight, isTrue);
-    expect(result.right, FirebaseSuccessResponse({}));
+    expect(result.right, const FirebaseSuccessResponse({}));
   });
 
   test('FirebaseExternalInterface delete request', () async {
     final gateWay =
         GatewayFake<FirebaseDeleteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseDeleteRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseDeleteRequest(path: 'fake path', id: 'foo'));
     expect(result.isRight, isTrue);
-    expect(result.right, FirebaseSuccessResponse({}));
+    expect(result.right, const FirebaseSuccessResponse({}));
   });
 
   test('FirebaseExternalInterface read id no content', () async {
@@ -139,14 +164,16 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
     );
 
     firebaseClient.dispose();
@@ -158,14 +185,16 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
-    final result =
-        await gateWay.transport(FirebaseReadAllRequest(path: 'fake path'));
+    final result = await gateWay
+        .transport(const FirebaseReadAllRequest(path: 'fake path'));
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
     );
 
     firebaseClient.dispose();
@@ -176,24 +205,26 @@ void main() {
     final gateWay =
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
-        firebaseClient: firebaseClient, gatewayConnections: [() => gateWay]);
+      firebaseClient: firebaseClient,
+      gatewayConnections: [() => gateWay],
+    );
 
     final result = await gateWay
-        .transport(FirebaseWriteRequest(path: 'fake path', id: 'foo'));
+        .transport(const FirebaseWriteRequest(path: 'fake path', id: 'foo'));
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
     );
 
     firebaseClient.dispose();
   });
 
   test('FirebaseExternalInterface query', () async {
-    final firebaseClient = FirebaseClientFake({});
-    firebaseClient.createQuery('fake', (_) => _);
-    firebaseClient.clearQuery();
-    firebaseClient.dispose();
+    FirebaseClientFake({})
+      ..createQuery('fake', (_) => _)
+      ..clearQuery()
+      ..dispose();
   });
 
   test('FirebaseExternalInterface read with unknown exception', () async {
@@ -207,7 +238,7 @@ void main() {
     );
 
     final result = await gateWay.transport(
-      FirebaseReadIdRequest(path: 'fake path', id: 'foo'),
+      const FirebaseReadIdRequest(path: 'fake path', id: 'foo'),
     );
     expect(result.isLeft, isTrue);
     expect(

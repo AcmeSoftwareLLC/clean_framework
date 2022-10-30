@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 
 class FirebaseSuccessResponse extends SuccessResponse {
-  final Map<String, dynamic> json;
   const FirebaseSuccessResponse(this.json);
+  final Map<String, dynamic> json;
 
   @override
   List<Object?> get props => [json];
@@ -10,11 +10,11 @@ class FirebaseSuccessResponse extends SuccessResponse {
 
 class FirebaseFailureResponse
     extends TypedFailureResponse<FirebaseFailureType> {
-  FirebaseFailureResponse({
-    required FirebaseFailureType type,
-    String message = '',
-    Map<String, Object?> errorData = const {},
-  }) : super(type: type, message: message, errorData: errorData);
+  const FirebaseFailureResponse({
+    required super.type,
+    super.message,
+    super.errorData,
+  });
 }
 
 enum FirebaseFailureType { noContent }

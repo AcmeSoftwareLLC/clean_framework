@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 
-import 'package:clean_framework/src/defaults/providers/network_logger.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 

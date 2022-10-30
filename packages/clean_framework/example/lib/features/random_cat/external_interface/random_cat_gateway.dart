@@ -23,7 +23,9 @@ class RandomCatGateway extends RestGateway<RandomCatGatewayOutput,
 
   @override
   RandomCatSuccessInput onSuccess(RestSuccessResponse response) {
-    return RandomCatSuccessInput.fromJson(response.data);
+    return RandomCatSuccessInput.fromJson(
+      response.data as Map<String, dynamic>,
+    );
   }
 }
 

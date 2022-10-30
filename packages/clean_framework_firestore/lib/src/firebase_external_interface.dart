@@ -1,18 +1,17 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 
-import 'firebase_client.dart';
-import 'firebase_requests.dart';
-import 'firebase_responses.dart';
+import 'package:clean_framework_firestore/src/firebase_client.dart';
+import 'package:clean_framework_firestore/src/firebase_requests.dart';
+import 'package:clean_framework_firestore/src/firebase_responses.dart';
 
 class FirebaseExternalInterface
     extends ExternalInterface<FirebaseRequest, FirebaseSuccessResponse> {
-  final FirebaseClient _client;
-
   FirebaseExternalInterface({
     required List<GatewayConnection<Gateway>> gatewayConnections,
     FirebaseClient? firebaseClient,
   })  : _client = firebaseClient ?? FirebaseClient(),
         super(gatewayConnections);
+  final FirebaseClient _client;
 
   @override
   void handleRequest() {
@@ -32,31 +31,35 @@ class FirebaseExternalInterface
     return UnknownFailureResponse(error);
   }
 
-  void _withFirebaseReadIdRequest(
+  Future<void> _withFirebaseReadIdRequest(
     FirebaseReadIdRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final content = await _client.read(path: request.path, id: request.id);
     if (content.isEmpty) {
-      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
+      sendError(
+        const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      );
     } else {
       send(FirebaseSuccessResponse(content));
     }
   }
 
-  void _withFirebaseReadAllRequest(
+  Future<void> _withFirebaseReadAllRequest(
     FirebaseReadAllRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     final content = await _client.readAll(path: request.path);
     if (content.isEmpty) {
-      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
+      sendError(
+        const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      );
     } else {
       send(FirebaseSuccessResponse(content));
     }
   }
 
-  void _withFirebaseWriteRequest(
+  Future<void> _withFirebaseWriteRequest(
     FirebaseWriteRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
@@ -67,13 +70,15 @@ class FirebaseExternalInterface
       merge: request.merge,
     );
     if (id.isEmpty) {
-      sendError(FirebaseFailureResponse(type: FirebaseFailureType.noContent));
+      sendError(
+        const FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+      );
     } else {
       send(FirebaseSuccessResponse({'id': id}));
     }
   }
 
-  void _withFirebaseUpdateRequest(
+  Future<void> _withFirebaseUpdateRequest(
     FirebaseUpdateRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
@@ -82,34 +87,32 @@ class FirebaseExternalInterface
       id: request.id,
       content: request.toJson(),
     );
-    send(FirebaseSuccessResponse({}));
+    send(const FirebaseSuccessResponse({}));
   }
 
-  void _withFirebaseDeleteRequest(
+  Future<void> _withFirebaseDeleteRequest(
     FirebaseDeleteRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) async {
     await _client.delete(path: request.path, id: request.id);
-    send(FirebaseSuccessResponse({}));
+    send(const FirebaseSuccessResponse({}));
   }
 
   void _withFirebaseWatchIdRequest(
     FirebaseWatchIdRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) {
-    final featureStream = _client.watch(path: request.path, id: request.id);
-    featureStream.listen(
-      (model) => send(FirebaseSuccessResponse(model)),
-    );
+    _client.watch(path: request.path, id: request.id).listen(
+          (model) => send(FirebaseSuccessResponse(model)),
+        );
   }
 
   void _withFirebaseWatchAllRequest(
     FirebaseWatchAllRequest request,
     ResponseSender<FirebaseSuccessResponse> send,
   ) {
-    final featureStream = _client.watchAll(path: request.path);
-    featureStream.listen(
-      (model) => send(FirebaseSuccessResponse(model)),
-    );
+    _client.watchAll(path: request.path).listen(
+          (model) => send(FirebaseSuccessResponse(model)),
+        );
   }
 }

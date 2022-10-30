@@ -9,10 +9,8 @@ void main() {
   test('FirebaseWatcherGateway transport success', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestGateway(context, provider);
-
-    gateway.transport = (request) async {
-      return Right(FirebaseSuccessResponse({'content': 'success'}));
+    TestGateway(context, provider).transport = (request) async {
+      return const Right(FirebaseSuccessResponse({'content': 'success'}));
     };
 
     await useCase.doFakeRequest(TestOutput('123'));
@@ -23,10 +21,8 @@ void main() {
   test('FirebaseWatcherGateway transport failure', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestGateway(context, provider);
-
-    gateway.transport = (request) async {
-      return Left(
+    TestGateway(context, provider).transport = (request) async {
+      return const Left(
         FirebaseFailureResponse(type: FirebaseFailureType.noContent),
       );
     };
@@ -58,16 +54,14 @@ class TestGateway extends FirebaseWatcherGateway<TestOutput,
 }
 
 class TestOutput extends Output {
-  final String id;
-
   TestOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestSuccessInput extends SuccessInput {
-  final String foo;
-
   TestSuccessInput(this.foo);
+  final String foo;
 }

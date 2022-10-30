@@ -7,10 +7,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('RestGateway success response', () async {
     final useCase = UseCaseFake();
-    final gateway = TestGateway(useCase);
-    gateway.transport = (request) async =>
-        Right<FailureResponse, RestSuccessResponse>(
-            RestSuccessResponse(data: {}));
+    final gateway = TestGateway(useCase)
+      ..transport = (request) async {
+        return const Right<FailureResponse, RestSuccessResponse>(
+          RestSuccessResponse(data: {}),
+        );
+      };
 
     await useCase.doFakeRequest(TestOutput());
     expect(useCase.entity, EntityFake(value: 'success'));
@@ -22,8 +24,7 @@ void main() {
 
   test('RestGateway failure response', () async {
     final useCase = UseCaseFake();
-    final gateway = TestGateway(useCase);
-    gateway.transport = (request) async {
+    TestGateway(useCase).transport = (request) async {
       return Left<FailureResponse, RestSuccessResponse>(
         UnknownFailureResponse(),
       );

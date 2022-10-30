@@ -1,8 +1,8 @@
 // coverage:ignore-file
 
-import 'package:clean_framework/src/defaults/providers/network_logger.dart';
-import 'package:graphql/client.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:gql/language.dart';
+import 'package:graphql/client.dart';
 
 class GraphQLLoggerLink extends Link {
   GraphQLLoggerLink({

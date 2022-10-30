@@ -1,7 +1,6 @@
-import 'package:clean_framework/src/providers/gateway.dart';
-
-import 'graphql_error_policy.dart';
-import 'graphql_fetch_policy.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_graphql/src/graphql_error_policy.dart';
+import 'package:clean_framework_graphql/src/graphql_fetch_policy.dart';
 
 abstract class GraphQLRequest extends Request {
   String get document;

@@ -1,16 +1,16 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
 
-import 'rest_requests.dart';
-import 'rest_responses.dart';
+import 'package:clean_framework_rest/src/rest_requests.dart';
+import 'package:clean_framework_rest/src/rest_responses.dart';
 
 abstract class RestGateway<O extends Output, R extends RestRequest,
-    S extends SuccessInput> extends Gateway<O, R, RestSuccessResponse, S> {
+        S extends SuccessInput>
+    extends Gateway<O, R, RestSuccessResponse<dynamic>, S> {
   RestGateway({
-    ProvidersContext? context,
-    UseCaseProvider? provider,
-    UseCase? useCase,
-  }) : super(context: context, provider: provider, useCase: useCase);
+    super.context,
+    super.provider,
+    super.useCase,
+  });
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {

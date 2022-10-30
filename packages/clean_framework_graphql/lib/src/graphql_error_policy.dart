@@ -1,9 +1,10 @@
 enum GraphQLErrorPolicy {
-  /// Any GraphQL Errors are treated the same as network errors and any data is ignored from the response. (default)
+  /// Any GraphQL Errors are treated the same as network errors
+  /// and any data is ignored from the response. (default)
   none,
 
-  /// Ignore allows you to read any data that is returned alongside GraphQL Errors,
-  /// but doesn't save the errors or report them to your UI.
+  /// Ignore allows you to read any data that is returned alongside
+  /// GraphQL Errors, but doesn't save the errors or report them to your UI.
   ignore,
 
   /// Saves both data and errors into the `cache` so your UI can use them.

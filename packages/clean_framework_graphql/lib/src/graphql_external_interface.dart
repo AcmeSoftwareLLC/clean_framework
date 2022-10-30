@@ -1,10 +1,8 @@
-import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
-
-import 'graphql_method.dart';
-import 'graphql_requests.dart';
-import 'graphql_responses.dart';
-import 'graphql_service.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_graphql/src/graphql_method.dart';
+import 'package:clean_framework_graphql/src/graphql_requests.dart';
+import 'package:clean_framework_graphql/src/graphql_responses.dart';
+import 'package:clean_framework_graphql/src/graphql_service.dart';
 
 class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
@@ -24,12 +22,12 @@ class GraphQLExternalInterface
         ),
         super(gatewayConnections);
 
-  final GraphQLService service;
-
   GraphQLExternalInterface.withService({
     required List<GatewayConnection<Gateway>> gatewayConnections,
     required this.service,
   }) : super(gatewayConnections);
+
+  final GraphQLService service;
 
   @override
   void handleRequest() {
@@ -71,7 +69,7 @@ class GraphQLExternalInterface
   @override
   FailureResponse onError(Object error) {
     if (error is GraphQLOperationException) {
-      return GraphQLFailureResponse(type: GraphQLFailureType.operation);
+      return const GraphQLFailureResponse(type: GraphQLFailureType.operation);
     } else if (error is GraphQLNetworkException) {
       return GraphQLFailureResponse(
         type: GraphQLFailureType.network,
@@ -85,7 +83,7 @@ class GraphQLExternalInterface
         errorData: error.errorData ?? {},
       );
     } else if (error is GraphQLTimeoutException) {
-      return GraphQLFailureResponse(
+      return const GraphQLFailureResponse(
         type: GraphQLFailureType.timeout,
         message: 'Connection Timeout',
       );

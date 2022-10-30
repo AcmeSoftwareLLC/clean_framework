@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:clean_framework_rest/src/rest_logger.dart';
+import 'package:clean_framework_rest/src/rest_method.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
-
-import 'rest_logger.dart';
-import 'rest_method.dart';
 
 ///
 class RestService {
@@ -31,7 +30,7 @@ class RestService {
     },
     Client? client,
   }) async {
-    final _client = RestLoggerClient(client ?? Client());
+    final resolvedClient = RestLoggerClient(client ?? Client());
 
     var uri = _pathToUri(path);
 
@@ -52,7 +51,7 @@ class RestService {
         ..addAll(this.headers)
         ..addAll(headers);
 
-      final response = await _client.send(request);
+      final response = await resolvedClient.send(request);
 
       final statusCode = response.statusCode;
 
@@ -72,7 +71,7 @@ class RestService {
         throw StateError('The type $T is not supported by request');
       }
 
-      //TODO Enable the types of error we should consider later:
+      // TODO(sarbagyastha): Enable the types of error we should consider later:
       // } on SocketException {
       //   print('No Internet connection 😑');
       // } on HttpException {
@@ -85,7 +84,7 @@ class RestService {
       //print(e);
       throw RestServiceFailure(e.toString());
     } finally {
-      _client.close();
+      resolvedClient.close();
     }
   }
 
@@ -98,9 +97,9 @@ class RestService {
     },
     Client? client,
   }) async {
-    final _client = client ?? Client();
+    final resolvedClient = client ?? Client();
 
-    var uri = _pathToUri(path);
+    final uri = _pathToUri(path);
 
     try {
       final request = MultipartRequest(method.value, uri);
@@ -108,7 +107,7 @@ class RestService {
         final k = entry.key;
         final v = entry.value;
         if (v is XFile) {
-          final stream = ByteStream(v.openRead()..cast());
+          final stream = ByteStream(v.openRead());
           final length = await v.length();
           final multipartFile = MultipartFile(
             k,
@@ -126,7 +125,7 @@ class RestService {
         ..addAll(this.headers)
         ..addAll(headers);
 
-      final streamedResponse = await _client.send(request);
+      final streamedResponse = await resolvedClient.send(request);
       final response = await Response.fromStream(streamedResponse);
 
       final statusCode = streamedResponse.statusCode;
@@ -145,7 +144,7 @@ class RestService {
     } catch (e) {
       throw RestServiceFailure(e.toString());
     } finally {
-      _client.close();
+      resolvedClient.close();
     }
   }
 
@@ -156,19 +155,18 @@ class RestService {
     Map<String, String> headers = const {},
     Client? client,
   }) async {
-    final _client = client ?? Client();
-    var uri = _pathToUri(path);
+    final resolvedClient = client ?? Client();
+    final uri = _pathToUri(path);
 
     try {
-      final request = Request(method.value, uri);
-
-      request.bodyBytes = data;
+      final request = Request(method.value, uri)..bodyBytes = data;
 
       request.headers
         ..addAll(this.headers)
         ..addAll(headers);
 
-      final response = await Response.fromStream(await _client.send(request));
+      final response =
+          await Response.fromStream(await resolvedClient.send(request));
 
       final statusCode = response.statusCode;
       final resData = parseResponse(response);
@@ -186,7 +184,7 @@ class RestService {
     } catch (e) {
       throw RestServiceFailure(e.toString());
     } finally {
-      _client.close();
+      resolvedClient.close();
     }
   }
 
@@ -198,29 +196,26 @@ class RestService {
   }
 
   Uri _pathToUri(String path) {
-    String _url;
-    if (baseUrl.isEmpty)
-      _url = path;
-    else
-      _url = '$baseUrl/$path';
-    return Uri.parse(_url);
+    final url = baseUrl.isEmpty ? path : '$baseUrl/$path';
+
+    return Uri.parse(url);
   }
 }
 
 class RestServiceFailure {
-  final String? message;
-
   RestServiceFailure([this.message]);
+
+  final String? message;
 }
 
 class InvalidResponseRestServiceFailure extends RestServiceFailure {
-  final String path;
-  final int statusCode;
-  final Map<String, dynamic> error;
-
   InvalidResponseRestServiceFailure({
     required this.path,
     required this.error,
     required this.statusCode,
   });
+
+  final String path;
+  final int statusCode;
+  final Map<String, dynamic> error;
 }

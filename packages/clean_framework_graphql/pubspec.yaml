@@ -14,6 +14,7 @@ dependencies:
       ../clean_framework
   flutter:
     sdk: flutter
+  gql: ^0.14.0
   graphql: ^5.1.1
 
 dev_dependencies:

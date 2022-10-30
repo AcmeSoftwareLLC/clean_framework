@@ -81,7 +81,8 @@ class AppRouter<R extends Object> {
   final AppRouterRedirect? _redirect;
   AppRouterNavigatorBuilder? _navigatorBuilder;
 
-  /// NavigatorObserver used to receive change notifications when navigation changes.
+  /// NavigatorObserver used to receive change notifications
+  /// when navigation changes.
   final List<NavigatorObserver>? observers;
 
   /// The initial location for the router.
@@ -93,8 +94,8 @@ class AppRouter<R extends Object> {
   /// navigating widget.
   RouterDelegate<Object> get delegate => _router.routerDelegate;
 
-  /// A delegate that is used by the [Router] widget to parse a route information
-  /// into a configuration of type T.
+  /// A delegate that is used by the [Router] widget to parse
+  /// a route information into a configuration of type T.
   RouteInformationParser<Object> get informationParser {
     return _router.routeInformationParser;
   }
@@ -125,7 +126,8 @@ class AppRouter<R extends Object> {
   /// router.to(Routes.home, queryParams: {'id': '112'}); // location = /home?id=112
   /// ```
   ///
-  /// 3. Extra (Not recommended when targeting Flutter Web; as the data get lost, but useful when a complex object is to be passed)
+  /// 3. Extra(Not recommended when targeting Flutter Web; as the data get lost,
+  /// but useful when a complex object is to be passed)
   /// ```dart
   /// path = '/home';
   ///
@@ -181,7 +183,8 @@ class AppRouter<R extends Object> {
 
   /// Register a closure to be called when the navigation stack changes.
   ///
-  /// Adding a listener will provide a function which can be called off to remove the added listener.
+  /// Adding a listener will provide a function which can be called off
+  /// to remove the added listener.
   ///
   /// ```dart
   /// final removeListener = router.addListener(
@@ -199,6 +202,7 @@ class AppRouter<R extends Object> {
 
   /// Overrides the provided navigatorBuilder for tests.
   @visibleForTesting
+  // ignore: avoid_setters_without_getters
   set navigatorBuilder(AppRouterNavigatorBuilder? builder) {
     _navigatorBuilder = builder;
   }
@@ -317,6 +321,20 @@ class AppRouteState {
     this.error,
   }) : _params = params;
 
+  factory AppRouteState._fromGoRouteState(GoRouterState state) {
+    return AppRouteState(
+      location: state.location,
+      subloc: state.subloc,
+      name: state.name,
+      path: state.path,
+      fullpath: state.fullpath,
+      params: state.params,
+      queryParams: state.queryParams,
+      extra: state.extra,
+      error: state.error,
+    );
+  }
+
   /// The full location of the route
   final String location;
 
@@ -338,28 +356,15 @@ class AppRouteState {
   /// The extra value associated with the route.
   final Object? extra;
 
-  /// The error thrown by the [AppRoute.builder].
+  /// The error thrown by the builder.
   final Exception? error;
 
   final Map<String, String> _params;
 
-  factory AppRouteState._fromGoRouteState(GoRouterState state) {
-    return AppRouteState(
-      location: state.location,
-      subloc: state.subloc,
-      name: state.name,
-      path: state.path,
-      fullpath: state.fullpath,
-      params: state.params,
-      queryParams: state.queryParams,
-      extra: state.extra,
-      error: state.error,
-    );
-  }
-
   /// Get the route param for specified [key].
   ///
-  /// Throws an assertion error if the route param doesn't contain value for provided `key`.
+  /// Throws an assertion error if the route param doesn't contain value
+  /// for provided `key`.
   String getParam(String key) {
     assert(
       _params.containsKey(key),

@@ -1,9 +1,8 @@
-import 'package:clean_framework/src/providers/gateway.dart';
-
-import 'graphql_service.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_graphql/src/graphql_service.dart';
 
 class GraphQLSuccessResponse extends SuccessResponse {
-  GraphQLSuccessResponse({
+  const GraphQLSuccessResponse({
     required this.data,
     this.errors = const [],
   });
@@ -13,11 +12,11 @@ class GraphQLSuccessResponse extends SuccessResponse {
 }
 
 class GraphQLFailureResponse extends TypedFailureResponse<GraphQLFailureType> {
-  GraphQLFailureResponse({
-    required GraphQLFailureType type,
-    String message = '',
-    Map<String, Object?> errorData = const {},
-  }) : super(type: type, message: message, errorData: errorData);
+  const GraphQLFailureResponse({
+    required super.type,
+    super.message,
+    super.errorData,
+  });
 }
 
 enum GraphQLFailureType { operation, network, server, timeout }

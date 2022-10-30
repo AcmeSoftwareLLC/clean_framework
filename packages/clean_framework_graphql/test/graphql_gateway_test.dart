@@ -7,10 +7,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test('GraphQLGateway success response', () async {
     final useCase = UseCaseFake();
-    final gateway = TestGateway(useCase);
-    gateway.transport = (request) async =>
-        Right<FailureResponse, GraphQLSuccessResponse>(
-            GraphQLSuccessResponse(data: {}));
+    final gateway = TestGateway(useCase)
+      ..transport = (request) async {
+        return const Right<FailureResponse, GraphQLSuccessResponse>(
+          GraphQLSuccessResponse(data: {}),
+        );
+      };
 
     await useCase.doFakeRequest(TestOutput());
     expect(useCase.entity, EntityFake(value: 'success'));
@@ -21,9 +23,8 @@ void main() {
 
   test('GraphQLGateway failure response', () async {
     final useCase = UseCaseFake();
-    final gateway = TestGateway(useCase);
-    gateway.transport = (request) async {
-      return Left<FailureResponse, GraphQLSuccessResponse>(
+    TestGateway(useCase).transport = (request) async {
+      return const Left<FailureResponse, GraphQLSuccessResponse>(
         GraphQLFailureResponse(type: GraphQLFailureType.operation),
       );
     };
@@ -57,7 +58,7 @@ class TestRequest extends QueryGraphQLRequest {
   TestRequest();
 
   @override
-  String get document => r'''
+  String get document => '''
    
   ''';
 }

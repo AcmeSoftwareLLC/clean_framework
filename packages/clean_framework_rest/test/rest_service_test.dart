@@ -1,17 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  final file = File('test/test_file.txt');
+  final file = XFile('test/test_file.txt');
 
-  setUp(() async {
-    await file.create();
+  setUp(() {
+    File(file.name).createSync();
   });
 
   setUpAll(() {
@@ -40,8 +41,10 @@ void main() {
         {'Content-Type': 'multipart/form-data'},
       );
       expect(client.multipartRequest.method, 'POST');
-      expect(client.multipartRequest.url.toString(),
-          'https://fake.com/multipart/test');
+      expect(
+        client.multipartRequest.url.toString(),
+        'https://fake.com/multipart/test',
+      );
 
       expect(client.multipartRequest.fields, {'foo': 'bar'});
       expect(client.multipartRequest.files.length, 1);
@@ -58,19 +61,24 @@ void main() {
     when(() => client.send(any()))
         .thenThrow((_) async => ClientException('no connectivity'));
 
-    expectLater(
-        service.multipartRequest<Map<String, dynamic>>(
-            method: RestMethod.post, path: '/', client: client),
-        throwsA(isA<RestServiceFailure>()));
+    await expectLater(
+      service.multipartRequest<Map<String, dynamic>>(
+        method: RestMethod.post,
+        path: '/',
+        client: client,
+      ),
+      throwsA(isA<RestServiceFailure>()),
+    );
 
     //for coverage purposes, we test a real Client
-    expectLater(
-        service.multipartRequest(
-          method: RestMethod.post,
-          path: '/',
-          data: {},
-        ),
-        throwsA(isA<RestServiceFailure>()));
+    await expectLater(
+      service.multipartRequest(
+        method: RestMethod.post,
+        path: '/',
+        data: {},
+      ),
+      throwsA(isA<RestServiceFailure>()),
+    );
   });
 
   test('RestService server error | multipart request', () async {
@@ -79,7 +87,8 @@ void main() {
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -88,15 +97,19 @@ void main() {
     when(() => streamedResponse.isRedirect).thenReturn(false);
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
-    expectLater(
-        service.multipartRequest<Map<String, dynamic>>(
-            method: RestMethod.post, path: 'test', client: client),
-        throwsA(
-          isA<InvalidResponseRestServiceFailure>()
-              .having((res) => res.statusCode, 'statusCode', 500)
-              .having((res) => res.path, 'path', 'http://fake.com/test')
-              .having((res) => res.error, 'error', content),
-        ));
+    await expectLater(
+      service.multipartRequest<Map<String, dynamic>>(
+        method: RestMethod.post,
+        path: 'test',
+        client: client,
+      ),
+      throwsA(
+        isA<InvalidResponseRestServiceFailure>()
+            .having((res) => res.statusCode, 'statusCode', 500)
+            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.error, 'error', content),
+      ),
+    );
   });
 
   test(
@@ -153,12 +166,13 @@ void main() {
   });
 
   test('RestService success', () async {
-    final content = {"foo": "bar"};
+    final content = {'foo': 'bar'};
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -168,26 +182,33 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     final result = await service.request<Map<String, dynamic>>(
-        method: RestMethod.get, path: '/', client: client);
+      method: RestMethod.get,
+      path: '/',
+      client: client,
+    );
 
     expect(result, {'foo': 'bar'});
 
     //for coverage purposes, we test a real Client
-    expectLater(
-        service.request<Map<String, dynamic>>(
-            method: RestMethod.get, path: '/'),
-        throwsA(isA<RestServiceFailure>()));
+    await expectLater(
+      service.request<Map<String, dynamic>>(
+        method: RestMethod.get,
+        path: '/',
+      ),
+      throwsA(isA<RestServiceFailure>()),
+    );
   });
 
   test('RestService success list', () async {
     final content = [
-      {"foo": "bar"}
+      {'foo': 'bar'}
     ];
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -197,7 +218,10 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     final result = await service.request<Map<String, dynamic>>(
-        method: RestMethod.get, path: '/', client: client);
+      method: RestMethod.get,
+      path: '/',
+      client: client,
+    );
 
     expect(result, {
       'data': [
@@ -213,10 +237,14 @@ void main() {
     when(() => client.send(any()))
         .thenThrow((_) async => ClientException('no connectivity'));
 
-    expectLater(
-        service.request<Map<String, dynamic>>(
-            method: RestMethod.get, path: '/', client: client),
-        throwsA(isA<RestServiceFailure>()));
+    await expectLater(
+      service.request<Map<String, dynamic>>(
+        method: RestMethod.get,
+        path: '/',
+        client: client,
+      ),
+      throwsA(isA<RestServiceFailure>()),
+    );
   });
 
   test('RestService server error', () async {
@@ -225,7 +253,8 @@ void main() {
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -234,24 +263,29 @@ void main() {
     when(() => streamedResponse.isRedirect).thenReturn(false);
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
-    expectLater(
-        service.request<Map<String, dynamic>>(
-            method: RestMethod.post, path: 'test', client: client),
-        throwsA(
-          isA<InvalidResponseRestServiceFailure>()
-              .having((res) => res.statusCode, 'statusCode', 500)
-              .having((res) => res.path, 'path', 'http://fake.com/test')
-              .having((res) => res.error, 'error', content),
-        ));
+    await expectLater(
+      service.request<Map<String, dynamic>>(
+        method: RestMethod.post,
+        path: 'test',
+        client: client,
+      ),
+      throwsA(
+        isA<InvalidResponseRestServiceFailure>()
+            .having((res) => res.statusCode, 'statusCode', 500)
+            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.error, 'error', content),
+      ),
+    );
   });
 
   test('RestService binary request success', () async {
-    final content = {"foo": "bar"};
+    final content = {'foo': 'bar'};
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -270,13 +304,14 @@ void main() {
     expect(result, {'foo': 'bar'});
 
     //for coverage purposes, we test a real Client
-    expectLater(
-        service.binaryRequest(
-          method: RestMethod.post,
-          path: '/',
-          data: [],
-        ),
-        throwsA(isA<RestServiceFailure>()));
+    await expectLater(
+      service.binaryRequest(
+        method: RestMethod.post,
+        path: '/',
+        data: [],
+      ),
+      throwsA(isA<RestServiceFailure>()),
+    );
   });
 
   test('RestService binary request server error', () async {
@@ -285,7 +320,8 @@ void main() {
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
-        Uint8List.fromList((json.encode(content).codeUnits)));
+      Uint8List.fromList(json.encode(content).codeUnits),
+    );
 
     when(() => client.send(any())).thenAnswer((_) async => streamedResponse);
     when(() => streamedResponse.stream).thenAnswer((_) => byteStream);
@@ -294,7 +330,7 @@ void main() {
     when(() => streamedResponse.isRedirect).thenReturn(false);
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
-    expectLater(
+    await expectLater(
       service.binaryRequest(
         method: RestMethod.post,
         path: 'test',
@@ -311,13 +347,13 @@ void main() {
   });
 
   test('RestService success, binary bytes response', () async {
-    final content = {"foo": "bar"};
+    final content = {'foo': 'bar'};
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
       Uint8List.fromList(
-        (json.encode(content).codeUnits),
+        json.encode(content).codeUnits,
       ),
     );
 
@@ -329,24 +365,27 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     final result = await service.request<Uint8List>(
-        method: RestMethod.get, path: '/', client: client);
+      method: RestMethod.get,
+      path: '/',
+      client: client,
+    );
 
     expect(
       result,
       Uint8List.fromList(
-        (json.encode(content).codeUnits),
+        json.encode(content).codeUnits,
       ),
     );
   });
 
   test('RestService success, unknown request type', () async {
-    final content = {"foo": "bar"};
+    final content = {'foo': 'bar'};
     final service = RestService(baseUrl: 'http://fake.com');
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
       Uint8List.fromList(
-        (json.encode(content).codeUnits),
+        json.encode(content).codeUnits,
       ),
     );
 
@@ -358,16 +397,18 @@ void main() {
     when(() => streamedResponse.persistentConnection).thenReturn(false);
 
     expect(
-        service.request<String>(
-          method: RestMethod.get,
-          path: '/',
-          client: client,
-        ),
-        throwsA(TypeMatcher<RestServiceFailure>()));
+      service.request<String>(
+        method: RestMethod.get,
+        path: '/',
+        client: client,
+      ),
+      throwsA(const TypeMatcher<RestServiceFailure>()),
+    );
   });
 
   tearDown(() {
-    if (file.existsSync()) file.delete();
+    final ioFile = File(file.name);
+    if (ioFile.existsSync()) ioFile.deleteSync();
   });
 }
 
@@ -386,7 +427,7 @@ class ClientFake extends Fake implements Client {
     if (request is Request) {
       this.request = request;
     } else if (request is MultipartRequest) {
-      this.multipartRequest = request;
+      multipartRequest = request;
     }
     final contentBytes = jsonEncode({'foo': 'bar'}).codeUnits;
     return StreamedResponse(Stream.value(contentBytes), 200);

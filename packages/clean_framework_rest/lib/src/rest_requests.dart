@@ -1,12 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/src/providers/gateway.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_rest/src/rest_method.dart';
 import 'package:meta/meta.dart';
 
-import 'rest_method.dart';
-
 abstract class RestRequest extends Request {
-  RestRequest(this.method);
+  const RestRequest(this.method);
 
   final RestMethod method;
 
@@ -18,53 +17,53 @@ abstract class RestRequest extends Request {
 }
 
 abstract class JsonRestRequest extends RestRequest {
-  JsonRestRequest(super.method);
+  const JsonRestRequest(super.method);
 
   Map<String, dynamic> get data => {};
 }
 
 abstract class MultiPartRestRequest extends RestRequest {
-  MultiPartRestRequest(super.method);
+  const MultiPartRestRequest(super.method);
 
   Map<String, dynamic> get data => {};
 }
 
 abstract class BytesRestRequest extends RestRequest {
-  BytesRestRequest({required RestMethod method}) : super(method);
+  const BytesRestRequest({required RestMethod method}) : super(method);
 
   Map<String, dynamic> get data => {};
 }
 
 abstract class BinaryDataSrcRestRequest extends RestRequest {
-  BinaryDataSrcRestRequest(super.method);
+  const BinaryDataSrcRestRequest(super.method);
 
   String get src;
 }
 
 abstract class BinaryDataSrcPostRestRequest extends BinaryDataSrcRestRequest {
-  BinaryDataSrcPostRestRequest() : super(RestMethod.post);
+  const BinaryDataSrcPostRestRequest() : super(RestMethod.post);
 }
 
 abstract class BinaryDataSrcPutRestRequest extends BinaryDataSrcRestRequest {
-  BinaryDataSrcPutRestRequest() : super(RestMethod.put);
+  const BinaryDataSrcPutRestRequest() : super(RestMethod.put);
 }
 
 abstract class BinaryDataRestRequest extends RestRequest {
-  BinaryDataRestRequest(super.method);
+  const BinaryDataRestRequest(super.method);
 
   Uint8List get binaryData;
 }
 
 abstract class BinaryDataPostRestRequest extends BinaryDataRestRequest {
-  BinaryDataPostRestRequest() : super(RestMethod.post);
+  const BinaryDataPostRestRequest() : super(RestMethod.post);
 }
 
 abstract class BinaryDataPutRestRequest extends BinaryDataRestRequest {
-  BinaryDataPutRestRequest() : super(RestMethod.put);
+  const BinaryDataPutRestRequest() : super(RestMethod.put);
 }
 
 abstract class GetRestRequest extends JsonRestRequest {
-  GetRestRequest() : super(RestMethod.get);
+  const GetRestRequest() : super(RestMethod.get);
 
   @nonVirtual
   @override
@@ -72,21 +71,21 @@ abstract class GetRestRequest extends JsonRestRequest {
 }
 
 abstract class PostRestRequest extends JsonRestRequest {
-  PostRestRequest() : super(RestMethod.post);
+  const PostRestRequest() : super(RestMethod.post);
 }
 
 abstract class PutRestRequest extends JsonRestRequest {
-  PutRestRequest() : super(RestMethod.put);
+  const PutRestRequest() : super(RestMethod.put);
 }
 
 abstract class PatchRestRequest extends JsonRestRequest {
-  PatchRestRequest() : super(RestMethod.patch);
+  const PatchRestRequest() : super(RestMethod.patch);
 }
 
 abstract class DeleteRestRequest extends JsonRestRequest {
-  DeleteRestRequest() : super(RestMethod.delete);
+  const DeleteRestRequest() : super(RestMethod.delete);
 }
 
 abstract class PostMultiPartRestRequest extends MultiPartRestRequest {
-  PostMultiPartRestRequest() : super(RestMethod.post);
+  const PostMultiPartRestRequest() : super(RestMethod.post);
 }

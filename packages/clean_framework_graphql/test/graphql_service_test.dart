@@ -59,15 +59,17 @@ void main() {
       when(() => mock.query(any())).thenAnswer(
         (_) async => exceptionResult(
           OperationException(
-            linkException: NetworkException(
+            linkException: NetworkException.fromException(
               message: 'message',
               uri: Uri.parse('https://acmesoftware.com'),
+              originalException: Object(),
+              originalStackTrace: StackTrace.empty,
             ),
           ),
         ),
       );
 
-      expectLater(
+      await expectLater(
         () => service.request(method: GraphQLMethod.query, document: ''),
         throwsA(
           isA<GraphQLNetworkException>().having(
@@ -85,20 +87,21 @@ void main() {
       when(() => mock.query(any())).thenAnswer(
         (_) async => exceptionResult(
           OperationException(
-            linkException: ServerException(
+            linkException: const ServerException(
               parsedResponse: Response(data: {'status': 403}, response: {}),
             ),
           ),
         ),
       );
 
-      expectLater(
+      await expectLater(
         () => service.request(method: GraphQLMethod.query, document: ''),
         throwsA(
           isA<GraphQLServerException>().having(
             (e) => e.toString(),
             'string representation',
-            'GraphQLServerException{originalException: null, errorData: {status: 403}}',
+            'GraphQLServerException{originalException: null, '
+                'errorData: {status: 403}}',
           ),
         ),
       );
@@ -110,12 +113,12 @@ void main() {
       when(() => mock.query(any())).thenAnswer(
         (_) async => exceptionResult(
           OperationException(
-            graphqlErrors: [GraphQLError(message: 'failure')],
+            graphqlErrors: [const GraphQLError(message: 'failure')],
           ),
         ),
       );
 
-      expectLater(
+      await expectLater(
         () => service.request(method: GraphQLMethod.query, document: ''),
         throwsA(
           isA<GraphQLOperationException>().having(
@@ -152,12 +155,16 @@ void main() {
       when(() => mock.mutate(any())).thenAnswer(
         (_) async => exceptionResult(
           OperationException(
-            linkException: NetworkException(uri: Uri()),
+            linkException: NetworkException.fromException(
+              uri: Uri(),
+              originalException: Object(),
+              originalStackTrace: StackTrace.empty,
+            ),
           ),
         ),
       );
 
-      expectLater(
+      await expectLater(
         () => service.request(method: GraphQLMethod.mutation, document: ''),
         throwsA(isA<GraphQLNetworkException>()),
       );
@@ -172,12 +179,12 @@ void main() {
       when(() => mock.mutate(any())).thenAnswer(
         (_) async => exceptionResult(
           OperationException(
-            linkException: ServerException(),
+            linkException: const ServerException(),
           ),
         ),
       );
 
-      expectLater(
+      await expectLater(
         () => service.request(method: GraphQLMethod.mutation, document: ''),
         throwsA(isA<GraphQLServerException>()),
       );
@@ -241,7 +248,7 @@ void main() {
           () => mock.query(any()),
         ).thenAnswer((_) async => successResult);
 
-        final document = '''
+        const document = '''
 query test {
  foo {
   	id
@@ -279,7 +286,7 @@ query test {
           () => mock.query(any()),
         ).thenAnswer((_) async => successResult);
 
-        final document = '''
+        const document = '''
 query test {
  foo {
   	id
@@ -324,13 +331,13 @@ query test {
             data: {'foo': 'bar'},
             OperationException(
               graphqlErrors: [
-                GraphQLError(message: 'something went wrong'),
+                const GraphQLError(message: 'something went wrong'),
               ],
             ),
           ),
         );
 
-        final document = '''
+        const document = '''
 query test {
  foo {
   	id

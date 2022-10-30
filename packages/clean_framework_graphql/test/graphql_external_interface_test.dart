@@ -18,7 +18,7 @@ void main() {
 
       final result = await gateway.transport(SuccessfulRequest());
       expect(result.isRight, isTrue);
-      expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
+      expect(result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'}));
     });
 
     test('failure response', () async {
@@ -52,7 +52,7 @@ void main() {
 
       final result = await gateway.transport(MutationRequest());
       expect(result.isRight, isTrue);
-      expect(result.right, GraphQLSuccessResponse(data: {'foo': 'bar'}));
+      expect(result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'}));
     });
 
     test('failure with mutation', () async {
@@ -89,7 +89,7 @@ void main() {
       expect(result.isLeft, isTrue);
       expect(
         result.left,
-        GraphQLFailureResponse(type: GraphQLFailureType.operation),
+        const GraphQLFailureResponse(type: GraphQLFailureType.operation),
       );
     });
 
@@ -110,7 +110,7 @@ void main() {
       expect(result.isLeft, isTrue);
       expect(
         result.left,
-        GraphQLFailureResponse(
+        const GraphQLFailureResponse(
           type: GraphQLFailureType.network,
           message: 'no internet',
           errorData: {'url': 'https://acmesoftware.com'},
@@ -125,7 +125,7 @@ void main() {
         gatewayConnections: [() => gateway],
         service: GraphQLServiceFake.exception(
           GraphQLServerException(
-            originalException: FormatException(),
+            originalException: const FormatException(),
             errorData: const {},
           ),
         ),
@@ -135,7 +135,7 @@ void main() {
       expect(result.isLeft, isTrue);
       expect(
         result.left,
-        GraphQLFailureResponse(
+        const GraphQLFailureResponse(
           type: GraphQLFailureType.server,
           message: 'FormatException',
         ),
@@ -155,7 +155,7 @@ void main() {
       expect(result.isLeft, isTrue);
       expect(
         result.left,
-        GraphQLFailureResponse(
+        const GraphQLFailureResponse(
           type: GraphQLFailureType.timeout,
           message: 'Connection Timeout',
         ),
@@ -197,7 +197,7 @@ class GatewayFake extends GraphQLGateway {
   GatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  buildRequest(output) {
+  MutationRequest buildRequest(Output output) {
     return MutationRequest();
   }
 
@@ -211,7 +211,7 @@ class MutationGatewayFake extends GraphQLGateway {
   MutationGatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  buildRequest(output) {
+  SuccessfulRequest buildRequest(Output output) {
     return SuccessfulRequest();
   }
 
@@ -223,14 +223,14 @@ class MutationGatewayFake extends GraphQLGateway {
 
 class SuccessfulRequest extends QueryGraphQLRequest {
   @override
-  String get document => r'''
+  String get document => '''
    
   ''';
 }
 
 class MutationRequest extends MutationGraphQLRequest {
   @override
-  String get document => r'''
+  String get document => '''
    
   ''';
 }

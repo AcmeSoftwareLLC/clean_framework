@@ -53,7 +53,7 @@ class FirebaseClientFake implements FirebaseClient {
   @override
   Stream<Map<String, dynamic>> watchAll({required String path}) {
     Future<void>.delayed(
-      Duration(milliseconds: 1),
+      const Duration(milliseconds: 1),
       () => _controller.sink.add(_content),
     );
     return _controller.stream;
@@ -74,7 +74,7 @@ class FirebaseClientFake implements FirebaseClient {
   void createQuery(String path, SnapshotQuery<Map<String, dynamic>> query) {}
 
   @override
-  clearQuery() {}
+  void clearQuery() {}
 
   void dispose() {
     _controller.close();

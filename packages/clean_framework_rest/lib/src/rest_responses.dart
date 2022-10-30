@@ -1,16 +1,17 @@
 import 'dart:typed_data';
-import 'package:clean_framework/src/providers/gateway.dart';
 
-class RestSuccessResponse<T> extends SuccessResponse {
+import 'package:clean_framework/clean_framework_providers.dart';
+
+class RestSuccessResponse<T extends Object> extends SuccessResponse {
+  const RestSuccessResponse({required this.data});
   final T data;
-  RestSuccessResponse({required this.data});
 }
 
 class BytesRestSuccessResponse extends RestSuccessResponse<Uint8List> {
-  BytesRestSuccessResponse({required super.data});
+  const BytesRestSuccessResponse({required super.data});
 }
 
 class JsonRestSuccessResponse
     extends RestSuccessResponse<Map<String, dynamic>> {
-  JsonRestSuccessResponse({required super.data});
+  const JsonRestSuccessResponse({required super.data});
 }

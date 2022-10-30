@@ -1,17 +1,13 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
+import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework_rest/src/rest_requests.dart';
+import 'package:clean_framework_rest/src/rest_responses.dart';
+import 'package:clean_framework_rest/src/rest_service.dart';
 import 'package:cross_file/cross_file.dart';
 
-import 'rest_requests.dart';
-import 'rest_responses.dart';
-import 'rest_service.dart';
-
 class RestExternalInterface
-    extends ExternalInterface<RestRequest, RestSuccessResponse> {
-  final RestService _restService;
-
+    extends ExternalInterface<RestRequest, RestSuccessResponse<dynamic>> {
   RestExternalInterface({
     required List<GatewayConnection<Gateway>> gatewayConnections,
     required String baseUrl,
@@ -23,6 +19,7 @@ class RestExternalInterface
               headers: headers,
             ),
         super(gatewayConnections);
+  final RestService _restService;
 
   @override
   void handleRequest() {
@@ -101,13 +98,12 @@ class RestExternalInterface
 }
 
 class HttpFailureResponse extends FailureResponse {
-  final String path;
-  final int statusCode;
-  final Map<String, dynamic> error;
-
-  HttpFailureResponse({
+  const HttpFailureResponse({
     required this.path,
     required this.error,
     required this.statusCode,
   });
+  final String path;
+  final int statusCode;
+  final Map<String, dynamic> error;
 }
