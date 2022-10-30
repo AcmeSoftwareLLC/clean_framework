@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework_example/features/random_cat/domain/random_cat_entity.dart';
 import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_rest/clean_framework_rest.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/src/defaults/providers/rest/src/rest_requests.dart';
-import 'package:clean_framework/src/defaults/providers/rest/src/rest_responses.dart';
-import 'package:clean_framework/src/defaults/providers/rest/src/rest_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
+import 'package:cross_file/cross_file.dart';
 
-import '../../../../utilities/file.dart';
+import 'rest_requests.dart';
+import 'rest_responses.dart';
+import 'rest_service.dart';
 
 class RestExternalInterface
     extends ExternalInterface<RestRequest, RestSuccessResponse> {
@@ -61,7 +61,7 @@ class RestExternalInterface
     );
     on<BinaryDataSrcRestRequest>(
       (request, send) async {
-        final binaryData = File(request.src).readAsBytesSync();
+        final binaryData = await XFile(request.src).readAsBytes();
         final data = await _restService.binaryRequest(
           method: request.method,
           path: request.path,

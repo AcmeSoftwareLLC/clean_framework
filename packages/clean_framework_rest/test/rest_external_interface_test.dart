@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/src/tests/gateway_fake.dart';
 import 'package:clean_framework/src/utilities/file.dart';
+import 'package:clean_framework_rest/clean_framework_rest.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 

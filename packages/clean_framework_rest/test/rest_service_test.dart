@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_defaults.dart';
+import 'package:clean_framework_rest/clean_framework_rest.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';

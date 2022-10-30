@@ -1,14 +1,12 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_defaults.dart'
-    hide FeatureState;
 import 'package:clean_framework/clean_framework_providers.dart';
-
 import 'package:clean_framework_example/features/last_login/domain/last_login_entity.dart';
 import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
 import 'package:clean_framework_example/features/last_login/external_interface/last_login_date_gateway.dart';
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';
 import 'package:clean_framework_graphql/clean_framework_graphql.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:flutter/foundation.dart';
 
 import 'features/country/domain/country_entity.dart';
 import 'features/country/domain/country_use_case.dart';

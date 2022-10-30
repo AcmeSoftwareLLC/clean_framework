@@ -1,19 +1,26 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:clean_framework/src/defaults/network_service.dart';
-import 'package:clean_framework/src/defaults/providers/rest/rest_logger.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
-import '../../../../utilities/file.dart';
+
+import 'rest_logger.dart';
+import 'rest_method.dart';
 
 ///
-class RestService extends NetworkService {
+class RestService {
   /// Default constructor for [RestService].
   RestService({
-    String baseUrl = '',
-    Map<String, String> headers = const {},
-  }) : super(baseUrl: baseUrl, headers: headers);
+    this.baseUrl = '',
+    this.headers = const {},
+  });
+
+  /// The base URL of the service.
+  final String baseUrl;
+
+  /// The global headers to be sent with the request.
+  final Map<String, String> headers;
 
   Future<T> request<T extends Object>({
     required RestMethod method,
@@ -42,7 +49,7 @@ class RestService extends NetworkService {
       }
 
       request.headers
-        ..addAll(this.headers!)
+        ..addAll(this.headers)
         ..addAll(headers);
 
       final response = await _client.send(request);
@@ -100,7 +107,7 @@ class RestService extends NetworkService {
       for (final entry in data.entries) {
         final k = entry.key;
         final v = entry.value;
-        if (v is File) {
+        if (v is XFile) {
           final stream = ByteStream(v.openRead()..cast());
           final length = await v.length();
           final multipartFile = MultipartFile(
@@ -116,7 +123,7 @@ class RestService extends NetworkService {
         }
       }
       request.headers
-        ..addAll(this.headers!)
+        ..addAll(this.headers)
         ..addAll(headers);
 
       final streamedResponse = await _client.send(request);
@@ -158,7 +165,7 @@ class RestService extends NetworkService {
       request.bodyBytes = data;
 
       request.headers
-        ..addAll(this.headers!)
+        ..addAll(this.headers)
         ..addAll(headers);
 
       final response = await Response.fromStream(await _client.send(request));

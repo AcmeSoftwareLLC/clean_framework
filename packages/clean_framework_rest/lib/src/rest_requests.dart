@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:meta/meta.dart';
+
+import 'rest_method.dart';
 
 abstract class RestRequest extends Request {
   RestRequest(this.method);

@@ -1,7 +1,7 @@
-import 'package:clean_framework/src/defaults/network_service.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 
+import 'graphql_method.dart';
 import 'graphql_requests.dart';
 import 'graphql_responses.dart';
 import 'graphql_service.dart';

@@ -1,22 +1,22 @@
 import 'dart:async';
 
-import 'package:clean_framework/clean_framework_defaults.dart';
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart';
 
 import 'graphql_error_policy.dart';
 import 'graphql_fetch_policy.dart';
 import 'graphql_logger.dart';
+import 'graphql_method.dart';
 
-class GraphQLService extends NetworkService {
+class GraphQLService {
   GraphQLService({
-    required String endpoint,
+    required this.endpoint,
+    this.headers = const {},
+    this.timeout,
     GraphQLToken? token,
-    Map<String, String> headers = const {},
     GraphQLPersistence persistence = const GraphQLPersistence(),
     DefaultPolicies? defaultPolicies,
-    this.timeout,
-  }) : super(baseUrl: endpoint, headers: headers) {
+  }) {
     final link = _createLink(token: token);
 
     _createClient(
@@ -26,15 +26,23 @@ class GraphQLService extends NetworkService {
     );
   }
 
-  final Completer<GraphQLClient> _clientCompleter = Completer();
+  /// The GraphQL endpoint.
+  final String endpoint;
+
+  /// The global headers to be sent with the request.
+  final Map<String, String> headers;
+
   final Duration? timeout;
+
+  final Completer<GraphQLClient> _clientCompleter = Completer();
   GraphQLClient? _graphQLClient;
 
   GraphQLService.withClient({
     required GraphQLClient client,
     this.timeout,
-  })  : _graphQLClient = client,
-        super(baseUrl: '', headers: const {});
+  })  : endpoint = '',
+        headers = const {},
+        _graphQLClient = client;
 
   Future<GraphQLClient> get _client async {
     if (_graphQLClient == null) {
@@ -98,8 +106,7 @@ class GraphQLService extends NetworkService {
   }
 
   Link _createLink({required GraphQLToken? token}) {
-    final _headers = headers ?? {};
-    final httpLink = HttpLink(baseUrl, defaultHeaders: _headers);
+    final httpLink = HttpLink(endpoint, defaultHeaders: headers);
 
     Link _link;
     if (token == null) {
@@ -115,12 +122,12 @@ class GraphQLService extends NetworkService {
     // Attach GraphQL Logger only in debug mode
     assert(() {
       final loggerLink = GraphQLLoggerLink(
-        endpoint: baseUrl,
+        endpoint: endpoint,
         getHeaders: () async {
           // coverage:ignore-start
           return {
             if (token != null) token.key: await token.builder() ?? '',
-            ..._headers,
+            ...headers,
           };
           // coverage:ignore-end
         },
