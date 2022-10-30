@@ -8,13 +8,13 @@ void main() {
   testWidgets('Presenter initial load', (tester) async {
     final presenter = TestPresenter(
       builder: (TestViewModel viewModel) {
-        return Text(viewModel.foo, key: Key('foo'));
+        return Text(viewModel.foo, key: const Key('foo'));
       },
     );
 
     await ProviderTester().pumpWidget(tester, MaterialApp(home: presenter));
 
-    expect(find.byKey(Key('foo')), findsOneWidget);
+    expect(find.byKey(const Key('foo')), findsOneWidget);
     expect(find.text('INITIAL'), findsOneWidget);
 
     await tester.pump();
@@ -38,7 +38,7 @@ void main() {
           builder: (context, snapshot) {
             return TestPresenter(
               count: snapshot.data,
-              builder: (viewModel) => Text(viewModel.foo, key: Key('foo')),
+              builder: (viewModel) => Text(viewModel.foo, key: const Key('foo')),
             );
           },
         ),
@@ -61,8 +61,8 @@ void main() {
 }
 
 class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
-  TestPresenter({required PresenterBuilder<TestViewModel> builder, this.count})
-      : super(provider: provider, builder: builder);
+  TestPresenter({required super.builder, this.count})
+      : super(provider: provider);
 
   final int? count;
 
@@ -76,7 +76,7 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
   }
 
   @override
-  TestViewModel createViewModel(_, output) => TestViewModel.fromOutput(output);
+  TestViewModel createViewModel(_, TestOutput output) => TestViewModel.fromOutput(output);
 
   @override
   void onOutputUpdate(BuildContext context, TestOutput output) {
@@ -114,20 +114,20 @@ class TestUseCase extends UseCase<EntityFake> {
 }
 
 class TestOutput extends Output {
-  final String foo;
 
   TestOutput(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
 class TestViewModel extends ViewModel {
-  final String foo;
 
-  TestViewModel(this.foo);
+  const TestViewModel(this.foo);
 
   TestViewModel.fromOutput(TestOutput output) : foo = output.foo.toUpperCase();
+  final String foo;
 
   @override
   List<Object?> get props => [foo];

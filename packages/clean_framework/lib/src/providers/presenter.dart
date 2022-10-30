@@ -5,14 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
+  const Presenter({
+    super.key,
+    required UseCaseProvider provider,
+    required this.builder,
+  }) : _provider = provider;
   final UseCaseProvider _provider;
   final PresenterBuilder<V> builder;
 
-  Presenter({required UseCaseProvider provider, required this.builder})
-      : _provider = provider;
-
   @override
-  _PresenterState<V, O, U> createState() => _PresenterState<V, O, U>();
+  ConsumerState<Presenter<V, O, U>> createState() => _PresenterState<V, O, U>();
 
   @protected
   V createViewModel(U useCase, O output);

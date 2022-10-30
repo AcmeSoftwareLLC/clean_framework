@@ -1,9 +1,8 @@
+import 'package:clean_framework/src/feature_state/feature.dart';
+import 'package:clean_framework/src/feature_state/feature_mapper.dart';
+import 'package:clean_framework/src/feature_state/feature_state_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'feature.dart';
-import 'feature_mapper.dart';
-import 'feature_state_provider.dart';
 
 /// For each feature entry point, a FeatureWidget instance is used to control
 /// the visibility and behavior of the children. One FeatureWidget could have
@@ -19,14 +18,13 @@ import 'feature_state_provider.dart';
 /// current state for the given Feature, and use it as part of the [builder]
 /// method.
 abstract class FeatureWidget<S> extends ConsumerStatefulWidget {
-  final FeatureStateProvider<S, FeatureMapper<S>> provider;
-  final Feature feature;
-
-  FeatureWidget({
-    Key? key,
+  const FeatureWidget({
+    super.key,
     required this.provider,
     required this.feature,
-  }) : super(key: key);
+  });
+  final FeatureStateProvider<S, FeatureMapper<S>> provider;
+  final Feature feature;
 
   /// The override of this method should return the proper widget depending
   /// on the currentState value. A common pattern is to have states that
@@ -54,7 +52,8 @@ class _FeatureWidgetState<S> extends ConsumerState<FeatureWidget<S>> {
     final mapper = ref.read(widget.provider.featuresMap);
     final currentState = mapper.getStateFor(widget.feature);
 
-    //TODO THIS SHOULDN'T BE NEEDED, FIGURE OUT WHY THE REBUILD DOESN'T HAPPEN
+    // TODO(sarbagyastha): THIS SHOULDN'T BE NEEDED,
+    // FIGURE OUT WHY THE REBUILD DOESN'T HAPPEN
     ref.listen(widget.provider(), (_, __) => setState(() {}));
 
     return widget.builder(context, currentState);

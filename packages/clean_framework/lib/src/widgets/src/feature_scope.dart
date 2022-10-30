@@ -17,8 +17,9 @@ class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
   final Future<void> Function(T)? loader;
   final VoidCallback? onLoaded;
 
+  // ignore: library_private_types_in_public_api
   static _InheritedFeatureScope of(BuildContext context) {
-    final _InheritedFeatureScope? result =
+    final result =
         context.dependOnInheritedWidgetOfExactType<_InheritedFeatureScope>();
     assert(result != null, 'No _InheritedFeatureScope found in context');
     return result!;
@@ -61,9 +62,9 @@ class _FeatureScopeState<T extends FeatureProvider>
 
 class _InheritedFeatureScope extends InheritedWidget {
   const _InheritedFeatureScope({
-    required Widget child,
+    required super.child,
     required this.client,
-  }) : super(child: child);
+  });
 
   final FeatureClient client;
 

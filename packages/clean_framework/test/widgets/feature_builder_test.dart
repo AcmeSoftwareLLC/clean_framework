@@ -8,7 +8,7 @@ void main() {
     testWidgets('default value', (tester) async {
       await tester.pumpWidget(
         FeatureScope<FakeJsonFeatureProvider>(
-          register: () => FakeJsonFeatureProvider(),
+          register: FakeJsonFeatureProvider.new,
           loader: (featureProvider) async => featureProvider.load(),
           onLoaded: () {},
           child: MaterialApp(
@@ -31,7 +31,7 @@ void main() {
     testWidgets('default variant', (tester) async {
       await tester.pumpWidget(
         FeatureScope<FakeJsonFeatureProvider>(
-          register: () => FakeJsonFeatureProvider(),
+          register: FakeJsonFeatureProvider.new,
           loader: (featureProvider) async => featureProvider.load(),
           onLoaded: () {},
           child: MaterialApp(
@@ -55,7 +55,7 @@ void main() {
     testWidgets('alternative variant for iOS', (tester) async {
       await tester.pumpWidget(
         FeatureScope<FakeJsonFeatureProvider>(
-          register: () => FakeJsonFeatureProvider(),
+          register: FakeJsonFeatureProvider.new,
           loader: (featureProvider) async => featureProvider.load(),
           onLoaded: () {},
           child: MaterialApp(
@@ -82,7 +82,7 @@ void main() {
     testWidgets('alternative variant for Android', (tester) async {
       await tester.pumpWidget(
         FeatureScope<FakeJsonFeatureProvider>(
-          register: () => FakeJsonFeatureProvider(),
+          register: FakeJsonFeatureProvider.new,
           loader: (featureProvider) async => featureProvider.load(),
           onLoaded: () {},
           child: MaterialApp(
@@ -113,7 +113,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<FakeJsonFeatureProvider>(
-            register: () => FakeJsonFeatureProvider(),
+            register: FakeJsonFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
@@ -139,7 +139,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<FakeJsonFeatureProvider>(
-            register: () => FakeJsonFeatureProvider(),
+            register: FakeJsonFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
@@ -165,7 +165,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<FakeJsonFeatureProvider>(
-            register: () => FakeJsonFeatureProvider(),
+            register: FakeJsonFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
@@ -191,13 +191,13 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<FakeJsonFeatureProvider>(
-            register: () => FakeJsonFeatureProvider(),
+            register: FakeJsonFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
                 return FeatureBuilder<List>(
                   flagKey: 'object',
-                  defaultValue: [0, 0],
+                  defaultValue: const [0, 0],
                   builder: (context, value) {
                     return Text(value.toString());
                   },
@@ -217,13 +217,13 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<FakeJsonFeatureProvider>(
-            register: () => FakeJsonFeatureProvider(),
+            register: FakeJsonFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
                 return FeatureBuilder<List>(
                   flagKey: 'objects', // invalid key
-                  defaultValue: [0, 0],
+                  defaultValue: const [0, 0],
                   builder: (context, value) {
                     return Text(value.toString());
                   },
@@ -243,7 +243,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           FeatureScope<NewTitleFeatureProvider>(
-            register: () => NewTitleFeatureProvider(),
+            register: NewTitleFeatureProvider.new,
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
@@ -268,7 +268,7 @@ void main() {
 
 class NewTitleFeatureProvider extends JsonFeatureProvider {
   void load() {
-    feed({"newTitle": {}});
+    feed({'newTitle': {}});
   }
 }
 
@@ -276,54 +276,54 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
   void load() {
     feed(
       {
-        "newTitle": {"state": "disabled"},
-        "object": {
-          "returnType": "object",
-          "variants": {
-            "a": [1, 2],
-            "b": [2, 3]
+        'newTitle': {'state': 'disabled'},
+        'object': {
+          'returnType': 'object',
+          'variants': {
+            'a': [1, 2],
+            'b': [2, 3]
           },
-          "defaultVariant": "a",
-          "state": "enabled"
+          'defaultVariant': 'a',
+          'state': 'enabled'
         },
-        "boolean": {
-          "returnType": "boolean",
-          "variants": {"a": true, "b": false},
-          "defaultVariant": "a",
-          "state": "enabled"
+        'boolean': {
+          'returnType': 'boolean',
+          'variants': {'a': true, 'b': false},
+          'defaultVariant': 'a',
+          'state': 'enabled'
         },
-        "color": {
-          "returnType": "number",
-          "variants": {
-            "red": 4294901760,
-            "green": 4278255360,
-            "blue": 4278190335,
-            "purple": 4285140397
+        'color': {
+          'returnType': 'number',
+          'variants': {
+            'red': 4294901760,
+            'green': 4278255360,
+            'blue': 4278190335,
+            'purple': 4285140397
           },
-          "defaultVariant": "red",
-          "state": "enabled"
+          'defaultVariant': 'red',
+          'state': 'enabled'
         },
-        "exampleFeatures": {
-          "returnType": "string",
-          "variants": {
-            "query": "firebase,graphql",
-            "restful": "graphql,rest",
-            "traditional": "rest",
-            "all": "firebase,graphql,rest"
+        'exampleFeatures': {
+          'returnType': 'string',
+          'variants': {
+            'query': 'firebase,graphql',
+            'restful': 'graphql,rest',
+            'traditional': 'rest',
+            'all': 'firebase,graphql,rest'
           },
-          "defaultVariant": "query",
-          "state": "enabled",
-          "rules": [
+          'defaultVariant': 'query',
+          'state': 'enabled',
+          'rules': [
             {
-              "action": {"variant": "restful"},
-              "conditions": [
-                {"context": "platform", "op": "equals", "value": "iOS"}
+              'action': {'variant': 'restful'},
+              'conditions': [
+                {'context': 'platform', 'op': 'equals', 'value': 'iOS'}
               ]
             },
             {
-              "action": {"variant": "all"},
-              "conditions": [
-                {"context": "platform", "op": "equals", "value": "android"}
+              'action': {'variant': 'all'},
+              'conditions': [
+                {'context': 'platform', 'op': 'equals', 'value': 'android'}
               ]
             }
           ]

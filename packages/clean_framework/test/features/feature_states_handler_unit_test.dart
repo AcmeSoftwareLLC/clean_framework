@@ -4,18 +4,24 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('FeatureStatesHandler load and append json', () {
-    final states = TestFeatureStateMapper();
-
-    states.load({
-      'features': [
-        {'name': 'login', 'version': '1.0', 'state': 'VISIBLE'},
-      ]
-    });
-
-    expect(states.getStateFor(Feature(name: 'login')), FeatureState.visible);
+    final states = TestFeatureStateMapper()
+      ..load(
+        {
+          'features': [
+            {'name': 'login', 'version': '1.0', 'state': 'VISIBLE'},
+          ]
+        },
+      );
 
     expect(
-        states.getStateFor(Feature(name: 'non-existant')), FeatureState.hidden);
+      states.getStateFor(const Feature(name: 'login')),
+      FeatureState.visible,
+    );
+
+    expect(
+      states.getStateFor(const Feature(name: 'non-existant')),
+      FeatureState.hidden,
+    );
 
     states.append({
       'features': [
@@ -23,10 +29,15 @@ void main() {
       ]
     });
 
-    expect(states.getStateFor(Feature(name: 'login')), FeatureState.visible);
+    expect(
+      states.getStateFor(const Feature(name: 'login')),
+      FeatureState.visible,
+    );
 
-    expect(states.getStateFor(Feature(name: 'biometrics', version: '1.5')),
-        FeatureState.visible);
+    expect(
+      states.getStateFor(const Feature(name: 'biometrics', version: '1.5')),
+      FeatureState.visible,
+    );
   });
 }
 
@@ -42,5 +53,5 @@ class TestFeatureStateMapper extends FeatureMapper<FeatureState> {
   }
 
   @override
-  get defaultState => FeatureState.hidden;
+  FeatureState get defaultState => FeatureState.hidden;
 }

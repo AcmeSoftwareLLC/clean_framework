@@ -71,20 +71,20 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   void handleRequest() {
     on<FutureTestRequest>(
       (request, send) async {
-        await Future.delayed(Duration(milliseconds: 100));
-        send(TestResponse('success'));
+        await Future.delayed(const Duration(milliseconds: 100));
+        send(const TestResponse('success'));
       },
     );
     on<FailedRequest>(
       (request, send) async {
-        await Future.delayed(Duration(milliseconds: 100));
-        sendError(TypedFailureResponse(type: 'test'));
+        await Future.delayed(const Duration(milliseconds: 100));
+        sendError(const TypedFailureResponse(type: 'test'));
       },
     );
     on<StreamTestRequest>(
       (request, send) async {
         final stream = Stream.periodic(
-          Duration(milliseconds: 100),
+          const Duration(milliseconds: 100),
           (count) => count,
         );
 
@@ -92,8 +92,8 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
           (count) => send(TestResponse(count.toString())),
         );
 
-        await Future.delayed(Duration(milliseconds: 500));
-        subscription.cancel();
+        await Future.delayed(const Duration(milliseconds: 500));
+        await subscription.cancel();
       },
     );
   }
@@ -194,60 +194,60 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 abstract class TestRequest extends Request {
-  final String id;
 
-  TestRequest(this.id);
+  const TestRequest(this.id);
+  final String id;
 }
 
 class FutureTestRequest extends TestRequest {
-  FutureTestRequest(String id) : super(id);
+  const FutureTestRequest(super.id);
 }
 
 class FailedRequest extends TestRequest {
-  FailedRequest(String id) : super(id);
+  const FailedRequest(super.id);
 }
 
 class StreamTestRequest extends TestRequest {
-  StreamTestRequest(String id) : super(id);
+  const StreamTestRequest(super.id);
 }
 
 class TestResponse extends SuccessResponse {
-  final String foo;
 
-  TestResponse(this.foo);
+  const TestResponse(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
 class TestSuccessInput extends SuccessInput {
-  final String foo;
 
   TestSuccessInput(this.foo);
+  final String foo;
 }
 
 class TestDirectOutput extends Output {
-  final String id;
 
   TestDirectOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestSubscriptionOutput extends Output {
-  final String id;
 
   TestSubscriptionOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestEntity extends Entity {
-  final String foo;
 
   TestEntity({required this.foo});
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
@@ -256,9 +256,9 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-  final String foo;
 
   TestOutput(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];

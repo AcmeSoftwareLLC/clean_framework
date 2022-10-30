@@ -1,6 +1,6 @@
 // coverage:ignore-file
 
-import '../core/enums/error_code.dart';
+import 'package:clean_framework/src/open_feature/src/core/enums/error_code.dart';
 
 export '../core/enums/error_code.dart';
 export 'src/flag_not_found_exception.dart';

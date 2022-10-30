@@ -177,7 +177,7 @@ void main() {
 
       expect(
         data.getDateTime('key'),
-        DateTime(2020, 1, 1),
+        DateTime(2020),
       );
     });
 
@@ -187,8 +187,8 @@ void main() {
       );
 
       expect(
-        data.getDateTime('key', defaultValue: DateTime(2020, 2, 1)),
-        DateTime(2020, 2, 1),
+        data.getDateTime('key', defaultValue: DateTime(2020, 2)),
+        DateTime(2020, 2),
       );
     });
 

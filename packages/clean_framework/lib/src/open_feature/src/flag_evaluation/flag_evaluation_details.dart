@@ -1,4 +1,4 @@
-import '../core/enums.dart';
+import 'package:clean_framework/src/open_feature/src/core/enums.dart';
 
 class FlagEvaluationDetails<T extends Object> {
   FlagEvaluationDetails({

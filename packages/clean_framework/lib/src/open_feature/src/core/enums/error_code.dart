@@ -1,5 +1,7 @@
 // coverage:ignore-file
 
+import 'package:clean_framework/clean_framework.dart';
+
 /// Different error codes that can be returned by the [FeatureProvider].
 enum ErrorCode {
   /// Provider is not in ready state.

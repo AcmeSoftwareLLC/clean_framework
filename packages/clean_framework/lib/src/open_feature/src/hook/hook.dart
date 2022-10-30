@@ -2,10 +2,10 @@
 
 import 'dart:async';
 
-import '../evaluation_context/evaluation_context.dart';
-import '../flag_evaluation/flag_evaluation_details.dart';
-import 'hook_context.dart';
-import 'hook_hints.dart';
+import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
+import 'package:clean_framework/src/open_feature/src/flag_evaluation/flag_evaluation_details.dart';
+import 'package:clean_framework/src/open_feature/src/hook/hook_context.dart';
+import 'package:clean_framework/src/open_feature/src/hook/hook_hints.dart';
 
 export 'hook_context.dart';
 export 'hook_hints.dart';

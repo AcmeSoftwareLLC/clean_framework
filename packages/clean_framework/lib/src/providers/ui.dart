@@ -2,13 +2,13 @@ import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:flutter/material.dart';
 
 abstract class UI<V extends ViewModel> extends StatefulWidget {
-  late final PresenterCreator<V>? _create;
   UI({
-    Key? key,
+    super.key,
     PresenterCreator<V>? create,
-  }) : super(key: key) {
+  }) {
     _create = create ?? this.create;
   }
+  late final PresenterCreator<V>? _create;
 
   Widget build(BuildContext context, V viewModel);
 
@@ -28,7 +28,7 @@ class _UIState<V extends ViewModel> extends State<UI<V>> {
 }
 
 typedef PresenterCreator<V extends ViewModel> = Presenter Function(
-    PresenterBuilder<V> builder);
+    PresenterBuilder<V> builder,);
 
 typedef UIBuilder<V extends ViewModel> = Widget Function(
-    BuildContext context, V viewModel);
+    BuildContext context, V viewModel,);

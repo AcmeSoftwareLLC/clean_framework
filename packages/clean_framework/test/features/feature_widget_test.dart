@@ -117,7 +117,7 @@ void main() {
 }
 
 class TestFeatureWidget extends FeatureWidget<FeatureState> {
-  TestFeatureWidget(
+  const TestFeatureWidget(
     FeatureStateProvider<FeatureState, FeatureMapper<FeatureState>> provider, {
     super.key,
   }) : super(

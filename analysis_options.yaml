@@ -8,4 +8,5 @@ language:
 linter:
   rules:
     one_member_abstracts: false
+    only_throw_errors: false
     public_member_api_docs: false

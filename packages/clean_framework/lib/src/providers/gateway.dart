@@ -1,31 +1,32 @@
 import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-import '../app_providers_container.dart';
-
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
-  late UseCase _useCase;
-
-  late final Transport<R, P> transport;
-
   Gateway({
     ProvidersContext? context,
     UseCaseProvider? provider,
     UseCase? useCase,
-  }) {
-    assert(() {
-      return (context != null && provider != null) || useCase != null;
-    }());
+  }) : assert(
+          () {
+            return (context != null && provider != null) || useCase != null;
+          }(),
+          '',
+        ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
     _useCase.subscribe(
       O,
       (O output) async => _processRequest(buildRequest(output)),
     );
   }
+
+  late UseCase _useCase;
+
+  late final Transport<R, P> transport;
 
   S onSuccess(covariant P response);
   FailureInput onFailure(covariant FailureResponse failureResponse);
@@ -48,9 +49,6 @@ abstract class Gateway<O extends Output, R extends Request,
 
 abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
     PUBLISHER_OUTPUT extends Output, SUBSCRIBER_INPUT extends Input> {
-  late UseCase _subscriberUseCase;
-  late UseCase _publisherUseCase;
-
   BridgeGateway({
     required UseCase subscriberUseCase,
     required UseCase publisherUseCase,
@@ -67,6 +65,8 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
       },
     );
   }
+  late final UseCase _subscriberUseCase;
+  late final UseCase _publisherUseCase;
 
   SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
 }
@@ -125,8 +125,8 @@ class TypedFailureResponse<T extends Object> extends FailureResponse {
   const TypedFailureResponse({
     required this.type,
     this.errorData = const {},
-    String message = '',
-  }) : super(message: message);
+    super.message,
+  });
 
   final T type;
   final Map<String, Object?> errorData;

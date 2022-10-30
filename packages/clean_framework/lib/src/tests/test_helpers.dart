@@ -64,34 +64,35 @@ void uiTest(
   TestVariant<Object?> variant = const DefaultTestVariant(),
   dynamic tags,
   Size? screenSize,
-  Iterable<LocalizationsDelegate>? localizationDelegates,
+  Iterable<LocalizationsDelegate<dynamic>>? localizationDelegates,
   Widget Function(Widget)? parentBuilder,
 }) {
   assert(
     () {
       return localizationDelegates == null || wrapWithMaterialApp;
     }(),
-    'Need to wrap with MaterialApp if overriding localization delegates is required',
+    'Need to wrap with MaterialApp '
+    'if overriding localization delegates is required',
   );
 
-  final _router = router ?? _uiTestConfig?.router;
-  final _context = context ?? _uiTestConfig?.context;
+  final resolvedRouter = router ?? _uiTestConfig?.router;
+  final resolvedContext = context ?? _uiTestConfig?.context;
 
   assert(
     () {
-      return builder != null || _router != null;
+      return builder != null || resolvedRouter != null;
     }(),
     'Provide either "builder" or "router".',
   );
   assert(
     () {
-      return _router == null || wrapWithMaterialApp;
+      return resolvedRouter == null || wrapWithMaterialApp;
     }(),
     '"router" should not be passed when wrapWithMaterialApp is false',
   );
   assert(
     () {
-      return _context != null;
+      return resolvedContext != null;
     }(),
     'Either pass "context" or call "setupUITest()" before test block.',
   );
@@ -106,30 +107,33 @@ void uiTest(
 
       await setup?.call();
 
-      Widget _scopedChild(Widget child) {
+      Widget scopedChild(Widget child) {
         return uiTestWidgetBuilder(
-          UncontrolledProviderScope(container: _context!(), child: child),
+          UncontrolledProviderScope(
+            container: resolvedContext!(),
+            child: child,
+          ),
         );
       }
 
       Widget child;
       if (wrapWithMaterialApp) {
         if (builder == null) {
-          _router!.navigatorBuilder = (_, __, nav) => _scopedChild(nav);
+          resolvedRouter!.navigatorBuilder = (_, __, nav) => scopedChild(nav);
           child = MaterialApp.router(
-            routeInformationParser: _router.informationParser,
-            routerDelegate: _router.delegate,
-            routeInformationProvider: _router.informationProvider,
+            routeInformationParser: resolvedRouter.informationParser,
+            routerDelegate: resolvedRouter.delegate,
+            routeInformationProvider: resolvedRouter.informationProvider,
             localizationsDelegates: localizationDelegates,
           );
         } else {
           child = MaterialApp(
-            home: _scopedChild(builder()),
+            home: scopedChild(builder()),
             localizationsDelegates: localizationDelegates,
           );
         }
       } else {
-        child = _scopedChild(builder!());
+        child = scopedChild(builder!());
       }
 
       await tester.pumpWidget(
@@ -162,7 +166,7 @@ void useCaseTest<U extends UseCase, O extends Output>(
   required U Function(Ref) build,
   required FutureOr<void> Function(U) execute,
   FutureOr<void> Function(UseCaseProvider)? setup,
-  Iterable Function()? expect,
+  Iterable<dynamic> Function()? expect,
   FutureOr<void> Function(U)? verify,
 }) {
   test(

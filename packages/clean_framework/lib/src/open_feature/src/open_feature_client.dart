@@ -1,7 +1,7 @@
 // coverage:ignore-file
 
-import '../open_feature.dart';
-import 'flag_evaluation/flag_evaluation_details.dart';
+import 'package:clean_framework/src/open_feature/open_feature.dart';
+import 'package:clean_framework/src/open_feature/src/flag_evaluation/flag_evaluation_details.dart';
 
 typedef FeatureProviderResolver<T extends Object> = Future<ResolutionDetails<T>>
     Function({

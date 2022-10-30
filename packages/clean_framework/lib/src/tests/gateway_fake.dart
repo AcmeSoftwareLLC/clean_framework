@@ -7,7 +7,7 @@ class GatewayFake<R extends Request, P extends SuccessResponse> extends Fake
     implements Gateway<Output, R, P, SuccessInput> {
   FailureResponse? failureResponse;
   SuccessResponse? successResponse;
-  final Completer hasYielded = Completer();
+  final Completer<void> hasYielded = Completer();
 
   @override
   late final Transport<R, P> transport;

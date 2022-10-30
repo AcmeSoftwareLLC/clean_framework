@@ -20,7 +20,7 @@ void main() {
 
   uiTest(
     'LastLogin without setup',
-    builder: () => TestUI(),
+    builder: TestUI.new,
     context: ProvidersContext(),
     parentBuilder: (child) => Container(child: child),
     verify: (tester) async {
@@ -28,7 +28,7 @@ void main() {
       expect(find.text('bar'), findsOneWidget);
     },
     wrapWithMaterialApp: false,
-    screenSize: Size(800, 600),
+    screenSize: const Size(800, 600),
   );
 
   setupUITest(
@@ -45,19 +45,17 @@ void main() {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);
     },
-    wrapWithMaterialApp: true,
-    screenSize: Size(800, 600),
+    screenSize: const Size(800, 600),
   );
 
   uiTest(
     'LastLogin',
-    builder: () => TestUI(),
+    builder: TestUI.new,
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);
     },
-    wrapWithMaterialApp: true,
-    screenSize: Size(800, 600),
+    screenSize: const Size(800, 600),
   );
 }
 
@@ -79,9 +77,8 @@ class TestUI extends UI<TestViewModel> {
 }
 
 class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
-  PresenterFake({required PresenterBuilder<TestViewModel> builder})
+  PresenterFake({required super.builder})
       : super(
-          builder: builder,
           provider: UseCaseProvider((_) => UseCaseFake()),
         );
 
@@ -95,18 +92,18 @@ class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
 }
 
 class TestViewModel extends ViewModel {
-  final String foo;
 
-  TestViewModel(this.foo);
+  const TestViewModel(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
 class TestOutput extends Output {
-  final String foo;
 
   TestOutput(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];

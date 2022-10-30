@@ -1,9 +1,9 @@
 // coverage:ignore-file
 
-import '../core/enums/flag_value_type.dart';
-import '../core/feature_client.dart';
-import '../evaluation_context/evaluation_context.dart';
-import '../provider/feature_provider.dart';
+import 'package:clean_framework/src/open_feature/src/core/enums/flag_value_type.dart';
+import 'package:clean_framework/src/open_feature/src/core/feature_client.dart';
+import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
+import 'package:clean_framework/src/open_feature/src/provider/feature_provider.dart';
 
 class HookContext<T extends Object> {
   HookContext({

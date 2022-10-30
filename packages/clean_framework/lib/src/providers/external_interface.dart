@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:either_dart/either.dart';
-
-import 'gateway.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   ExternalInterface(List<GatewayConnection<Gateway>> gatewayConnections) {
@@ -97,7 +96,7 @@ class _RequestCompleter<R extends Request, S extends SuccessResponse> {
 
 class _StreamRequestCompleter<R extends Request, S extends SuccessResponse>
     extends _RequestCompleter<R, S> {
-  _StreamRequestCompleter(R request, this.emitSuccess) : super(request);
+  _StreamRequestCompleter(super.request, this.emitSuccess);
 
   final void Function(S) emitSuccess;
 }

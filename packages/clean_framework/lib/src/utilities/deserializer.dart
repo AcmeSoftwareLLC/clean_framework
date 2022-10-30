@@ -85,10 +85,13 @@ class Deserializer {
 
   DateTime getDateTime(String key, {DateTime? defaultValue}) {
     final value = map[key];
-    final _defaultValue = defaultValue ?? DateTime.now();
+    final resolvedDefaultValue = defaultValue ?? DateTime.now();
 
-    if (value is String) return DateTime.tryParse(value) ?? _defaultValue;
-    return _defaultValue;
+    if (value is String) {
+      return DateTime.tryParse(value) ?? resolvedDefaultValue;
+    }
+
+    return resolvedDefaultValue;
   }
 
   Deserializer call(String key) {

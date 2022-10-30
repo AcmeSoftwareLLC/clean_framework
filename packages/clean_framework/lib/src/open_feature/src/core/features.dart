@@ -1,7 +1,7 @@
-import '../evaluation_context/evaluation_context.dart';
-import '../flag_evaluation/flag_evaluation_details.dart';
-import '../flag_evaluation/flag_evaluation_options.dart';
-import 'enums.dart';
+import 'package:clean_framework/src/open_feature/src/core/enums.dart';
+import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
+import 'package:clean_framework/src/open_feature/src/flag_evaluation/flag_evaluation_details.dart';
+import 'package:clean_framework/src/open_feature/src/flag_evaluation/flag_evaluation_options.dart';
 
 abstract class Features {
   Future<FlagEvaluationDetails<bool>> getBooleanDetails({

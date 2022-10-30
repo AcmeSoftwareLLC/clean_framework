@@ -61,7 +61,7 @@ void main() {
 
     expect(() => useCase.getOutput<TestDirectOutput>(), throwsStateError);
     expect(
-        () => useCase.setInput<FailureInput>(FailureInput()), throwsStateError);
+        () => useCase.setInput<FailureInput>(FailureInput()), throwsStateError,);
 
     useCase.dispose();
   });
@@ -168,7 +168,7 @@ class TestUseCase extends UseCase<TestEntity> {
         }, inputFilters: {
           TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
               entity.merge(foo: input.foo),
-        });
+        },);
 
   Future<void> fetchDataImmediatelly() async {
     await request<TestDirectOutput, TestSuccessInput>(
@@ -189,33 +189,33 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 class TestSuccessInput extends SuccessInput {
-  final String foo;
 
   TestSuccessInput(this.foo);
+  final String foo;
 }
 
 class TestDirectOutput extends Output {
-  final String id;
 
   TestDirectOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestSubscriptionOutput extends Output {
-  final String id;
 
   TestSubscriptionOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestEntity extends Entity {
-  final String foo;
 
   TestEntity({required this.foo});
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
@@ -224,9 +224,9 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-  final String foo;
 
   TestOutput(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];

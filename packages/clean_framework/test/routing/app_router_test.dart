@@ -21,12 +21,12 @@ void main() {
             AppRoute(
               name: Routes.home,
               path: '/',
-              builder: (_, __) => OnTapPage(id: 'Home'),
+              builder: (_, __) => const OnTapPage(id: 'Home'),
             ),
             AppRoute(
               name: Routes.detail,
               path: '/detail',
-              builder: (_, __) => OnTapPage(id: 'Detail'),
+              builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
@@ -53,7 +53,7 @@ void main() {
             AppRoute(
               name: Routes.detail,
               path: '/detail',
-              builder: (_, __) => OnTapPage(id: 'Detail'),
+              builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
@@ -90,7 +90,7 @@ void main() {
                 AppRoute(
                   name: Routes.detail,
                   path: 'detail',
-                  builder: (_, __) => OnTapPage(id: 'Detail'),
+                  builder: (_, __) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
@@ -523,7 +523,7 @@ void main() {
                 AppRoute(
                   name: Routes.detail,
                   path: 'detail',
-                  builder: (_, __) => OnTapPage(id: 'Detail'),
+                  builder: (_, __) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
@@ -625,13 +625,13 @@ void main() {
             AppRoute(
               name: Routes.detail,
               path: '/detail',
-              builder: (_, __) => OnTapPage(id: 'Detail'),
+              builder: (_, __) => const OnTapPage(id: 'Detail'),
               redirect: (state) => '/more-detail',
             ),
             AppRoute(
               name: Routes.moreDetail,
               path: '/more-detail',
-              builder: (_, __) => OnTapPage(id: 'More Detail'),
+              builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
@@ -670,12 +670,12 @@ void main() {
             AppRoute(
               name: Routes.detail,
               path: '/detail',
-              builder: (_, __) => OnTapPage(id: 'Detail'),
+              builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
             AppRoute(
               name: Routes.moreDetail,
               path: '/more-detail',
-              builder: (_, __) => OnTapPage(id: 'More Detail'),
+              builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
@@ -726,14 +726,14 @@ void main() {
             AppRoute(
               name: Routes.moreDetail,
               path: '/more-detail',
-              builder: (_, __) => OnTapPage(id: 'More Detail'),
+              builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
         );
         await pumpApp(tester);
 
-        int count = 1;
+        var count = 1;
         final removeListener = testRouter.addListener(
           expectAsync0(
             () {
@@ -803,7 +803,7 @@ void main() {
             AppRoute(
               name: Routes.moreDetail,
               path: '/more-detail',
-              builder: (_, __) => OnTapPage(id: 'More Detail'),
+              builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
           errorBuilder: (_, __) => Page404(),
@@ -1027,12 +1027,11 @@ Future<void> pumpApp(WidgetTester tester) {
 }
 
 class OnTapPage extends StatelessWidget {
+
+  const OnTapPage({super.key, required this.id, this.onTap, this.value});
   final String id;
   final void Function(BuildContext)? onTap;
   final String? value;
-
-  const OnTapPage({Key? key, required this.id, this.onTap, this.value})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1044,7 +1043,7 @@ class OnTapPage extends StatelessWidget {
         children: [
           Text('Value: $value'),
           ElevatedButton(
-            child: Text('Navigate'),
+            child: const Text('Navigate'),
             onPressed: () => onTap?.call(context),
           ),
         ],
@@ -1056,7 +1055,7 @@ class OnTapPage extends StatelessWidget {
 class Page404 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text('404'),
       ),

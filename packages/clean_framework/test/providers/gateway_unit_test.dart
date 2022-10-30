@@ -10,9 +10,9 @@ void main() {
   test('Gateway unit test for success on direct output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestDirectGateway(provider);
+    final gateway = TestDirectGateway(provider);
 
-    gateway.transport = (request) async => Right(TestResponse('success'));
+    gateway.transport = (request) async => const Right(TestResponse('success'));
 
     await useCase.doFakeRequest(TestDirectOutput('123'));
 
@@ -22,7 +22,7 @@ void main() {
   test('Gateway unit test for failure on direct output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestDirectGateway(provider);
+    final gateway = TestDirectGateway(provider);
 
     gateway.transport = (request) async {
       return Left(UnknownFailureResponse());
@@ -36,15 +36,15 @@ void main() {
   test('Gateway unit test for success on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestYieldGateway(provider);
+    final gateway = TestYieldGateway(provider);
 
-    gateway.transport = (request) async => Right(TestResponse('success'));
+    gateway.transport = (request) async => const Right(TestResponse('success'));
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'success'));
 
-    gateway.yieldResponse(TestResponse('with yield'));
+    gateway.yieldResponse(const TestResponse('with yield'));
 
     expect(useCase.entity, EntityFake(value: 'success with input'));
   });
@@ -52,7 +52,7 @@ void main() {
   test('Gateway unit test for failure on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    var gateway = TestYieldGateway(provider);
+    final gateway = TestYieldGateway(provider);
 
     gateway.transport = (request) async => Left(UnknownFailureResponse());
 
@@ -62,8 +62,8 @@ void main() {
   });
 
   test('props', () {
-    final response = SuccessResponse();
-    expect(response, SuccessResponse());
+    const response = SuccessResponse();
+    expect(response, const SuccessResponse());
     // If we log the responses and compare the output, that could replace this
     expect(response.stringify, isTrue);
   });
@@ -109,39 +109,39 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 }
 
 class TestRequest extends Request {
-  final String id;
 
-  TestRequest(this.id);
+  const TestRequest(this.id);
+  final String id;
 }
 
 class TestResponse extends SuccessResponse {
-  final String foo;
 
-  TestResponse(this.foo);
+  const TestResponse(this.foo);
+  final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
 class TestSuccessInput extends SuccessInput {
-  final String foo;
 
   TestSuccessInput(this.foo);
+  final String foo;
 }
 
 class TestDirectOutput extends Output {
-  final String id;
 
   TestDirectOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
 class TestSubscriptionOutput extends Output {
-  final String id;
 
   TestSubscriptionOutput(this.id);
+  final String id;
 
   @override
   List<Object?> get props => [id];

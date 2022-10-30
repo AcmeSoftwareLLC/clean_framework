@@ -9,7 +9,7 @@ typedef FeatureBuilderCallback<T extends Object> = Widget Function(
 );
 
 class FeatureBuilder<T extends Object> extends StatefulWidget {
-  FeatureBuilder({
+  const FeatureBuilder({
     super.key,
     required this.flagKey,
     required this.defaultValue,
@@ -52,36 +52,36 @@ class _FeatureBuilderState<T extends Object> extends State<FeatureBuilder<T>> {
   }
 
   Future<T> _resolver(FeatureClient client) async {
-    Future<Object> _future;
+    Future<Object> future;
 
     final defaultValue = widget.defaultValue;
 
     if (defaultValue is bool) {
-      _future = client.getBooleanValue(
+      future = client.getBooleanValue(
         key: widget.flagKey,
         defaultValue: defaultValue,
         context: widget.evaluationContext,
       );
     } else if (defaultValue is String) {
-      _future = client.getStringValue(
+      future = client.getStringValue(
         key: widget.flagKey,
         defaultValue: defaultValue,
         context: widget.evaluationContext,
       );
     } else if (defaultValue is num) {
-      _future = client.getNumberValue(
+      future = client.getNumberValue(
         key: widget.flagKey,
         defaultValue: widget.defaultValue as num,
         context: widget.evaluationContext,
       );
     } else {
-      _future = client.getValue(
+      future = client.getValue(
         key: widget.flagKey,
         defaultValue: defaultValue,
         context: widget.evaluationContext,
       );
     }
 
-    return (await _future) as T;
+    return await future as T;
   }
 }

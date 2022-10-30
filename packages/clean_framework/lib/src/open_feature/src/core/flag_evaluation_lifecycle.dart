@@ -1,4 +1,4 @@
-import '../hook/hook.dart';
+import 'package:clean_framework/src/open_feature/src/hook/hook.dart';
 
 abstract class FlagEvaluationLifecycle {
   List<Hook> get hooks;

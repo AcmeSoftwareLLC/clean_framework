@@ -1,12 +1,12 @@
 // coverage:ignore-file
 library open_feature;
 
-import 'src/core/feature_client.dart';
-import 'src/evaluation_context/evaluation_context.dart';
-import 'src/hook/hook.dart';
-import 'src/open_feature_client.dart';
-import 'src/provider/feature_provider.dart';
-import 'src/provider/no_op_feature_provider.dart';
+import 'package:clean_framework/src/open_feature/src/core/feature_client.dart';
+import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
+import 'package:clean_framework/src/open_feature/src/hook/hook.dart';
+import 'package:clean_framework/src/open_feature/src/open_feature_client.dart';
+import 'package:clean_framework/src/open_feature/src/provider/feature_provider.dart';
+import 'package:clean_framework/src/open_feature/src/provider/no_op_feature_provider.dart';
 
 export 'src/core/enums.dart';
 export 'src/core/feature_client.dart';
@@ -30,6 +30,7 @@ class OpenFeature {
 
   static OpenFeature? _instance;
 
+  // ignore: prefer_constructors_over_static_methods
   static OpenFeature get instance {
     return _instance ??= OpenFeature._();
   }
