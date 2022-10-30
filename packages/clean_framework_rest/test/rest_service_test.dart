@@ -9,10 +9,11 @@ import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  const fileName = 'test/test_file.txt';
+  late String fileName;
   late XFile file;
 
   setUp(() {
+    fileName = 'test/test_file_${DateTime.now()}.txt';
     File(fileName).createSync();
     file = XFile(fileName);
   });
@@ -52,7 +53,6 @@ void main() {
       expect(client.multipartRequest.files.length, 1);
       expect(client.multipartRequest.files[0].length, await file.length());
       expect(client.multipartRequest.files[0].field, 'file');
-      expect(client.multipartRequest.files[0].filename, 'test_file.txt');
     },
   );
 

@@ -4,17 +4,14 @@ import 'dart:typed_data';
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework_rest/clean_framework_rest.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
-import 'package:cross_file/cross_file.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
 void main() {
   const fileName = 'test/test_file.txt';
-  late XFile file;
 
   setUp(() {
     File(fileName).createSync();
-    file = XFile(fileName);
   });
 
   test('RestExternalInterface success response', () async {
@@ -222,7 +219,10 @@ void main() {
     );
   });
 
-  tearDown(File(fileName).deleteSync);
+  tearDown(() {
+    final ioFile = File(fileName);
+    if (ioFile.existsSync()) ioFile.deleteSync();
+  });
 }
 
 class TestBytesRestRequest extends BytesRestRequest {
