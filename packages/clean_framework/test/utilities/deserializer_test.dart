@@ -153,22 +153,24 @@ void main() {
     });
 
     test(
-        'should return an default enum if matcher could not match with the value',
-        () {
-      final data = Deserializer(
-        {'key': 'value'},
-      );
+      'should return an default enum '
+      'if matcher could not match with the value',
+      () {
+        final data = Deserializer(
+          {'key': 'value'},
+        );
 
-      expect(
-        data.getEnum<TestEnum>(
-          'key',
-          values: TestEnum.values,
-          defaultValue: TestEnum.baz,
-          matcher: (e) => e.name,
-        ),
-        TestEnum.baz,
-      );
-    });
+        expect(
+          data.getEnum<TestEnum>(
+            'key',
+            values: TestEnum.values,
+            defaultValue: TestEnum.baz,
+            matcher: (e) => e.name,
+          ),
+          TestEnum.baz,
+        );
+      },
+    );
 
     test('should return DateTime', () {
       final data = Deserializer(

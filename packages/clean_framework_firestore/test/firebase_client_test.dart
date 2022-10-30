@@ -381,7 +381,7 @@ void main() {
       when(() => mock.collection(path)).thenReturn(mockCollectionRef);
       when(() => mockCollectionRef.snapshots()).thenAnswer((_) async* {
         yield mockQuerySnapshot;
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
         yield mockQuerySnapshot;
       });
       when(() => mockQuerySnapshot.docs).thenReturn([

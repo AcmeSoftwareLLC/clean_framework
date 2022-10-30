@@ -8,11 +8,13 @@ final context = ProvidersContext();
 void main() {
   test('Gateway transport direct request with success', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-        (_) => TestUseCase(TestEntity(foo: 'bar')),);
-    final gateway = TestDirectGateway(provider);
-
-    gateway.transport = (request) async =>
-        const Right<FailureResponse, TestResponse>(TestResponse('success'));
+      (_) => TestUseCase(TestEntity(foo: 'bar')),
+    );
+    TestDirectGateway(provider).transport = (request) async {
+      return const Right<FailureResponse, TestResponse>(
+        TestResponse('success'),
+      );
+    };
 
     final useCase = provider.getUseCaseFromContext(context);
 
@@ -24,9 +26,9 @@ void main() {
 
   test('Gateway transport direct request with failure', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-        (_) => TestUseCase(TestEntity(foo: 'bar')),);
-    final gateway = TestDirectGateway(provider);
-    gateway.transport = (request) async {
+      (_) => TestUseCase(TestEntity(foo: 'bar')),
+    );
+    TestDirectGateway(provider).transport = (request) async {
       return Left<FailureResponse, TestResponse>(UnknownFailureResponse());
     };
 
@@ -40,11 +42,14 @@ void main() {
 
   test('Gateway transport delayed request with a yielded success', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-        (_) => TestUseCase(TestEntity(foo: 'bar')),);
-    final gateway = TestYieldGateway(provider);
-
-    gateway.transport = (request) async =>
-        const Right<FailureResponse, TestResponse>(TestResponse('success'));
+      (_) => TestUseCase(TestEntity(foo: 'bar')),
+    );
+    final gateway = TestYieldGateway(provider)
+      ..transport = (request) async {
+        return const Right<FailureResponse, TestResponse>(
+          TestResponse('success'),
+        );
+      };
 
     final useCase = provider.getUseCaseFromContext(context);
 
@@ -124,12 +129,16 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
-      : super(entity: entity, outputFilters: {
-          TestOutput: (entity) => TestOutput(entity.foo),
-        }, inputFilters: {
-          TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-              entity.merge(foo: input.foo),
-        },);
+      : super(
+          entity: entity,
+          outputFilters: {
+            TestOutput: (entity) => TestOutput(entity.foo),
+          },
+          inputFilters: {
+            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
+                entity.merge(foo: input.foo),
+          },
+        );
 
   Future<void> fetchDataImmediatelly() async {
     await request<TestDirectOutput, TestSuccessInput>(
@@ -149,22 +158,22 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 
   Future<void> fetchStateFromOtherUseCase() async {
-    await request<TestDirectOutput, TestSuccessInput>(TestDirectOutput(''),
-        onFailure: (_) => entity,
-        onSuccess: (input) {
-          return entity.merge(foo: input.foo);
-        },);
+    await request<TestDirectOutput, TestSuccessInput>(
+      TestDirectOutput(''),
+      onFailure: (_) => entity,
+      onSuccess: (input) {
+        return entity.merge(foo: input.foo);
+      },
+    );
   }
 }
 
 class TestRequest extends Request {
-
   const TestRequest(this.id);
   final String id;
 }
 
 class TestResponse extends SuccessResponse {
-
   const TestResponse(this.foo);
   final String foo;
 
@@ -173,13 +182,11 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-
   TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-
   TestDirectOutput(this.id);
   final String id;
 
@@ -188,7 +195,6 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-
   TestSubscriptionOutput(this.id);
   final String id;
 
@@ -197,7 +203,6 @@ class TestSubscriptionOutput extends Output {
 }
 
 class TestEntity extends Entity {
-
   TestEntity({required this.foo});
   final String foo;
 
@@ -208,7 +213,6 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-
   TestOutput(this.foo);
   final String foo;
 

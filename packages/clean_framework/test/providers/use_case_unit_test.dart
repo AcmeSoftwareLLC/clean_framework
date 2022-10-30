@@ -37,11 +37,10 @@ void main() {
   });
 
   test('UseCase subscription with delayed response on input filter', () async {
-    final useCase = TestUseCase(TestEntity(foo: ''));
-
-    useCase.subscribe(TestSubscriptionOutput, (output) {
-      return Right<FailureInput, SuccessInput>(SuccessInput());
-    });
+    final useCase = TestUseCase(TestEntity(foo: ''))
+      ..subscribe(TestSubscriptionOutput, (output) {
+        return Right<FailureInput, SuccessInput>(SuccessInput());
+      });
 
     await useCase.fetchDataEventually();
 
@@ -61,7 +60,9 @@ void main() {
 
     expect(() => useCase.getOutput<TestDirectOutput>(), throwsStateError);
     expect(
-        () => useCase.setInput<FailureInput>(FailureInput()), throwsStateError,);
+      () => useCase.setInput<FailureInput>(FailureInput()),
+      throwsStateError,
+    );
 
     useCase.dispose();
   });
@@ -74,35 +75,35 @@ void main() {
     useCase.increment();
     expect(getCount(), equals(1));
 
-    await Future.delayed(const Duration(milliseconds: 110));
+    await Future<void>.delayed(const Duration(milliseconds: 110));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 90));
+    await Future<void>.delayed(const Duration(milliseconds: 90));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 75));
+    await Future<void>.delayed(const Duration(milliseconds: 75));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 60));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 105));
+    await Future<void>.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(3));
 
-    await Future.delayed(const Duration(milliseconds: 95));
+    await Future<void>.delayed(const Duration(milliseconds: 95));
     useCase.increment();
     expect(getCount(), equals(3));
 
-    await Future.delayed(const Duration(milliseconds: 105));
+    await Future<void>.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(4));
 
@@ -117,43 +118,43 @@ void main() {
     useCase.increment();
     expect(getCount(), equals(0));
 
-    await Future.delayed(const Duration(milliseconds: 40));
+    await Future<void>.delayed(const Duration(milliseconds: 40));
     useCase.increment();
     expect(getCount(), equals(0));
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
     useCase.increment();
     expect(getCount(), equals(1));
 
-    await Future.delayed(const Duration(milliseconds: 110));
+    await Future<void>.delayed(const Duration(milliseconds: 110));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 90));
+    await Future<void>.delayed(const Duration(milliseconds: 90));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 75));
+    await Future<void>.delayed(const Duration(milliseconds: 75));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 50));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 60));
+    await Future<void>.delayed(const Duration(milliseconds: 60));
     useCase.increment();
     expect(getCount(), equals(2));
 
-    await Future.delayed(const Duration(milliseconds: 105));
+    await Future<void>.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(3));
 
-    await Future.delayed(const Duration(milliseconds: 95));
+    await Future<void>.delayed(const Duration(milliseconds: 95));
     useCase.increment();
     expect(getCount(), equals(3));
 
-    await Future.delayed(const Duration(milliseconds: 105));
+    await Future<void>.delayed(const Duration(milliseconds: 105));
     useCase.increment();
     expect(getCount(), equals(4));
 
@@ -163,12 +164,16 @@ void main() {
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
-      : super(entity: entity, outputFilters: {
-          TestOutput: (entity) => TestOutput(entity.foo),
-        }, inputFilters: {
-          TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-              entity.merge(foo: input.foo),
-        },);
+      : super(
+          entity: entity,
+          outputFilters: {
+            TestOutput: (entity) => TestOutput(entity.foo),
+          },
+          inputFilters: {
+            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
+                entity.merge(foo: input.foo),
+          },
+        );
 
   Future<void> fetchDataImmediatelly() async {
     await request<TestDirectOutput, TestSuccessInput>(
@@ -189,13 +194,11 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 class TestSuccessInput extends SuccessInput {
-
   TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-
   TestDirectOutput(this.id);
   final String id;
 
@@ -204,7 +207,6 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-
   TestSubscriptionOutput(this.id);
   final String id;
 
@@ -213,7 +215,6 @@ class TestSubscriptionOutput extends Output {
 }
 
 class TestEntity extends Entity {
-
   TestEntity({required this.foo});
   final String foo;
 
@@ -224,7 +225,6 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-
   TestOutput(this.foo);
   final String foo;
 

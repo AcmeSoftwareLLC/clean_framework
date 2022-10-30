@@ -60,6 +60,8 @@ void main() {
 }
 
 class TestUI extends UI<TestViewModel> {
+  TestUI({super.key});
+
   @override
   Widget build(BuildContext context, TestViewModel viewModel) {
     return Directionality(
@@ -77,7 +79,7 @@ class TestUI extends UI<TestViewModel> {
 }
 
 class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
-  PresenterFake({required super.builder})
+  PresenterFake({super.key, required super.builder})
       : super(
           provider: UseCaseProvider((_) => UseCaseFake()),
         );
@@ -92,7 +94,6 @@ class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
 }
 
 class TestViewModel extends ViewModel {
-
   const TestViewModel(this.foo);
   final String foo;
 
@@ -101,7 +102,6 @@ class TestViewModel extends ViewModel {
 }
 
 class TestOutput extends Output {
-
   TestOutput(this.foo);
   final String foo;
 

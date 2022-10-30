@@ -71,13 +71,13 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   void handleRequest() {
     on<FutureTestRequest>(
       (request, send) async {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
         send(const TestResponse('success'));
       },
     );
     on<FailedRequest>(
       (request, send) async {
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future<void>.delayed(const Duration(milliseconds: 100));
         sendError(const TypedFailureResponse(type: 'test'));
       },
     );
@@ -92,7 +92,7 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
           (count) => send(TestResponse(count.toString())),
         );
 
-        await Future.delayed(const Duration(milliseconds: 500));
+        await Future<void>.delayed(const Duration(milliseconds: 500));
         await subscription.cancel();
       },
     );
@@ -194,7 +194,6 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 abstract class TestRequest extends Request {
-
   const TestRequest(this.id);
   final String id;
 }
@@ -212,7 +211,6 @@ class StreamTestRequest extends TestRequest {
 }
 
 class TestResponse extends SuccessResponse {
-
   const TestResponse(this.foo);
   final String foo;
 
@@ -221,13 +219,11 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-
   TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-
   TestDirectOutput(this.id);
   final String id;
 
@@ -236,7 +232,6 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-
   TestSubscriptionOutput(this.id);
   final String id;
 
@@ -245,7 +240,6 @@ class TestSubscriptionOutput extends Output {
 }
 
 class TestEntity extends Entity {
-
   TestEntity({required this.foo});
   final String foo;
 
@@ -256,7 +250,6 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-
   TestOutput(this.foo);
   final String foo;
 

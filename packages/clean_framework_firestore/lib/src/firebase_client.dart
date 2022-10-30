@@ -38,7 +38,6 @@ class FirebaseClient {
   }
 
   /// Similar to [write], but updates data in the document.
-  // TODO this process should return something
   Future<void> update({
     required String path,
     required Map<String, dynamic> content,
@@ -53,7 +52,7 @@ class FirebaseClient {
       return;
     }
 
-    return await _fireStore.collection(path).doc(id).update(content);
+    return _fireStore.collection(path).doc(id).update(content);
   }
 
   /// Deletes a document in fire-store.
@@ -67,7 +66,7 @@ class FirebaseClient {
       return;
     }
 
-    return await _fireStore.doc(path).delete();
+    return _fireStore.doc(path).delete();
   }
 
   /// Queries a fire-store document for the [path] and [id].
@@ -86,7 +85,7 @@ class FirebaseClient {
 
   void createQuery(String path, SnapshotQuery<Map<String, dynamic>> query) {
     if (_queryRef == null) {
-      var ref = _fireStore.collection(path);
+      final ref = _fireStore.collection(path);
       _queryRef = query(ref);
     } else {
       _queryRef = query(_queryRef!);
@@ -101,17 +100,17 @@ class FirebaseClient {
   Future<Map<String, dynamic>> readAll({
     required String path,
   }) async {
-    var ref = _queryRef ?? _fireStore.collection(path);
+    final ref = _queryRef ?? _fireStore.collection(path);
 
     final querySnapshots = await ref.get();
 
-    final _docs = <Map<String, dynamic>>[];
+    final docs = <Map<String, dynamic>>[];
     for (final snapshot in querySnapshots.docs) {
       final doc = snapshot.data();
       doc['id'] = snapshot.id;
-      _docs.add(doc);
+      docs.add(doc);
     }
-    return {'list': _docs};
+    return {'list': docs};
   }
 
   /// Queries a fire-store document for the [path] and [id].
@@ -134,17 +133,17 @@ class FirebaseClient {
   Stream<Map<String, dynamic>> watchAll({
     required String path,
   }) async* {
-    var ref = _queryRef ?? _fireStore.collection(path);
+    final ref = _queryRef ?? _fireStore.collection(path);
 
     await for (final qs in ref.snapshots()) {
-      final _docs = <Map<String, dynamic>>[];
+      final docs = <Map<String, dynamic>>[];
 
       for (final snapshot in qs.docs) {
         final doc = snapshot.data();
         doc['id'] = snapshot.id;
-        _docs.add(doc);
+        docs.add(doc);
       }
-      yield {'list': _docs};
+      yield {'list': docs};
     }
   }
 }
@@ -152,10 +151,10 @@ class FirebaseClient {
 typedef SnapshotQuery<T> = Query<T> Function(Query<T>);
 
 class BatchKey {
-  WriteBatch _batch;
-
   BatchKey([FirebaseFirestore? fireStore])
       : _batch = (fireStore ?? FirebaseFirestore.instance).batch();
+
+  final WriteBatch _batch;
 
   Future<void> commit() => _batch.commit();
 }

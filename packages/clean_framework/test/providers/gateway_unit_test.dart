@@ -10,9 +10,9 @@ void main() {
   test('Gateway unit test for success on direct output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    final gateway = TestDirectGateway(provider);
-
-    gateway.transport = (request) async => const Right(TestResponse('success'));
+    TestDirectGateway(provider).transport = (request) async {
+      return const Right(TestResponse('success'));
+    };
 
     await useCase.doFakeRequest(TestDirectOutput('123'));
 
@@ -22,9 +22,7 @@ void main() {
   test('Gateway unit test for failure on direct output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    final gateway = TestDirectGateway(provider);
-
-    gateway.transport = (request) async {
+    TestDirectGateway(provider).transport = (request) async {
       return Left(UnknownFailureResponse());
     };
 
@@ -36,9 +34,10 @@ void main() {
   test('Gateway unit test for success on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    final gateway = TestYieldGateway(provider);
-
-    gateway.transport = (request) async => const Right(TestResponse('success'));
+    final gateway = TestYieldGateway(provider)
+      ..transport = (request) async {
+        return const Right(TestResponse('success'));
+      };
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
@@ -52,9 +51,9 @@ void main() {
   test('Gateway unit test for failure on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
-    final gateway = TestYieldGateway(provider);
-
-    gateway.transport = (request) async => Left(UnknownFailureResponse());
+    TestYieldGateway(provider).transport = (request) async {
+      return Left(UnknownFailureResponse());
+    };
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
 
@@ -109,13 +108,11 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 }
 
 class TestRequest extends Request {
-
   const TestRequest(this.id);
   final String id;
 }
 
 class TestResponse extends SuccessResponse {
-
   const TestResponse(this.foo);
   final String foo;
 
@@ -124,13 +121,11 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-
   TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-
   TestDirectOutput(this.id);
   final String id;
 
@@ -139,7 +134,6 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-
   TestSubscriptionOutput(this.id);
   final String id;
 

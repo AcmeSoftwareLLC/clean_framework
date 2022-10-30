@@ -29,7 +29,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -56,7 +56,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -95,7 +95,7 @@ void main() {
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -145,7 +145,7 @@ void main() {
               ),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -189,7 +189,7 @@ void main() {
               ),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -233,7 +233,7 @@ void main() {
               ),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -276,12 +276,12 @@ void main() {
               path: '/detail/:a',
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
-                value:
-                    '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                value: '${state.getParam('a')}${state.queryParams['b']}'
+                    '${state.extra}',
               ),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -333,7 +333,7 @@ void main() {
             ],
           ),
         ],
-        errorBuilder: (_, __) => Page404(),
+        errorBuilder: (_, __) => const Page404(),
       );
       await pumpApp(tester);
 
@@ -397,14 +397,14 @@ void main() {
                   path: 'detail/:a',
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value:
-                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                        '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -448,14 +448,14 @@ void main() {
                   path: 'detail/:a',
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value:
-                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                        '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -490,7 +490,7 @@ void main() {
             ),
           ),
         ],
-        errorBuilder: (_, __) => Page404(),
+        errorBuilder: (_, __) => const Page404(),
       );
       await pumpApp(tester);
 
@@ -528,7 +528,7 @@ void main() {
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -596,7 +596,7 @@ void main() {
               state.error.toString(),
               contains('No route param with "c" key was passed'),
             );
-            return Page404();
+            return const Page404();
           },
         );
         await pumpApp(tester);
@@ -634,7 +634,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -678,7 +678,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
           redirect: (state) {
             if (state.location == '/detail') return '/more-detail';
             return null;
@@ -729,7 +729,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -737,7 +737,6 @@ void main() {
         final removeListener = testRouter.addListener(
           expectAsync0(
             () {
-              // TODO(sarbagya): Update the test when go_router fixes listener being called twice
               switch (count) {
                 case 1:
                 case 2:
@@ -806,7 +805,7 @@ void main() {
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -867,14 +866,14 @@ void main() {
                   path: 'detail/:a',
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value:
-                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                        '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -929,14 +928,14 @@ void main() {
                   path: 'detail/:a',
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value:
-                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                        '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -984,14 +983,14 @@ void main() {
                   path: 'detail/:a',
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value:
-                        '${state.getParam('a')}${state.queryParams['b']}${state.extra}',
+                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                        '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => Page404(),
+          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -1027,7 +1026,6 @@ Future<void> pumpApp(WidgetTester tester) {
 }
 
 class OnTapPage extends StatelessWidget {
-
   const OnTapPage({super.key, required this.id, this.onTap, this.value});
   final String id;
   final void Function(BuildContext)? onTap;
@@ -1053,6 +1051,8 @@ class OnTapPage extends StatelessWidget {
 }
 
 class Page404 extends StatelessWidget {
+  const Page404({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
@@ -1067,7 +1067,7 @@ class TestNavigatorObserver extends NavigatorObserver {
   String? removedRoute;
 
   @override
-  void didRemove(Route route, Route? previousRoute) {
+  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
     removedRoute = (route.settings as MaterialPage).name;
   }
 }

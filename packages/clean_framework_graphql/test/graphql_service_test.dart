@@ -217,7 +217,7 @@ void main() {
       when(
         () => mock.query(any()),
       ).thenAnswer((_) async {
-        await Future.delayed(const Duration(milliseconds: 10));
+        await Future<void>.delayed(const Duration(milliseconds: 10));
         return successResult;
       });
 

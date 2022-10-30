@@ -195,7 +195,7 @@ void main() {
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
-                return FeatureBuilder<List>(
+                return FeatureBuilder<List<dynamic>>(
                   flagKey: 'object',
                   defaultValue: const [0, 0],
                   builder: (context, value) {
@@ -221,7 +221,7 @@ void main() {
             loader: (featureProvider) async => featureProvider.load(),
             child: MaterialApp(
               builder: (context, child) {
-                return FeatureBuilder<List>(
+                return FeatureBuilder<List<dynamic>>(
                   flagKey: 'objects', // invalid key
                   defaultValue: const [0, 0],
                   builder: (context, value) {
@@ -268,7 +268,7 @@ void main() {
 
 class NewTitleFeatureProvider extends JsonFeatureProvider {
   void load() {
-    feed({'newTitle': {}});
+    feed({'newTitle': <String, dynamic>{}});
   }
 }
 

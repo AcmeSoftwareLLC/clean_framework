@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'firebase_client.dart';
+import 'package:clean_framework_firestore/src/firebase_client.dart';
 
 class FirebaseClientFake implements FirebaseClient {
+  FirebaseClientFake(this._content, [this._exception]);
+
   final _controller = StreamController<Map<String, dynamic>>.broadcast();
   final Map<String, dynamic> _content;
   final Object? _exception;
-
-  FirebaseClientFake(this._content, [this._exception]);
 
   @override
   Future<void> delete({
@@ -39,10 +39,12 @@ class FirebaseClientFake implements FirebaseClient {
   }) async {}
 
   @override
-  Stream<Map<String, dynamic>> watch(
-      {required String path, required String id}) {
-    Future.delayed(
-      Duration(milliseconds: 1),
+  Stream<Map<String, dynamic>> watch({
+    required String path,
+    required String id,
+  }) {
+    Future<void>.delayed(
+      const Duration(milliseconds: 1),
       () => _controller.sink.add(_content),
     );
     return _controller.stream;
@@ -50,7 +52,7 @@ class FirebaseClientFake implements FirebaseClient {
 
   @override
   Stream<Map<String, dynamic>> watchAll({required String path}) {
-    Future.delayed(
+    Future<void>.delayed(
       Duration(milliseconds: 1),
       () => _controller.sink.add(_content),
     );

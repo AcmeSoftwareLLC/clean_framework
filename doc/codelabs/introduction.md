@@ -1069,7 +1069,7 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
     // For normal Gateways
     on<FutureTestRequest>(
       (request, send) async {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future<void>.delayed(Duration(milliseconds: 100));
         send(Right(TestResponse('success')));
       },
     );
@@ -1086,7 +1086,7 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
           (count) => send(Right(TestResponse(count.toString()))),
         );
 
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future<void>.delayed(Duration(milliseconds: 500));
         subscription.cancel();
       },
     );

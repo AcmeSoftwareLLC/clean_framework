@@ -12,7 +12,8 @@ void main() {
       },
     );
 
-    await ProviderTester().pumpWidget(tester, MaterialApp(home: presenter));
+    await ProviderTester<dynamic>()
+        .pumpWidget(tester, MaterialApp(home: presenter));
 
     expect(find.byKey(const Key('foo')), findsOneWidget);
     expect(find.text('INITIAL'), findsOneWidget);
@@ -34,17 +35,21 @@ void main() {
       final widget = MaterialApp(
         home: FutureBuilder<int>(
           initialData: 1,
-          future: Future.delayed(const Duration(milliseconds: 100), () => 2),
+          future: Future<int>.delayed(
+            const Duration(milliseconds: 100),
+            () => 2,
+          ),
           builder: (context, snapshot) {
             return TestPresenter(
               count: snapshot.data,
-              builder: (viewModel) => Text(viewModel.foo, key: const Key('foo')),
+              builder: (viewModel) =>
+                  Text(viewModel.foo, key: const Key('foo')),
             );
           },
         ),
       );
 
-      await ProviderTester().pumpWidget(tester, widget);
+      await ProviderTester<dynamic>().pumpWidget(tester, widget);
 
       final testPresenterFinder = find.byType(TestPresenter);
       expect(testPresenterFinder, findsOneWidget);
@@ -61,7 +66,7 @@ void main() {
 }
 
 class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
-  TestPresenter({required super.builder, this.count})
+  TestPresenter({super.key, required super.builder, this.count})
       : super(provider: provider);
 
   final int? count;
@@ -76,7 +81,8 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
   }
 
   @override
-  TestViewModel createViewModel(_, TestOutput output) => TestViewModel.fromOutput(output);
+  TestViewModel createViewModel(_, TestOutput output) =>
+      TestViewModel.fromOutput(output);
 
   @override
   void onOutputUpdate(BuildContext context, TestOutput output) {
@@ -107,14 +113,13 @@ class TestUseCase extends UseCase<EntityFake> {
   Future<void> fetch() async {
     entity = EntityFake(value: 'a');
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future<void>.delayed(const Duration(milliseconds: 100));
 
     entity = EntityFake(value: 'b');
   }
 }
 
 class TestOutput extends Output {
-
   TestOutput(this.foo);
   final String foo;
 
@@ -123,7 +128,6 @@ class TestOutput extends Output {
 }
 
 class TestViewModel extends ViewModel {
-
   const TestViewModel(this.foo);
 
   TestViewModel.fromOutput(TestOutput output) : foo = output.foo.toUpperCase();

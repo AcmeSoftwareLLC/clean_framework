@@ -22,7 +22,8 @@ class CleanFrameworkObserver {
   /// ```
   static CleanFrameworkObserver instance = CleanFrameworkObserver();
 
-  /// Called when an [error] is thrown by [ExternalInterface] for the given [request].
+  /// Called when an [error] is thrown by [ExternalInterface]
+  /// for the given [request].
   void onExternalError(
     ExternalInterface externalInterface,
     Request request,

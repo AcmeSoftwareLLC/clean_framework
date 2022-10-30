@@ -20,7 +20,7 @@ class ExampleApp extends StatelessWidget {
       register: () => AssetFeatureProvider(),
       loader: (featureProvider) async {
         // To demonstrate the lazy update triggered by change in feature flags.
-        await Future.delayed(Duration(seconds: 2));
+        await Future<void>.delayed(Duration(seconds: 2));
         await featureProvider.load('assets/flags.json');
       },
       onLoaded: () {
