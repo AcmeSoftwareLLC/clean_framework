@@ -1,5 +1,4 @@
-import 'package:clean_framework/src/feature_state/feature_mapper.dart';
-import 'package:clean_framework/src/feature_state/feature_state_provider.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

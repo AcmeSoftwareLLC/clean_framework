@@ -7,7 +7,7 @@ import 'package:clean_framework_rest/src/rest_service.dart';
 import 'package:cross_file/cross_file.dart';
 
 class RestExternalInterface
-    extends ExternalInterface<RestRequest, RestSuccessResponse<dynamic>> {
+    extends ExternalInterface<RestRequest, RestSuccessResponse> {
   RestExternalInterface({
     required List<GatewayConnection<Gateway>> gatewayConnections,
     required String baseUrl,

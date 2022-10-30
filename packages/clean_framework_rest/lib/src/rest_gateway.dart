@@ -4,8 +4,7 @@ import 'package:clean_framework_rest/src/rest_requests.dart';
 import 'package:clean_framework_rest/src/rest_responses.dart';
 
 abstract class RestGateway<O extends Output, R extends RestRequest,
-        S extends SuccessInput>
-    extends Gateway<O, R, RestSuccessResponse<dynamic>, S> {
+    S extends SuccessInput> extends Gateway<O, R, RestSuccessResponse, S> {
   RestGateway({
     super.context,
     super.provider,

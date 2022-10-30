@@ -18,11 +18,12 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.0.2
-  flutter_test:
-    sdk: flutter
   meta: '>=1.8.0 <1.9.0'
   riverpod: ^2.0.2
 
 dev_dependencies:
+  clean_framework_test: ^0.1.0
+  flutter_test:
+    sdk: flutter
   mocktail: ^0.3.0
   very_good_analysis: ^3.1.0

@@ -14,6 +14,7 @@ dependencies:
   intl: ^0.17.0
 
 dev_dependencies:
+  clean_framework_test: ^0.1.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0-nullsafety.7

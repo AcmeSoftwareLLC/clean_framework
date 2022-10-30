@@ -142,6 +142,7 @@ class RestService {
     } on InvalidResponseRestServiceFailure {
       rethrow;
     } catch (e) {
+      print(e);
       throw RestServiceFailure(e.toString());
     } finally {
       resolvedClient.close();

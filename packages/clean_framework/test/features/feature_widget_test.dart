@@ -3,7 +3,7 @@ import 'package:clean_framework/src/feature_state/feature.dart';
 import 'package:clean_framework/src/feature_state/feature_mapper.dart';
 import 'package:clean_framework/src/feature_state/feature_state_provider.dart';
 import 'package:clean_framework/src/feature_state/feature_widget.dart';
-import 'package:clean_framework/src/tests/feature_tester.dart';
+import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

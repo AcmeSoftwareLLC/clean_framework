@@ -9,10 +9,12 @@ import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  final file = XFile('test/test_file.txt');
+  const fileName = 'test/test_file.txt';
+  late XFile file;
 
   setUp(() {
-    File(file.name).createSync();
+    File(fileName).createSync();
+    file = XFile(fileName);
   });
 
   setUpAll(() {
@@ -407,7 +409,7 @@ void main() {
   });
 
   tearDown(() {
-    final ioFile = File(file.name);
+    final ioFile = File(fileName);
     if (ioFile.existsSync()) ioFile.deleteSync();
   });
 }
