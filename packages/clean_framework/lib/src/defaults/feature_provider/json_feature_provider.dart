@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:clean_framework/src/defaults/feature_provider/engine/evaluation_engine.dart';
 import 'package:clean_framework/src/defaults/feature_provider/engine/json_evaluation_engine.dart';
+import 'package:clean_framework/src/defaults/feature_provider/engine/open_feature_flags.dart';
 import 'package:clean_framework/src/open_feature/open_feature.dart';
-
-import 'engine/open_feature_flags.dart';
 
 export 'engine/evaluation_engine.dart';
 export 'engine/open_feature_flags.dart';
@@ -97,7 +96,7 @@ class JsonFeatureProvider implements FeatureProvider {
     final flags = Map<String, dynamic>.of(rawFlags);
 
     for (final flag in flags.entries) {
-      final flagObject = Map<String, dynamic>.from(flag.value);
+      final flagObject = Map<String, dynamic>.from(flag.value as Map);
 
       if (!flagObject.containsKey('returnType')) {
         flagObject['returnType'] = 'boolean';

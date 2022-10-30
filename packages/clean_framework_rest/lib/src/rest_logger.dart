@@ -71,7 +71,9 @@ class _RequestLogger extends NetworkLogger {
       printInLines(prettyMap(request.bodyFields));
     } else {
       try {
-        final payload = jsonDecode(request.body);
+        final payload = Map<String, dynamic>.from(
+          jsonDecode(request.body) as Map,
+        );
 
         if (payload.isNotEmpty) {
           printCategory('Payload');
@@ -115,11 +117,11 @@ class _ResponseLogger extends NetworkLogger {
     final body = response.body;
 
     try {
-      final _data = body.isEmpty ? body : jsonDecode(body);
-      final data = _data is Map<String, dynamic> ? _data : {'data': _data};
+      final data = body.isEmpty ? body : jsonDecode(body);
+      final dataMap = data is Map<String, dynamic> ? data : {'data': data};
 
       printCategory('Body');
-      printInLines(prettyMap(data));
+      printInLines(prettyMap(dataMap));
     } catch (_) {
       printCategory('Raw Body');
       printInLines(body);

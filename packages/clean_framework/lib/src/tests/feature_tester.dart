@@ -5,17 +5,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class FeatureTester<S> {
-  final _container = ProviderContainer();
-  final FeatureStateProvider _featureStateProvider;
-
   FeatureTester(this._featureStateProvider);
 
-  Future<void> pumpWidget(WidgetTester tester, Widget widget) =>
-      tester.pumpWidget(
-          UncontrolledProviderScope(container: _container, child: widget));
+  final ProviderContainer _container = ProviderContainer();
+  final FeatureStateProvider<S, FeatureMapper<S>> _featureStateProvider;
+
+  Future<void> pumpWidget(WidgetTester tester, Widget widget) {
+    return tester.pumpWidget(
+      UncontrolledProviderScope(container: _container, child: widget),
+    );
+  }
 
   void dispose() => _container.dispose();
 
-  FeatureMapper<S> get featuresMap =>
-      _container.read(_featureStateProvider.featuresMap);
+  FeatureMapper<S> get featuresMap {
+    return _container.read(_featureStateProvider.featuresMap);
+  }
 }

@@ -1,9 +1,8 @@
 // coverage:ignore-file
 
 import 'package:clean_framework/src/defaults/feature_provider/engine/evaluation_engine.dart';
+import 'package:clean_framework/src/defaults/feature_provider/engine/open_feature_flags.dart';
 import 'package:clean_framework/src/open_feature/open_feature.dart';
-
-import 'open_feature_flags.dart';
 
 class JsonEvaluationEngine implements EvaluationEngine {
   const JsonEvaluationEngine();
@@ -21,7 +20,8 @@ class JsonEvaluationEngine implements EvaluationEngine {
       throw FlagNotFoundException('$flagKey not found.');
     } else if (flag.returnType != returnType) {
       throw TypeMismatchException(
-        'Flag value $flagKey had unexpected type ${flag.returnType?.name}, expected $returnType',
+        'Flag value $flagKey had unexpected type ${flag.returnType?.name}, '
+        'expected $returnType',
       );
     }
 
@@ -44,7 +44,7 @@ class JsonEvaluationEngine implements EvaluationEngine {
               }
             }
 
-            if (value is String && conditionValue is Iterable) {
+            if (value is String && conditionValue is Iterable<String>) {
               if (condition.op == 'ends_with') {
                 for (final checkValue in conditionValue) {
                   if (value.contains(checkValue)) return true;
@@ -61,13 +61,15 @@ class JsonEvaluationEngine implements EvaluationEngine {
       final variant = matchedRule.action.variant;
 
       return ResolutionDetails(
-        value: flag.variants[variant],
+        value: flag.variants[variant] as T,
         variant: variant,
         reason: Reason.targetingMatch,
       );
+
+      // ignore: avoid_catching_errors
     } on StateError {
       return ResolutionDetails(
-        value: flag.variants[flag.defaultVariant],
+        value: flag.variants[flag.defaultVariant] as T,
         variant: flag.defaultVariant,
         reason: Reason.noop,
       );

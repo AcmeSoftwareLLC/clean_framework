@@ -2,55 +2,64 @@ import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+typedef UseCaseSubscription = Future<Either<FailureInput, SuccessInput>>
+    Function(
+  Output,
+);
+
 class UseCaseFake<I extends SuccessInput> extends Fake
     implements UseCase<EntityFake> {
+  UseCaseFake({this.output});
+
   EntityFake _entity = EntityFake();
-  late Function subscription;
+  late UseCaseSubscription subscription;
   I? successInput;
   final Output? output;
-
-  UseCaseFake({this.output});
 
   @override
   EntityFake get entity => _entity;
 
   @override
-  Future<void> request<O extends Output, S extends SuccessInput>(O output,
-      {required EntityFake Function(S successInput) onSuccess,
-      required EntityFake Function(FailureInput failureInput)
-          onFailure}) async {
-    final Either<FailureInput, S> either = await subscription.call(output);
+  Future<void> request<O extends Output, S extends SuccessInput>(
+    O output, {
+    required EntityFake Function(S successInput) onSuccess,
+    required EntityFake Function(FailureInput failureInput) onFailure,
+  }) async {
+    final either = await subscription(output) as Either<FailureInput, S>;
     _entity = either.fold(
-        (FailureInput failureInput) => onFailure(failureInput),
-        (S successInput) => onSuccess(successInput));
+      (FailureInput failureInput) => onFailure(failureInput),
+      (S successInput) => onSuccess(successInput),
+    );
   }
 
   @override
-  void setInput<I extends Input>(I input) {
+  void setInput<T extends Input>(T input) {
     _entity = _entity.merge('success with input');
   }
 
   @override
   void subscribe(Type outputType, Function callback) {
-    subscription = callback;
+    subscription = callback as UseCaseSubscription;
   }
 
   Future<void> doFakeRequest<O extends Output>(O output) async {
-    await request(output,
-        onFailure: (failure) => _entity.merge('failure'),
-        onSuccess: (success) {
-          successInput = success as I;
-          return _entity.merge('success');
-        });
+    await request(
+      output,
+      onFailure: (failure) => _entity.merge('failure'),
+      onSuccess: (success) {
+        successInput = success as I?;
+        return _entity.merge('success');
+      },
+    );
   }
 }
 
 class EntityFake extends Entity {
-  final String value;
   EntityFake({this.value = 'initial'});
+  final String value;
 
   @override
   List<Object?> get props => [value];
 
-  EntityFake merge(newValue) => EntityFake(value: newValue);
+  EntityFake merge(String newValue) => EntityFake(value: newValue);
 }

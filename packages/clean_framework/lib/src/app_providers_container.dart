@@ -1,6 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+typedef ContainerBuildCallback = void Function(
+  BuildContext,
+  ProvidersContext,
+);
+
 /// A container that holds all the app providers.
 class AppProvidersContainer extends StatelessWidget {
   /// Default constructor.
@@ -8,7 +13,7 @@ class AppProvidersContainer extends StatelessWidget {
     super.key,
     required this.child,
     ProvidersContext? providersContext,
-    Function(BuildContext, ProvidersContext)? onBuild,
+    ContainerBuildCallback? onBuild,
   })  : _providersContext = providersContext ?? ProvidersContext(),
         _onBuild = onBuild;
 
@@ -16,7 +21,7 @@ class AppProvidersContainer extends StatelessWidget {
   final Widget child;
 
   final ProvidersContext _providersContext;
-  final Function(BuildContext, ProvidersContext)? _onBuild;
+  final ContainerBuildCallback? _onBuild;
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +36,12 @@ class AppProvidersContainer extends StatelessWidget {
 
 /// A class to hold the [ProviderContainer].
 class ProvidersContext {
-  final ProviderContainer _container;
-
   /// Default constructor.
   ProvidersContext([
     List<Override> overrides = const [],
   ]) : _container = ProviderContainer(overrides: overrides);
+
+  final ProviderContainer _container;
 
   /// The [ProviderContainer].
   ProviderContainer call() => _container;

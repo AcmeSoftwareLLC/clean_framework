@@ -118,7 +118,7 @@ class RestService {
           );
 
           request.files.add(multipartFile);
-        } else {
+        } else if (v is String) {
           request.fields[k] = v;
         }
       }

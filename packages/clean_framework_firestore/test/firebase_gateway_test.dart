@@ -51,7 +51,9 @@ class TestGateway extends FirebaseGateway<TestOutput, FirebaseReadIdRequest,
 
   @override
   TestSuccessInput onSuccess(FirebaseSuccessResponse response) {
-    return TestSuccessInput(response.json['content']);
+    final data = Deserializer(response.json);
+
+    return TestSuccessInput(data.getString('content'));
   }
 }
 

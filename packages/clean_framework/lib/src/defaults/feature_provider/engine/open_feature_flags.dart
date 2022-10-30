@@ -1,17 +1,19 @@
-import 'package:clean_framework/src/open_feature/open_feature.dart';
+import 'package:clean_framework/clean_framework.dart';
 
 enum FlagState { enabled, disabled }
 
 class OpenFeatureFlags {
+  factory OpenFeatureFlags.fromMap(Map<String, dynamic> map) {
+    return OpenFeatureFlags._(
+      map.map(
+        (k, v) => MapEntry(k, FeatureFlag.fromMap(v as Map<String, dynamic>)),
+      ),
+    );
+  }
+
   OpenFeatureFlags._(this._flags);
 
   final Map<String, FeatureFlag> _flags;
-
-  factory OpenFeatureFlags.fromMap(Map<String, dynamic> map) {
-    return OpenFeatureFlags._(
-      map.map((k, v) => MapEntry(k, FeatureFlag.fromMap(v))),
-    );
-  }
 
   FeatureFlag? operator [](String key) => _flags[key];
 }
@@ -27,6 +29,22 @@ class FeatureFlag {
     this.rules = const [],
   });
 
+  factory FeatureFlag.fromMap(Map<String, dynamic> map) {
+    final flagOptions = Deserializer(map);
+    final returnType = map['returnType']?.toString();
+
+    return FeatureFlag(
+      state: FlagState.values.byName(map['state'].toString()),
+      name: map['name']?.toString(),
+      description: map['description']?.toString(),
+      returnType:
+          returnType == null ? null : FlagValueType.values.byName(returnType),
+      variants: flagOptions.getMap('variants'),
+      defaultVariant: map['defaultVariant']?.toString(),
+      rules: flagOptions.getList('rules', converter: FlagRule.fromMap),
+    );
+  }
+
   final FlagState state;
   final String? name;
   final String? description;
@@ -34,23 +52,6 @@ class FeatureFlag {
   final Map<String, dynamic> variants;
   final String? defaultVariant;
   final List<FlagRule> rules;
-
-  factory FeatureFlag.fromMap(Map<String, dynamic> map) {
-    final returnType = map['returnType'];
-
-    return FeatureFlag(
-      state: FlagState.values.byName(map['state']),
-      name: map['name'],
-      description: map['description'],
-      returnType:
-          returnType == null ? null : FlagValueType.values.byName(returnType),
-      variants: map['variants'] ?? {},
-      defaultVariant: map['defaultVariant'],
-      rules: List.from(map['rules'] ?? [])
-          .map((rule) => FlagRule.fromMap(rule))
-          .toList(growable: false),
-    );
-  }
 }
 
 class FlagRule {
@@ -58,32 +59,30 @@ class FlagRule {
     required this.action,
     required this.conditions,
   });
+  factory FlagRule.fromMap(Map<String, dynamic> map) {
+    final data = Deserializer(map);
+
+    return FlagRule(
+      action: RuleAction.fromMap(data.getMap('action')),
+      conditions: data.getList('conditions', converter: RuleCondition.fromMap),
+    );
+  }
 
   final RuleAction action;
   final List<RuleCondition> conditions;
-
-  factory FlagRule.fromMap(Map<String, dynamic> map) {
-    return FlagRule(
-      action: RuleAction.fromMap(map['action']),
-      conditions: List.from(map['conditions'])
-          .map((c) => RuleCondition.fromMap(c))
-          .toList(growable: false),
-    );
-  }
 }
 
 class RuleAction {
   RuleAction({
     required this.variant,
   });
-
-  final String variant;
-
   factory RuleAction.fromMap(Map<String, dynamic> map) {
     return RuleAction(
-      variant: map['variant'],
+      variant: Deserializer(map).getString('variant'),
     );
   }
+
+  final String variant;
 }
 
 class RuleCondition {
@@ -92,16 +91,17 @@ class RuleCondition {
     required this.op,
     required this.value,
   });
+  factory RuleCondition.fromMap(Map<String, dynamic> map) {
+    final data = Deserializer(map);
+
+    return RuleCondition(
+      context: data.getString('context'),
+      op: data.getString('op'),
+      value: map['value'] as Object,
+    );
+  }
 
   final String context;
   final String op;
   final Object value;
-
-  factory RuleCondition.fromMap(Map<String, dynamic> map) {
-    return RuleCondition(
-      context: map['context'],
-      op: map['op'],
-      value: map['value'],
-    );
-  }
 }

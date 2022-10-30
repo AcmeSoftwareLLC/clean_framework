@@ -1,28 +1,27 @@
 import 'dart:async';
 
+import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:either_dart/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-import 'entity.dart';
-import 'view_model.dart';
+typedef OutputBuilder<T extends Entity> = Output Function(T);
 
 abstract class UseCase<E extends Entity> extends StateNotifier<E> {
-  // TODO Replace with a proper implementation like Freezed
-  final Map<Type, dynamic> _outputFilters;
-  final Map<Type, Function> _inputFilters;
-
-  final Map<Type, Function> _requestSubscriptions = {};
-  final Map<String, Timer> _debounceTimers = {};
-
   UseCase({
     required E entity,
-    Map<Type, dynamic>? outputFilters,
+    Map<Type, OutputBuilder<E>>? outputFilters,
     Map<Type, Function>? inputFilters,
   })  : _outputFilters = outputFilters ?? const {},
         _inputFilters = inputFilters ?? const {},
         super(entity);
+
+  final Map<Type, OutputBuilder<E>> _outputFilters;
+  final Map<Type, Function> _inputFilters;
+
+  final Map<Type, Function> _requestSubscriptions = {};
+  final Map<String, Timer> _debounceTimers = {};
 
   @override
   void dispose() {
@@ -38,7 +37,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
   E get entity => super.state;
 
   @protected
-  set entity(newEntity) => super.state = newEntity;
+  set entity(E newEntity) => super.state = newEntity;
 
   /// Executes the [action] so that it will only be executed
   /// when there is no further repeated actions with same [tag]
@@ -51,7 +50,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
     required String tag,
     Duration duration = const Duration(milliseconds: 300),
     bool immediate = true,
-  }) async {
+  }) {
     final timer = _debounceTimers[tag];
 
     final timerPending = timer?.isActive ?? false;
@@ -74,14 +73,14 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
     if (filter == null) {
       throw StateError('Output filter not defined for $O');
     }
-    return filter(entity);
+    return filter(entity) as O;
   }
 
   void setInput<I extends Input>(I input) {
     if (_inputFilters[I] == null) {
       throw StateError('Input processor not defined for $I');
     }
-    final processor = _inputFilters[I] as InputProcessor<I, E>;
+    final processor = _inputFilters[I]! as InputProcessor<I, E>;
     entity = processor(input, entity);
   }
 
@@ -102,7 +101,9 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> {
         (_) => Left<NoSubscriptionFailureInput, S>(
               NoSubscriptionFailureInput(O),
             );
-    final Either<FailureInput, S> either = await callback(output);
+
+    // ignore: avoid_dynamic_calls
+    final either = await callback(output) as Either<FailureInput, S>;
     entity = either.fold(onFailure, onSuccess);
   }
 }
@@ -130,9 +131,8 @@ abstract class Input {}
 class SuccessInput extends Input {}
 
 class FailureInput extends Input {
-  final String message;
-
   FailureInput({this.message = ''});
+  final String message;
 }
 
 class NoSubscriptionFailureInput extends FailureInput {

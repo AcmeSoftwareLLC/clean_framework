@@ -1,6 +1,5 @@
+import 'package:clean_framework/src/feature_state/feature.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'feature.dart';
 
 /// This class is a requirement to be able to use a FeatureStateProvider. It
 /// specifies how a JSON that contains the list of features and their states
@@ -20,25 +19,26 @@ abstract class FeatureMapper<S> extends StateNotifier<Map<Feature, S>> {
   Map<Feature, S> _parseJson(Map<String, dynamic> json) {
     final newStates = <Feature, S>{};
 
-    if (!(json['features'] is List))
+    if (json['features'] is! List) {
       throw StateError('Feature States JSON parse error, not a list');
+    }
 
-    final List<dynamic> list = (json['features'] as List);
+    final features = json['features'] as List<Map>;
 
-    list.forEach((feature) {
-      final String name = feature['name'];
-      final String? version = feature['version'];
-      final String state = feature['state'];
+    for (final feature in features) {
+      final name = feature['name'].toString();
+      final version = feature['version']?.toString();
+      final state = feature['state'].toString();
 
       if (name.isNotEmpty && state.isNotEmpty) {
         newStates[Feature(name: name, version: version)] = parseState(state);
       }
-    });
+    }
     return newStates;
   }
 
-  /// This method creates the internal mapping of states, and the JSON that serves
-  /// as the input should have the following structure:
+  /// This method creates the internal mapping of states, and the JSON
+  /// that serves as the input should have the following structure:
   ///
   /// ```json
   /// {

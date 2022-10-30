@@ -45,8 +45,10 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
               event.emitSuccess(response);
             });
             if (handlerCall is Future) {
-              handlerCall.catchError(
-                (error) => e.completeFailure(_onError(error, request)),
+              unawaited(
+                handlerCall.catchError(
+                  (Object error) => e.completeFailure(_onError(error, request)),
+                ),
               );
             }
           } else {

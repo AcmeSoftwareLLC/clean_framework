@@ -7,7 +7,7 @@ export 'src/flag_not_found_exception.dart';
 export 'src/parse_exception.dart';
 export 'src/type_mismatch_exception.dart';
 
-abstract class OpenFeatureException {
+abstract class OpenFeatureException implements Exception {
   OpenFeatureException(this.message, {required this.code});
 
   final String message;

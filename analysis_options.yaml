@@ -1,12 +1,11 @@
-analyzer:
-  errors:
-    # treat missing required parameters as a warning (not a hint)
-    missing_required_param: warning
-    # treat missing returns as a warning (not a hint)
-    missing_return: warning
-    # allow having TODOs in the code
-    todo: ignore
+include: package:very_good_analysis/analysis_options.yaml
+
+language:
+  strict-casts: false
+  strict-inference: false
+  strict-raw-types: false
 
 linter:
   rules:
-    #- public_member_api_docs
+    one_member_abstracts: false
+    public_member_api_docs: false

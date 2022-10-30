@@ -13,58 +13,60 @@ void main() {
       (tester) async {
     final featureStateProvider =
         FeatureStateProvider<FeatureState, TestFeatureStateMapper>(
-            (_) => TestFeatureStateMapper());
+      (_) => TestFeatureStateMapper(),
+    );
 
     final featureTester = FeatureTester<FeatureState>(featureStateProvider);
 
     final testWidget = MaterialApp(
-        home: Column(
-      children: [
-        TestFeatureWidget(
-          featureStateProvider,
-        ),
-        ElevatedButton(
-          key: Key('loadButton'),
-          child: Text('load'),
-          onPressed: () {
-            featureTester.featuresMap.append({
-              'features': [
-                {'name': 'login', 'version': '1.0', 'state': 'VISIBLE'},
-              ]
-            });
-          },
-        ),
-        ElevatedButton(
-          key: Key('hideButton'),
-          child: Text('hide'),
-          onPressed: () {
-            featureTester.featuresMap.append({
-              'features': [
-                {'name': 'login', 'version': '1.0', 'state': 'HIDDEN'},
-              ]
-            });
-          },
-        )
-      ],
-    ));
+      home: Column(
+        children: [
+          TestFeatureWidget(
+            featureStateProvider,
+          ),
+          ElevatedButton(
+            key: const Key('loadButton'),
+            child: const Text('load'),
+            onPressed: () {
+              featureTester.featuresMap.append({
+                'features': [
+                  {'name': 'login', 'version': '1.0', 'state': 'VISIBLE'},
+                ]
+              });
+            },
+          ),
+          ElevatedButton(
+            key: const Key('hideButton'),
+            child: const Text('hide'),
+            onPressed: () {
+              featureTester.featuresMap.append({
+                'features': [
+                  {'name': 'login', 'version': '1.0', 'state': 'HIDDEN'},
+                ]
+              });
+            },
+          )
+        ],
+      ),
+    );
 
     await featureTester.pumpWidget(tester, testWidget);
 
     expect(find.byType(TestFeatureWidget), findsOneWidget);
     expect(find.text('visible'), findsNothing);
-    expect(find.byKey(Key('empty')), findsOneWidget);
+    expect(find.byKey(const Key('empty')), findsOneWidget);
 
-    await tester.tap(find.byKey(Key('loadButton')));
+    await tester.tap(find.byKey(const Key('loadButton')));
     await tester.pumpAndSettle();
 
     expect(find.text('visible'), findsOneWidget);
-    expect(find.byKey(Key('empty')), findsNothing);
+    expect(find.byKey(const Key('empty')), findsNothing);
 
-    await tester.tap(find.byKey(Key('hideButton')));
+    await tester.tap(find.byKey(const Key('hideButton')));
     await tester.pump();
 
     expect(find.text('visible'), findsNothing);
-    expect(find.byKey(Key('empty')), findsOneWidget);
+    expect(find.byKey(const Key('empty')), findsOneWidget);
 
     featureTester.dispose();
   });
@@ -72,57 +74,64 @@ void main() {
   testWidgets('FeatureStatesProvider load error', (tester) async {
     final featureStateProvider =
         FeatureStateProvider<FeatureState, TestFeatureStateMapper>(
-            (_) => TestFeatureStateMapper());
+      (_) => TestFeatureStateMapper(),
+    );
 
     final featureTester = FeatureTester<FeatureState>(featureStateProvider);
 
     final testWidget = MaterialApp(
-        home: Column(
-      children: [
-        TestFeatureWidget(
-          featureStateProvider,
-        ),
-        ElevatedButton(
-          key: Key('loadButton'),
-          child: Text('load'),
-          onPressed: () {
-            try {
-              featureTester.featuresMap.append({});
-            } catch (e) {}
-          },
-        ),
-      ],
-    ));
+      home: Column(
+        children: [
+          TestFeatureWidget(
+            featureStateProvider,
+          ),
+          ElevatedButton(
+            key: const Key('loadButton'),
+            child: const Text('load'),
+            onPressed: () {
+              try {
+                featureTester.featuresMap.append({});
+              } catch (e) {
+                // no-op
+              }
+            },
+          ),
+        ],
+      ),
+    );
 
     await featureTester.pumpWidget(tester, testWidget);
 
     expect(find.byType(TestFeatureWidget), findsOneWidget);
     expect(find.text('visible'), findsNothing);
-    expect(find.byKey(Key('empty')), findsOneWidget);
+    expect(find.byKey(const Key('empty')), findsOneWidget);
 
-    await tester.tap(find.byKey(Key('loadButton')));
+    await tester.tap(find.byKey(const Key('loadButton')));
     await tester.pumpAndSettle();
 
     expect(find.text('visible'), findsNothing);
-    expect(find.byKey(Key('empty')), findsOneWidget);
+    expect(find.byKey(const Key('empty')), findsOneWidget);
 
     featureTester.dispose();
   });
 }
 
 class TestFeatureWidget extends FeatureWidget<FeatureState> {
-  TestFeatureWidget(provider)
-      : super(
-          feature: Feature(name: 'login'),
+  TestFeatureWidget(
+    FeatureStateProvider<FeatureState, FeatureMapper<FeatureState>> provider, {
+    super.key,
+  }) : super(
+          feature: const Feature(name: 'login'),
           provider: provider,
         );
+
   @override
   Widget builder(BuildContext context, FeatureState currentState) {
     switch (currentState) {
       case FeatureState.visible:
-        return Text('visible');
-      default:
-        return Container(key: Key('empty'));
+        return const Text('visible');
+      case FeatureState.hidden:
+        return Container(key: const Key('empty'));
     }
   }
 }
@@ -139,5 +148,5 @@ class TestFeatureStateMapper extends FeatureMapper<FeatureState> {
   }
 
   @override
-  get defaultState => FeatureState.hidden;
+  FeatureState get defaultState => FeatureState.hidden;
 }
