@@ -1,10 +1,5 @@
 include: package:very_good_analysis/analysis_options.yaml
 
-language:
-  strict-casts: false
-  strict-inference: false
-  strict-raw-types: false
-
 linter:
   rules:
     one_member_abstracts: false

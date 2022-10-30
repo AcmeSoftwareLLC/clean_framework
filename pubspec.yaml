@@ -1,0 +1,7 @@
+name: clean_framework
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dev_dependencies:
+  very_good_analysis: ^3.1.0
