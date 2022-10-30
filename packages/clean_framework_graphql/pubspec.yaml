@@ -9,9 +9,7 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework:
-    path:
-      ../clean_framework
+  clean_framework: ^1.5.0
   flutter:
     sdk: flutter
   gql: ^0.14.0
