@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework_defaults.dart';
+import 'package:clean_framework_graphql/clean_framework_graphql.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:graphql/client.dart';
 import 'package:mocktail/mocktail.dart';

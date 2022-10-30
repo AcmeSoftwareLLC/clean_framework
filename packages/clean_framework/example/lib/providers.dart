@@ -7,6 +7,7 @@ import 'package:clean_framework_example/features/last_login/domain/last_login_en
 import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
 import 'package:clean_framework_example/features/last_login/external_interface/last_login_date_gateway.dart';
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';
+import 'package:clean_framework_graphql/clean_framework_graphql.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'features/country/domain/country_entity.dart';

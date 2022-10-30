@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_defaults.dart';
-import 'package:clean_framework/src/defaults/providers/graphql/graphql_logger.dart';
 import 'package:gql/ast.dart';
 import 'package:graphql/client.dart';
+
+import 'graphql_error_policy.dart';
+import 'graphql_fetch_policy.dart';
+import 'graphql_logger.dart';
 
 class GraphQLService extends NetworkService {
   GraphQLService({

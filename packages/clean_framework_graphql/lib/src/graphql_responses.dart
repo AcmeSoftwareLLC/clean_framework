@@ -1,5 +1,6 @@
-import 'package:clean_framework/src/defaults/providers/graphql/src/graphql_service.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
+
+import 'graphql_service.dart';
 
 class GraphQLSuccessResponse extends SuccessResponse {
   GraphQLSuccessResponse({
