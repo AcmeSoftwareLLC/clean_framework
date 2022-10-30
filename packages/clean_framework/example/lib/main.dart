@@ -28,7 +28,6 @@ class ExampleApp extends StatelessWidget {
       },
       child: AppProvidersContainer(
         providersContext: providersContext,
-        onBuild: (context, _) {},
         child: MaterialApp.router(
           routeInformationParser: router.informationParser,
           routerDelegate: router.delegate,

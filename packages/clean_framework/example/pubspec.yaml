@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   clean_framework:
     path: ../
+  clean_framework_firestore:
+    path: ../../clean_framework_firestore
 
   intl: ^0.17.0
 

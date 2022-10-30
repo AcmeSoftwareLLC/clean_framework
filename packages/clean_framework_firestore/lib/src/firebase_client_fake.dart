@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/defaults/providers/firebase/firebase_client.dart';
+import 'firebase_client.dart';
 
 class FirebaseClientFake implements FirebaseClient {
   final _controller = StreamController<Map<String, dynamic>>.broadcast();

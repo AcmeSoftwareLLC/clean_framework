@@ -9,9 +9,9 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework_core:
+  clean_framework:
     path:
-      ../clean_framework_core
+      ../clean_framework
   flutter:
     sdk: flutter
   go_router: ^4.5.1
