@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 /// instances globally shared to simplify its use.
 @immutable
 class Feature extends Equatable {
-  final String name;
-  final String version;
-
   const Feature({required this.name, String? version})
       : version = version ?? '1.0';
+
+  final String name;
+  final String version;
 
   @override
   List<Object?> get props => [name, version];

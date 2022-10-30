@@ -1,7 +1,6 @@
+import 'package:clean_framework/src/feature_state/feature.dart';
 import 'package:clean_framework/src/feature_state/feature_mapper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'feature.dart';
 
 /// An instance of this class creates a [FeatureMapper] implementation
 /// that uses a specific data type to represent the states of each

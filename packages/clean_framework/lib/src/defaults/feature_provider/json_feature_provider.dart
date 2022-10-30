@@ -115,7 +115,7 @@ class JsonFeatureProvider implements FeatureProvider {
       }
 
       if (!flagObject.containsKey('rules')) {
-        flagObject['rules'] = [];
+        flagObject['rules'] = <Map<String, dynamic>>[];
       }
 
       flags[flag.key] = flagObject;

@@ -1,12 +1,15 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/foundation.dart';
 
 int _lineWidth = 100;
 
 abstract class NetworkLogger {
   NetworkLogger() {
-    if (CleanFrameworkObserver.instance.enableNetworkLogs) {
+    if (kDebugMode && CleanFrameworkObserver.instance.enableNetworkLogs) {
       initialize();
     }
   }
@@ -18,11 +21,11 @@ abstract class NetworkLogger {
   }
 
   String prettyMap(Map<String, dynamic> map) {
-    return JsonEncoder.withIndent('  ').convert(map);
+    return const JsonEncoder.withIndent('  ').convert(map);
   }
 
   void printInLines(String data) {
-    final lines = LineSplitter().convert(data);
+    final lines = const LineSplitter().convert(data);
     for (final line in lines) {
       print('║  $line');
     }
@@ -31,7 +34,7 @@ abstract class NetworkLogger {
 
   void printCategory(String data) {
     final width = (_lineWidth - data.length - 5) ~/ 2;
-    final divider = '${'┄' * width}';
+    final divider = '┄' * width;
     print('╟$divider $data $divider');
     printGap();
   }
