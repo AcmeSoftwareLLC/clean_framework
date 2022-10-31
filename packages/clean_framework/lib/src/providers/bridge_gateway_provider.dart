@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BridgeGatewayProvider<G extends BridgeGateway>
     implements OverridableProvider<G> {
-
   BridgeGatewayProvider(this.create) : _provider = Provider<G>(create);
   final Provider<G> _provider;
   final G Function(Ref) create;

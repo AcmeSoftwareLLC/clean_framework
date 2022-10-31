@@ -28,7 +28,10 @@ class _UIState<V extends ViewModel> extends State<UI<V>> {
 }
 
 typedef PresenterCreator<V extends ViewModel> = Presenter Function(
-    PresenterBuilder<V> builder,);
+  PresenterBuilder<V> builder,
+);
 
 typedef UIBuilder<V extends ViewModel> = Widget Function(
-    BuildContext context, V viewModel,);
+  BuildContext context,
+  V viewModel,
+);

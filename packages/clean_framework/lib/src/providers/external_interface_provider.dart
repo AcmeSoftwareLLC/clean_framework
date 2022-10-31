@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ExternalInterfaceProvider<I extends ExternalInterface>
     implements OverridableProvider<I> {
-
   ExternalInterfaceProvider(this.create) : _provider = Provider<I>(create);
   final Provider<I> _provider;
   final I Function(Ref) create;

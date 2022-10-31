@@ -8,6 +8,8 @@ abstract class FirebaseWatcherGateway<
     R extends FirebaseRequest,
     P extends FirebaseSuccessResponse,
     S extends SuccessInput> extends WatcherGateway<O, R, P, S> {
-  FirebaseWatcherGateway(
-      {required super.context, required super.provider,});
+  FirebaseWatcherGateway({
+    required super.context,
+    required super.provider,
+  });
 }

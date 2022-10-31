@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     implements OverridableProvider<U> {
-
   UseCaseProvider(this.create)
       : _provider = StateNotifierProvider<U, E>(create);
   final StateNotifierProvider<U, E> _provider;

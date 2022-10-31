@@ -5,17 +5,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('AppProviderContainer', (tester) async {
-    await tester.pumpWidget(AppProvidersContainer(
-      child: const MaterialApp(),
-      onBuild: (_, __) {},
-    ),);
+    await tester.pumpWidget(
+      AppProvidersContainer(
+        child: const MaterialApp(),
+        onBuild: (_, __) {},
+      ),
+    );
   });
   test('All providers', () async {
     final context = ProvidersContext();
     final useCase = TestUseCase(TestEntity());
     final gateway = TestGateway(useCase);
     final bridgeGateway = TestBridgeGateway(
-        subscriberUseCase: useCase, publisherUseCase: useCase,);
+      subscriberUseCase: useCase,
+      publisherUseCase: useCase,
+    );
     final externalInterface = TestInterface();
 
     final provider = UseCaseProvider((_) => useCase);
@@ -27,8 +31,10 @@ void main() {
     expect(provider.getUseCaseFromContext(context), useCase);
     expect(gatewayProvider.getGateway(context), gateway);
     expect(bridgeGatewayProvider.getBridgeGateway(context), bridgeGateway);
-    expect(externalInterfaceProvider.getExternalInterface(context),
-        externalInterface,);
+    expect(
+      externalInterfaceProvider.getExternalInterface(context),
+      externalInterface,
+    );
     context.dispose();
   });
 
@@ -36,17 +42,21 @@ void main() {
     final provider = UseCaseProvider((_) => TestUseCase(TestEntity()));
     final gatewayProvider =
         GatewayProvider((_) => TestGateway(TestUseCase(TestEntity())));
-    final bridgeGatewayProvider = BridgeGatewayProvider((_) =>
-        TestBridgeGateway(
-            subscriberUseCase: TestUseCase(TestEntity()),
-            publisherUseCase: TestUseCase(TestEntity()),),);
+    final bridgeGatewayProvider = BridgeGatewayProvider(
+      (_) => TestBridgeGateway(
+        subscriberUseCase: TestUseCase(TestEntity()),
+        publisherUseCase: TestUseCase(TestEntity()),
+      ),
+    );
     final externalInterfaceProvider =
         ExternalInterfaceProvider((_) => TestInterface());
 
     final useCase = TestUseCase(TestEntity());
     final gateway = TestGateway(useCase);
     final bridgeGateway = TestBridgeGateway(
-        subscriberUseCase: useCase, publisherUseCase: useCase,);
+      subscriberUseCase: useCase,
+      publisherUseCase: useCase,
+    );
     final externalInterface = TestInterface();
 
     final context = ProvidersContext([
@@ -58,8 +68,10 @@ void main() {
 
     expect(provider.getUseCaseFromContext(context), useCase);
     expect(gatewayProvider.getGateway(context), gateway);
-    expect(externalInterfaceProvider.getExternalInterface(context),
-        externalInterface,);
+    expect(
+      externalInterfaceProvider.getExternalInterface(context),
+      externalInterface,
+    );
     expect(bridgeGatewayProvider.getBridgeGateway(context), bridgeGateway);
     context.dispose();
   });
@@ -111,8 +123,11 @@ class TestGateway extends Gateway {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity) : super(entity: entity);
 
-  void doRequest() => request(TestOutput(),
-      onSuccess: (_) => TestEntity(), onFailure: (_) => TestEntity(),);
+  void doRequest() => request(
+        TestOutput(),
+        onSuccess: (_) => TestEntity(),
+        onFailure: (_) => TestEntity(),
+      );
 }
 
 class TestEntity extends Entity {
