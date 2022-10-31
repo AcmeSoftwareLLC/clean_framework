@@ -8,36 +8,29 @@ jobs:
 
     steps:
       - name: Check out current repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Flutter Stable
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
 
+      - name: 'Install Tools'
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+
       - name: Get package dependencies
-        run: flutter pub get
+        run: melos bs
 
       - name: Analyze dart code for the project
-        run: flutter analyze
+        run: melos analyze
 
-      - name: Run tests and generate coverage for the library
-        run: flutter test --coverage
-
-      - name: Run tests and generate coverage for the example app
-        run: flutter test --coverage
-        working-directory: example
+      - name: Run tests and generate coverage
+        run: melos coverage:all
 
       - name: Upload library coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          file: ./coverage/lcov.info
+          files: ./packages/clean_framework/coverage/lcov.info,./packages/clean_framework_firestore/coverage/lcov.info,./packages/clean_framework_graphql/coverage/lcov.info,./packages/clean_framework_rest/coverage/lcov.info,./packages/clean_framework_router/coverage/lcov.info,./packages/clean_framework_test/coverage/lcov.info
           name: clean-framework-coverage
-
-      - name: Upload example coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          file: ./example/coverage/lcov.info
-          name: clean-framework-example-coverage
