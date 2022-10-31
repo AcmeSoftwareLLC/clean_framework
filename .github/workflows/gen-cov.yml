@@ -1,9 +1,13 @@
-name: Analyze, Run Tests & Generate Coverage
+name: Quality Check
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types: [ opened, reopened ]
 
 jobs:
   gen-cov:
+    name: Generate Coverage
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +44,7 @@ jobs:
       run:
         working-directory: packages/clean_framework
 
+    name: Verify Pub Score
     runs-on: ubuntu-latest
 
     steps:
