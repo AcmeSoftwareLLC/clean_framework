@@ -1,3 +1,8 @@
+## 1.4.10-dev.0
+
+ - **BUG**: fixed issue with analysis options.
+ - **BUG**: fixed tests.
+
 # Changelog
 
 ## 1.4.2
