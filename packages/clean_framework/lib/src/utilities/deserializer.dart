@@ -1,19 +1,23 @@
 class Deserializer {
   Deserializer(Object object)
       : assert(object is Map, '\n\nThe provided object is not a Map.\n'),
-        map = Map.from(object as Map);
+        _map = Map.from(object as Map);
 
-  final Map<String, dynamic> map;
+  final Map<String, dynamic> _map;
+
+  T map<T extends Object>(T Function(Map<String, dynamic>) converter) {
+    return converter(_map);
+  }
 
   String getString(String key, {String defaultValue = ''}) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is String) return value;
     return defaultValue;
   }
 
   int getInt(String key, {int defaultValue = 0}) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is int) return value;
     if (value is String) return int.tryParse(value) ?? defaultValue;
@@ -21,7 +25,7 @@ class Deserializer {
   }
 
   double getDouble(String key, {double defaultValue = 0}) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is double) return value;
     if (value is int) return value.toDouble();
@@ -30,7 +34,7 @@ class Deserializer {
   }
 
   bool getBool(String key, {bool defaultValue = false}) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is bool) return value;
     return defaultValue;
@@ -40,7 +44,7 @@ class Deserializer {
     String key, {
     Map<String, dynamic> defaultValue = const {},
   }) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is Map) return value.cast<String, dynamic>();
     return defaultValue;
@@ -51,7 +55,7 @@ class Deserializer {
     List<T> defaultValue = const [],
     required T Function(Map<String, dynamic>) converter,
   }) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is List) {
       return List<T>.from(
@@ -65,7 +69,7 @@ class Deserializer {
     String key, {
     List<T> defaultValue = const [],
   }) {
-    final value = map[key];
+    final value = _map[key];
 
     if (value is List) return List<T>.from(value);
     return defaultValue;
@@ -77,7 +81,7 @@ class Deserializer {
     required T defaultValue,
     required String Function(T) matcher,
   }) {
-    final value = map[key];
+    final value = _map[key];
 
     return values.firstWhere(
       (v) => matcher(v) == value,
@@ -86,7 +90,7 @@ class Deserializer {
   }
 
   DateTime getDateTime(String key, {DateTime? defaultValue}) {
-    final value = map[key];
+    final value = _map[key];
     final resolvedDefaultValue = defaultValue ?? DateTime.now();
 
     if (value is String) {
