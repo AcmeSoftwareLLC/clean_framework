@@ -106,3 +106,7 @@ class Deserializer {
     return Deserializer(value);
   }
 }
+
+extension DeserializerExtension on Map<String, dynamic> {
+  Deserializer get deserialize => Deserializer(this);
+}
