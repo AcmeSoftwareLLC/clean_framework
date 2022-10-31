@@ -1,6 +1,6 @@
 name: clean_framework_rest
 description: A wrapper around http to make it easier to use with clean_framework.
-version: 0.1.0-dev.0+1
+version: 0.1.0-dev.0
 homepage: https://acmesoftware.com/
 repository: https://github.com/MattHamburger/clean_framework/packages/clean_framework_rest
 
@@ -9,7 +9,7 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^1.4.10-dev.0
+  clean_framework: ^1.5.0-dev.0
   cross_file: ^0.3.3+2
   flutter:
     sdk: flutter
@@ -18,7 +18,7 @@ dependencies:
   path: '>=1.8.2 <1.9.0'
 
 dev_dependencies:
-  clean_framework_test: ^0.1.0-dev.0+1
+  clean_framework_test: ^0.1.0-dev.0
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0

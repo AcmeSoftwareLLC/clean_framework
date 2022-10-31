@@ -1,9 +1,9 @@
-## 1.4.10-dev.0
-
- - **BUG**: fixed issue with analysis options.
- - **BUG**: fixed tests.
-
 # Changelog
+## 1.5.0-dev.0
+**Oct 31, 2022**
+- Breakdown into multiple sub packages.
+- Moved test helpers to `clean_framework_test` package.
+- **RestSuccessResponse**'s data is subtype of `Object` instead of `dynamic`.
 
 ## 1.4.2
 **Sep 13, 2022**
