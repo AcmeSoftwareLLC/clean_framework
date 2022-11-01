@@ -39,23 +39,23 @@ jobs:
           files: ./packages/clean_framework/coverage/lcov.info,./packages/clean_framework_firestore/coverage/lcov.info,./packages/clean_framework_graphql/coverage/lcov.info,./packages/clean_framework_rest/coverage/lcov.info,./packages/clean_framework_router/coverage/lcov.info,./packages/clean_framework_test/coverage/lcov.info
           name: clean-framework-coverage
 
-  pana:
-    defaults:
-      run:
-        working-directory: packages/clean_framework
-
-    name: Verify Pub Score
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-
-      - name: Install Dependencies
-        run: |
-          flutter packages get
-          flutter pub global activate pana
-
-      - name: Verify Pub Score
-        run: |
-          ./.github/workflows/scripts/verify-pub-score.sh
+#  pana:
+#    defaults:
+#      run:
+#        working-directory: packages/clean_framework
+#
+#    name: Verify Pub Score
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v3
+#      - uses: subosito/flutter-action@v2
+#
+#      - name: Install Dependencies
+#        run: |
+#          flutter packages get
+#          flutter pub global activate pana
+#
+#      - name: Verify Pub Score
+#        run: |
+#          ./.github/workflows/scripts/verify-pub-score.sh
