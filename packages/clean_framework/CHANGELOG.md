@@ -1,7 +1,13 @@
 # Changelog
+## 1.5.0
+**Nov 1, 2022**
+- Breakdown into sub packages.
+- Moved test helpers to `clean_framework_test` package.
+- **RestSuccessResponse**'s data is subtype of `Object` instead of `dynamic`.
+
 ## 1.5.0-dev.0
 **Oct 31, 2022**
-- Breakdown into multiple sub packages.
+- Breakdown into sub packages.
 - Moved test helpers to `clean_framework_test` package.
 - **RestSuccessResponse**'s data is subtype of `Object` instead of `dynamic`.
 
