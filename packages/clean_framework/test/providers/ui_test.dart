@@ -37,6 +37,7 @@ void main() {
   uiTest(
     'LastLogin',
     builder: TestUI.new,
+    context: ProvidersContext(),
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);
