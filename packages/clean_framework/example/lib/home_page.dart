@@ -1,5 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -99,7 +100,7 @@ class _List extends StatelessWidget {
                 ListTile(
                   title: Text(title),
                   leading: Icon(iconData),
-                  onTap: () => router.to(route),
+                  onTap: () => context.router.go(route),
                 ),
                 Divider(),
               ],

@@ -5,11 +5,11 @@ class AppRouterScope extends StatefulWidget {
   const AppRouterScope({
     super.key,
     required this.create,
-    required this.child,
+    required this.builder,
   });
 
   final ValueGetter<AppRouter> create;
-  final Widget child;
+  final WidgetBuilder builder;
 
   // ignore: library_private_types_in_public_api
   static _AppRouterScope of(BuildContext context) {
@@ -41,7 +41,7 @@ class _AppRouterScopeState extends State<AppRouterScope> {
   Widget build(BuildContext context) {
     return _AppRouterScope(
       router: _router,
-      child: widget.child,
+      child: Builder(builder: widget.builder),
     );
   }
 
@@ -62,4 +62,8 @@ class _AppRouterScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_AppRouterScope old) => false;
+}
+
+extension AppRouterExtension on BuildContext {
+  AppRouter get router => AppRouterScope.of(this).router;
 }

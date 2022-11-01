@@ -1,10 +1,7 @@
 import 'package:go_router/go_router.dart';
 
-@Deprecated('Use Route instead.')
-typedef AppRoute = Route;
-
-class Route extends GoRoute {
-  Route({
+class AppRoute extends GoRoute {
+  AppRoute({
     required this.route,
     super.pageBuilder,
     super.builder,
