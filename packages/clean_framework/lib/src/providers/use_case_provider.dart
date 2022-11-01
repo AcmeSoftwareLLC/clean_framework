@@ -11,11 +11,7 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   final U Function(Ref) create;
 
   @override
-  Override overrideWith(U useCase) {
-    return _provider.overrideWithProvider(
-      StateNotifierProvider((_) => useCase),
-    );
-  }
+  Override overrideWith(U useCase) => _provider.overrideWith((_) => useCase);
 
   U getUseCase(WidgetRef ref) => ref.watch(_provider.notifier);
 
