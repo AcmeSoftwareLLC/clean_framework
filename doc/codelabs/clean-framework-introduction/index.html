@@ -848,7 +848,7 @@ class AddMachineGetTotalResponse extends SuccessResponse {
     // For normal Gateways
     on&lt;FutureTestRequest&gt;(
       (request, send) async {
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future<void>.delayed(Duration(milliseconds: 100));
         send(Right(TestResponse(&#39;success&#39;)));
       },
     );
@@ -865,7 +865,7 @@ class AddMachineGetTotalResponse extends SuccessResponse {
           (count) =&gt; send(Right(TestResponse(count.toString()))),
         );
 
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future<void>.delayed(Duration(milliseconds: 500));
         subscription.cancel();
       },
     );
