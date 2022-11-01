@@ -7,17 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  final router = AppRouter(
-    routes: [
-      AppRoute(
-        name: 'test',
-        path: '/',
-        builder: (_, __) => TestUI(),
-      ),
-    ],
-    errorBuilder: (_, __) => Container(),
-  );
-
   uiTest(
     'LastLogin without setup',
     builder: TestUI.new,
@@ -31,13 +20,10 @@ void main() {
     screenSize: const Size(800, 600),
   );
 
-  setupUITest(
-    context: ProvidersContext(),
-    router: router,
-  );
-
   uiTest(
     'LastLogin using router',
+    builder: TestUI.new,
+    context: ProvidersContext(),
     postFrame: (tester) async {
       await tester.pump();
     },

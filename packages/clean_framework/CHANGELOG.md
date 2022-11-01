@@ -1,6 +1,18 @@
 # Changelog
 ## 1.5.0
 **Nov 1, 2022**
+- Removed dependencies on sub packages. Sub-packages can be added separately as per the requirement.
+```text
+Sub-packages:
+- clean_framework_router
+- clean_framework_graphql
+- clean_framework_rest
+- clean_framework_firestore
+- clean_framework_test
+```
+
+## 1.5.0
+**Nov 1, 2022**
 - Breakdown into sub packages.
 - Moved test helpers to `clean_framework_test` package.
 - **RestSuccessResponse**'s data is subtype of `Object` instead of `dynamic`.
