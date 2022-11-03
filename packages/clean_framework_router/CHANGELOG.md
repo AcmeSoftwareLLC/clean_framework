@@ -1,4 +1,8 @@
 # Changelog
+## 0.2.0-dev.2
+**Nov 3, 2022**
+- Added `AppRouterState` alias.
+
 ## 0.2.0-dev.1
 **Nov 2, 2022 (Breaking)**
 - Upgraded to `go_router` v5.
