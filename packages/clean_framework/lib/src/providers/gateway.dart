@@ -18,9 +18,8 @@ abstract class Gateway<O extends Output, R extends Request,
           '',
         ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
-    _useCase.subscribe(
-      O,
-      (O output) async => _processRequest(buildRequest(output)),
+    _useCase.subscribe<O, S>(
+      (output) => _processRequest(buildRequest(output as O)),
     );
   }
 
@@ -54,9 +53,8 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
     required UseCase publisherUseCase,
   })  : _subscriberUseCase = subscriberUseCase,
         _publisherUseCase = publisherUseCase {
-    _subscriberUseCase.subscribe(
-      SUBSCRIBER_OUTPUT,
-      (SUBSCRIBER_OUTPUT output) {
+    _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
+      (output) {
         return Right<FailureInput, SUBSCRIBER_INPUT>(
           onResponse(
             _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),

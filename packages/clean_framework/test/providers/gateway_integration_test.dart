@@ -135,8 +135,8 @@ class TestUseCase extends UseCase<TestEntity> {
             TestOutput: (entity) => TestOutput(entity.foo),
           },
           inputFilters: {
-            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-                entity.merge(foo: input.foo),
+            TestSuccessInput: (input, TestEntity entity) =>
+                entity.merge(foo: (input as TestSuccessInput).foo),
           },
         );
 

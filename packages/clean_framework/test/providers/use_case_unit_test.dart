@@ -23,11 +23,16 @@ void main() {
     final successInput = TestSuccessInput('success');
     expect(SuccessInput() == successInput, isFalse);
 
-    useCase.subscribe(TestDirectOutput, (output) {
-      return Right<FailureInput, TestSuccessInput>(successInput);
+    useCase.subscribe<TestDirectOutput, TestSuccessInput>((output) {
+      return Right(successInput);
     });
 
-    expect(() => useCase.subscribe(TestDirectOutput, (_) {}), throwsStateError);
+    expect(
+      () => useCase.subscribe<TestDirectOutput, TestSuccessInput>((_) {
+        return Right(successInput);
+      }),
+      throwsStateError,
+    );
 
     await useCase.fetchDataImmediatelly();
 
@@ -38,9 +43,9 @@ void main() {
 
   test('UseCase subscription with delayed response on input filter', () async {
     final useCase = TestUseCase(TestEntity(foo: ''))
-      ..subscribe(TestSubscriptionOutput, (output) {
-        return Right<FailureInput, SuccessInput>(SuccessInput());
-      });
+      ..subscribe<TestSubscriptionOutput, SuccessInput>(
+        (output) => Right(SuccessInput()),
+      );
 
     await useCase.fetchDataEventually();
 
@@ -170,8 +175,9 @@ class TestUseCase extends UseCase<TestEntity> {
             TestOutput: (entity) => TestOutput(entity.foo),
           },
           inputFilters: {
-            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-                entity.merge(foo: input.foo),
+            TestSuccessInput: (input, TestEntity entity) {
+              return entity.merge(foo: (input as TestSuccessInput).foo);
+            },
           },
         );
 
