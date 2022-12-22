@@ -8,39 +8,27 @@ import 'package:meta/meta.dart';
 
 export 'package:clean_framework/src/providers/use_case/use_case_helpers.dart';
 
-part 'use_case/helpers/use_case_filter.dart';
-
 typedef InputCallback<E extends Entity, I extends Input> = E Function(I);
 
 abstract class UseCase<E extends Entity> extends StateNotifier<E>
     with UseCaseDebounceMixin {
   UseCase({
     required E entity,
-    OutputFilterMap<E>? outputFilters,
-    InputFilterMap<E>? inputFilters,
+    @Deprecated('Use filters instead') OutputFilterMap<E>? outputFilters,
+    @Deprecated('Use filters instead') InputFilterMap<E>? inputFilters,
     List<UseCaseFilter<E>>? filters,
   })  : _outputFilters = Map.of(outputFilters ?? const {}),
         _inputFilters = Map.of(inputFilters ?? const {}),
         super(entity) {
     if (filters != null && filters.isNotEmpty) {
-      _outputFilters.addEntries(
-        filters.whereType<OutputFilter<E, Output>>().map((f) => f._entry),
-      );
-      _inputFilters.addEntries(
-        filters.whereType<InputFilter<E, Input>>().map((f) => f._entry),
-      );
+      _outputFilters.addFilters(filters);
+      _inputFilters.addFilters(filters);
     }
   }
 
   final OutputFilterMap<E> _outputFilters;
   final InputFilterMap<E> _inputFilters;
   final RequestSubscriptionMap _requestSubscriptions = {};
-
-  @override
-  void dispose() {
-    clearDebounce();
-    super.dispose();
-  }
 
   @visibleForTesting
   @protected
@@ -70,5 +58,11 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     final input = await _requestSubscriptions<O, S>(output);
 
     entity = input.fold(onFailure, onSuccess);
+  }
+
+  @override
+  void dispose() {
+    clearDebounce();
+    super.dispose();
   }
 }

@@ -1,5 +1,4 @@
-import 'package:clean_framework/src/providers/entity.dart';
-import 'package:clean_framework/src/providers/use_case/helpers/input.dart';
+part of 'use_case_filter.dart';
 
 typedef InputProcessor<E extends Entity> = E Function(dynamic, E);
 
@@ -14,5 +13,11 @@ extension InputFilterMapExtension<E extends Entity> on InputFilterMap<E> {
     }
 
     return processor(input, entity);
+  }
+
+  void addFilters(List<UseCaseFilter> filters) {
+    addEntries(
+      filters.whereType<InputFilter<E, Input>>().map((f) => f._entry),
+    );
   }
 }

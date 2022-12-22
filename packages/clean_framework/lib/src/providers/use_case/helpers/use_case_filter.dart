@@ -1,4 +1,10 @@
-part of '../../use_case.dart';
+import 'package:clean_framework/src/providers/entity.dart';
+import 'package:clean_framework/src/providers/use_case/helpers/input.dart';
+import 'package:clean_framework/src/providers/use_case/helpers/output.dart';
+import 'package:meta/meta.dart';
+
+part 'input_filter_map.dart';
+part 'output_filter_map.dart';
 
 abstract class UseCaseFilter<E extends Entity> {}
 
