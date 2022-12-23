@@ -68,7 +68,11 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
           entity: TestEntity(),
-          filters: [FooOutputFilter(), BarOutputFilter(), FooInputFilter()],
+          transformers: [
+            FooOutputTransformer(),
+            BarOutputTransformer(),
+            FooInputTransformer()
+          ],
         );
 
   void updateFoo(String foo) {
@@ -101,21 +105,21 @@ class BarOutput extends Output {
   List<Object?> get props => [bar];
 }
 
-class FooOutputFilter extends OutputFilter<TestEntity, FooOutput> {
+class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
   @override
   FooOutput transform(TestEntity entity) {
     return FooOutput(entity.foo);
   }
 }
 
-class BarOutputFilter extends OutputFilter<TestEntity, BarOutput> {
+class BarOutputTransformer extends OutputTransformer<TestEntity, BarOutput> {
   @override
   BarOutput transform(TestEntity entity) {
     return BarOutput(entity.bar);
   }
 }
 
-class FooInputFilter extends InputFilter<TestEntity, FooInput> {
+class FooInputTransformer extends InputTransformer<TestEntity, FooInput> {
   @override
   TestEntity transform(TestEntity entity, FooInput input) {
     return entity.copyWith(foo: input.foo);

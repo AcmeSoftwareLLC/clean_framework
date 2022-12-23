@@ -14,15 +14,15 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     with UseCaseDebounceMixin {
   UseCase({
     required E entity,
-    @Deprecated('Use filters instead') OutputFilterMap<E>? outputFilters,
-    @Deprecated('Use filters instead') InputFilterMap<E>? inputFilters,
-    List<UseCaseFilter<E>>? filters,
+    @Deprecated('Use transformers instead') OutputFilterMap<E>? outputFilters,
+    @Deprecated('Use transformers instead') InputFilterMap<E>? inputFilters,
+    List<UseCaseTransformer<E>>? transformers,
   })  : _outputFilters = Map.of(outputFilters ?? const {}),
         _inputFilters = Map.of(inputFilters ?? const {}),
         super(entity) {
-    if (filters != null && filters.isNotEmpty) {
-      _outputFilters.addFilters(filters);
-      _inputFilters.addFilters(filters);
+    if (transformers != null && transformers.isNotEmpty) {
+      _outputFilters.addTransformers(transformers);
+      _inputFilters.addTransformers(transformers);
     }
   }
 

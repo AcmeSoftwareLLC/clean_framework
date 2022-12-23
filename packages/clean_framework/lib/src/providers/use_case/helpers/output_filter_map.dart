@@ -1,4 +1,4 @@
-part of 'use_case_filter.dart';
+part of 'use_case_transformer.dart';
 
 typedef OutputBuilder<E extends Entity> = Output Function(E);
 
@@ -18,9 +18,11 @@ extension OutputFilterMapExtension<E extends Entity> on OutputFilterMap<E> {
     return builder(entity) as O;
   }
 
-  void addFilters(List<UseCaseFilter> filters) {
+  void addTransformers(List<UseCaseTransformer> transformers) {
     addEntries(
-      filters.whereType<OutputFilter<E, Output>>().map((f) => f._entry),
+      transformers
+          .whereType<OutputTransformer<E, Output>>()
+          .map((f) => f._entry),
     );
   }
 }

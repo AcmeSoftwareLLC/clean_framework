@@ -6,15 +6,16 @@ import 'package:meta/meta.dart';
 part 'input_filter_map.dart';
 part 'output_filter_map.dart';
 
-abstract class UseCaseFilter<E extends Entity> {}
+abstract class UseCaseTransformer<E extends Entity> {}
 
-abstract class OutputFilter<E extends Entity, O extends Output>
-    implements UseCaseFilter<E> {
-  const OutputFilter() : _transformer = null;
+abstract class OutputTransformer<E extends Entity, O extends Output>
+    implements UseCaseTransformer<E> {
+  const OutputTransformer() : _transformer = null;
 
-  factory OutputFilter.from(O Function(E) transformer) = _OutputFilter<E, O>;
+  factory OutputTransformer.from(O Function(E) transformer) =
+      _OutputFilter<E, O>;
 
-  const OutputFilter._(this._transformer);
+  const OutputTransformer._(this._transformer);
 
   final O Function(E)? _transformer;
 
@@ -24,13 +25,14 @@ abstract class OutputFilter<E extends Entity, O extends Output>
   O transform(E entity);
 }
 
-abstract class InputFilter<E extends Entity, I extends Input>
-    implements UseCaseFilter<E> {
-  const InputFilter() : _transformer = null;
+abstract class InputTransformer<E extends Entity, I extends Input>
+    implements UseCaseTransformer<E> {
+  const InputTransformer() : _transformer = null;
 
-  factory InputFilter.from(E Function(E, I) transformer) = _InputFilter<E, I>;
+  factory InputTransformer.from(E Function(E, I) transformer) =
+      _InputFilter<E, I>;
 
-  const InputFilter._(this._transformer);
+  const InputTransformer._(this._transformer);
 
   final E Function(E, I)? _transformer;
 
@@ -43,7 +45,7 @@ abstract class InputFilter<E extends Entity, I extends Input>
 }
 
 class _OutputFilter<E extends Entity, O extends Output>
-    extends OutputFilter<E, O> {
+    extends OutputTransformer<E, O> {
   const _OutputFilter(super.transformer) : super._();
 
   @override
@@ -51,7 +53,7 @@ class _OutputFilter<E extends Entity, O extends Output>
 }
 
 class _InputFilter<E extends Entity, I extends Input>
-    extends InputFilter<E, I> {
+    extends InputTransformer<E, I> {
   const _InputFilter(super.transformer) : super._();
 
   @override

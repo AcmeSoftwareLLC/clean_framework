@@ -8,7 +8,7 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
           outputFilters: {
             LastLoginCTAUIOutput: _lastLoginCTAUIOutput,
           },
-          filters: [LastLoginUIOutputFilter()],
+          transformers: [LastLoginUIOutputFilter()],
         );
 
   static LastLoginCTAUIOutput _lastLoginCTAUIOutput(LastLoginEntity entity) =>
@@ -57,7 +57,7 @@ class LastLoginDateInput extends SuccessInput {
 }
 
 class LastLoginUIOutputFilter
-    extends OutputFilter<LastLoginEntity, LastLoginUIOutput> {
+    extends OutputTransformer<LastLoginEntity, LastLoginUIOutput> {
   @override
   LastLoginUIOutput transform(LastLoginEntity entity) {
     return LastLoginUIOutput(lastLogin: entity.lastLogin);

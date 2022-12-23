@@ -1,4 +1,4 @@
-part of 'use_case_filter.dart';
+part of 'use_case_transformer.dart';
 
 typedef InputProcessor<E extends Entity> = E Function(dynamic, E);
 
@@ -15,9 +15,9 @@ extension InputFilterMapExtension<E extends Entity> on InputFilterMap<E> {
     return processor(input, entity);
   }
 
-  void addFilters(List<UseCaseFilter> filters) {
+  void addTransformers(List<UseCaseTransformer> transformers) {
     addEntries(
-      filters.whereType<InputFilter<E, Input>>().map((f) => f._entry),
+      transformers.whereType<InputTransformer<E, Input>>().map((f) => f._entry),
     );
   }
 }
