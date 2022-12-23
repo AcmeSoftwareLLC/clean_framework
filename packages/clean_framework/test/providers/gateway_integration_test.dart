@@ -18,7 +18,7 @@ void main() {
 
     final useCase = provider.getUseCaseFromContext(context);
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     final output = useCase.getOutput<TestOutput>();
     expect(output, TestOutput('success'));
@@ -34,7 +34,7 @@ void main() {
 
     final useCase = provider.getUseCaseFromContext(context);
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     final output = useCase.getOutput<TestOutput>();
     expect(output, TestOutput('failure'));
@@ -131,16 +131,17 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
           entity: entity,
-          outputFilters: {
-            TestOutput: (entity) => TestOutput(entity.foo),
-          },
-          inputFilters: {
-            TestSuccessInput: (input, TestEntity entity) =>
-                entity.merge(foo: (input as TestSuccessInput).foo),
-          },
+          transformers: [
+            OutputTransformer<TestEntity, TestOutput>.from(
+              (entity) => TestOutput(entity.foo),
+            ),
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (entity, input) => entity.merge(foo: input.foo),
+            ),
+          ],
         );
 
-  Future<void> fetchDataImmediatelly() async {
+  Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
       TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),

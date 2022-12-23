@@ -105,9 +105,11 @@ class TestUseCase extends UseCase<EntityFake> {
   TestUseCase()
       : super(
           entity: EntityFake(),
-          outputFilters: {
-            TestOutput: (EntityFake entity) => TestOutput(entity.value),
-          },
+          transformers: [
+            OutputTransformer<EntityFake, TestOutput>.from(
+              (entity) => TestOutput(entity.value),
+            ),
+          ],
         );
 
   Future<void> fetch() async {

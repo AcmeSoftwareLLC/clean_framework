@@ -171,14 +171,14 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
           entity: entity,
-          outputFilters: {
-            TestOutput: (entity) => TestOutput(entity.foo),
-          },
-          inputFilters: {
-            TestSuccessInput: (input, TestEntity entity) {
-              return entity.merge(foo: (input as TestSuccessInput).foo);
-            },
-          },
+          transformers: [
+            OutputTransformer<TestEntity, TestOutput>.from(
+              (entity) => TestOutput(entity.foo),
+            ),
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (entity, input) => entity.merge(foo: input.foo),
+            ),
+          ],
         );
 
   Future<void> fetchDataImmediatelly() async {

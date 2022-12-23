@@ -5,26 +5,29 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
   LastLoginUseCase()
       : super(
           entity: LastLoginEntity(),
-          outputFilters: {
-            LastLoginCTAUIOutput: _lastLoginCTAUIOutput,
-          },
-          transformers: [LastLoginUIOutputFilter()],
+          transformers: [
+            OutputTransformer<LastLoginEntity, LastLoginCTAUIOutput>.from(
+              (entity) => LastLoginCTAUIOutput(
+                isLoading: entity.state == LastLoginState.loading,
+              ),
+            ),
+            LastLoginUIOutputTransformer(),
+          ],
         );
-
-  static LastLoginCTAUIOutput _lastLoginCTAUIOutput(LastLoginEntity entity) =>
-      LastLoginCTAUIOutput(
-        isLoading: entity.state == LastLoginState.loading,
-      );
 
   Future<void> fetchCurrentDate() async {
     entity = entity.merge(state: LastLoginState.loading);
 
-    await request(LastLoginDateOutput(), onSuccess: (LastLoginDateInput input) {
-      return entity.merge(
-          state: LastLoginState.idle, lastLogin: input.lastLogin);
-    }, onFailure: (_) {
-      return entity;
-    });
+    await request(
+      LastLoginDateOutput(),
+      onSuccess: (LastLoginDateInput input) {
+        return entity.merge(
+          state: LastLoginState.idle,
+          lastLogin: input.lastLogin,
+        );
+      },
+      onFailure: (_) => entity,
+    );
   }
 }
 
@@ -56,7 +59,7 @@ class LastLoginDateInput extends SuccessInput {
   LastLoginDateInput(this.lastLogin);
 }
 
-class LastLoginUIOutputFilter
+class LastLoginUIOutputTransformer
     extends OutputTransformer<LastLoginEntity, LastLoginUIOutput> {
   @override
   LastLoginUIOutput transform(LastLoginEntity entity) {
