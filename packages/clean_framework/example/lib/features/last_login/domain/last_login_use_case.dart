@@ -6,7 +6,7 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
       : super(
           entity: LastLoginEntity(),
           transformers: [
-            OutputTransformer<LastLoginEntity, LastLoginCTAUIOutput>.from(
+            OutputTransformer.from(
               (entity) => LastLoginCTAUIOutput(
                 isLoading: entity.state == LastLoginState.loading,
               ),

@@ -2,35 +2,25 @@ import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('UseCase tests', () {
-    test('output filter works', () {
-      final useCase = TestUseCase();
-
-      useCase.updateFoo('hello');
-
-      expect(useCase.entity.foo, 'hello');
-
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
-    });
-
-    test('input filter works', () {
-      final useCase = TestUseCase();
-
-      useCase.setInput(FooInput('hello'));
+  group('UseCase Transformer tests', () {
+    test('output transformer', () {
+      final useCase = TestUseCase()
+        ..updateFoo('hello')
+        ..updateBar(3);
 
       expect(useCase.entity.foo, 'hello');
-
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
-    });
-
-    test('output 2 filter works', () {
-      final useCase = TestUseCase();
-
-      useCase.updateBar(3);
-
       expect(useCase.entity.bar, 3);
 
+      expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
+    });
+
+    test('input transformer', () {
+      final useCase = TestUseCase()..setInput(FooInput('hello'));
+
+      expect(useCase.entity.foo, 'hello');
+
+      expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
   });
 }
@@ -70,8 +60,8 @@ class TestUseCase extends UseCase<TestEntity> {
           entity: TestEntity(),
           transformers: [
             FooOutputTransformer(),
-            BarOutputTransformer(),
-            FooInputTransformer()
+            FooInputTransformer(),
+            OutputTransformer.from((entity) => BarOutput(entity.bar)),
           ],
         );
 
@@ -109,13 +99,6 @@ class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
   @override
   FooOutput transform(TestEntity entity) {
     return FooOutput(entity.foo);
-  }
-}
-
-class BarOutputTransformer extends OutputTransformer<TestEntity, BarOutput> {
-  @override
-  BarOutput transform(TestEntity entity) {
-    return BarOutput(entity.bar);
   }
 }
 

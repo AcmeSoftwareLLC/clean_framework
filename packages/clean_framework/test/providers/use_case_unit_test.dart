@@ -10,7 +10,7 @@ void main() {
 
     expect(viewModel.foo, '');
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     expect(useCase.entity, TestEntity(foo: 'failure'));
 
@@ -34,7 +34,7 @@ void main() {
       throwsStateError,
     );
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     expect(useCase.entity, TestEntity(foo: 'success'));
 
@@ -172,16 +172,14 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: entity,
           transformers: [
-            OutputTransformer<TestEntity, TestOutput>.from(
-              (entity) => TestOutput(entity.foo),
-            ),
+            OutputTransformer.from((entity) => TestOutput(entity.foo)),
             InputTransformer<TestEntity, TestSuccessInput>.from(
               (entity, input) => entity.merge(foo: input.foo),
             ),
           ],
         );
 
-  Future<void> fetchDataImmediatelly() async {
+  Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
       TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),

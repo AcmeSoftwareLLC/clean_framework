@@ -106,9 +106,7 @@ class TestUseCase extends UseCase<EntityFake> {
       : super(
           entity: EntityFake(),
           transformers: [
-            OutputTransformer<EntityFake, TestOutput>.from(
-              (entity) => TestOutput(entity.value),
-            ),
+            OutputTransformer.from((entity) => TestOutput(entity.value)),
           ],
         );
 

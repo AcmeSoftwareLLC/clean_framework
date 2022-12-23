@@ -7,7 +7,7 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
       : super(
           entity: RandomCatEntity(),
           transformers: [
-            OutputTransformer<RandomCatEntity, RandomCatUIOutput>.from(
+            OutputTransformer.from(
               (e) {
                 return RandomCatUIOutput(
                   isLoading: e.isLoading,

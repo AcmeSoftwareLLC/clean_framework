@@ -132,9 +132,7 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: entity,
           transformers: [
-            OutputTransformer<TestEntity, TestOutput>.from(
-              (entity) => TestOutput(entity.foo),
-            ),
+            OutputTransformer.from((entity) => TestOutput(entity.foo)),
             InputTransformer<TestEntity, TestSuccessInput>.from(
               (entity, input) => entity.merge(foo: input.foo),
             ),

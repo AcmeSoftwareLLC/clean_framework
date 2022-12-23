@@ -18,7 +18,7 @@ class CountryUseCase extends UseCase<CountryEntity> {
             },
           ),
           transformers: [
-            OutputTransformer<CountryEntity, CountryUIOutput>.from(
+            OutputTransformer.from(
               (e) {
                 return CountryUIOutput(
                   isLoading: e.isLoading,
