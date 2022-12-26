@@ -2,34 +2,63 @@ import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
-enum Routes {
-  home,
-  detail,
-  moreDetail,
+enum Routes with RoutesMixin {
+  home('/'),
+  detail('/detail'),
+  subDetail('detail'),
+  detailWithParam('/detail/:meta'),
+  subDetailWithParam('detail/:meta'),
+  moreDetail('more-detail'),
+  moreDetailRoot('/more-detail');
+
+  const Routes(this.path);
+
+  @override
+  final String path;
 }
 
 late AppRouter testRouter;
+
+class TestRouter extends AppRouter<Routes> {
+  TestRouter({
+    required this.routes,
+    this.redirect,
+    this.observers,
+  });
+
+  final List<RouteBase> routes;
+  final GoRouterRedirect? redirect;
+  final List<NavigatorObserver>? observers;
+
+  @override
+  RouterConfiguration configureRouter() {
+    return RouterConfiguration(
+      routes: routes,
+      errorBuilder: (_, __) => const Page404(),
+      redirect: redirect,
+      observers: observers,
+    );
+  }
+}
 
 void main() {
   group('Router tests | ', () {
     testWidgets(
       'route defined with "/" path is the initial route',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => const OnTapPage(id: 'Home'),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -40,23 +69,20 @@ void main() {
     testWidgets(
       'navigating to sibling route replaces the older sibling',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -77,25 +103,22 @@ void main() {
     testWidgets(
       'navigating to child route pushes the child on top of the parent',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.subDetail),
               ),
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail',
+                  route: Routes.subDetail,
                   builder: (_, __) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -111,7 +134,7 @@ void main() {
 
         expect(testRouter.location, '/detail');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -123,29 +146,26 @@ void main() {
     testWidgets(
       'navigating with params',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(
-                  Routes.detail,
-                  params: {'test': '123'},
+                onTap: (context) => testRouter.go(
+                  Routes.detailWithParam,
+                  params: {'meta': '123'},
                 ),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail/:test',
+              route: Routes.detailWithParam,
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
-                value: state.getParam('test'),
+                value: state.params['meta'],
               ),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -167,29 +187,26 @@ void main() {
     testWidgets(
       'navigating with query parameters',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(
+                onTap: (context) => testRouter.go(
                   Routes.detail,
                   queryParams: {'test': '123'},
                 ),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
                 value: state.queryParams['test'],
               ),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -211,29 +228,26 @@ void main() {
     testWidgets(
       'navigating with extra argument',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(
+                onTap: (context) => testRouter.go(
                   Routes.detail,
                   extra: 123,
                 ),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
                 value: state.extra.toString(),
               ),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -256,32 +270,29 @@ void main() {
     testWidgets(
       'navigating with every possible type of arguments',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(
-                  Routes.detail,
-                  params: {'a': '123'},
+                onTap: (context) => testRouter.go(
+                  Routes.detailWithParam,
+                  params: {'meta': '123'},
                   queryParams: {'b': '456'},
                   extra: 789,
                 ),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail/:a',
+              route: Routes.detailWithParam,
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
-                value: '${state.getParam('a')}${state.queryParams['b']}'
+                value: '${state.params['meta']}${state.queryParams['b']}'
                     '${state.extra}',
               ),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -302,30 +313,27 @@ void main() {
     );
 
     testWidgets('pop', (tester) async {
-      testRouter = AppRouter(
+      testRouter = TestRouter(
         routes: [
           AppRoute(
-            name: Routes.home,
-            path: '/',
+            route: Routes.home,
             builder: (_, __) => OnTapPage(
               id: 'Home',
-              onTap: (context) => testRouter.to(Routes.detail),
+              onTap: (context) => testRouter.go(Routes.subDetail),
             ),
             routes: [
               AppRoute(
-                name: Routes.detail,
-                path: 'detail',
+                route: Routes.subDetail,
                 builder: (_, state) => OnTapPage(
                   id: 'Detail',
-                  onTap: (context) => testRouter.to(Routes.moreDetail),
+                  onTap: (context) => testRouter.go(Routes.moreDetail),
                 ),
                 routes: [
                   AppRoute(
-                    name: Routes.moreDetail,
-                    path: 'more-detail',
+                    route: Routes.moreDetail,
                     builder: (_, state) => OnTapPage(
                       id: 'More Detail',
-                      onTap: (context) => testRouter.back(),
+                      onTap: (context) => testRouter.pop(),
                     ),
                   ),
                 ],
@@ -333,7 +341,6 @@ void main() {
             ],
           ),
         ],
-        errorBuilder: (_, __) => const Page404(),
       );
       await pumpApp(tester);
 
@@ -371,40 +378,37 @@ void main() {
       expect(find.text('Detail'), findsOneWidget);
       expect(find.text('More Detail'), findsNothing);
 
-      expect(testRouter.location, '/detail');
+      expect(testRouter.location, '/detail/');
     });
 
     testWidgets(
       'navigating using push',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(
-                  Routes.detail,
-                  params: {'a': '123'},
+                  Routes.subDetailWithParam,
+                  params: {'meta': '123'},
                   queryParams: {'b': '456'},
                   extra: 789,
                 ),
               ),
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail/:a',
+                  route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                    value: '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -419,7 +423,7 @@ void main() {
 
         expect(testRouter.location, '/detail/123?b=456');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -428,34 +432,31 @@ void main() {
     );
 
     testWidgets(
-      'navigating using open',
+      'navigating using goLocation',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.open(
+                onTap: (context) => testRouter.goLocation(
                   '/detail/123?b=456',
                   extra: 789,
                 ),
               ),
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail/:a',
+                  route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                    value: '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -470,7 +471,7 @@ void main() {
 
         expect(testRouter.location, '/detail/123?b=456');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -479,18 +480,16 @@ void main() {
     );
 
     testWidgets('shows error widget when route is not found', (tester) async {
-      testRouter = AppRouter(
+      testRouter = TestRouter(
         routes: [
           AppRoute(
-            name: Routes.home,
-            path: '/',
+            route: Routes.home,
             builder: (_, __) => OnTapPage(
               id: 'Home',
-              onTap: (context) => testRouter.open('/test'),
+              onTap: (context) => testRouter.goLocation('/test'),
             ),
           ),
         ],
-        errorBuilder: (_, __) => const Page404(),
       );
       await pumpApp(tester);
 
@@ -508,27 +507,24 @@ void main() {
     });
 
     testWidgets(
-      'calling reset() will reset the underlying router',
+      'calling refresh() will refresh the underlying router',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.subDetail),
               ),
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail',
+                  route: Routes.subDetail,
                   builder: (_, __) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -544,97 +540,32 @@ void main() {
 
         expect(testRouter.location, '/detail');
 
-        testRouter.reset();
-        expect(testRouter.delegate.currentConfiguration, isEmpty);
-
-        // Just resets the underlying router; no change in UI
-        // Since this method is only intended for tests
-        expect(find.text('Home'), findsNothing);
-        expect(find.text('Detail'), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      'throws assertion error if querying key in not found in param',
-      (tester) async {
-        final flutterErrorHandler = FlutterError.onError;
-        FlutterError.onError = (details) async {
-          await expectLater(
-            details.exception.toString(),
-            contains('No route param with "c" key was passed'),
-          );
-
-          FlutterError.onError = flutterErrorHandler;
-        };
-
-        testRouter = AppRouter(
-          routes: [
-            AppRoute(
-              name: Routes.home,
-              path: '/',
-              builder: (_, __) => OnTapPage(
-                id: 'Home',
-                onTap: (context) => testRouter.to(
-                  Routes.detail,
-                  params: {'a': 'b'},
-                ),
-              ),
-              routes: [
-                AppRoute(
-                  name: Routes.detail,
-                  path: 'detail/:a',
-                  builder: (_, state) => OnTapPage(
-                    id: 'Detail',
-                    value: state.getParam('c'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-          errorBuilder: (_, state) {
-            expect(
-              state.error.toString(),
-              contains('No route param with "c" key was passed'),
-            );
-            return const Page404();
-          },
-        );
-        await pumpApp(tester);
-
-        expect(find.text('Home'), findsOneWidget);
-        expect(find.text('Detail'), findsNothing);
-
-        await tester.tap(find.byType(ElevatedButton));
-        await tester.pumpAndSettle();
+        testRouter.refresh();
       },
     );
 
     testWidgets(
       'local redirect',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => const OnTapPage(id: 'Detail'),
-              redirect: (state) => '/more-detail',
+              redirect: (context, state) => '/more-detail',
             ),
             AppRoute(
-              name: Routes.moreDetail,
-              path: '/more-detail',
+              route: Routes.moreDetailRoot,
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -657,29 +588,25 @@ void main() {
     testWidgets(
       'global redirect',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => const OnTapPage(id: 'Detail'),
             ),
             AppRoute(
-              name: Routes.moreDetail,
-              path: '/more-detail',
+              route: Routes.moreDetailRoot,
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
-          redirect: (state) {
+          redirect: (context, state) {
             if (state.location == '/detail') return '/more-detail';
             return null;
           },
@@ -705,31 +632,27 @@ void main() {
     testWidgets(
       'listening to changes in route using addListener',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => OnTapPage(
                 id: 'Detail',
-                onTap: (context) => testRouter.to(Routes.moreDetail),
+                onTap: (context) => testRouter.go(Routes.moreDetailRoot),
               ),
             ),
             AppRoute(
-              name: Routes.moreDetail,
-              path: '/more-detail',
+              route: Routes.moreDetailRoot,
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -739,17 +662,15 @@ void main() {
             () {
               switch (count) {
                 case 1:
-                case 2:
                   expect(testRouter.location, '/detail');
                   break;
-                case 3:
-                case 4:
+                case 2:
                   expect(testRouter.location, '/more-detail');
                   break;
               }
               count++;
             },
-            count: 4,
+            count: 2,
           ),
         );
 
@@ -780,32 +701,28 @@ void main() {
       (tester) async {
         final observer = TestNavigatorObserver();
 
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           observers: [observer],
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.to(Routes.detail),
+                onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
-              name: Routes.detail,
-              path: '/detail',
+              route: Routes.detail,
               builder: (_, __) => OnTapPage(
                 id: 'Detail',
-                onTap: (context) => testRouter.to(Routes.moreDetail),
+                onTap: (context) => testRouter.go(Routes.moreDetailRoot),
               ),
             ),
             AppRoute(
-              name: Routes.moreDetail,
-              path: '/more-detail',
+              route: Routes.moreDetailRoot,
               builder: (_, __) => const OnTapPage(id: 'More Detail'),
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -844,17 +761,16 @@ void main() {
     testWidgets(
       'using page builder',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute.page(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => CupertinoPage(
                 child: OnTapPage(
                   id: 'Home',
                   onTap: (context) => testRouter.push(
-                    Routes.detail,
-                    params: {'a': '123'},
+                    Routes.subDetailWithParam,
+                    params: {'meta': '123'},
                     queryParams: {'b': '456'},
                     extra: 789,
                   ),
@@ -862,18 +778,16 @@ void main() {
               ),
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail/:a',
+                  route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                    value: '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -891,7 +805,7 @@ void main() {
 
         expect(testRouter.location, '/detail/123?b=456');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -902,16 +816,15 @@ void main() {
     testWidgets(
       'using custom transition',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute.custom(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(
-                  Routes.detail,
-                  params: {'a': '123'},
+                  Routes.subDetailWithParam,
+                  params: {'meta': '123'},
                   queryParams: {'b': '456'},
                   extra: 789,
                 ),
@@ -924,18 +837,16 @@ void main() {
               },
               routes: [
                 AppRoute(
-                  name: Routes.detail,
-                  path: 'detail/:a',
+                  route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                    value: '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -952,7 +863,7 @@ void main() {
 
         expect(testRouter.location, '/detail/123?b=456');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -963,34 +874,31 @@ void main() {
     testWidgets(
       'by default custom routes has no transition',
       (tester) async {
-        testRouter = AppRouter(
+        testRouter = TestRouter(
           routes: [
             AppRoute(
-              name: Routes.home,
-              path: '/',
+              route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(
-                  Routes.detail,
-                  params: {'a': '123'},
+                  Routes.subDetailWithParam,
+                  params: {'meta': '123'},
                   queryParams: {'b': '456'},
                   extra: 789,
                 ),
               ),
               routes: [
                 AppRoute.custom(
-                  name: Routes.detail,
-                  path: 'detail/:a',
+                  route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.getParam('a')}${state.queryParams['b']}'
+                    value: '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
               ],
             ),
           ],
-          errorBuilder: (_, __) => const Page404(),
         );
         await pumpApp(tester);
 
@@ -1005,7 +913,7 @@ void main() {
 
         expect(testRouter.location, '/detail/123?b=456');
 
-        testRouter.back();
+        testRouter.pop();
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsOneWidget);
@@ -1017,11 +925,7 @@ void main() {
 
 Future<void> pumpApp(WidgetTester tester) {
   return tester.pumpWidget(
-    MaterialApp.router(
-      routerDelegate: testRouter.delegate,
-      routeInformationParser: testRouter.informationParser,
-      routeInformationProvider: testRouter.informationProvider,
-    ),
+    MaterialApp.router(routerConfig: testRouter.config),
   );
 }
 

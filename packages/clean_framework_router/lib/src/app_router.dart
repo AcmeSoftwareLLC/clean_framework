@@ -45,13 +45,13 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void replace(
+  void pushReplacement(
     R route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
     Object? extra,
   }) {
-    return _router.replaceNamed(
+    return _router.pushReplacementNamed(
       route.name,
       params: params,
       queryParams: queryParams,
@@ -70,8 +70,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void replaceLocation(String location, {Object? extra}) {
-    return _router.replace(location, extra: extra);
+  void pushReplacementLocation(String location, {Object? extra}) {
+    return _router.pushReplacement(location, extra: extra);
   }
 
   @override
@@ -95,6 +95,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
     _router.addListener(listener);
     return () => _router.removeListener(listener);
   }
+
+  void refresh() => _router.refresh();
 
   @override
   String get location => _router.location;
