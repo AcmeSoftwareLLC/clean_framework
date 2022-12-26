@@ -1,16 +1,17 @@
 # Adapter Layer: Gateways
-We already learned part of this layer componets with the Presenter and View Model. The only thing left to learn here are the Gateways, which handle Outputs used as requests, and create Inputs to be processed by the Use Case.
+We already learned part of this layer components with the Presenter and View Model.
+The only thing left to learn here are the Gateways, which handle Outputs used as requests, and create Inputs to be processed by the Use Case.
 <Image src="/assets/adapter_layer.png" caption="Adaptive Layer"/>
 
 Let's look at a simple example first:
 
 ```dart
-class MyGateway extends Gateway<MyOutput,
-    MyRequest, MyResponse, MyInput> {
+class MyGateway extends Gateway<MyOutput, MyRequest, MyResponse, MyInput> {
   LastLoginDateGateway({ProvidersContext? context, UseCaseProvider? provider})
       : super(
-            context: context ?? providersContext,
-            provider: provider ?? lastLoginUseCaseProvider);
+          context: context ?? providersContext,
+          provider: provider ?? lastLoginUseCaseProvider,
+        );
 
   @override
   MyRequest buildRequest(MyOutput output) {
@@ -18,7 +19,7 @@ class MyGateway extends Gateway<MyOutput,
   }
 
   @override
-  MyInput onSuccess(covariant FirebaseSuccessResponse response) {
+  MyInput onSuccess(FirebaseSuccessResponse response) {
     return MyInput(data: response.data);
   }
 
@@ -81,17 +82,14 @@ uiTest(
     context: context,
     builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
     setup: () {
-      final gateway = AddMachineGetTotalGateway(
-          context: context, provider: addMachineUseCaseProvider);
-      gateway.transport =
-          (request) async => Right(AddMachineGetTotalResponse(740));
+      final gateway = AddMachineGetTotalGateway(context: context, provider: addMachineUseCaseProvider);
+      gateway.transport = (request) async => Right(AddMachineGetTotalResponse(740));
 
       final gatewayProvider = GatewayProvider((_) => gateway);
       gatewayProvider.getGateway(context);
     },
     verify: (tester) async {
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')), findsOneWidget);
     },
   );
 
@@ -135,7 +133,7 @@ class AddMachineGetTotalGateway extends Gateway<
   }
 
   @override
-  onSuccess(covariant AddMachineGetTotalResponse response) {
+  onSuccess(AddMachineGetTotalResponse response) {
     return AddMachineGetTotalInput(response.number);
   }
 }
@@ -159,23 +157,28 @@ And with this code, the only thing we need to do is make the UseCase do a reques
 ```dart
 class AddMachineUseCase extends UseCase<AddMachineEntity> {
   AddMachineUseCase()
-      : super(entity: AddMachineEntity(0), outputFilters: {
-          AddMachineUIOutput: (AddMachineEntity e) =>
-              AddMachineUIOutput(total: e.total),
-        }, inputFilters: {
-          AddMachineAddNumberInput:
-              (AddMachineAddNumberInput i, AddMachineEntity e) =>
-                  AddMachineEntity(i.number + e.total),
-        }) {
+      : super(
+          entity: AddMachineEntity(0),
+          transformers: [
+            OutputTransformer.from(
+              (entity) => AddMachineUIOutput(total: entity.total),
+            ),
+            InputTransformer<AddMachineEntity, AddMachineAddNumberInput>.from(
+              (entity, input) => AddMachineEntity(entity.total + input.number),
+            ),
+          ],
+        ) {
     onCreate();
   }
 
   void onCreate() {
-    request(AddMachineGetTotalOutput(),
-        onSuccess: (AddMachineGetTotalInput input) {
-          return AddMachineEntity(input.number);
-        },
-        onFailure: (_) => entity);
+    request(
+      AddMachineGetTotalOutput(),
+      onSuccess: (input) {
+        return AddMachineEntity(input.number);
+      },
+      onFailure: (_) => entity,
+    );
   }
 }
 ```
@@ -187,18 +190,18 @@ Here we are adding a way to trigger a request. This **onCreate** method will be 
 class AddMachinePresenter extends Presenter<AddMachineViewModel,
     AddMachineUIOutput, AddMachineUseCase> {
   AddMachinePresenter({
-    required UseCaseProvider provider,
-    required PresenterBuilder<AddMachineViewModel> builder,
-  }) : super(provider: provider, builder: builder);
+    required super.provider,
+    required super.builder,
+  });
 
   @override
   AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
       total: output.total.toString(),
-      onAddNumber: (number) => _onAddNumber(useCase, number));
+      onAddNumber: (number) => _onAddNumber(useCase, number),
+  );
 
   void _onAddNumber(useCase, String number) {
-    useCase.setInput<AddMachineAddNumberInput>(
-        AddMachineAddNumberInput(int.parse(number)));
+    useCase.setInput<AddMachineAddNumberInput>(AddMachineAddNumberInput(int.parse(number)));
   }
 
   @override

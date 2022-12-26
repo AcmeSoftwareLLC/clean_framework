@@ -1,37 +1,61 @@
 # The UI Layer: UI, Presenter and View Model
+
 Lets discuss in more detail the components of the UI Layer
+
 <Image src="/assets/ui_layer.png" caption="UI Layers"/>
-As mentioned on the previous topic, the UI component lives on the most external layer of the architecture. It means that it is related to specific libraries that conform the frontend of the application, in our case, the Flutter widgets libraries.
 
-When building an app using the Clean Framework classes, we try to separate as much as possible any code that is not related to pure UI logic and put that on the Presenter (to send and receive data from internal layers) and the Use Case (the normal location for business logic).
+As mentioned on the previous topic,
+the UI component lives on the most external layer of the architecture.
+It means that it is related to specific libraries that conform the frontend of the application,
+in our case, the Flutter widgets libraries.
 
-UI is a class that behaves like a Stateless Widget. It will be very rare that a Stateful Widget is needed, since the state usage for important data breaks the layer rules. Try to always think on ways the UI widgets without the need for Stateful Widgets.
+When building an app using the Clean Framework classes,
+we try to separate as much as possible any code that is not related to pure UI logic and put that on the Presenter (to send and receive data from internal layers)
+and the Use Case (the normal location for business logic).
 
-All UI implementations require at least one View Model to fetch data from the entities. This data comes from Use Case Outputs, which Presenters receive and translate as needed.
+UI is a class that behaves like a Stateless Widget.
+It will be very rare that a Stateful Widget is needed, since the state usage for important data breaks the layer rules.
+Try to always think on ways the UI widgets without the need for Stateful Widgets.
 
-The feature you code can be expresed into multiple screens presented to the user, and even include small widgets that are inserted in other screens. These are your entry points to the feature, and as such, will require for the UI to listen to the state changes of the feature's Use Case through its Outputs. In other words, Use Cases can have multiple Outputs, that can have relationships with many View Models through the Presenters.
+All UI implementations require at least one View Model to fetch data from the entities.
+This data comes from Use Case Outputs, which Presenters receive and translate as needed.
 
-View Models are immutable classes, almost pure PODO's (Plain Old Dart Objects). We try to make them as lean as possible, because its only responsibility is the passing of digested data fields into the UI object.
+The feature you code can be expressed into multiple screens presented to the user,
+and even include small widgets that are inserted in other screens.
+These are your entry points to the feature, and as such,
+will require for the UI to listen to the state changes of the feature's Use Case through its Outputs.
+In other words, Use Cases can have multiple Outputs, that can have relationships with many View Models through the Presenters.
 
-They tend to have only Strings. This is intentional since the Presenter has the responsibility of any formating and parsing done to the data.
+View Models are immutable classes, almost pure PODOs (Plain Old Dart Objects).
+We try to make them as lean as possible, because its only responsibility is the passing of digested data fields into the UI object.
 
-Finally, the Presenters purpose is to connect and listen to Use Case Providers to interact with the Use Case instance and pass messages for user actions done on the UI (through callbacks on the View Model) and also to trigger rebuilds on the UI when the state changes causes a new Output to be generated. This will be explained in detail on the following sessions, so for now just asume the Presenters associate with only one type of Output.
+They tend to have only Strings.
+This is intentional since the Presenter has the responsibility of any formatting and parsing done to the data.
 
-The most important job of the Presenter is to translate an Output instance and create a new View Model everytime the Output is received. 
+Finally, the Presenters purpose is to connect and listen to Use Case Providers to interact with the Use Case instance
+and pass messages for user actions done on the UI (through callbacks on the View Model)
+and also to trigger rebuilds on the UI when the state changes causes a new Output to be generated.
+This will be explained in detail on the following sessions, so for now just assume the Presenters associate with only one type of Output.
+
+The most important job of the Presenter is to translate an Output instance
+and create a new View Model everytime the Output is received.
+
 ### Testing and Coding the UI Layer
 
-After a feature folder is created, any developer will probably try to start adding Flutter Widgets to build up the code requirements. This framework is flexible enough to allow you to start coding components that don't require to have any access or even knowledge of any possible dependency (databases, services, cache, etc), because those concerns belong to other layers.
+After a feature folder is created, any developer will probably try to start adding Flutter Widgets to build up the code requirements.
+This framework is flexible enough to allow you to start coding components that don't require to have any access
+or even knowledge of any possible dependency (databases, services, cache, etc), because those concerns belong to other layers.
 
-The simplest way to start working on a new feature is to first decide how many UI elements will be required to complete the implementation of the feature. For the sake of simplicity we are going to considering only one widget for the single screen of the new feature.
+The simplest way to start working on a new feature is to first decide how many UI elements will be required to complete the implementation of the feature.
+For the sake of simplicity we are going to considering only one widget for the single screen of the new feature.
 
 <aside class="positive">
-While working on this codelab, we will be creating the code by using TDD so we can focus on stablishing the desired outcome before explaining the code that produces it.
+While working on this codelab, we will be creating the code by using TDD so we can focus on establishing the desired outcome before explaining the code that produces it.
 </aside>
 
 ### The feature requirements
 
 We are going to code a very simple feature which can be explained in a few Gherkin scenarios:
-
 
 
 ```gherkin
@@ -88,7 +112,8 @@ void main() {
 }
 ```
 
-After creating the initial blank project (using 'flutter create' for instance), you can add this test under the suggested path (features/add_machine/presentation).
+After creating the initial blank project (using 'flutter create' for instance),
+you can add this test under the suggested path (features/add_machine/presentation).
 
 <aside class="negative">
 Be aware that TDD rules should cause the developer to not write more code than what is needed in order to make the test pass, but recreating the actual process will be lengthy for this codelab. We are oversimplifying the process here.
@@ -108,18 +133,19 @@ But in practice, we not only need that. UI is coupled to a valid ViewModel, whic
 #### lib/features/add_machine/presentation/add_machine_ui.dart
 ```dart
 class AddMachineUI extends UI<AddMachineViewModel> {
-  AddMachineUI({required PresenterCreator<AddMachineViewModel> create})
-      : super(create: create);
+  AddMachineUI({required super.create});
 
   @override
   Widget build(BuildContext context, AddMachineViewModel viewModel) {
-    return Column(children: [
-      Text('Add Machine'),
-      Container(
-        key: Key('SumTotalWidget'),
-        child: Text(viewModel.total),
-      ),
-    ]);
+    return Column(
+      children: [
+        Text('Add Machine'),
+        Container(
+          key: Key('SumTotalWidget'),
+          child: Text(viewModel.total),
+        ),
+      ],
+    );
   }
 
   @override
@@ -132,9 +158,9 @@ class AddMachineUI extends UI<AddMachineViewModel> {
 #### lib/features/add_machine/presentation/add_machine_view_model.dart
 ```dart
 class AddMachineViewModel extends ViewModel {
-  final String total;
-
   AddMachineViewModel({required this.total});
+
+  final String total;
 
   @override
   List<Object?> get props => [total];
@@ -145,7 +171,7 @@ Let's review the code so far:
 
 * The UI class specifies by generics the usage of a AddMachineViewModel. This way the class can have access to any field of the model.
 
-* A constructor is provided to accept a creator function. This is normally not needed. The "normal" implementation instanciates the proper presenter on the create override. But to make the test pass we can have a presenter that doesn't use a Use Case provider, but builds a static view model instead. This is useful for unit tests that use fake presenters.
+* A constructor is provided to accept a creator function. This is normally not needed. The "normal" implementation instantiates the proper presenter on the create override. But to make the test pass we can have a presenter that doesn't use a Use Case provider, but builds a static view model instead. This is useful for unit tests that use fake presenters.
 
 * Since the presenter has a mocked behavior, the actual class is defined on the test file, and the create override is left as is (it will never be called on execution).
 
@@ -167,29 +193,28 @@ void main() {
       final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')), findsOneWidget);
     },
   );
 }
 
-class AddMachinePresenter
-    extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
+class AddMachinePresenter extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
   AddMachinePresenter({
-    required PresenterBuilder<AddMachineViewModel> builder,
-  }) : super(provider: addMachineUseCaseProvider, builder: builder);
+    required super.builder,
+  }) : super(provider: addMachineUseCaseProvider);
 
   @override
-  AddMachineViewModel createViewModel(UseCase<Entity> useCase, output) =>
-      AddMachineViewModel(total: output.total.toString());
+  AddMachineViewModel createViewModel(UseCase<Entity> useCase, output) {
+    return AddMachineViewModel(total: output.total.toString());
+  }
 
   AddMachineUIOutput subscribe(_) => AddMachineUIOutput(total: 0);
 }
 
 class AddMachineUIOutput extends Output {
-  final int total;
-
   AddMachineUIOutput({required this.total});
+
+  final int total;
 
   @override
   List<Object?> get props => [total];
@@ -210,10 +235,10 @@ We use to write any mocks and fakes in the test file that uses them, and try to 
 Now lets evolve our current code so we can test the second scenario. This is the test for it:
 
 ```dart
-/// Given I opened the Add Machine feature
-  /// When I write a number on the number field
-  /// And I press the "Add" button
-  /// Then the total shown will be the entered number.
+  // Given I opened the Add Machine feature
+  // When I write a number on the number field
+  // And I press the "Add" button
+  // Then the total shown will be the entered number.
   uiTest(
     'AddMachineUI unit test - Scenario 2',
     context: ProvidersContext(),
@@ -234,8 +259,7 @@ Now lets evolve our current code so we can test the second scenario. This is the
       final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')), findsOneWidget);
     },
   );
 ```
@@ -248,8 +272,7 @@ To make this test work, we will need to first move the Presenter code into its c
 
 #### lib/features/add_machine/presentation/add_machine_presenter.dart
 ```dart
-class AddMachinePresenter
-    extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
+class AddMachinePresenter extends Presenter<AddMachineViewModel, AddMachineUIOutput, UseCase> {
   AddMachinePresenter({
     required UseCaseProvider provider,
     required PresenterBuilder<AddMachineViewModel> builder,
@@ -261,8 +284,7 @@ class AddMachinePresenter
       onAddNumber: (number) => _onAddNumber(useCase, number));
 
   void _onAddNumber(useCase, String number) {
-    useCase.setInput<AddMachineAddNumberInput>(
-        AddMachineAddNumberInput(int.parse(number)));
+    useCase.setInput<AddMachineAddNumberInput>(AddMachineAddNumberInput(int.parse(number)));
   }
 }
 ```
@@ -334,6 +356,7 @@ class AddMachineUI extends UI<AddMachineViewModel> {
   @override
   Widget build(BuildContext context, AddMachineViewModel viewModel) {
     final fieldController = TextEditingController();
+
     return Scaffold(
       body: Column(children: [
         Text('Add Machine'),
@@ -357,8 +380,7 @@ class AddMachineUI extends UI<AddMachineViewModel> {
   }
 
   @override
-  create(PresenterBuilder<AddMachineViewModel> builder) =>
-      AddMachinePresenter(provider: provider, builder: builder);
+  create(PresenterBuilder<AddMachineViewModel> builder) => AddMachinePresenter(provider: provider, builder: builder);
 }
 ```
 
@@ -390,8 +412,7 @@ void main() {
       final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')), findsOneWidget);
     },
   );
 }
@@ -430,6 +451,6 @@ class EmptyEntity extends Entity {
 Remember that as part of the TDD methodology, you will be constantly refactoring and updating the tests the more production code you complete, at this point you can see that the UseCaseFake is basically a minimal functioning Use Case. This is done intentionally to exemplify how fakes can be used to avoid writing production code before it's actually needed. For a normal real-case project, this is probably a step you can skip.
 </aside>
 
-Hopefuly by now you can appreciate the capacity of the Clean Framework components to help developers work with the UI layer without the need to first finish the Domain Layer code. You can even work in paralel with another developer that is doing it, while also having a high coverage on your code.
+Hopefully by now you can appreciate the capacity of the Clean Framework components to help developers work with the UI layer without the need to first finish the Domain Layer code. You can even work in parallel with another developer that is doing it, while also having a high coverage on your code.
 
 It has to be noted that this is very helpful to create MVP builds and have a working prototype that can be reviewed by stakeholders and QA teams, saving the development team a lot of headaches, since the feedback can be received sooner.
