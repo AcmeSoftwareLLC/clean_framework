@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/asset_feature_provider.dart';
+import 'package:clean_framework_example/demo_router.dart';
 import 'package:clean_framework_example/providers.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -28,17 +29,20 @@ class ExampleApp extends StatelessWidget {
       },
       child: AppProvidersContainer(
         providersContext: providersContext,
-        child: MaterialApp.router(
-          routeInformationParser: router.informationParser,
-          routerDelegate: router.delegate,
-          routeInformationProvider: router.informationProvider,
-          theme: ThemeData(
-            pageTransitionsTheme: PageTransitionsTheme(
-              builders: {
-                TargetPlatform.android: ZoomPageTransitionsBuilder(),
-              },
-            ),
-          ),
+        child: AppRouterScope(
+          create: () => DemoRouter(),
+          builder: (context) {
+            return MaterialApp.router(
+              routerConfig: context.router.config,
+              theme: ThemeData(
+                pageTransitionsTheme: PageTransitionsTheme(
+                  builders: {
+                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
+                  },
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

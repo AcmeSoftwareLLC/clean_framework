@@ -2,6 +2,7 @@ import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework_example/features/country/domain/country_view_model.dart';
 import 'package:clean_framework_example/features/country/presentation/country_presenter.dart';
 import 'package:clean_framework_example/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
 class CountryUI extends UI<CountryViewModel> {
@@ -77,7 +78,7 @@ class CountryUI extends UI<CountryViewModel> {
                       title: Text(country.name),
                       subtitle: Text(country.capital),
                       horizontalTitleGap: 0,
-                      onTap: () => router.to(
+                      onTap: () => context.router.go(
                         Routes.countryDetail,
                         params: {'country': country.name},
                         queryParams: {'capital': country.capital},
