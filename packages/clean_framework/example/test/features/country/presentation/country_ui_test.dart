@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/demo_router.dart';
 import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/routes.dart';
@@ -11,6 +12,8 @@ import '../../../home_page_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  final router = DemoRouter();
 
   setupUITest(context: providersContext, router: router);
 
@@ -98,7 +101,7 @@ void main() {
         child: child,
       ),
       verify: (tester) async {
-        router.to(Routes.countries);
+        router.go(Routes.countries);
         await tester.pumpAndSettle();
 
         final listTileFinder = find.byType(ListTile);

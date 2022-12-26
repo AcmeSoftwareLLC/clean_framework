@@ -1,19 +1,16 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_defaults.dart';
+import 'package:clean_framework_example/demo_router.dart';
 import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
 import 'package:clean_framework_example/features/last_login/presentation/last_login_ui.dart';
 import 'package:clean_framework_example/features/random_cat/presentation/random_cat_ui.dart';
 import 'package:clean_framework_example/home_page.dart';
 import 'package:clean_framework_example/providers.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  tearDown(() {
-    router.reset();
-  });
-
   group('HomePage tests | ', () {
     testWidgets(
       'correct UI',
@@ -113,10 +110,13 @@ Widget buildWidget(Widget widget) {
     child: AppProvidersContainer(
       providersContext: providersContext,
       onBuild: (_, __) {},
-      child: MaterialApp.router(
-        routeInformationParser: router.informationParser,
-        routerDelegate: router.delegate,
-        routeInformationProvider: router.informationProvider,
+      child: AppRouterScope(
+        create: () => DemoRouter(),
+        builder: (context) {
+          return MaterialApp.router(
+            routerConfig: context.router.config,
+          );
+        },
       ),
     ),
   );
