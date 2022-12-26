@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+export 'package:go_router/go_router.dart' show ShellRoute;
+
 /// Signature for router's `builder` and `errorBuilder` callback.
 typedef RouteWidgetBuilder = Widget Function(BuildContext, GoRouterState);
 
