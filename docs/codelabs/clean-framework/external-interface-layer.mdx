@@ -1,5 +1,7 @@
 # External Interface Layer
-The final piece of the Framework is the most flexible one, since it work as a wrapper for any external dependency code from libraries and modules. If coded properly, they will protect you from dependencies migrations and version upgrades.
+The final piece of the Framework is the most flexible one, since it work as a wrapper for any external dependency code from libraries and modules.
+If coded properly, they will protect you from dependencies migrations and version upgrades.
+
 <Image src="/assets/interface_layer.png" caption="External Interface Layer"/>
 As usual, let's study the example first:
 
@@ -56,8 +58,7 @@ This is the remaining code:
 
 #### lib/features/add_machine/external_interface/add_machine_external_interface.dart
 ```dart
-class AddMachineExternalInterface
-    extends ExternalInterface<Request, AddMachineGetTotalResponse> {
+class AddMachineExternalInterface extends ExternalInterface<Request, AddMachineGetTotalResponse> {
   int _savedNumber;
 
   AddMachineExternalInterface({
@@ -131,28 +132,35 @@ And here are the changes for the rest of components:
 ```dart
 class AddMachineUseCase extends UseCase<AddMachineEntity> {
   AddMachineUseCase()
-      : super(entity: AddMachineEntity(0), outputFilters: {
-          AddMachineUIOutput: (AddMachineEntity e) =>
-              AddMachineUIOutput(total: e.total),
-        }) {
+      : super(
+          entity: AddMachineEntity(0),
+          transformers: [
+            OutputTransformer.from(
+              (entity) => AddMachineUIOutput(total: entity.total),
+            ),
+          ],
+        ) {
     onCreate();
   }
 
   void onAddNumber(int number) async {
-    await request(AddMachineSetTotalOutput(number + entity.total),
-        onSuccess: (AddMachineGetTotalInput input) {
-      return AddMachineEntity(input.number);
-    }, onFailure: (_) {
-      return entity;
-    });
+    await request(
+      AddMachineSetTotalOutput(number + entity.total),
+      onSuccess: (AddMachineGetTotalInput input) {
+       return AddMachineEntity(input.number);
+      },
+      onFailure: (_) => entity,
+    );
   }
 
   void onCreate() async {
-    await request(AddMachineGetTotalOutput(),
-        onSuccess: (AddMachineGetTotalInput input) {
-          return AddMachineEntity(input.number);
-        },
-        onFailure: (_) => entity);
+    await request(
+      AddMachineGetTotalOutput(),
+      onSuccess: (AddMachineGetTotalInput input) {
+        return AddMachineEntity(input.number);
+      },
+      onFailure: (_) => entity,
+    );
   }
 }
 ```
@@ -169,7 +177,8 @@ class AddMachinePresenter extends Presenter<AddMachineViewModel,
   @override
   AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
       total: output.total.toString(),
-      onAddNumber: (number) => _onAddNumber(useCase, number));
+      onAddNumber: (number) => _onAddNumber(useCase, number)
+  );
 
   void _onAddNumber(AddMachineUseCase useCase, String number) {
     useCase.onAddNumber(int.parse(number));
@@ -197,11 +206,9 @@ void main() {
   void setup() {
     addMachineUseCaseProvider = UseCaseProvider((_) => AddMachineUseCase());
     getTotalGatewayProvider = GatewayProvider<AddMachineGetTotalGateway>((_) =>
-        AddMachineGetTotalGateway(
-            context: context, provider: addMachineUseCaseProvider));
+        AddMachineGetTotalGateway(context: context, provider: addMachineUseCaseProvider));
     setTotalGatewayProvider = GatewayProvider<AddMachineSetTotalGateway>((_) =>
-        AddMachineSetTotalGateway(
-            context: context, provider: addMachineUseCaseProvider));
+        AddMachineSetTotalGateway(context: context, provider: addMachineUseCaseProvider));
 
     externalInterfaceProvider = ExternalInterfaceProvider((_) =>
         AddMachineExternalInterface(
@@ -227,8 +234,7 @@ void main() {
 
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('0')), findsOneWidget);
     },
   );
 
@@ -256,8 +262,7 @@ void main() {
 
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')), findsOneWidget);
     },
   );
 
@@ -283,15 +288,13 @@ void main() {
 
       expect(sumTotalWidget, findsOneWidget);
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')), findsOneWidget);
 
       await tester.enterText(numberField, '7');
       await tester.tap(addButton);
       await tester.pumpAndSettle();
 
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('22')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('22')), findsOneWidget);
     },
   );
 
@@ -312,8 +315,7 @@ void main() {
       gateway.transport(AddMachineSetTotalRequest(740));
     },
     verify: (tester) async {
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')),
-          findsOneWidget);
+      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')), findsOneWidget);
     },
   );
 }

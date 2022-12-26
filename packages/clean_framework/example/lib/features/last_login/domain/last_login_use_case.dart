@@ -3,30 +3,31 @@ import 'last_login_entity.dart';
 
 class LastLoginUseCase extends UseCase<LastLoginEntity> {
   LastLoginUseCase()
-      : super(entity: LastLoginEntity(), outputFilters: {
-          LastLoginUIOutput: _lastLoginUIOutput,
-          LastLoginCTAUIOutput: _lastLoginCTAUIOutput,
-        });
-
-  static LastLoginUIOutput _lastLoginUIOutput(LastLoginEntity entity) =>
-      LastLoginUIOutput(
-        lastLogin: entity.lastLogin,
-      );
-
-  static LastLoginCTAUIOutput _lastLoginCTAUIOutput(LastLoginEntity entity) =>
-      LastLoginCTAUIOutput(
-        isLoading: entity.state == LastLoginState.loading,
-      );
+      : super(
+          entity: LastLoginEntity(),
+          transformers: [
+            OutputTransformer.from(
+              (entity) => LastLoginCTAUIOutput(
+                isLoading: entity.state == LastLoginState.loading,
+              ),
+            ),
+            LastLoginUIOutputTransformer(),
+          ],
+        );
 
   Future<void> fetchCurrentDate() async {
     entity = entity.merge(state: LastLoginState.loading);
 
-    await request(LastLoginDateOutput(), onSuccess: (LastLoginDateInput input) {
-      return entity.merge(
-          state: LastLoginState.idle, lastLogin: input.lastLogin);
-    }, onFailure: (_) {
-      return entity;
-    });
+    await request(
+      LastLoginDateOutput(),
+      onSuccess: (LastLoginDateInput input) {
+        return entity.merge(
+          state: LastLoginState.idle,
+          lastLogin: input.lastLogin,
+        );
+      },
+      onFailure: (_) => entity,
+    );
   }
 }
 
@@ -56,4 +57,12 @@ class LastLoginDateInput extends SuccessInput {
   final DateTime lastLogin;
 
   LastLoginDateInput(this.lastLogin);
+}
+
+class LastLoginUIOutputTransformer
+    extends OutputTransformer<LastLoginEntity, LastLoginUIOutput> {
+  @override
+  LastLoginUIOutput transform(LastLoginEntity entity) {
+    return LastLoginUIOutput(lastLogin: entity.lastLogin);
+  }
 }

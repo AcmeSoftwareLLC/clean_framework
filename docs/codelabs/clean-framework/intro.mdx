@@ -1,45 +1,73 @@
 # OverView
 
-Clean Framework is a toolkit of classes and implementations that help any developer create a layered architecture on any app, following the principles of Clean Architecture from Uncle Bob (Robert Martin).
+Clean Framework is a toolkit of classes and implementations that help any developer create a layered architecture on any app,
+following the principles of Clean Architecture from Uncle Bob (Robert Martin).
 
 ## The Layers
 
-To understand the components, first we have to talk about the layers, which are just a way to group your code to avoid interdependencies and to separate concerns.
+To understand the components,
+first we have to talk about the layers, which are just a way to group your code to avoid interdependencies and to separate concerns.
 
 The following diagram explains how the Clean Architecture proposes the implementation of the layers.
 
-.|.
----|---
 <Image src="/assets/clean_architecture_layers.png" caption="Clean Framework Layers"/>
 
-The idea of layering the architecture to separate the domain logic from the implementation details is not recent, and some other approaches have also been proposed (like the Hexagonal Architecture). Bob Martin took good ideas from the existing proposals, so some of the terms may seem familiar.
+The idea of layering the architecture to separate the domain logic from the implementation details is not recent,
+and some other approaches have also been proposed (like the Hexagonal Architecture).
+Bob Martin took good ideas from the existing proposals, so some of the terms may seem familiar.
 
 ### Entities Layer
-The core of your app should exist within this layer. Here we have Entity instances that hold the state of all your features. These entities are immutable and should be free of any external code, they should not care about databases, UI, or services. If you are familiar with Domain Driven Design, this is considered your Domain data.
+The core of your app should exist within this layer.
+Here we have Entity instances that hold the state of your features.
+These entities are immutable and should be free of any external code, they should not care about databases, UI, or services.
+If you are familiar with Domain Driven Design, this is considered your Domain data.
 
 ### Use Cases Layer
-The Use Case is an object that handles the data in the Entities and redirects the flows of data. Use Cases will hold most of the business logic of your features.
+The Use Case is an object that handles the data in the Entities and redirects the flows of data.
+Use Cases will hold most of the business logic of your features.
 
-Use Cases handle two classes, Input and Output, which move data inside or outside respectively, they are very similar to DDD Events. The next layer can only use these components to send and receive data from the Entities. Since they are simple PODOs (Plain Old Dart Objects), they are completely agnostic from the implementation of the outside layer, and this means the Use Case will usually interact with any type of object without worrying about the details.
+Use Cases handle two classes, Input and Output, which move data inside or outside respectively, they are very similar to DDD Events.
+The next layer can only use these components to send and receive data from the Entities.
+Since they are simple PODOs (Plain Old Dart Objects), they are completely agnostic from the implementation of the outside layer,
+and this means the Use Case will usually interact with any type of object without worrying about the details.
 
-To interact with the Outputs and Inputs, Use Cases use requests and filters, and these interactions can be synchronous or subscriptions.
+To interact with the Outputs and Inputs, Use Cases use `requests` and `transformers`,
+and these interactions can be synchronous or subscriptions.
 
 ### Adapters Layer
-The goal of this layer is to translate the Inputs and Outputs from the Use Case into more specific messages for specific destinations. These components have a similar function than the BDD Adapter. We have to main components, the Presenter and the Gateway
+The goal of this layer is to translate the `Input`s and `Output`s from the Use Case into more specific messages for specific destinations.
+These components have a similar function as the BDD Adapter. We have two main components, the `Presenter` and the `Gateway`:
 
-### Presenter
-It's job is to translate Outputs into ViewModels, which are contain data and behavior (in the form of callbacks). This class will hold most of your UI logic that is not business related, like navigation.
+#### Presenters
+It's job is to translate `Output`s into `ViewModel`s, which are contain data and behavior _(in the form of callbacks)_.
+This class will hold most of your UI logic that is not business related, like navigation.
 
-Presenters will interact with providers of Use Cases to subscribe to a specific Output, so when that output gets updated, we can schedule a refresh on the UI side. Once the Presenter receives the updated Output, it will create a new View Model to be processed by the UI.
+Presenters will interact with providers of Use Cases to subscribe to a specific `Output`,
+so when that output gets updated, we can schedule a refresh on the UI side.
+Once the Presenter receives the updated Output, it will create a new View Model to be processed by the UI.
 
-### Gateway
-When you need external data from sources like REST servers, databases, hardware, cache, etc. Use Cases will send requests with an specific Output. This message will be listened by a Gateway, which translates the Output data into a request that can be processed by the next layer.
+#### Gateways
+When you need external data from sources like REST servers, databases, hardware, cache, etc.
+Use Cases will send requests with an specific `Output`.
+This message will be listened by a `Gateway`,
+which translates the `Output` data into a request that can be processed by the next layer.
 
-There are two types of Gateway, depending on how you need the response to be delivered. The base Gateway class handles requests and waits for a response on the same interaction, blocking the execution until a response or an error is received.
+There are two types of `Gateway`, depending on how you need the response to be delivered.
+The base `Gateway` class handles requests and waits for a response on the same interaction,
+blocking the execution until a response or an error is received.
 
-The other type is the WatcherGateway, which will create a subscription. Once the result is received and sent back to the UseCase, it will keep listening for subsequent responses, which are sent to the Use Case through the Input listener.
+The other type is the `WatcherGateway`,which will create a subscription.
+Once the result is received and sent back to the UseCase, it will keep listening for subsequent responses,
+which are sent to the Use Case through the Input listener.
 
 ### External Interfaces Layer
-This is where code from libraries and dependencies interacts with your features. Waits for Requests to happen and then process them depending on its type. Clean Framework include some ready-to-use default implementations to work with Firebase, GraphQL and REST services.
+This is where code from libraries and dependencies interacts with your features.
+Waits for Requests to happen and then process them depending on its type.
 
-The UI layer is considered a type of External Interface layer since it also relies on messages to an adapter (the Presenter) to send and receive state changes from the entities.
+Clean Framework include some ready-to-use default implementations to work with `GraphQL`, `REST` & `Cloud FireStore` services in the form of sub-packages.
+- [clean_framework_graphql](https://pub.dev/packages/clean_framework_graphql)
+- [clean_framework_rest](https://pub.dev/packages/clean_framework_rest)
+- [clean_framework_firestore](https://pub.dev/packages/clean_framework_firestore)
+
+The UI layer is considered a type of External Interface layer,
+since it also relies on messages to an adapter (the Presenter) to send and receive state changes from the entities.

@@ -6,15 +6,17 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
   RandomCatUseCase()
       : super(
           entity: RandomCatEntity(),
-          outputFilters: {
-            RandomCatUIOutput: (RandomCatEntity e) {
-              return RandomCatUIOutput(
-                isLoading: e.isLoading,
-                id: e.id,
-                url: e.url,
-              );
-            },
-          },
+          transformers: [
+            OutputTransformer.from(
+              (e) {
+                return RandomCatUIOutput(
+                  isLoading: e.isLoading,
+                  id: e.id,
+                  url: e.url,
+                );
+              },
+            ),
+          ],
         );
 
   Future<void> fetch() async {

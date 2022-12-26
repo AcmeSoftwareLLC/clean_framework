@@ -17,17 +17,19 @@ class CountryUseCase extends UseCase<CountryEntity> {
               'South America': 'SA',
             },
           ),
-          outputFilters: {
-            CountryUIOutput: (CountryEntity e) {
-              return CountryUIOutput(
-                isLoading: e.isLoading,
-                countries: e.countries,
-                continents: e.continents,
-                selectedContinentId: e.selectedContinentId,
-                errorMessage: e.errorMessage,
-              );
-            },
-          },
+          transformers: [
+            OutputTransformer.from(
+              (e) {
+                return CountryUIOutput(
+                  isLoading: e.isLoading,
+                  countries: e.countries,
+                  continents: e.continents,
+                  selectedContinentId: e.selectedContinentId,
+                  errorMessage: e.errorMessage,
+                );
+              },
+            ),
+          ],
         );
 
   Future<void> fetchCountries({

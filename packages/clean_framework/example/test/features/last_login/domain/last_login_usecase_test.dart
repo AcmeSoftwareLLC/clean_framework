@@ -11,10 +11,11 @@ void main() {
 
     // Subscription shortcut to mock a successful response from a Gateway
 
-    useCase.subscribe(
-        LastLoginDateOutput,
-        (_) => Right<FailureInput, LastLoginDateInput>(
-            LastLoginDateInput(currentDate)));
+    useCase.subscribe<LastLoginDateOutput, LastLoginDateInput>(
+      (_) => Right<FailureInput, LastLoginDateInput>(
+        LastLoginDateInput(currentDate),
+      ),
+    );
 
     var output = useCase.getOutput<LastLoginUIOutput>();
     expect(output, LastLoginUIOutput(lastLogin: DateTime.parse('1900-01-01')));
@@ -35,10 +36,12 @@ void main() {
     final useCase = LastLoginUseCase();
 
     // Subscription shortcut to mock a failure in the response from a Gateway
-    useCase.subscribe(LastLoginDateOutput, (output) {
-      expect(output, LastLoginDateOutput());
-      return Left<FailureInput, LastLoginDateInput>(FailureInput());
-    });
+    useCase.subscribe<LastLoginDateOutput, LastLoginDateInput>(
+      (output) {
+        expect(output, LastLoginDateOutput());
+        return Left<FailureInput, LastLoginDateInput>(FailureInput());
+      },
+    );
 
     await useCase.fetchCurrentDate();
 

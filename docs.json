@@ -11,7 +11,7 @@
       ["Setup","/codelabs/clean-framework/setup"],
       ["UI Layer","/codelabs/clean-framework/ui-layer"],
       ["Domain Layer","/codelabs/clean-framework/domain-layer"],
-      ["Adaptive Layer","/codelabs/clean-framework/adaptive-layer"],
+      ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
       ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
       ]
     ],
@@ -29,6 +29,5 @@
       ]
     ],
     ["Other Resources", "/resources"]
-
   ]
 }

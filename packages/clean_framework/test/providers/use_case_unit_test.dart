@@ -10,7 +10,7 @@ void main() {
 
     expect(viewModel.foo, '');
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     expect(useCase.entity, TestEntity(foo: 'failure'));
 
@@ -23,13 +23,18 @@ void main() {
     final successInput = TestSuccessInput('success');
     expect(SuccessInput() == successInput, isFalse);
 
-    useCase.subscribe(TestDirectOutput, (output) {
-      return Right<FailureInput, TestSuccessInput>(successInput);
+    useCase.subscribe<TestDirectOutput, TestSuccessInput>((output) {
+      return Right(successInput);
     });
 
-    expect(() => useCase.subscribe(TestDirectOutput, (_) {}), throwsStateError);
+    expect(
+      () => useCase.subscribe<TestDirectOutput, TestSuccessInput>((_) {
+        return Right(successInput);
+      }),
+      throwsStateError,
+    );
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     expect(useCase.entity, TestEntity(foo: 'success'));
 
@@ -38,9 +43,9 @@ void main() {
 
   test('UseCase subscription with delayed response on input filter', () async {
     final useCase = TestUseCase(TestEntity(foo: ''))
-      ..subscribe(TestSubscriptionOutput, (output) {
-        return Right<FailureInput, SuccessInput>(SuccessInput());
-      });
+      ..subscribe<TestSubscriptionOutput, SuccessInput>(
+        (output) => Right(SuccessInput()),
+      );
 
     await useCase.fetchDataEventually();
 
@@ -166,16 +171,15 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
           entity: entity,
-          outputFilters: {
-            TestOutput: (entity) => TestOutput(entity.foo),
-          },
-          inputFilters: {
-            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-                entity.merge(foo: input.foo),
-          },
+          transformers: [
+            OutputTransformer.from((entity) => TestOutput(entity.foo)),
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (entity, input) => entity.merge(foo: input.foo),
+            ),
+          ],
         );
 
-  Future<void> fetchDataImmediatelly() async {
+  Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
       TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
