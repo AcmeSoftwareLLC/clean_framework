@@ -1,5 +1,6 @@
+import 'package:clean_framework_example/demo_router.dart';
 import 'package:clean_framework_example/home_page.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'home_page_test.dart';
@@ -10,7 +11,10 @@ void main() {
     (tester) async {
       await tester.pumpWidget(buildWidget(HomePage()));
 
-      router.open('/non-existent');
+      final router =
+          AppRouterScope.of(tester.element(find.byType(HomePage))).router;
+
+      router.goLocation('/non-existent');
       await tester.pumpAndSettle();
 
       expect(find.byType(Page404), findsOneWidget);

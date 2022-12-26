@@ -8,7 +8,8 @@ abstract class AppRouterBase<R extends Enum> {
   RouterConfiguration configureRouter();
 
   /// Navigates to the given [route] without respecting previous routes.
-  /// i.e. navigation stack is not maintained and previous routes might be cleared based on the composition of new [route].
+  /// i.e. navigation stack is not maintained and previous routes
+  /// might be cleared based on the composition of new [route].
   void go(
     R route, {
     RouterParams params = const {},
@@ -16,7 +17,8 @@ abstract class AppRouterBase<R extends Enum> {
     Object? extra,
   });
 
-  /// Navigates to the given [route] by pushing it at the top of the previous route.
+  /// Navigates to the given [route]
+  /// by pushing it at the top of the previous route.
   /// i.e navigation stack is maintained and previous routes are preserved.
   void push(
     R route, {
@@ -39,7 +41,8 @@ abstract class AppRouterBase<R extends Enum> {
     Object? extra,
   });
 
-  /// Navigates to the given [location] by pushing it at the top of the previous route.
+  /// Navigates to the given [location]
+  /// by pushing it at the top of the previous route.
   void pushLocation(
     String location, {
     Object? extra,
@@ -55,7 +58,8 @@ abstract class AppRouterBase<R extends Enum> {
   /// Navigates the page back to the previous route if available.
   void pop();
 
-  /// Constructs the full location of the given [route] with [params] and [queryParams].
+  /// Constructs the full location of the given [route]
+  /// with [params] and [queryParams].
   String locationOf(
     R route, {
     RouterParams params = const {},
@@ -64,7 +68,8 @@ abstract class AppRouterBase<R extends Enum> {
 
   /// Register a closure to be called when the navigation stack changes.
   ///
-  /// Adding a listener will provide a function which can be called off to remove the added listener.
+  /// Adding a listener will provide a function
+  /// which can be called off to remove the added listener.
   ///
   /// ```dart
   /// final removeListener = router.addListener(

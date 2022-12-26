@@ -45,13 +45,13 @@ class DemoRouter extends AppRouter<Routes> {
           ],
         ),
       ],
-      errorBuilder: (context, state) => _Page404(error: state.error),
+      errorBuilder: (context, state) => Page404(error: state.error),
     );
   }
 }
 
-class _Page404 extends StatelessWidget {
-  const _Page404({required this.error});
+class Page404 extends StatelessWidget {
+  const Page404({required this.error});
 
   final Exception? error;
 

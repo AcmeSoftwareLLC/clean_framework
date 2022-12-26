@@ -120,10 +120,15 @@ void uiTest(
       Widget child;
       if (wrapWithMaterialApp) {
         if (builder == null) {
-          child = MaterialApp.router(
-            routerConfig: resolvedRouter!.config,
-            localizationsDelegates: localizationDelegates,
-            builder: (context, child) => scopedChild(child!),
+          child = AppRouterScope(
+            create: () => resolvedRouter!,
+            builder: (context) {
+              return MaterialApp.router(
+                routerConfig: context.router.config,
+                localizationsDelegates: localizationDelegates,
+                builder: (context, child) => scopedChild(child!),
+              );
+            },
           );
         } else {
           child = MaterialApp(
