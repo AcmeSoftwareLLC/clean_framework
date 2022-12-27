@@ -1,6 +1,5 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
@@ -11,9 +10,7 @@ void main() {
       (_) => TestUseCase(TestEntity(foo: 'bar')),
     );
     TestDirectGateway(provider).transport = (request) async {
-      return const Right<FailureResponse, TestResponse>(
-        TestResponse('success'),
-      );
+      return const Either.right(TestResponse('success'));
     };
 
     final useCase = provider.getUseCaseFromContext(context);
@@ -29,7 +26,7 @@ void main() {
       (_) => TestUseCase(TestEntity(foo: 'bar')),
     );
     TestDirectGateway(provider).transport = (request) async {
-      return Left<FailureResponse, TestResponse>(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
     final useCase = provider.getUseCaseFromContext(context);
@@ -46,9 +43,7 @@ void main() {
     );
     final gateway = TestYieldGateway(provider)
       ..transport = (request) async {
-        return const Right<FailureResponse, TestResponse>(
-          TestResponse('success'),
-        );
+        return const Either.right(TestResponse('success'));
       };
 
     final useCase = provider.getUseCaseFromContext(context);

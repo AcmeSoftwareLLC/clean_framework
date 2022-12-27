@@ -20,7 +20,7 @@ void main() {
   final gateway = countryGatewayProvider.getGateway(providersContext);
 
   gateway.transport = (request) async {
-    return Right(
+    return Either.right(
       GraphQLSuccessResponse(
         data: {
           'countries': request.continentCode == 'NA'

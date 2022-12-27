@@ -9,7 +9,6 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  either_dart: ^0.3.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter

@@ -9,7 +9,7 @@ void main() {
     final useCase = UseCaseFake();
     final gateway = TestGateway(useCase)
       ..transport = (request) async {
-        return const Right<FailureResponse, GraphQLSuccessResponse>(
+        return const Either<FailureResponse, GraphQLSuccessResponse>.right(
           GraphQLSuccessResponse(data: {}),
         );
       };
@@ -24,7 +24,7 @@ void main() {
   test('GraphQLGateway failure response', () async {
     final useCase = UseCaseFake();
     TestGateway(useCase).transport = (request) async {
-      return const Left<FailureResponse, GraphQLSuccessResponse>(
+      return const Either.left(
         GraphQLFailureResponse(type: GraphQLFailureType.operation),
       );
     };

@@ -1,7 +1,6 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
@@ -11,7 +10,7 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestDirectGateway(provider).transport = (request) async {
-      return const Right(TestResponse('success'));
+      return const Either.right(TestResponse('success'));
     };
 
     await useCase.doFakeRequest(TestDirectOutput('123'));
@@ -23,7 +22,7 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestDirectGateway(provider).transport = (request) async {
-      return Left(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
     await useCase.doFakeRequest(TestDirectOutput('123'));
@@ -36,7 +35,7 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     final gateway = TestYieldGateway(provider)
       ..transport = (request) async {
-        return const Right(TestResponse('success'));
+        return const Either.right(TestResponse('success'));
       };
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));
@@ -52,7 +51,7 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestYieldGateway(provider).transport = (request) async {
-      return Left(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
     await useCase.doFakeRequest(TestSubscriptionOutput('123'));

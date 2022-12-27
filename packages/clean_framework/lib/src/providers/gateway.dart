@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
-import 'package:either_dart/either.dart';
+import 'package:clean_framework/src/utilities/either.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -34,8 +34,8 @@ abstract class Gateway<O extends Output, R extends Request,
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
-      (failureResponse) => Left(_onFailure(failureResponse)),
-      (response) => Right(onSuccess(response)),
+      (failureResponse) => Either.left(_onFailure(failureResponse)),
+      (response) => Either.right(onSuccess(response)),
     );
   }
 
@@ -55,7 +55,7 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
         _publisherUseCase = publisherUseCase {
     _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
       (output) {
-        return Right<FailureInput, SUBSCRIBER_INPUT>(
+        return Either<FailureInput, SUBSCRIBER_INPUT>.right(
           onResponse(
             _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
           ),

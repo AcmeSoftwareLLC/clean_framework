@@ -12,9 +12,7 @@ void main() {
     // Subscription shortcut to mock a successful response from a Gateway
 
     useCase.subscribe<LastLoginDateOutput, LastLoginDateInput>(
-      (_) => Right<FailureInput, LastLoginDateInput>(
-        LastLoginDateInput(currentDate),
-      ),
+      (_) => Either.right(LastLoginDateInput(currentDate)),
     );
 
     var output = useCase.getOutput<LastLoginUIOutput>();
@@ -39,7 +37,7 @@ void main() {
     useCase.subscribe<LastLoginDateOutput, LastLoginDateInput>(
       (output) {
         expect(output, LastLoginDateOutput());
-        return Left<FailureInput, LastLoginDateInput>(FailureInput());
+        return Either.left(FailureInput());
       },
     );
 
