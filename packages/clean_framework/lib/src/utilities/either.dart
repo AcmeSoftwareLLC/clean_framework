@@ -25,17 +25,6 @@ abstract class Either<L, R> {
   /// The Right version of an [Either].
   const factory Either.right(R value) = _Right<L, R>;
 
-  @override
-  bool operator ==(Object other) {
-    return fold(
-      (left) => other is _Left && left == other.value,
-      (right) => other is _Right && right == other.value,
-    );
-  }
-
-  @override
-  int get hashCode => fold((left) => left.hashCode, (right) => right.hashCode);
-
   /// Returns whether this [Either] is an [Either.left].
   bool get isLeft => this is _Left<L, R>;
 
@@ -74,6 +63,12 @@ class _Left<L, R> extends Either<L, R> {
   T fold<T>(EitherMapper<T, L> leftMapper, EitherMapper<T, R> rightMapper) {
     return leftMapper(value);
   }
+
+  @override
+  bool operator ==(Object other) => other is _Left && value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 class _Right<L, R> extends Either<L, R> {
@@ -86,6 +81,12 @@ class _Right<L, R> extends Either<L, R> {
   T fold<T>(EitherMapper<T, L> leftMapper, EitherMapper<T, R> rightMapper) {
     return rightMapper(value);
   }
+
+  @override
+  bool operator ==(Object other) => other is _Right && value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
 }
 
 /// [Exception] that indicates the element being requested does not exist.
