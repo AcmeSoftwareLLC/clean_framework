@@ -39,8 +39,8 @@ void main() {
 
     test('equality check', () {
       expect(
-        const Either<bool, bool>.left(true),
-        const Either<bool, bool>.left(true),
+        const Either<bool, bool>.left(false),
+        const Either<bool, bool>.left(false),
       );
 
       expect(
@@ -49,13 +49,23 @@ void main() {
       );
 
       expect(
-        const Either<bool, bool>.left(true),
+        const Either<bool, bool>.left(false),
         isNot(const Either<bool, bool>.right(true)),
       );
 
       expect(
         const Either<bool, bool>.right(true),
-        isNot(const Either<bool, bool>.left(true)),
+        isNot(const Either<bool, bool>.left(false)),
+      );
+
+      expect(
+        const Either<bool, bool>.left(false).hashCode,
+        const Either<bool, bool>.left(false).hashCode,
+      );
+
+      expect(
+        const Either<bool, bool>.right(true).hashCode,
+        const Either<bool, bool>.right(true).hashCode,
       );
     });
   });
