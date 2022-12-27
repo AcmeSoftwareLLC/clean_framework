@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/src/providers/use_case/helpers/input.dart';
 import 'package:clean_framework/src/providers/use_case/helpers/output.dart';
-import 'package:either_dart/either.dart';
+import 'package:clean_framework/src/utilities/either.dart';
 
 typedef RequestSubscriptionMap<I extends Input>
     = Map<Type, RequestSubscription<I>>;
@@ -27,7 +27,7 @@ extension RequestSubscriptionMapExtension<I extends Input>
     final subscription = this[O];
 
     if (subscription == null) {
-      return Left<NoSubscriptionFailureInput, S>(
+      return Either<NoSubscriptionFailureInput, S>.left(
         NoSubscriptionFailureInput<O>(),
       );
     }

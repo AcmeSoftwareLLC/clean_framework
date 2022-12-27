@@ -9,9 +9,7 @@ void main() {
     final useCase = UseCaseFake();
     final gateway = TestGateway(useCase)
       ..transport = (request) async {
-        return const Right<FailureResponse, RestSuccessResponse>(
-          RestSuccessResponse(data: {}),
-        );
+        return const Either.right(RestSuccessResponse(data: {}));
       };
 
     await useCase.doFakeRequest(TestOutput());
@@ -25,9 +23,7 @@ void main() {
   test('RestGateway failure response', () async {
     final useCase = UseCaseFake();
     TestGateway(useCase).transport = (request) async {
-      return Left<FailureResponse, RestSuccessResponse>(
-        UnknownFailureResponse(),
-      );
+      return Either.left(UnknownFailureResponse());
     };
 
     await useCase.doFakeRequest(TestOutput());

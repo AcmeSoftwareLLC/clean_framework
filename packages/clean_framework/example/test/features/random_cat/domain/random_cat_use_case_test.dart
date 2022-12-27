@@ -19,7 +19,7 @@ void main() {
       final gateway = randomCatGatewayProvider.getGateway(providersContext);
 
       gateway.transport = (request) async {
-        return Right(RestSuccessResponse(
+        return Either.right(RestSuccessResponse(
           data: {
             'id': 420,
             'webpurl':
@@ -54,7 +54,7 @@ void main() {
       final gateway = randomCatGatewayProvider.getGateway(providersContext);
 
       gateway.transport = (request) async {
-        return Left(UnknownFailureResponse());
+        return Either.left(UnknownFailureResponse());
       };
 
       expect(

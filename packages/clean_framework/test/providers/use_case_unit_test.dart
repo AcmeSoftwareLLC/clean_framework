@@ -1,5 +1,5 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -24,12 +24,12 @@ void main() {
     expect(SuccessInput() == successInput, isFalse);
 
     useCase.subscribe<TestDirectOutput, TestSuccessInput>((output) {
-      return Right(successInput);
+      return Either.right(successInput);
     });
 
     expect(
       () => useCase.subscribe<TestDirectOutput, TestSuccessInput>((_) {
-        return Right(successInput);
+        return Either.right(successInput);
       }),
       throwsStateError,
     );
@@ -44,7 +44,7 @@ void main() {
   test('UseCase subscription with delayed response on input filter', () async {
     final useCase = TestUseCase(TestEntity(foo: ''))
       ..subscribe<TestSubscriptionOutput, SuccessInput>(
-        (output) => Right(SuccessInput()),
+        (output) => Either.right(SuccessInput()),
       );
 
     await useCase.fetchDataEventually();

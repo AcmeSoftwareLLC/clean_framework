@@ -10,7 +10,9 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestGateway(context, provider).transport = (request) async {
-      return const Right(FirebaseSuccessResponse({'content': 'success'}));
+      return const Either.right(
+        FirebaseSuccessResponse({'content': 'success'}),
+      );
     };
 
     await useCase.doFakeRequest(TestOutput('123'));
@@ -22,7 +24,7 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestGateway(context, provider).transport = (request) async {
-      return const Left(
+      return const Either.left(
         FirebaseFailureResponse(type: FirebaseFailureType.noContent),
       );
     };

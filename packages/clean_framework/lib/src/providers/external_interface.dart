@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
-import 'package:either_dart/either.dart';
+import 'package:clean_framework/src/utilities/either.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   ExternalInterface(List<GatewayConnection<Gateway>> gatewayConnections) {
@@ -87,10 +87,10 @@ class _RequestCompleter<R extends Request, S extends SuccessResponse> {
 
   bool get isCompleted => _completer.isCompleted;
 
-  void complete(S success) => _completer.complete(Right(success));
+  void complete(S success) => _completer.complete(Either.right(success));
 
   void completeFailure(FailureResponse failure) {
-    _completer.complete(Left(failure));
+    _completer.complete(Either.left(failure));
   }
 }
 
