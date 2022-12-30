@@ -1,1 +1,2 @@
-export 'package:clean_framework/clean_framework_core.dart';
+export 'package:clean_framework/src/core/core.dart';
+export 'package:clean_framework/src/presentation/presentation.dart';
