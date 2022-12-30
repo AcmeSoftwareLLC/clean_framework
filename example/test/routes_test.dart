@@ -1,5 +1,5 @@
-import 'package:clean_framework_example/demo_router.dart';
-import 'package:clean_framework_example/home_page.dart';
+import 'package:example/demo_router.dart';
+import 'package:example/home_page.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter_test/flutter_test.dart';
 

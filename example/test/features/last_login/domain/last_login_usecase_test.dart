@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/last_login/domain/last_login_entity.dart';
-import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
+import 'package:example/features/last_login/domain/last_login_entity.dart';
+import 'package:example/features/last_login/domain/last_login_use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

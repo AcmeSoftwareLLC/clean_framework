@@ -1,8 +1,8 @@
 name: clean_framework
 
 packages:
-  - packages/**
   - example
+  - packages/**
 
 command:
   bootstrap:

@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/country/domain/country_view_model.dart';
-import 'package:clean_framework_example/features/country/presentation/country_presenter.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:example/features/country/domain/country_view_model.dart';
+import 'package:example/features/country/presentation/country_presenter.dart';
+import 'package:example/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,5 @@
-import 'package:clean_framework_example/providers.dart';
-import 'package:clean_framework_example/main.dart' as app;
+import 'package:example/providers.dart';
+import 'package:example/main.dart' as app;
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 

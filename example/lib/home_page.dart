@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:example/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

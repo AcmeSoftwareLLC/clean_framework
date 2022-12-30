@@ -1,8 +1,8 @@
-import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
-import 'package:clean_framework_example/features/last_login/presentation/last_login_ui.dart';
-import 'package:clean_framework_example/features/random_cat/presentation/random_cat_ui.dart';
-import 'package:clean_framework_example/home_page.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:example/features/country/presentation/country_ui.dart';
+import 'package:example/features/last_login/presentation/last_login_ui.dart';
+import 'package:example/features/random_cat/presentation/random_cat_ui.dart';
+import 'package:example/home_page.dart';
+import 'package:example/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 

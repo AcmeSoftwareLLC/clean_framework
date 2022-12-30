@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:example/features/last_login/domain/last_login_use_case.dart';
+import 'package:example/providers.dart';
 import 'package:intl/intl.dart';
 
 import 'last_login_view_model.dart';

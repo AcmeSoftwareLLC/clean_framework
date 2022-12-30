@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/asset_feature_provider.dart';
-import 'package:clean_framework_example/demo_router.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:example/asset_feature_provider.dart';
+import 'package:example/demo_router.dart';
+import 'package:example/providers.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 

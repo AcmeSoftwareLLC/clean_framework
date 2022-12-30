@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/demo_router.dart';
-import 'package:clean_framework_example/features/country/presentation/country_ui.dart';
-import 'package:clean_framework_example/providers.dart';
-import 'package:clean_framework_example/routes.dart';
+import 'package:example/demo_router.dart';
+import 'package:example/features/country/presentation/country_ui.dart';
+import 'package:example/providers.dart';
+import 'package:example/routes.dart';
 import 'package:clean_framework_graphql/clean_framework_graphql.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';

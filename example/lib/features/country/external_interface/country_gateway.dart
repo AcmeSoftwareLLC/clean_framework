@@ -1,5 +1,5 @@
-import 'package:clean_framework_example/features/country/domain/country_use_case.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:example/features/country/domain/country_use_case.dart';
+import 'package:example/providers.dart';
 import 'package:clean_framework_graphql/clean_framework_graphql.dart';
 
 class CountryGateway extends GraphQLGateway<CountryGatewayOutput,

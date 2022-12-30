@@ -1,7 +1,7 @@
-import 'package:clean_framework_example/features/country/domain/country_entity.dart';
-import 'package:clean_framework_example/features/country/domain/country_model.dart';
-import 'package:clean_framework_example/features/country/domain/country_use_case.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:example/features/country/domain/country_entity.dart';
+import 'package:example/features/country/domain/country_model.dart';
+import 'package:example/features/country/domain/country_use_case.dart';
+import 'package:example/providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final continents = {

@@ -1,0 +1,19 @@
+name: clean_framework_example
+description: An example application to demonstrate usage of clean_framework package.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  clean_framework: ^1.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

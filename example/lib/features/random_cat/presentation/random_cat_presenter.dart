@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/random_cat/domain/random_cat_use_case.dart';
-import 'package:clean_framework_example/features/random_cat/domain/random_cat_view_model.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:example/features/random_cat/domain/random_cat_use_case.dart';
+import 'package:example/features/random_cat/domain/random_cat_view_model.dart';
+import 'package:example/providers.dart';
 import 'package:flutter/material.dart';
 
 class RandomCatPresenter

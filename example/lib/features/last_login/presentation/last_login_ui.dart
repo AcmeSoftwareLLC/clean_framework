@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/last_login/presentation/last_login_presenter.dart';
+import 'package:example/features/last_login/presentation/last_login_presenter.dart';
 import 'package:flutter/material.dart';
 
 import 'last_login_view_model.dart';
