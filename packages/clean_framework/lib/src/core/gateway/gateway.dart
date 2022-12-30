@@ -1,37 +1,52 @@
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
+import 'dart:async';
+
+import 'package:clean_framework/src/core/external_interface/request.dart';
+import 'package:clean_framework/src/core/external_interface/response.dart';
+import 'package:clean_framework/src/core/use_case/use_case.dart';
+import 'package:clean_framework/src/core/use_case/use_case_provider.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
-  Gateway({
-    ProvidersContext? context,
-    UseCaseProvider? provider,
-    UseCase? useCase,
-  }) : assert(
-          () {
-            return (context != null && provider != null) || useCase != null;
-          }(),
-          '',
-        ) {
-    _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
-    _useCase.subscribe<O, S>(
-      (output) => _processRequest(buildRequest(output as O)),
-    );
+  UseCase? _useCase;
+
+  void attach(
+    ProviderRef<Object> ref, {
+    required List<UseCaseProvider> providers,
+  }) {
+    for (final useCaseProvider in providers) {
+      useCaseProvider.notifier.then(
+        (notifier) {
+          ref
+              .read(notifier)
+              .subscribe<O, S>((output) => buildInput(output as O));
+        },
+      );
+    }
   }
 
-  late UseCase _useCase;
+  @visibleForTesting
+  @nonVirtual
+  // ignore: use_setters_to_change_properties
+  void feedResponse(Responder<R, P> feeder) => _responder = feeder;
 
-  late final Transport<R, P> transport;
+  @visibleForTesting
+  @nonVirtual
+  Future<Either<FailureInput, S>> buildInput(O output) {
+    return _processRequest(buildRequest(output));
+  }
+
+  late final Responder<R, P> _responder;
 
   S onSuccess(covariant P response);
   FailureInput onFailure(covariant FailureResponse failureResponse);
   R buildRequest(O output);
 
   Future<Either<FailureInput, S>> _processRequest(R request) async {
-    final either = await transport(request);
+    final either = await _responder(request);
     return either.fold(
       (failureResponse) => Either.left(_onFailure(failureResponse)),
       (response) => Either.right(onSuccess(response)),
@@ -73,19 +88,14 @@ abstract class WatcherGateway<
     R extends Request,
     P extends SuccessResponse,
     S extends SuccessInput> extends Gateway<O, R, P, S> {
-  WatcherGateway({
-    required ProvidersContext context,
-    required UseCaseProvider provider,
-  }) : super(context: context, provider: provider);
-
   @override
   FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
 
   @nonVirtual
   void yieldResponse(P response) {
-    _useCase.setInput(onSuccess(response));
+    _useCase?.setInput(onSuccess(response));
   }
 }
 
-typedef Transport<R extends Request, P extends SuccessResponse>
-    = Future<Either<FailureResponse, P>> Function(R request);
+typedef Responder<R extends Request, P extends SuccessResponse>
+    = FutureOr<Either<FailureResponse, P>> Function(R request);

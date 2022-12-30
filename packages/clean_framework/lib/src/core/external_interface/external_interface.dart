@@ -2,16 +2,31 @@ import 'dart:async';
 
 import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
-import 'package:clean_framework/src/providers/gateway.dart';
-import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
+import 'package:clean_framework/src/core/gateway/gateway.dart';
+import 'package:clean_framework/src/core/gateway/gateway_provider.dart';
 import 'package:clean_framework/src/utilities/either.dart';
+import 'package:meta/meta.dart';
+import 'package:riverpod/riverpod.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
-  ExternalInterface(List<GatewayConnection<Gateway>> gatewayConnections) {
+  ExternalInterface() {
     handleRequest();
-    for (final connection in gatewayConnections) {
-      final gateway = connection();
-      gateway.transport = (request) async {
+  }
+
+  @internal
+  void attach(
+    ProviderRef<Object> ref, {
+    required List<GatewayProvider> providers,
+  }) {
+    for (final gatewayProvider in providers) {
+      _initTransporter(ref.read(gatewayProvider()));
+    }
+  }
+
+  void _initTransporter(Gateway gateway) {
+    // ignore: invalid_use_of_visible_for_testing_member
+    gateway.feedResponse(
+      (request) async {
         final req = request as R;
         final requestCompleter = gateway is WatcherGateway
             ? _StreamRequestCompleter<R, S>(req, gateway.yieldResponse)
@@ -19,11 +34,11 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 
         _requestController.add(requestCompleter);
         return requestCompleter.future;
-      };
-    }
+      },
+    );
   }
 
-  final StreamController<_RequestCompleter<R, S>> _requestController =
+  final _RequestController<R, S> _requestController =
       StreamController.broadcast();
 
   void handleRequest();
@@ -40,11 +55,14 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
         try {
           if (e is _StreamRequestCompleter) {
             final event = e as _StreamRequestCompleter<R, S>;
+            final handlerCall = handler(
+              request,
+              (response) {
+                if (!event.isCompleted) event.complete(response);
+                event.emitSuccess(response);
+              },
+            );
 
-            final handlerCall = handler(request, (response) {
-              if (!event.isCompleted) event.complete(response);
-              event.emitSuccess(response);
-            });
             if (handlerCall is Future) {
               unawaited(
                 handlerCall.catchError(
@@ -65,14 +83,15 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   Never sendError(Object error) => throw error;
 
   FailureResponse _onError(Object error, R request) {
-    CleanFrameworkObserver.instance.onExternalError(this, request, error);
+    //CleanFrameworkObserver.instance.onExternalError(this, request, error);
     final failure = onError(error);
-    CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
+    //CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
     return failure;
   }
 }
 
-typedef GatewayConnection<G extends Gateway> = G Function();
+typedef _RequestController<R extends Request, S extends SuccessResponse>
+    = StreamController<_RequestCompleter<R, S>>;
 
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
