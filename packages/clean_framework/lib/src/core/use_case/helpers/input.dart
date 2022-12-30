@@ -1,4 +1,4 @@
-import 'package:clean_framework/src/providers/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:meta/meta.dart';
 
 @immutable

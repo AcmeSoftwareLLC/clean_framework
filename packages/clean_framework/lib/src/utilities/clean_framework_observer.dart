@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
+import 'package:clean_framework/src/core/use_case/helpers/input.dart';
 import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:clean_framework/src/providers/use_case.dart';
 
 /// The class to observe failures, route changes and other events.
 class CleanFrameworkObserver {

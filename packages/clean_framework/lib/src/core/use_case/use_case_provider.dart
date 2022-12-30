@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:clean_framework/src/core/clean_framework_provider.dart';
+import 'package:clean_framework/src/core/use_case/entity.dart';
 import 'package:clean_framework/src/core/use_case/use_case.dart';
-import 'package:clean_framework/src/providers/entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 

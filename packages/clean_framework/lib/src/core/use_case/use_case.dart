@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/providers/entity.dart';
-import 'package:clean_framework/src/providers/use_case/use_case_helpers.dart';
-import 'package:clean_framework/src/providers/use_case_debounce_mixin.dart';
+import 'package:clean_framework/src/core/use_case/entity.dart';
+import 'package:clean_framework/src/core/use_case/use_case_debounce_mixin.dart';
+import 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-export 'package:clean_framework/src/providers/use_case/use_case_helpers.dart';
+export 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
 
 typedef InputCallback<E extends Entity, I extends Input> = E Function(I);
 

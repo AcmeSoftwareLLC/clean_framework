@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/providers/use_case/helpers/input.dart';
-import 'package:clean_framework/src/providers/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/helpers/input.dart';
+import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 
 typedef RequestSubscriptionMap<I extends Input>
