@@ -15,7 +15,7 @@ dependencies:
   clean_framework_graphql: ^0.1.0
   clean_framework_rest: ^0.1.0
   clean_framework_router: ^0.1.0
-  intl: ^0.17.0
+  intl: ^0.18.0
 
 dev_dependencies:
   clean_framework_test: ^0.1.0

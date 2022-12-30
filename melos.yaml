@@ -2,6 +2,7 @@ name: clean_framework
 
 packages:
   - packages/**
+  - example
 
 command:
   bootstrap:
