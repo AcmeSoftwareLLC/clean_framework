@@ -3,7 +3,7 @@ import 'package:clean_framework/clean_framework_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Gateway', () {
+  group('Gateway tests |', () {
     test('success', () async {
       final gateway = TestGateway()
         ..feedResponse(

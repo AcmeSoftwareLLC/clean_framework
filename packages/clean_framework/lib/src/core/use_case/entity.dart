@@ -5,4 +5,6 @@ import 'package:flutter/foundation.dart';
 abstract class Entity extends Equatable {
   @override
   bool get stringify => true;
+
+  external Entity copyWith();
 }
