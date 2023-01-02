@@ -4,9 +4,18 @@ import 'package:clean_framework/src/core/use_case/entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  late TestUseCase useCase;
+
   group('UseCase tests |', () {
+    setUp(() {
+      useCase = TestUseCase();
+    });
+
+    tearDown(() {
+      useCase.dispose();
+    });
+
     test('entity updates with setter', () {
-      final useCase = TestUseCase();
       expect(useCase.entity, TestEntity());
 
       useCase.entity = useCase.entity.copyWith(foo: 'bar');
@@ -14,7 +23,6 @@ void main() {
     });
 
     test('entity updates with setInput', () {
-      final useCase = TestUseCase();
       expect(useCase.entity, TestEntity());
 
       useCase.setInput(TestInput(foo: 'input'));
@@ -22,10 +30,8 @@ void main() {
     });
 
     test(
-      'entity update fails with setInput if no appropriate transformer is found',
+      'entity update fails w/ setInput if no appropriate transformer is found',
       () {
-        final useCase = TestUseCase();
-
         expect(useCase.entity, TestEntity());
         expect(
           () => useCase.setInput(NoTransformerTestInput(foo: 'input')),
@@ -37,7 +43,6 @@ void main() {
     test(
       'getOutput() success',
       () {
-        final useCase = TestUseCase();
         expect(useCase.entity, TestEntity());
 
         useCase.setInput(TestInput(foo: 'input'));
@@ -50,7 +55,6 @@ void main() {
     test(
       'getOutput() fails when no appropriate transformer is found',
       () {
-        final useCase = TestUseCase();
         expect(useCase.entity, TestEntity());
 
         useCase.setInput(TestInput(foo: 'input'));
@@ -62,13 +66,12 @@ void main() {
     test(
       'successful request',
       () async {
-        final useCase = TestUseCase();
         expect(useCase.entity, TestEntity());
 
         useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
           (output) async {
             final out = output as TestGatewayOutput;
-            return Either<FailureInput, TestSuccessInput>.right(
+            return Either.right(
               TestSuccessInput(message: 'Hello ${out.name}!'),
             );
           },
@@ -87,8 +90,6 @@ void main() {
     test(
       'request fails if there is no appropriate subscription present',
       () async {
-        final useCase = TestUseCase();
-
         await useCase.request<TestGatewayOutput, TestSuccessInput>(
           TestGatewayOutput(name: 'World'),
           onSuccess: (success) => TestEntity(foo: success.message),
@@ -99,14 +100,145 @@ void main() {
       },
     );
 
-    test(
-      'clears resources on dispose',
-      () async {
-        final useCase = TestUseCase()..dispose();
+    test('throws error on duplicate subscription for same output', () {
+      useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+        (output) async {
+          final out = output as TestGatewayOutput;
+          return Either.right(
+            TestSuccessInput(message: 'Hello ${out.name}!'),
+          );
+        },
+      );
 
-        expect(() => useCase.entity, throwsStateError);
-      },
-    );
+      expect(
+        () => useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+          (output) async {
+            final out = output as TestGatewayOutput;
+            return Either.right(
+              TestSuccessInput(message: 'Hello ${out.name}!'),
+            );
+          },
+        ),
+        throwsStateError,
+      );
+    });
+
+    group('debounce', () {
+      test(
+        'performs action immediately first '
+        'and then only after the duration elapses',
+        () async {
+          useCase.entity = TestEntity(foo: '@');
+
+          String getChar() => useCase.entity.foo;
+
+          void increment() {
+            useCase.debounce(
+              action: () {
+                useCase.entity = useCase.entity.copyWith(
+                  foo: String.fromCharCode(getChar().codeUnitAt(0) + 1),
+                );
+              },
+              tag: 'increment',
+              duration: const Duration(milliseconds: 100),
+            );
+          }
+
+          increment();
+          expect(getChar(), equals('A'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 110));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 90));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 75));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 60));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 105));
+          increment();
+          expect(getChar(), equals('C'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 95));
+          increment();
+          expect(getChar(), equals('C'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 105));
+          increment();
+          expect(getChar(), equals('D'));
+        },
+      );
+
+      test(
+        'performs action only after the duration elapses; '
+        'when immediate is false',
+        () async {
+          useCase.entity = TestEntity(foo: 'A');
+
+          String getChar() => useCase.entity.foo;
+
+          void increment() {
+            useCase.debounce(
+              action: () {
+                useCase.entity = useCase.entity.copyWith(
+                  foo: String.fromCharCode(getChar().codeUnitAt(0) + 1),
+                );
+              },
+              tag: 'increment',
+              duration: const Duration(milliseconds: 100),
+              immediate: false,
+            );
+          }
+
+          increment();
+          expect(getChar(), equals('A'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 110));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 90));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 75));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 60));
+          increment();
+          expect(getChar(), equals('B'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 105));
+          increment();
+          expect(getChar(), equals('C'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 95));
+          increment();
+          expect(getChar(), equals('C'));
+
+          await Future<void>.delayed(const Duration(milliseconds: 105));
+          increment();
+          expect(getChar(), equals('D'));
+        },
+      );
+    });
   });
 }
 
