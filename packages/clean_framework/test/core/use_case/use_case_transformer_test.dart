@@ -7,7 +7,7 @@ void main() {
 
   group('UseCase | transformer tests |', () {
     setUp(() {
-      return useCase = TestUseCase();
+      return useCase = TransformerTestUseCase();
     });
 
     tearDown(() {
@@ -15,7 +15,7 @@ void main() {
     });
 
     test('output transformer', () {
-      final useCase = TestUseCase()
+      useCase
         ..updateFoo('hello')
         ..updateBar(3);
 
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('input transformer', () {
-      final useCase = TestUseCase()..setInput(FooInput('hello'));
+      useCase.setInput(FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
@@ -37,7 +37,7 @@ void main() {
 
   group('UseCase | inline transformer tests |', () {
     setUp(() {
-      return useCase = TransformerTestUseCase();
+      return useCase = InlineTransformerTestUseCase();
     });
 
     tearDown(() {
@@ -45,7 +45,7 @@ void main() {
     });
 
     test('output transformer', () {
-      final useCase = TestUseCase()
+      useCase
         ..updateFoo('hello')
         ..updateBar(3);
 
@@ -57,27 +57,51 @@ void main() {
     });
 
     test('input transformer', () {
-      final useCase = TestUseCase()..setInput(FooInput('hello'));
+      useCase.setInput(FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
   });
+
+  group('UseCase | legacy filter tests |', () {
+    setUp(() {
+      return useCase = FilterTestUseCase();
+    });
+
+    tearDown(() {
+      useCase.dispose();
+    });
+
+    test('output filter', () {
+      useCase
+        ..updateFoo('hello')
+        ..updateBar(3);
+
+      expect(useCase.entity.foo, 'hello');
+      expect(useCase.entity.bar, 3);
+
+      expect(useCase.getOutput<FooOutput>().foo, 'hello');
+      expect(useCase.getOutput<BarOutput>().bar, 3);
+    });
+
+    test('input filter', () {
+      useCase.setInput(FooInput('hello'));
+
+      expect(useCase.entity.foo, 'hello');
+
+      expect(useCase.getOutput<FooOutput>(), FooOutput('hello'));
+    });
+  });
 }
 
-class TestUseCase extends UseCase<TestEntity> {
+abstract class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({
-    List<UseCaseTransformer<TestEntity>>? transformers,
-  }) : super(
-          entity: TestEntity(),
-          transformers: transformers ??
-              [
-                FooOutputTransformer(),
-                FooInputTransformer(),
-                OutputTransformer.from((entity) => BarOutput(entity.bar)),
-              ],
-        );
+    super.transformers,
+    super.inputFilters,
+    super.outputFilters,
+  }) : super(entity: TestEntity());
 
   void updateFoo(String foo) {
     entity = entity.copyWith(foo: foo);
@@ -92,13 +116,38 @@ class TransformerTestUseCase extends TestUseCase {
   TransformerTestUseCase()
       : super(
           transformers: [
-            OutputTransformer.from(
-              (entity) => FooOutput(entity.foo),
-            ),
+            FooOutputTransformer(),
+            BarOutputTransformer(),
+            FooInputTransformer(),
+          ],
+        );
+}
+
+class InlineTransformerTestUseCase extends TestUseCase {
+  InlineTransformerTestUseCase()
+      : super(
+          transformers: [
+            OutputTransformer.from((entity) => FooOutput(entity.foo)),
+            OutputTransformer.from((entity) => BarOutput(entity.bar)),
             InputTransformer<TestEntity, FooInput>.from(
               (entity, input) => entity.copyWith(foo: input.foo),
             ),
           ],
+        );
+}
+
+class FilterTestUseCase extends TestUseCase {
+  FilterTestUseCase()
+      : super(
+          outputFilters: {
+            FooOutput: (entity) => FooOutput(entity.foo),
+            BarOutput: (entity) => BarOutput(entity.bar),
+          },
+          inputFilters: {
+            FooInput: (input, entity) {
+              return entity.copyWith(foo: (input as FooInput).foo);
+            },
+          },
         );
 }
 
@@ -157,6 +206,13 @@ class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
   @override
   FooOutput transform(TestEntity entity) {
     return FooOutput(entity.foo);
+  }
+}
+
+class BarOutputTransformer extends OutputTransformer<TestEntity, BarOutput> {
+  @override
+  BarOutput transform(TestEntity entity) {
+    return BarOutput(entity.bar);
   }
 }
 
