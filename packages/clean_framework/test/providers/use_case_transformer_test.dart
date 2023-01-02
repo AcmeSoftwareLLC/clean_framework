@@ -43,6 +43,7 @@ class TestEntity extends Entity {
   @override
   List<Object?> get props => [foo, bar];
 
+  @override
   TestEntity copyWith({
     String? foo,
     int? bar,
