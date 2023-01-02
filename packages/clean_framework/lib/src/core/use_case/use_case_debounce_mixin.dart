@@ -10,6 +10,7 @@ mixin UseCaseDebounceMixin {
   /// in a given frame of [duration].
   ///
   /// If [immediate] is false, then then first action will also be debounced.
+  @visibleForTesting
   @protected
   void debounce({
     required void Function() action,

@@ -11,12 +11,13 @@ import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
-  UseCase? _useCase;
-
   void attach(
     ProviderRef<Object> ref, {
     required List<UseCaseProvider> providers,
   }) {
+    _ref = ref;
+    _useCaseProviders = providers;
+
     for (final useCaseProvider in providers) {
       useCaseProvider.notifier.then(
         (notifier) {
@@ -27,6 +28,9 @@ abstract class Gateway<O extends Output, R extends Request,
       );
     }
   }
+
+  late final ProviderRef<Object> _ref;
+  late final List<UseCaseProvider> _useCaseProviders;
 
   @visibleForTesting
   @nonVirtual
@@ -60,40 +64,25 @@ abstract class Gateway<O extends Output, R extends Request,
   }
 }
 
-abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
-    PUBLISHER_OUTPUT extends Output, SUBSCRIBER_INPUT extends Input> {
-  BridgeGateway({
-    required UseCase subscriberUseCase,
-    required UseCase publisherUseCase,
-  })  : _subscriberUseCase = subscriberUseCase,
-        _publisherUseCase = publisherUseCase {
-    _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
-      (output) {
-        return Either<FailureInput, SUBSCRIBER_INPUT>.right(
-          onResponse(
-            _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
-          ),
-        );
-      },
-    );
-  }
-  late final UseCase _subscriberUseCase;
-  late final UseCase _publisherUseCase;
-
-  SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
-}
-
 abstract class WatcherGateway<
     O extends Output,
     R extends Request,
     P extends SuccessResponse,
     S extends SuccessInput> extends Gateway<O, R, P, S> {
   @override
-  FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
+  }
 
   @nonVirtual
   void yieldResponse(P response) {
-    _useCase?.setInput(onSuccess(response));
+    for (final useCaseProvider in _useCaseProviders) {
+      useCaseProvider.notifier.then(
+        (notifier) {
+          _ref.read(notifier).setInput(onSuccess(response));
+        },
+      );
+    }
   }
 }
 
