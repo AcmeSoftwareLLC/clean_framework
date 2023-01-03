@@ -17,4 +17,6 @@ class ExternalInterfaceProvider<E extends ExternalInterface>
 
   @visibleForTesting
   E read(ProviderContainer container) => container.read(call());
+
+  void initializeFor(ProviderContainer container) => read(container);
 }

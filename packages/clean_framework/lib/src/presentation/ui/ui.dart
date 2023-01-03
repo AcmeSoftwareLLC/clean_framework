@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/src/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 
 abstract class UI<V extends ViewModel> extends StatefulWidget {

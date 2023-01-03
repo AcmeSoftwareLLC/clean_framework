@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   clean_framework: ^1.5.0
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:
