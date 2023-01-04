@@ -2,8 +2,6 @@ import 'package:clean_framework/clean_framework_core.dart';
 
 enum HomeStatus { initial, loading, loaded, failed }
 
-enum HomeRefreshStatus { initial, succeeded, failed }
-
 class HomeEntity extends Entity {
   HomeEntity({
     this.pokemons = const [],

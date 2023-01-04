@@ -74,6 +74,7 @@ class HomeUIOutputTransformer
 
     return HomeUIOutput(
       pokemons: filteredPokemons.toList(growable: false),
+      status: entity.status,
       isRefresh: entity.isRefresh,
     );
   }

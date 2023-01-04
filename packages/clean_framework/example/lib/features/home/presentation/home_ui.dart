@@ -15,16 +15,13 @@ class HomeUI extends UI<HomeViewModel> {
   Widget build(BuildContext context, HomeViewModel viewModel) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pokémon'),
-        centerTitle: false,
-        titleTextStyle: textTheme.displaySmall!.copyWith(
-          fontWeight: FontWeight.w300,
-        ),
-        bottom: PokemonSearchField(onChanged: viewModel.onSearch),
-      ),
-      body: RefreshIndicator(
+    Widget child;
+    if (viewModel.isLoading) {
+      child = Center(child: CircularProgressIndicator());
+    } else if (viewModel.hasFailedLoading) {
+      child = _LoadingFailed(onRetry: viewModel.onRetry);
+    } else {
+      child = RefreshIndicator(
         onRefresh: viewModel.onRefresh,
         child: Scrollbar(
           thumbVisibility: true,
@@ -42,6 +39,55 @@ class HomeUI extends UI<HomeViewModel> {
             itemCount: viewModel.pokemons.length,
           ),
         ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pokémon'),
+        centerTitle: false,
+        titleTextStyle: textTheme.displaySmall!.copyWith(
+          fontWeight: FontWeight.w300,
+        ),
+        bottom: viewModel.isLoading || viewModel.hasFailedLoading
+            ? null
+            : PokemonSearchField(onChanged: viewModel.onSearch),
+      ),
+      body: child,
+    );
+  }
+}
+
+class _LoadingFailed extends StatelessWidget {
+  const _LoadingFailed({required this.onRetry});
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 32),
+            child: Image.asset('assets/sad-flareon.png', height: 300),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Oops',
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+          const SizedBox(height: 8),
+          Text('I lost my fellow Pokémons'),
+          const SizedBox(height: 24),
+          OutlinedButton(
+            onPressed: onRetry,
+            child: Text('Help Flareon, find her friends'),
+          ),
+          const SizedBox(height: 64),
+        ],
       ),
     );
   }
