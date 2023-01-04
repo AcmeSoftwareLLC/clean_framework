@@ -28,7 +28,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
   PokemonModel _resolvePokemon(PokemonIdentity pokemon) {
     return PokemonModel(
-      name: pokemon.name,
+      name: pokemon.name.toUpperCase(),
       imageUrl:
           'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg',
     );

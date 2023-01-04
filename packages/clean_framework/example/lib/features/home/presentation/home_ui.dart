@@ -51,7 +51,7 @@ class _PokemonCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   name,
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               picture,
