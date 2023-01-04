@@ -17,6 +17,8 @@ class HomeUI extends UI<HomeViewModel> {
         title: Text('Pokemon'),
       ),
       body: ListView.builder(
+        prototypeItem: SizedBox(height: 176), // 160 + 16
+        padding: EdgeInsets.symmetric(horizontal: 16),
         itemBuilder: (context, index) {
           final pokemon = viewModel.pokemons[index];
 
@@ -39,16 +41,30 @@ class _PokemonCard extends StatelessWidget {
     return SvgPaletteCard(
       url: imageUrl,
       height: 160,
+      margin: EdgeInsets.symmetric(vertical: 8),
       builder: (context, picture) {
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Expanded(
+                child: Text(
+                  name,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
               picture,
-              Text(name),
             ],
           ),
         );
+      },
+      backgroundColorBuilder: (context, palette) {
+        final color = Theme.of(context).brightness == Brightness.light
+            ? palette.lightVibrantColor?.color
+            : palette.darkVibrantColor?.color;
+
+        return color?.withAlpha(120);
       },
     );
   }

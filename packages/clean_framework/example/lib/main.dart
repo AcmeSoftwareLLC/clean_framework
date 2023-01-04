@@ -27,9 +27,17 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Clean Framework Example',
         theme: ThemeData.from(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
+        darkTheme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.green,
+            brightness: Brightness.dark,
+          ),
+          useMaterial3: true,
+        ),
+        themeMode: ThemeMode.dark,
         home: HomeUI(),
       ),
     );
