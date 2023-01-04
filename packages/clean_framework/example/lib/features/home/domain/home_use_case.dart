@@ -15,8 +15,22 @@ class HomeUseCase extends UseCase<HomeEntity> {
   void init() {
     request<PokemonCollectionGatewayOutput, PokemonCollectionSuccessInput>(
       PokemonCollectionGatewayOutput(),
-      onSuccess: (success) => entity.copyWith(pokemons: success.pokemonNames),
+      onSuccess: (success) {
+        return entity.copyWith(
+          pokemons: success.pokemonIdentities
+              .map(_resolvePokemon)
+              .toList(growable: false),
+        );
+      },
       onFailure: (failure) => entity,
+    );
+  }
+
+  PokemonModel _resolvePokemon(PokemonIdentity pokemon) {
+    return PokemonModel(
+      name: pokemon.name,
+      imageUrl:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg',
     );
   }
 }

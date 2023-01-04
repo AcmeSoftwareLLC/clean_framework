@@ -23,9 +23,9 @@ class PokemonCollectionGateway extends Gateway<
     final deserializer = Deserializer(response.data);
 
     return PokemonCollectionSuccessInput(
-      pokemonNames: deserializer.getList(
+      pokemonIdentities: deserializer.getList(
         'results',
-        converter: (result) => result['name'],
+        converter: PokemonIdentity.fromJson,
       ),
     );
   }
@@ -37,11 +37,29 @@ class PokemonCollectionGatewayOutput extends Output {
 }
 
 class PokemonCollectionSuccessInput extends SuccessInput {
-  PokemonCollectionSuccessInput({
-    required this.pokemonNames,
-  });
+  PokemonCollectionSuccessInput({required this.pokemonIdentities});
 
-  final List<String> pokemonNames;
+  final List<PokemonIdentity> pokemonIdentities;
+}
+
+final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
+
+class PokemonIdentity {
+  PokemonIdentity({required this.name, required this.id});
+
+  final String name;
+  final String id;
+
+  factory PokemonIdentity.fromJson(Map<String, dynamic> json) {
+    final deserializer = Deserializer(json);
+
+    final match = _pokemonResUrlRegex.firstMatch(deserializer.getString('url'));
+
+    return PokemonIdentity(
+      name: deserializer.getString('name'),
+      id: match?.group(1) ?? '0',
+    );
+  }
 }
 
 class PokemonCollectionRequest extends GetPokemonRequest {
