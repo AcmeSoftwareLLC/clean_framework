@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 class CountryUI extends UI<CountryViewModel> {
   @override
-  Presenter create(builder) => CountryPresenter(builder: builder);
+  CountryPresenter create(PresenterBuilder<CountryViewModel> builder) {
+    return CountryPresenter(builder: builder);
+  }
 
   @override
   Widget build(BuildContext context, CountryViewModel model) {
