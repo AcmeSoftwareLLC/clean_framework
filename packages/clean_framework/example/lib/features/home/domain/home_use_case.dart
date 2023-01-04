@@ -3,6 +3,9 @@ import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 
+const _spritesBaseUrl =
+    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites';
+
 class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase()
       : super(
@@ -13,25 +16,40 @@ class HomeUseCase extends UseCase<HomeEntity> {
           ],
         );
 
-  void init() {
-    request<PokemonCollectionGatewayOutput, PokemonCollectionSuccessInput>(
+  Future<void> fetchPokemons({bool isRefresh = false}) async {
+    if (!isRefresh) {
+      entity = entity.copyWith(status: HomeStatus.loading);
+    }
+
+    await request<PokemonCollectionGatewayOutput,
+        PokemonCollectionSuccessInput>(
       PokemonCollectionGatewayOutput(),
       onSuccess: (success) {
+        final pokemons = success.pokemonIdentities.map(_resolvePokemon);
+
         return entity.copyWith(
-          pokemons: success.pokemonIdentities
-              .map(_resolvePokemon)
-              .toList(growable: false),
+          pokemons: pokemons.toList(growable: false),
+          status: HomeStatus.loaded,
+          isRefresh: isRefresh,
         );
       },
-      onFailure: (failure) => entity,
+      onFailure: (failure) {
+        return entity.copyWith(
+          status: HomeStatus.failed,
+          isRefresh: isRefresh,
+        );
+      },
     );
+
+    if (isRefresh) {
+      entity = entity.copyWith(isRefresh: false);
+    }
   }
 
   PokemonModel _resolvePokemon(PokemonIdentity pokemon) {
     return PokemonModel(
       name: pokemon.name.toUpperCase(),
-      imageUrl:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg',
+      imageUrl: '$_spritesBaseUrl/pokemon/other/dream-world/${pokemon.id}.svg',
     );
   }
 }
@@ -56,6 +74,7 @@ class HomeUIOutputTransformer
 
     return HomeUIOutput(
       pokemons: filteredPokemons.toList(growable: false),
+      isRefresh: entity.isRefresh,
     );
   }
 }

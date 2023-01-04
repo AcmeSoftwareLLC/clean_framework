@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 class HomeViewModel extends ViewModel {
   HomeViewModel({
     required this.pokemons,
+    required this.onRefresh,
     required this.onSearch,
   });
 
   final List<PokemonModel> pokemons;
 
+  final AsyncCallback onRefresh;
   final ValueChanged<String> onSearch;
 
   @override

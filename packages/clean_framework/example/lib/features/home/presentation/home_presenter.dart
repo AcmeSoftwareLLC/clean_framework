@@ -13,7 +13,12 @@ class HomePresenter
 
   @override
   void onLayoutReady(BuildContext context, HomeUseCase useCase) {
-    useCase.init();
+    useCase.fetchPokemons();
+  }
+
+  @override
+  void onOutputUpdate(BuildContext context, HomeUIOutput output) {
+    if (output.isRefresh) {}
   }
 
   @override
@@ -21,6 +26,7 @@ class HomePresenter
     return HomeViewModel(
       pokemons: output.pokemons,
       onSearch: (query) => useCase.setInput(PokemonSearchInput(name: query)),
+      onRefresh: () => useCase.fetchPokemons(isRefresh: true),
     );
   }
 }

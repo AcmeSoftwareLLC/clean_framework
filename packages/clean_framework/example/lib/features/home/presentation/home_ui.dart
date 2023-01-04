@@ -24,18 +24,24 @@ class HomeUI extends UI<HomeViewModel> {
         ),
         bottom: PokemonSearchField(onChanged: viewModel.onSearch),
       ),
-      body: ListView.builder(
-        prototypeItem: SizedBox(height: 176), // 160 + 16
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        itemBuilder: (context, index) {
-          final pokemon = viewModel.pokemons[index];
+      body: RefreshIndicator(
+        onRefresh: viewModel.onRefresh,
+        child: Scrollbar(
+          thumbVisibility: true,
+          child: ListView.builder(
+            prototypeItem: SizedBox(height: 176), // 160 + 16
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            itemBuilder: (context, index) {
+              final pokemon = viewModel.pokemons[index];
 
-          return PokemonCard(
-            imageUrl: pokemon.imageUrl,
-            name: pokemon.name,
-          );
-        },
-        itemCount: viewModel.pokemons.length,
+              return PokemonCard(
+                imageUrl: pokemon.imageUrl,
+                name: pokemon.name,
+              );
+            },
+            itemCount: viewModel.pokemons.length,
+          ),
+        ),
       ),
     );
   }
