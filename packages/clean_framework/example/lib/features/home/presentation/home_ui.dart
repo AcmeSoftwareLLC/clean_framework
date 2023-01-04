@@ -36,6 +36,7 @@ class HomeUI extends UI<HomeViewModel> {
                 ),
                 const SizedBox(height: 8),
                 TextField(
+                  onChanged: viewModel.onSearch,
                   decoration: InputDecoration(
                     hintText: 'Pokémon name',
                     hintStyle: textTheme.bodyLarge!.copyWith(

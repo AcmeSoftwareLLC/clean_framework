@@ -65,4 +65,7 @@ class PokemonIdentity {
 class PokemonCollectionRequest extends GetPokemonRequest {
   @override
   String get resource => 'pokemon';
+
+  @override
+  Map<String, dynamic> get queryParams => {'limit': 1000};
 }

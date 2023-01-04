@@ -9,6 +9,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
           entity: HomeEntity(),
           transformers: [
             HomeUIOutputTransformer(),
+            PokemonSearchInputTransformer(),
           ],
         );
 
@@ -35,10 +36,34 @@ class HomeUseCase extends UseCase<HomeEntity> {
   }
 }
 
+class PokemonSearchInput extends Input {
+  PokemonSearchInput({required this.name});
+
+  final String name;
+}
+
 class HomeUIOutputTransformer
     extends OutputTransformer<HomeEntity, HomeUIOutput> {
   @override
   HomeUIOutput transform(HomeEntity entity) {
-    return HomeUIOutput(pokemons: entity.pokemons);
+    final filteredPokemons = entity.pokemons.where(
+      (pokemon) {
+        return pokemon.name
+            .toLowerCase()
+            .contains(entity.pokemonNameQuery.toLowerCase());
+      },
+    );
+
+    return HomeUIOutput(
+      pokemons: filteredPokemons.toList(growable: false),
+    );
+  }
+}
+
+class PokemonSearchInputTransformer
+    extends InputTransformer<HomeEntity, PokemonSearchInput> {
+  @override
+  HomeEntity transform(HomeEntity entity, PokemonSearchInput input) {
+    return entity.copyWith(pokemonNameQuery: input.name);
   }
 }

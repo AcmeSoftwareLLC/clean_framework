@@ -18,6 +18,9 @@ class HomePresenter
 
   @override
   HomeViewModel createViewModel(HomeUseCase useCase, HomeUIOutput output) {
-    return HomeViewModel(pokemons: output.pokemons);
+    return HomeViewModel(
+      pokemons: output.pokemons,
+      onSearch: (query) => useCase.setInput(PokemonSearchInput(name: query)),
+    );
   }
 }
