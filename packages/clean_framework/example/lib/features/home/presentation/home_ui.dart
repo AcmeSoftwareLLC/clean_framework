@@ -1,6 +1,7 @@
 import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
+import 'package:clean_framework_example/widgets/pokemon_search_field.dart';
 import 'package:clean_framework_example/widgets/svg_palette_card.dart';
 import 'package:flutter/material.dart';
 
@@ -21,37 +22,7 @@ class HomeUI extends UI<HomeViewModel> {
         titleTextStyle: textTheme.displaySmall!.copyWith(
           fontWeight: FontWeight.w300,
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(80),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Search for a Pokémon by name',
-                  style: textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w100,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextField(
-                  onChanged: viewModel.onSearch,
-                  decoration: InputDecoration(
-                    hintText: 'Pokémon name',
-                    hintStyle: textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w100,
-                    ),
-                    prefixIcon: Icon(Icons.search),
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        bottom: PokemonSearchField(onChanged: viewModel.onSearch),
       ),
       body: ListView.builder(
         prototypeItem: SizedBox(height: 176), // 160 + 16
@@ -94,7 +65,12 @@ class _PokemonCard extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.w300),
                 ),
               ),
-              picture,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2,
+                ),
+                child: picture,
+              ),
             ],
           ),
         );
