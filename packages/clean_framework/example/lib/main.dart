@@ -1,6 +1,7 @@
 import 'package:clean_framework/clean_framework_core.dart';
-import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
 import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example/routing/routes.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -24,21 +25,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       parent: container,
-      child: MaterialApp(
-        title: 'Clean Framework Example',
-        theme: ThemeData.from(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData.from(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.green,
-            brightness: Brightness.dark,
-          ),
-          useMaterial3: true,
-        ),
-        themeMode: ThemeMode.dark,
-        home: HomeUI(),
+      child: AppRouterScope(
+        create: PokeRouter.new,
+        builder: (context) {
+          return MaterialApp.router(
+            title: 'Clean Framework Example',
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.dark,
+              ),
+              useMaterial3: true,
+            ),
+            themeMode: ThemeMode.dark,
+            routerConfig: context.router.config,
+          );
+        },
       ),
     );
   }
