@@ -99,10 +99,12 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       final image = await picture.toImage(100, 100);
       final palette = await PaletteGenerator.fromImage(image);
 
-      _color = widget.backgroundColorBuilder?.call(context, palette) ??
-          palette.dominantColor?.color;
+      if (mounted) {
+        _color = widget.backgroundColorBuilder?.call(context, palette) ??
+            palette.dominantColor?.color;
 
-      if (mounted) setState(() {});
+        setState(() {});
+      }
     }
   }
 
