@@ -2,15 +2,22 @@ import 'package:clean_framework_example/widgets/svg_palette_card.dart';
 import 'package:flutter/material.dart';
 
 class PokemonCard extends StatelessWidget {
-  const PokemonCard({super.key, required this.imageUrl, required this.name});
+  const PokemonCard({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.onTap,
+  });
 
   final String imageUrl;
   final String name;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return SvgPaletteCard(
       url: imageUrl,
+      onTap: onTap,
       height: 160,
       margin: EdgeInsets.symmetric(vertical: 8),
       builder: (context, picture) {

@@ -11,6 +11,7 @@ class SvgPaletteCard extends StatefulWidget {
     required this.url,
     required this.builder,
     this.duration = const Duration(milliseconds: 500),
+    this.onTap,
     this.placeholderBuilder,
     this.backgroundColorBuilder,
     this.width,
@@ -21,6 +22,7 @@ class SvgPaletteCard extends StatefulWidget {
   final String url;
   final Widget Function(BuildContext, SvgPicture) builder;
   final Duration duration;
+  final VoidCallback? onTap;
   final WidgetBuilder? placeholderBuilder;
   final Color? Function(BuildContext, PaletteGenerator)? backgroundColorBuilder;
   final double? width;
@@ -59,7 +61,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       shape: RoundedRectangleBorder(borderRadius: borderRadius),
       color: _color,
       child: InkWell(
-        onTap: () {},
+        onTap: widget.onTap,
         borderRadius: borderRadius,
         child: AnimatedSwitcher(
           duration: widget.duration,

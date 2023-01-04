@@ -1,8 +1,10 @@
 import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
+import 'package:clean_framework_example/routing/routes.dart';
 import 'package:clean_framework_example/widgets/pokemon_card.dart';
 import 'package:clean_framework_example/widgets/pokemon_search_field.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
 class HomeUI extends UI<HomeViewModel> {
@@ -34,6 +36,10 @@ class HomeUI extends UI<HomeViewModel> {
               return PokemonCard(
                 imageUrl: pokemon.imageUrl,
                 name: pokemon.name,
+                onTap: () => context.router.go(
+                  Routes.profile,
+                  params: {'pokemon_name': pokemon.name},
+                ),
               );
             },
             itemCount: viewModel.pokemons.length,

@@ -1,8 +1,10 @@
 import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
+import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 
 enum Routes with RoutesMixin {
-  home('/');
+  home('/'),
+  profile(':pokemon_name');
 
   const Routes(this.path);
 
@@ -17,7 +19,15 @@ class PokeRouter extends AppRouter<Routes> {
       routes: [
         AppRoute(
           route: Routes.home,
-          builder: (context, state) => HomeUI(),
+          builder: (_, __) => HomeUI(),
+          routes: [
+            AppRoute(
+              route: Routes.profile,
+              builder: (_, state) => ProfileUI(
+                pokemonName: state.params['pokemon_name'] ?? '',
+              ),
+            ),
+          ],
         ),
       ],
     );
