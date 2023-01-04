@@ -12,9 +12,45 @@ class HomeUI extends UI<HomeViewModel> {
 
   @override
   Widget build(BuildContext context, HomeViewModel viewModel) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pokemon'),
+        title: Text('Pokémon'),
+        centerTitle: false,
+        titleTextStyle: textTheme.displaySmall!.copyWith(
+          fontWeight: FontWeight.w300,
+        ),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(80),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Search for a Pokémon by name',
+                  style: textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Pokémon name',
+                    hintStyle: textTheme.bodyLarge!.copyWith(
+                      fontWeight: FontWeight.w100,
+                    ),
+                    prefixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: ListView.builder(
         prototypeItem: SizedBox(height: 176), // 160 + 16
@@ -51,7 +87,10 @@ class _PokemonCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   name,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium!
+                      .copyWith(fontWeight: FontWeight.w300),
                 ),
               ),
               picture,
