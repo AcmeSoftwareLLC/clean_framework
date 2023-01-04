@@ -7,15 +7,18 @@ class PokemonCard extends StatelessWidget {
     required this.imageUrl,
     required this.name,
     required this.onTap,
+    required this.heroTag,
   });
 
   final String imageUrl;
   final String name;
   final VoidCallback onTap;
+  final String heroTag;
 
   @override
   Widget build(BuildContext context) {
     return SvgPaletteCard(
+      cacheKey: name,
       url: imageUrl,
       onTap: onTap,
       height: 160,
@@ -39,7 +42,7 @@ class PokemonCard extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 2,
                 ),
-                child: picture,
+                child: Hero(tag: heroTag, child: picture),
               ),
             ],
           ),

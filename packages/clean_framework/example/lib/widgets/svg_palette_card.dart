@@ -11,6 +11,7 @@ class SvgPaletteCard extends StatefulWidget {
     required this.url,
     required this.builder,
     this.duration = const Duration(milliseconds: 500),
+    this.cacheKey,
     this.onTap,
     this.placeholderBuilder,
     this.backgroundColorBuilder,
@@ -22,6 +23,7 @@ class SvgPaletteCard extends StatefulWidget {
   final String url;
   final Widget Function(BuildContext, SvgPicture) builder;
   final Duration duration;
+  final String? cacheKey;
   final VoidCallback? onTap;
   final WidgetBuilder? placeholderBuilder;
   final Color? Function(BuildContext, PaletteGenerator)? backgroundColorBuilder;
@@ -83,7 +85,10 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
 
   Future<void> _fetchSvg() async {
     try {
-      final file = await DefaultCacheManager().getSingleFile(widget.url);
+      final file = await DefaultCacheManager().getSingleFile(
+        widget.url,
+        key: widget.cacheKey,
+      );
       _rawSvg = await file.readAsString();
 
       if (mounted) setState(() {});

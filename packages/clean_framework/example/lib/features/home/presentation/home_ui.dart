@@ -36,6 +36,7 @@ class HomeUI extends UI<HomeViewModel> {
               return PokemonCard(
                 imageUrl: pokemon.imageUrl,
                 name: pokemon.name,
+                heroTag: pokemon.name,
                 onTap: () => context.router.go(
                   Routes.profile,
                   params: {'pokemon_name': pokemon.name},

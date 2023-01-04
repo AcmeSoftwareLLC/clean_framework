@@ -6,9 +6,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase()
       : super(
           entity: ProfileEntity(),
-          transformers: [
-            ProfileUIOutputTransformer(),
-          ],
+          transformers: [ProfileUIOutputTransformer()],
         );
 }
 
