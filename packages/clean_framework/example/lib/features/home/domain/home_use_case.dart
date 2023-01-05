@@ -43,7 +43,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
     );
 
     if (isRefresh) {
-      entity = entity.copyWith(isRefresh: false);
+      entity = entity.copyWith(isRefresh: false, status: HomeStatus.loaded);
     }
   }
 
