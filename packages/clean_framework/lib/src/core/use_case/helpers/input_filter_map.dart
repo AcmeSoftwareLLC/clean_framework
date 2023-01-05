@@ -9,7 +9,11 @@ extension InputFilterMapExtension<E extends Entity> on InputFilterMap<E> {
     final processor = this[I];
 
     if (processor == null) {
-      throw StateError('Input processor not defined for $I');
+      throw StateError(
+        'Input filter not defined for "$I".\n'
+        'Filters available for: ${keys.isEmpty ? 'none' : keys.join(', ')}\n'
+        'Dependency: $E',
+      );
     }
 
     return processor(input, entity);
