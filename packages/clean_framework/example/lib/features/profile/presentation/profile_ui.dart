@@ -36,19 +36,55 @@ class ProfileUI extends UI<ProfileViewModel> {
               borderRadius: BorderRadius.circular(48),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 48),
-              child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.only(top: 88),
+              child: Column(
                 children: [
-                  for (var i = 0; i < 400; i++)
-                    ListTile(
-                      title: Text('Item $i'),
-                    ),
+                  Wrap(
+                    runSpacing: 16,
+                    spacing: 16,
+                    children: viewModel.pokemonTypes
+                        .map(_PokeTypeChip.new)
+                        .toList(growable: false),
+                  ),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _PokeTypeChip extends StatelessWidget {
+  const _PokeTypeChip(this.type);
+
+  final PokemonType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      shape: StadiumBorder(
+        side: BorderSide(color: type.color),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(type.emoji),
+            Text(
+              type.name,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: type.color),
+            ),
+          ],
+        ),
       ),
     );
   }

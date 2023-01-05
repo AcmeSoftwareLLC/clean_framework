@@ -24,6 +24,8 @@ class ProfilePresenter
     ProfileUseCase useCase,
     ProfileUIOutput output,
   ) {
-    return ProfileViewModel();
+    return ProfileViewModel(
+      pokemonTypes: output.types.map(PokemonType.new).toList(growable: false),
+    );
   }
 }

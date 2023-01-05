@@ -14,8 +14,11 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     request<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
       PokemonProfileGatewayOutput(name: name.toLowerCase()),
       onSuccess: (success) {
-        print(success.profile);
-        return entity;
+        final profile = success.profile;
+
+        return entity.copyWith(
+          types: profile.types,
+        );
       },
       onFailure: (failure) => entity,
     );
@@ -26,6 +29,8 @@ class ProfileUIOutputTransformer
     extends OutputTransformer<ProfileEntity, ProfileUIOutput> {
   @override
   ProfileUIOutput transform(ProfileEntity entity) {
-    return ProfileUIOutput();
+    return ProfileUIOutput(
+      types: entity.types,
+    );
   }
 }
