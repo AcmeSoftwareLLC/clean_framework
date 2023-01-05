@@ -32,7 +32,7 @@ class ProfileUI extends UI<ProfileViewModel> {
 
           return Card(
             margin: EdgeInsets.zero,
-            elevation: 4,
+            elevation: Theme.of(context).brightness == Brightness.light ? 0 : 4,
             color: Theme.of(context).colorScheme.surface.withAlpha(120),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(48),
