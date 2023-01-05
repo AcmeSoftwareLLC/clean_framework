@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
+import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
 class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase()
@@ -11,8 +14,28 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
         );
 
   void fetchPokemonProfile(String name) {
+    final pokeName = name.toLowerCase();
+
+    request<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+      PokemonSpeciesGatewayOutput(name: pokeName),
+      onSuccess: (success) {
+        final descriptions = success.species.descriptions.where(
+          (desc) => desc.language == 'en',
+        );
+
+        final randomIndex = Random().nextInt(descriptions.length);
+
+        print(descriptions.map((e) => e.text));
+
+        return entity.copyWith(
+          description: descriptions.elementAt(randomIndex).text,
+        );
+      },
+      onFailure: (failure) => entity,
+    );
+
     request<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
-      PokemonProfileGatewayOutput(name: name.toLowerCase()),
+      PokemonProfileGatewayOutput(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;
 
@@ -31,6 +54,7 @@ class ProfileUIOutputTransformer
   ProfileUIOutput transform(ProfileEntity entity) {
     return ProfileUIOutput(
       types: entity.types,
+      description: entity.description,
     );
   }
 }

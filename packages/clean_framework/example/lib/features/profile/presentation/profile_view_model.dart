@@ -2,12 +2,16 @@ import 'package:clean_framework/clean_framework_core.dart';
 import 'package:flutter/material.dart';
 
 class ProfileViewModel extends ViewModel {
-  ProfileViewModel({required this.pokemonTypes});
+  ProfileViewModel({
+    required this.pokemonTypes,
+    required this.description,
+  });
 
   final List<PokemonType> pokemonTypes;
+  final String description;
 
   @override
-  List<Object?> get props => [pokemonTypes];
+  List<Object?> get props => [pokemonTypes, description];
 }
 
 class PokemonType {

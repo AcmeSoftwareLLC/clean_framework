@@ -29,7 +29,7 @@ class PokemonProfileGatewayOutput extends Output {
   final String name;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [name];
 }
 
 class PokemonProfileSuccessInput extends SuccessInput {

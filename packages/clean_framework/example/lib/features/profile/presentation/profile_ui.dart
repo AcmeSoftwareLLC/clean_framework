@@ -28,6 +28,8 @@ class ProfileUI extends UI<ProfileViewModel> {
         heroTag: pokemonName,
         cacheKey: pokemonName,
         builder: (context) {
+          final pokeTypes = viewModel.pokemonTypes;
+
           return Card(
             margin: EdgeInsets.zero,
             elevation: 8,
@@ -36,15 +38,18 @@ class ProfileUI extends UI<ProfileViewModel> {
               borderRadius: BorderRadius.circular(48),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(top: 88),
+              padding: const EdgeInsets.fromLTRB(16, 88, 16, 16),
               child: Column(
                 children: [
                   Wrap(
-                    runSpacing: 16,
-                    spacing: 16,
-                    children: viewModel.pokemonTypes
-                        .map(_PokeTypeChip.new)
-                        .toList(growable: false),
+                    runSpacing: 8,
+                    spacing: 8,
+                    children: pokeTypes.map(_PokeTypeChip.new).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    viewModel.description,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -69,8 +74,8 @@ class _PokeTypeChip extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
+          horizontal: 12,
+          vertical: 6,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
