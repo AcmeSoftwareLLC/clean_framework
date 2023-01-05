@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:flutter/material.dart';
 
 class ProfileViewModel extends ViewModel {
@@ -7,15 +8,17 @@ class ProfileViewModel extends ViewModel {
     required this.description,
     required this.height,
     required this.weight,
+    required this.stats,
   });
 
   final List<PokemonType> pokemonTypes;
   final String description;
   final String height;
   final String weight;
+  final List<PokemonStat> stats;
 
   @override
-  List<Object?> get props => [pokemonTypes, description, height, weight];
+  List<Object?> get props => [pokemonTypes, description, height, weight, stats];
 }
 
 class PokemonType {

@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
 import 'package:clean_framework_example/widgets/spotlight.dart';
@@ -38,30 +39,102 @@ class ProfileUI extends UI<ProfileViewModel> {
               borderRadius: BorderRadius.circular(48),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 88, 24, 16),
-              child: Column(
-                children: [
-                  Wrap(
-                    runSpacing: 8,
-                    spacing: 8,
-                    children: pokeTypes.map(_PokeTypeChip.new).toList(),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    viewModel.description,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  const SizedBox(height: 16),
-                  _BodyMeasurement(
-                    height: viewModel.height,
-                    weight: viewModel.weight,
-                  ),
-                ],
+              padding: const EdgeInsets.fromLTRB(24, 96, 24, 16),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Wrap(
+                      runSpacing: 8,
+                      spacing: 8,
+                      children: pokeTypes.map(_PokeTypeChip.new).toList(),
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      viewModel.description,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 24),
+                    _BodyMeasurement(
+                      height: viewModel.height,
+                      weight: viewModel.weight,
+                    ),
+                    const SizedBox(height: 32),
+                    _ProfileStats(stats: viewModel.stats),
+                  ],
+                ),
               ),
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _ProfileStats extends StatelessWidget {
+  const _ProfileStats({required this.stats});
+
+  final List<PokemonStat> stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (final stat in stats)
+          Padding(
+            padding: const EdgeInsets.all(6),
+            child: _StatRow(stat: stat),
+          ),
+      ],
+    );
+  }
+}
+
+class _StatRow extends StatelessWidget {
+  const _StatRow({required this.stat});
+
+  final PokemonStat stat;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    final primaryColor = themeData.colorScheme.primary;
+    final pointFraction = stat.point / 255;
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  stat.name,
+                  style: themeData.textTheme.bodySmall,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text(
+                stat.point.toString(),
+                style: themeData.textTheme.titleSmall,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 32),
+        Expanded(
+          flex: 3,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              color: primaryColor.withAlpha(stat.point),
+              value: pointFraction,
+              minHeight: 8,
+              backgroundColor: themeData.colorScheme.surfaceVariant,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

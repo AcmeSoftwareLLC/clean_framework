@@ -34,6 +34,7 @@ class HomeUI extends UI<HomeViewModel> {
               final pokemon = viewModel.pokemons[index];
 
               return PokemonCard(
+                key: ValueKey(pokemon.name),
                 imageUrl: pokemon.imageUrl,
                 name: pokemon.name,
                 heroTag: pokemon.name,
