@@ -9,12 +9,14 @@ class SpotlightImage extends StatefulWidget {
   const SpotlightImage({
     super.key,
     required this.cacheKey,
+    required this.heroTag,
     this.placeholderBuilder,
     this.width,
     this.height,
   });
 
   final String cacheKey;
+  final String heroTag;
   final WidgetBuilder? placeholderBuilder;
   final double? width;
   final double? height;
@@ -64,11 +66,14 @@ class _SpotlightImageState extends State<SpotlightImage> {
                 child: Padding(
                   padding: const EdgeInsets.all(32),
                   child: Center(
-                    child: SvgPicture.string(
-                      snapshot.data!,
-                      placeholderBuilder: widget.placeholderBuilder,
-                      height: widget.height,
-                      width: widget.width,
+                    child: Hero(
+                      tag: widget.heroTag,
+                      child: SvgPicture.string(
+                        snapshot.data!,
+                        placeholderBuilder: widget.placeholderBuilder,
+                        height: widget.height,
+                        width: widget.width,
+                      ),
                     ),
                   ),
                 ),

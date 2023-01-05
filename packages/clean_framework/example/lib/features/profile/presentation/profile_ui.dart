@@ -23,12 +23,10 @@ class ProfileUI extends UI<ProfileViewModel> {
         backgroundColor: Colors.transparent,
       ),
       extendBodyBehindAppBar: true,
-      body: Hero(
-        tag: pokemonName,
-        child: SpotlightImage(
-          height: 200,
-          cacheKey: pokemonName,
-        ),
+      body: SpotlightImage(
+        height: 200,
+        heroTag: pokemonName,
+        cacheKey: pokemonName,
       ),
     );
   }
