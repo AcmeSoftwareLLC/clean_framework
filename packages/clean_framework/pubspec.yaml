@@ -15,6 +15,7 @@ dependencies:
   flutter_riverpod: ^2.1.3
   meta: '>=1.8.0 <1.9.0'
   riverpod: ^2.1.3
+  stack_trace: ">=1.10.0 <1.12.0"
 
 dev_dependencies:
   clean_framework_test: ^0.1.0

@@ -87,15 +87,16 @@ void main() {
     );
 
     test(
-      'request fails if there is no appropriate subscription present',
+      'throws if there is no appropriate subscription present',
       () async {
-        await useCase.request<TestGatewayOutput, TestSuccessInput>(
-          TestGatewayOutput(name: 'World'),
-          onSuccess: (success) => TestEntity(foo: success.message),
-          onFailure: (failure) => TestEntity(foo: 'Hello Anonymous!'),
+        expect(
+          () => useCase.request<TestGatewayOutput, TestSuccessInput>(
+            TestGatewayOutput(name: 'World'),
+            onSuccess: (success) => TestEntity(),
+            onFailure: (failure) => TestEntity(),
+          ),
+          throwsStateError,
         );
-
-        expect(useCase.entity, TestEntity(foo: 'Hello Anonymous!'));
       },
     );
 

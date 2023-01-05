@@ -33,7 +33,3 @@ final pokemonExternalInterfaceProvider = ExternalInterfaceProvider(
     pokemonSpeciesGateway,
   ],
 );
-
-void initializeExternalInterfaces(ProviderContainer container) {
-  pokemonExternalInterfaceProvider.initializeFor(container);
-}

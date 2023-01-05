@@ -3,18 +3,8 @@ import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/routing/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
-import 'package:stack_trace/stack_trace.dart' as stack_trace;
-
-final container = ProviderContainer();
 
 void main() {
-  FlutterError.demangleStackTrace = (StackTrace stack) {
-    if (stack is stack_trace.Trace) return stack.vmTrace;
-    if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
-    return stack;
-  };
-  initializeExternalInterfaces(container);
-
   runApp(const MyApp());
 }
 
@@ -23,13 +13,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      parent: container,
+    return AppProviderScope(
+      externalInterfaceProviders: [
+        pokemonExternalInterfaceProvider,
+      ],
       child: AppRouterScope(
         create: PokeRouter.new,
         builder: (context) {
           return MaterialApp.router(
             title: 'Clean Framework Example',
+            routerConfig: context.router.config,
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
               useMaterial3: true,
@@ -42,7 +35,6 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             themeMode: ThemeMode.dark,
-            routerConfig: context.router.config,
           );
         },
       ),

@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  loadProviders();
+
   group('HomePage tests | ', () {
     testWidgets(
       'correct UI',
@@ -77,7 +79,10 @@ void main() {
         expect(graphQLTileFinder, findsOneWidget);
 
         await tester.tap(graphQLTileFinder);
-        await tester.pumpAndSettle();
+        // pumpAndSettle times out here; as the page has non-deterministic loading indicator
+        // so pumping each frame individually
+        await tester.pump();
+        await tester.pump();
 
         expect(find.byType(CountryUI), findsOneWidget);
       },

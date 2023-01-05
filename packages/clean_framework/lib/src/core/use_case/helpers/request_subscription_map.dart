@@ -15,7 +15,7 @@ extension RequestSubscriptionMapExtension<I extends Input>
     on RequestSubscriptionMap<I> {
   void add<O extends Output>(RequestSubscription<I> subscription) {
     if (this[O] != null) {
-      throw StateError('A subscription for $O already exists');
+      throw StateError('A subscription for $O already exists.');
     }
 
     this[O] = subscription;
@@ -27,8 +27,28 @@ extension RequestSubscriptionMapExtension<I extends Input>
     final subscription = this[O];
 
     if (subscription == null) {
-      return Either<NoSubscriptionFailureInput, S>.left(
-        NoSubscriptionFailureInput<O>(),
+      throw StateError(
+        '\n\nNo subscription for "$O" exists.\n\n'
+        'Please follow the steps below in order to fix this issue:\n'
+        '1. Ensure that the use case that requests "$O" is attached '
+        'the appropriate gateway.\n'
+        '     AppropriateGatewayProvider(\n'
+        '       ...,\n'
+        '       useCases: [<<useCaseProvider>>],\n'
+        '     )\n'
+        '2. Ensure that the gateway that belongs to "$O" is attached '
+        'the appropriate external interface.\n'
+        '     AppropriateExternalInterfaceProvider(\n'
+        '       ...,\n'
+        '       gateways: [<<gatewayProvider>>],\n'
+        '     )\n'
+        '3. Ensure that the associated external interface is initialized.\n'
+        '     AppProviderScope(\n'
+        '       ...,\n'
+        '       externalInterfaceProviders: [\n'
+        '         <<associatedExternalInterfaceProvider>>,\n'
+        '       ],\n'
+        '     )\n',
       );
     }
 
