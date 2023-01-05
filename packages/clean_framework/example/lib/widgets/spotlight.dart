@@ -5,11 +5,12 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
 
-class SpotlightImage extends StatefulWidget {
-  const SpotlightImage({
+class Spotlight extends StatefulWidget {
+  const Spotlight({
     super.key,
     required this.cacheKey,
     required this.heroTag,
+    required this.builder,
     this.placeholderBuilder,
     this.width,
     this.height,
@@ -17,52 +18,74 @@ class SpotlightImage extends StatefulWidget {
 
   final String cacheKey;
   final String heroTag;
+  final WidgetBuilder builder;
   final WidgetBuilder? placeholderBuilder;
   final double? width;
   final double? height;
 
   @override
-  State<SpotlightImage> createState() => _SpotlightImageState();
+  State<Spotlight> createState() => _SpotlightState();
 }
 
-class _SpotlightImageState extends State<SpotlightImage> {
+class _SpotlightState extends State<Spotlight> {
   PaletteGenerator? _palette;
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return FutureBuilder(
       future: _loadFileFromCache(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return AspectRatio(
-            aspectRatio: 0.8,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: SweepGradient(
-                  center: FractionalOffset.center,
-                  colors: [
-                    _getColor((p) => p.dominantColor),
-                    _getColor((p) => p.vibrantColor),
-                    _getColor((p) => p.mutedColor),
-                    _getColor((p) => p.lightMutedColor),
-                    _getColor((p) => p.dominantColor),
-                  ],
-                  stops: <double>[0.0, 0.2, 0.5, 0.7, 1.0],
-                  transform: GradientRotation(pi * 1.5),
-                ),
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      for (var a = 0; a < 200; a++) Colors.black.withAlpha(a),
-                    ],
-                    stops: [
-                      for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop
-                    ],
-                    radius: pi / 4,
+          return Stack(
+            clipBehavior: Clip.none,
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                top: 0,
+                height: width * 1.2,
+                width: width,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: SweepGradient(
+                      center: FractionalOffset.center,
+                      colors: [
+                        _getColor((p) => p.dominantColor),
+                        _getColor((p) => p.vibrantColor),
+                        _getColor((p) => p.mutedColor),
+                        _getColor((p) => p.lightMutedColor),
+                        _getColor((p) => p.dominantColor),
+                      ],
+                      stops: <double>[0.0, 0.2, 0.5, 0.7, 1.0],
+                      transform: GradientRotation(pi * 1.5),
+                    ),
+                  ),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: RadialGradient(
+                        colors: [
+                          for (var a = 0; a < 200; a++)
+                            Colors.black.withAlpha(a),
+                        ],
+                        stops: [
+                          for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop
+                        ],
+                        radius: pi / 4,
+                      ),
+                    ),
+                    child: const SizedBox(),
                   ),
                 ),
+              ),
+              Positioned.fill(
+                top: width / 1.5,
+                child: widget.builder(context),
+              ),
+              Positioned(
+                top: 0,
+                height: width * 1.2,
+                width: width,
                 child: Padding(
                   padding: const EdgeInsets.all(32),
                   child: Center(
@@ -78,7 +101,7 @@ class _SpotlightImageState extends State<SpotlightImage> {
                   ),
                 ),
               ),
-            ),
+            ],
           );
         }
 

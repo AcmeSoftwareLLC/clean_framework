@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/widgets/spotlight_image.dart';
+import 'package:clean_framework_example/widgets/spotlight.dart';
 import 'package:flutter/material.dart';
 
 class ProfileUI extends UI<ProfileViewModel> {
@@ -23,10 +23,32 @@ class ProfileUI extends UI<ProfileViewModel> {
         backgroundColor: Colors.transparent,
       ),
       extendBodyBehindAppBar: true,
-      body: SpotlightImage(
+      body: Spotlight(
         height: 200,
         heroTag: pokemonName,
         cacheKey: pokemonName,
+        builder: (context) {
+          return Card(
+            margin: EdgeInsets.zero,
+            elevation: 8,
+            color: Colors.black87,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(48),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 48),
+              child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                children: [
+                  for (var i = 0; i < 400; i++)
+                    ListTile(
+                      title: Text('Item $i'),
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
