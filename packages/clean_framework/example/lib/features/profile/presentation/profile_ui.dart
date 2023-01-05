@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/widgets/cached_image.dart';
+import 'package:clean_framework_example/widgets/spotlight_image.dart';
 import 'package:flutter/material.dart';
 
 class ProfileUI extends UI<ProfileViewModel> {
@@ -17,10 +17,15 @@ class ProfileUI extends UI<ProfileViewModel> {
   @override
   Widget build(BuildContext context, ProfileViewModel viewModel) {
     return Scaffold(
-      appBar: AppBar(title: Text(pokemonName)),
+      appBar: AppBar(
+        title: Text(pokemonName),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      extendBodyBehindAppBar: true,
       body: Hero(
         tag: pokemonName,
-        child: CachedImage(
+        child: SpotlightImage(
           height: 200,
           cacheKey: pokemonName,
         ),
