@@ -10,9 +10,9 @@ extension OutputFilterMapExtension<E extends Entity> on OutputFilterMap<E> {
 
     if (builder == null) {
       throw StateError(
-        'Output filter not defined for "$O".\n'
+        '\n\nOutput filter not defined for "$O".\n'
         'Filters available for: ${keys.isEmpty ? 'none' : keys.join(', ')}\n'
-        'Dependency: $E',
+        'Dependency: $E\n\n',
       );
     }
 

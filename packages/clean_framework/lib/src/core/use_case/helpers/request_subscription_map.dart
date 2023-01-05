@@ -28,13 +28,27 @@ extension RequestSubscriptionMapExtension<I extends Input>
 
     if (subscription == null) {
       throw StateError(
-        '\n\nNo subscription for "$O" exists.\n'
-        'Please ensure that the gateway that belongs to "$O" is attached '
+        '\n\nNo subscription for "$O" exists.\n\n'
+        'Please follow the steps below in order to fix this issue:\n'
+        '1. Ensure that the use case that requests "$O" is attached '
+        'the appropriate gateway.\n'
+        '     AppropriateGatewayProvider(\n'
+        '       ...,\n'
+        '       useCases: [<<useCaseProvider>>],\n'
+        '     )\n'
+        '2. Ensure that the gateway that belongs to "$O" is attached '
         'the appropriate external interface.\n'
-        'Also, ensure that the associated external interface is initialized.\n'
-        '\nExternal Interfaces can be initialized '
-        'by either calling initializeFor() in its provider, or by adding '
-        'the provider to AppProviderScope.\n',
+        '     AppropriateExternalInterfaceProvider(\n'
+        '       ...,\n'
+        '       gateways: [<<gatewayProvider>>],\n'
+        '     )\n'
+        '3. Ensure that the associated external interface is initialized.\n'
+        '     AppProviderScope(\n'
+        '       ...,\n'
+        '       externalInterfaceProviders: [\n'
+        '         <<associatedExternalInterfaceProvider>>,\n'
+        '       ],\n'
+        '     )\n',
       );
     }
 
