@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         builder: (context) {
           return MaterialApp.router(
             title: 'Clean Framework Example',
+            routerConfig: context.router.config,
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
               useMaterial3: true,
@@ -34,7 +35,6 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             themeMode: ThemeMode.dark,
-            routerConfig: context.router.config,
           );
         },
       ),
