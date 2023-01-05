@@ -67,9 +67,8 @@ class HomeUIOutputTransformer
   HomeUIOutput transform(HomeEntity entity) {
     final filteredPokemons = entity.pokemons.where(
       (pokemon) {
-        return pokemon.name
-            .toLowerCase()
-            .contains(entity.pokemonNameQuery.toLowerCase());
+        final pokeName = pokemon.name.toLowerCase();
+        return pokeName.contains(entity.pokemonNameQuery.toLowerCase());
       },
     );
 
