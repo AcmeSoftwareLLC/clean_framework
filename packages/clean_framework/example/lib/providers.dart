@@ -1,86 +1,39 @@
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework_example/features/last_login/domain/last_login_entity.dart';
-import 'package:clean_framework_example/features/last_login/domain/last_login_use_case.dart';
-import 'package:clean_framework_example/features/last_login/external_interface/last_login_date_gateway.dart';
-import 'package:clean_framework_firestore/clean_framework_firestore.dart';
-import 'package:clean_framework_graphql/clean_framework_graphql.dart';
-import 'package:clean_framework_rest/clean_framework_rest.dart';
-import 'package:flutter/foundation.dart';
+import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework_example/core/pokemon/pokemon_external_interface.dart';
+import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
+import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
+import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
+import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
-import 'features/country/domain/country_entity.dart';
-import 'features/country/domain/country_use_case.dart';
-import 'features/country/external_interface/country_gateway.dart';
-import 'features/random_cat/domain/random_cat_entity.dart';
-import 'features/random_cat/domain/random_cat_use_case.dart';
-import 'features/random_cat/external_interface/random_cat_gateway.dart';
+final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 
-ProvidersContext _providersContext = ProvidersContext();
+final profileUseCaseProvider = UseCaseProvider(ProfileUseCase.new);
 
-ProvidersContext get providersContext => _providersContext;
-
-@visibleForTesting
-void resetProvidersContext([ProvidersContext? context]) {
-  _providersContext = context ?? ProvidersContext();
-}
-
-final lastLoginUseCaseProvider =
-    UseCaseProvider<LastLoginEntity, LastLoginUseCase>(
-  (_) => LastLoginUseCase(),
+final pokemonCollectionGateway = GatewayProvider(
+  PokemonCollectionGateway.new,
+  useCases: [homeUseCaseProvider],
 );
 
-final lastLoginGatewayProvider = GatewayProvider<LastLoginDateGateway>(
-  (_) => LastLoginDateGateway(),
+final pokemonProfileGateway = GatewayProvider(
+  PokemonProfileGateway.new,
+  useCases: [profileUseCaseProvider],
 );
 
-final countryUseCaseProvider = UseCaseProvider<CountryEntity, CountryUseCase>(
-  (_) => CountryUseCase(),
+final pokemonSpeciesGateway = GatewayProvider(
+  PokemonSpeciesGateway.new,
+  useCases: [profileUseCaseProvider],
 );
 
-final countryGatewayProvider = GatewayProvider<CountryGateway>(
-  (_) => CountryGateway(),
+final pokemonExternalInterfaceProvider = ExternalInterfaceProvider(
+  PokemonExternalInterface.new,
+  gateways: [
+    pokemonCollectionGateway,
+    pokemonProfileGateway,
+    pokemonSpeciesGateway,
+  ],
 );
 
-final randomCatUseCaseProvider =
-    UseCaseProvider<RandomCatEntity, RandomCatUseCase>(
-  (_) => RandomCatUseCase(),
-);
-
-final randomCatGatewayProvider = GatewayProvider<RandomCatGateway>(
-  (_) => RandomCatGateway(),
-);
-
-final firebaseExternalInterface = ExternalInterfaceProvider(
-  (_) => FirebaseExternalInterface(
-    firebaseClient: FirebaseClientFake({'date': '2021-10-07'}),
-    gatewayConnections: [
-      () => lastLoginGatewayProvider.getGateway(providersContext),
-    ],
-  ),
-);
-
-final graphQLExternalInterface = ExternalInterfaceProvider(
-  (_) => GraphQLExternalInterface(
-    link: 'https://countries.trevorblades.com',
-    gatewayConnections: [
-      () => countryGatewayProvider.getGateway(providersContext),
-    ],
-  ),
-);
-
-final restExternalInterface = ExternalInterfaceProvider(
-  (_) => RestExternalInterface(
-    baseUrl: 'https://thatcopy.pw',
-    gatewayConnections: [
-      () => randomCatGatewayProvider.getGateway(providersContext),
-    ],
-  ),
-);
-
-void loadProviders() {
-  lastLoginUseCaseProvider.getUseCaseFromContext(providersContext);
-  lastLoginGatewayProvider.getGateway(providersContext);
-  firebaseExternalInterface.getExternalInterface(providersContext);
-  graphQLExternalInterface.getExternalInterface(providersContext);
-  restExternalInterface.getExternalInterface(providersContext);
+void initializeExternalInterfaces(ProviderContainer container) {
+  pokemonExternalInterfaceProvider.initializeFor(container);
 }

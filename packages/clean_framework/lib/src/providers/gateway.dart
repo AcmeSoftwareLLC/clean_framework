@@ -2,7 +2,6 @@ import 'package:clean_framework/clean_framework_providers.dart';
 import 'package:clean_framework/src/app_providers_container.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
@@ -90,49 +89,3 @@ abstract class WatcherGateway<
 
 typedef Transport<R extends Request, P extends SuccessResponse>
     = Future<Either<FailureResponse, P>> Function(R request);
-
-@immutable
-abstract class Request {
-  const Request();
-}
-
-@immutable
-abstract class Response extends Equatable {
-  const Response();
-  @override
-  bool get stringify => true;
-}
-
-class SuccessResponse extends Response {
-  const SuccessResponse();
-
-  @override
-  List<Object?> get props => [];
-}
-
-abstract class FailureResponse extends Response {
-  const FailureResponse({this.message = ''});
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class TypedFailureResponse<T extends Object> extends FailureResponse {
-  const TypedFailureResponse({
-    required this.type,
-    this.errorData = const {},
-    super.message,
-  });
-
-  final T type;
-  final Map<String, Object?> errorData;
-
-  @override
-  List<Object?> get props => [...super.props, type, errorData];
-}
-
-class UnknownFailureResponse extends FailureResponse {
-  UnknownFailureResponse([Object? error]) : super(message: error.toString());
-}

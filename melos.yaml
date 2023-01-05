@@ -1,6 +1,7 @@
 name: clean_framework
 
 packages:
+  - example
   - packages/**
 
 command:

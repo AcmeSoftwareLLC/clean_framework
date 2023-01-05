@@ -378,7 +378,7 @@ void main() {
       expect(find.text('Detail'), findsOneWidget);
       expect(find.text('More Detail'), findsNothing);
 
-      expect(testRouter.location, '/detail/');
+      expect(testRouter.location, '/detail');
     });
 
     testWidgets(

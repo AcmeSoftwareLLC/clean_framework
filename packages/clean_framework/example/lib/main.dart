@@ -1,49 +1,50 @@
-import 'dart:developer';
-
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/asset_feature_provider.dart';
-import 'package:clean_framework_example/demo_router.dart';
+import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example/routing/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  loadProviders();
+final container = ProviderContainer();
 
-  runApp(ExampleApp());
+void main() {
+  FlutterError.demangleStackTrace = (StackTrace stack) {
+    if (stack is stack_trace.Trace) return stack.vmTrace;
+    if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
+    return stack;
+  };
+  initializeExternalInterfaces(container);
+
+  runApp(const MyApp());
 }
 
-class ExampleApp extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return FeatureScope<AssetFeatureProvider>(
-      register: () => AssetFeatureProvider(),
-      loader: (featureProvider) async {
-        // To demonstrate the lazy update triggered by change in feature flags.
-        await Future<void>.delayed(Duration(seconds: 2));
-        await featureProvider.load('assets/flags.json');
-      },
-      onLoaded: () {
-        log('Feature Flags activated.');
-      },
-      child: AppProvidersContainer(
-        providersContext: providersContext,
-        child: AppRouterScope(
-          create: () => DemoRouter(),
-          builder: (context) {
-            return MaterialApp.router(
-              routerConfig: context.router.config,
-              theme: ThemeData(
-                pageTransitionsTheme: PageTransitionsTheme(
-                  builders: {
-                    TargetPlatform.android: ZoomPageTransitionsBuilder(),
-                  },
-                ),
+    return ProviderScope(
+      parent: container,
+      child: AppRouterScope(
+        create: PokeRouter.new,
+        builder: (context) {
+          return MaterialApp.router(
+            title: 'Clean Framework Example',
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData.from(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green,
+                brightness: Brightness.dark,
               ),
-            );
-          },
-        ),
+              useMaterial3: true,
+            ),
+            themeMode: ThemeMode.dark,
+            routerConfig: context.router.config,
+          );
+        },
       ),
     );
   }
