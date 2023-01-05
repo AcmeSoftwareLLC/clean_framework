@@ -44,10 +44,13 @@ class _SpotlightState extends State<Spotlight> {
             children: [
               Positioned(
                 top: 0,
-                height: width * 1.2,
+                height: width * 1.4,
                 width: width,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(48),
+                    ),
                     gradient: SweepGradient(
                       center: FractionalOffset.center,
                       colors: [
@@ -66,7 +69,10 @@ class _SpotlightState extends State<Spotlight> {
                       gradient: RadialGradient(
                         colors: [
                           for (var a = 0; a < 200; a++)
-                            Colors.black.withAlpha(a),
+                            Theme.of(context)
+                                .colorScheme
+                                .background
+                                .withAlpha(a),
                         ],
                         stops: [
                           for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop

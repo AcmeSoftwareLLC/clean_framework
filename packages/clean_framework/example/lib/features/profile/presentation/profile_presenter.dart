@@ -27,6 +27,8 @@ class ProfilePresenter
     return ProfileViewModel(
       pokemonTypes: output.types.map(PokemonType.new).toList(growable: false),
       description: output.description.replaceAll(RegExp(r'[\n\f]'), ' '),
+      height: '📏 ${output.height} m',
+      weight: '⚖️ ${output.weight} kg',
     );
   }
 }

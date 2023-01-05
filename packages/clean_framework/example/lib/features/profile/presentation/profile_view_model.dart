@@ -5,13 +5,17 @@ class ProfileViewModel extends ViewModel {
   ProfileViewModel({
     required this.pokemonTypes,
     required this.description,
+    required this.height,
+    required this.weight,
   });
 
   final List<PokemonType> pokemonTypes;
   final String description;
+  final String height;
+  final String weight;
 
   @override
-  List<Object?> get props => [pokemonTypes, description];
+  List<Object?> get props => [pokemonTypes, description, height, weight];
 }
 
 class PokemonType {
@@ -47,7 +51,7 @@ const _pokemonTypeColors = <String, Color>{
 
 const _pokemonTypeEmojis = <String, String>{
   'normal': '🔶',
-  'fire': '👊',
+  'fire': '🔥',
   'water': '💧',
   'electric': '⚡️',
   'grass': '🍃',

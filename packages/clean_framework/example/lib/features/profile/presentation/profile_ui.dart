@@ -33,7 +33,7 @@ class ProfileUI extends UI<ProfileViewModel> {
           return Card(
             margin: EdgeInsets.zero,
             elevation: 8,
-            color: Colors.black87,
+            color: Theme.of(context).colorScheme.surface.withAlpha(200),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(48),
             ),
@@ -51,11 +51,68 @@ class ProfileUI extends UI<ProfileViewModel> {
                     viewModel.description,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
+                  const SizedBox(height: 16),
+                  _BodyMeasurement(
+                    height: viewModel.height,
+                    weight: viewModel.weight,
+                  ),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _BodyMeasurement extends StatelessWidget {
+  const _BodyMeasurement({
+    required this.height,
+    required this.weight,
+  });
+
+  final String height;
+  final String weight;
+
+  @override
+  Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+    final titleStyle = themeData.textTheme.displaySmall!.copyWith(fontSize: 20);
+    final subtitleStyle = themeData.textTheme.bodySmall!.copyWith(
+      color: themeData.colorScheme.outline,
+    );
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Text(weight, style: titleStyle),
+                  const SizedBox(height: 4),
+                  Text('Weight', style: subtitleStyle),
+                ],
+              ),
+            ),
+            Container(
+              width: 1,
+              height: 32,
+              color: themeData.colorScheme.surfaceVariant,
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Text(height, style: titleStyle),
+                  const SizedBox(height: 4),
+                  Text('Height', style: subtitleStyle),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -69,6 +126,7 @@ class _PokeTypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
       shape: StadiumBorder(
         side: BorderSide(color: type.color),
       ),

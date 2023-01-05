@@ -25,8 +25,6 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 
         final randomIndex = Random().nextInt(descriptions.length);
 
-        print(descriptions.map((e) => e.text));
-
         return entity.copyWith(
           description: descriptions.elementAt(randomIndex).text,
         );
@@ -41,6 +39,8 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 
         return entity.copyWith(
           types: profile.types,
+          height: profile.height,
+          weight: profile.weight,
         );
       },
       onFailure: (failure) => entity,
@@ -55,6 +55,8 @@ class ProfileUIOutputTransformer
     return ProfileUIOutput(
       types: entity.types,
       description: entity.description,
+      height: entity.height / 10,
+      weight: entity.weight / 10,
     );
   }
 }
