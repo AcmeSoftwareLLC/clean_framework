@@ -32,7 +32,7 @@ class _SpotlightState extends State<Spotlight> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final size = MediaQuery.of(context).size;
 
     return FutureBuilder(
       future: _loadFileFromCache(),
@@ -44,15 +44,15 @@ class _SpotlightState extends State<Spotlight> {
             children: [
               Positioned(
                 top: 0,
-                height: width * 1.4,
-                width: width,
+                height: size.height,
+                width: size.width,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.vertical(
                       bottom: Radius.circular(48),
                     ),
                     gradient: SweepGradient(
-                      center: FractionalOffset.center,
+                      center: FractionalOffset(0.9, 0.5),
                       colors: [
                         _getColor((p) => p.dominantColor),
                         _getColor((p) => p.vibrantColor),
@@ -67,6 +67,7 @@ class _SpotlightState extends State<Spotlight> {
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: RadialGradient(
+                        center: FractionalOffset(0.5, 0.3),
                         colors: [
                           for (var a = 0; a < 200; a++)
                             Theme.of(context)
@@ -85,13 +86,13 @@ class _SpotlightState extends State<Spotlight> {
                 ),
               ),
               Positioned.fill(
-                top: width / 1.5,
+                top: size.width / 1.5,
                 child: widget.builder(context),
               ),
               Positioned(
                 top: 0,
-                height: width * 1.2,
-                width: width,
+                height: size.width * 1.2,
+                width: size.width,
                 child: Padding(
                   padding: const EdgeInsets.all(32),
                   child: Center(

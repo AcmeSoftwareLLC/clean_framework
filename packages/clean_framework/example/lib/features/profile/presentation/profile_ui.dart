@@ -32,13 +32,13 @@ class ProfileUI extends UI<ProfileViewModel> {
 
           return Card(
             margin: EdgeInsets.zero,
-            elevation: 8,
-            color: Theme.of(context).colorScheme.surface.withAlpha(200),
+            elevation: 4,
+            color: Theme.of(context).colorScheme.surface.withAlpha(120),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(48),
             ),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 88, 16, 16),
+              padding: const EdgeInsets.fromLTRB(24, 88, 24, 16),
               child: Column(
                 children: [
                   Wrap(
@@ -84,6 +84,7 @@ class _BodyMeasurement extends StatelessWidget {
     );
 
     return Card(
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
