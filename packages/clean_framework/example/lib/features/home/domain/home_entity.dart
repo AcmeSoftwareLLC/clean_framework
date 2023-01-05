@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
 enum HomeStatus { initial, loading, loaded, failed }
 
@@ -34,14 +35,4 @@ class HomeEntity extends Entity {
       isRefresh: isRefresh ?? this.isRefresh,
     );
   }
-}
-
-class PokemonModel {
-  PokemonModel({
-    required this.name,
-    required this.imageUrl,
-  });
-
-  final String name;
-  final String imageUrl;
 }

@@ -2,6 +2,7 @@ import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
+import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
 const _spritesBaseUrl =
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites';
