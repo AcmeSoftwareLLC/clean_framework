@@ -11,7 +11,7 @@ class ProfileUI extends UI<ProfileViewModel> {
 
   @override
   ProfilePresenter create(PresenterBuilder<ProfileViewModel> builder) {
-    return ProfilePresenter(builder: builder);
+    return ProfilePresenter(builder: builder, name: pokemonName);
   }
 
   @override
