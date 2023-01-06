@@ -1,5 +1,4 @@
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/random_cat/domain/random_cat_entity.dart';
 import 'package:example/providers.dart';
 import 'package:clean_framework_rest/clean_framework_rest.dart';

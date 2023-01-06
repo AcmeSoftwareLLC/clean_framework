@@ -1,6 +1,7 @@
 // coverage:ignore-file
 
-import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework/clean_framework_legacy.dart'
+    hide Request, Response;
 import 'package:gql/language.dart';
 import 'package:graphql/client.dart';
 

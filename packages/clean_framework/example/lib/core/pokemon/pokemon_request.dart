@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 
 abstract class PokemonRequest extends Request {
   Map<String, dynamic> get queryParams => {};

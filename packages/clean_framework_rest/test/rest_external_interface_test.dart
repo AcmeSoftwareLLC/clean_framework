@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_rest/clean_framework_rest.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
 enum HomeStatus { initial, loading, loaded, failed }

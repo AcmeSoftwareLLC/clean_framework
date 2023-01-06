@@ -2,7 +2,8 @@
 
 import 'dart:convert';
 
-import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework/clean_framework_legacy.dart'
+    hide Request, Response;
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 

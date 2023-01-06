@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef UseCaseSubscription = Future<Either<FailureInput, SuccessInput>>

@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_graphql/src/graphql_error_policy.dart';
 import 'package:clean_framework_graphql/src/graphql_fetch_policy.dart';
 

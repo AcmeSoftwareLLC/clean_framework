@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 
 import 'package:clean_framework_rest/src/rest_requests.dart';
 import 'package:clean_framework_rest/src/rest_responses.dart';

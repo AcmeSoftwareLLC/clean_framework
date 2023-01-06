@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
