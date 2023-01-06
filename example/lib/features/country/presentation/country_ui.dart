@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/country/domain/country_view_model.dart';
 import 'package:example/features/country/presentation/country_presenter.dart';
 import 'package:example/routes.dart';

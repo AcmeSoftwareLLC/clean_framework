@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

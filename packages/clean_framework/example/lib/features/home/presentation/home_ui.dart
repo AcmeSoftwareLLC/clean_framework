@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example/routing/routes.dart';

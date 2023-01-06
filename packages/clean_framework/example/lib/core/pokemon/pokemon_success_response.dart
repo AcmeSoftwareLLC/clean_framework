@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 
 class PokemonSuccessResponse extends SuccessResponse {
   PokemonSuccessResponse({required this.data});

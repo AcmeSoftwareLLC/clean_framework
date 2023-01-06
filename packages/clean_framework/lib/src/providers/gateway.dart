@@ -1,7 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
-import 'package:clean_framework/src/utilities/either.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,

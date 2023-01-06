@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'last_login_entity.dart';
 
 class LastLoginUseCase extends UseCase<LastLoginEntity> {

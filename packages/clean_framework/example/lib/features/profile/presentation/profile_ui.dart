@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
@@ -49,9 +49,12 @@ class ProfileUI extends UI<ProfileViewModel> {
                       children: pokeTypes.map(_PokeTypeChip.new).toList(),
                     ),
                     const SizedBox(height: 24),
-                    Text(
-                      viewModel.description,
-                      style: Theme.of(context).textTheme.bodySmall,
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 300),
+                      child: Text(
+                        viewModel.description,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     _BodyMeasurement(

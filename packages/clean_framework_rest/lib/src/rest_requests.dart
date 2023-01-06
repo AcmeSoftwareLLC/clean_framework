@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_rest/src/rest_method.dart';
 import 'package:meta/meta.dart';
 
