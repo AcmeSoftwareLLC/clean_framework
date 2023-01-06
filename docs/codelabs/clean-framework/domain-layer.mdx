@@ -1,9 +1,10 @@
-# The Domain Layer: Entity, Use Case and the interactions with Outputs and Inputs
-Congratulations, at this point we are ready to start exploring the Domain Layer, the heart of anything important for the project.
+# The Domain Layer
+## Entity, Use Case and the interactions with Outputs and Inputs
+Let's start by exploring the Domain Layer, the heart of anything important for the project.
 <Image src="/assets/domain_layer.png" caption="Domain Layers"/>
 ### Entity
 
-Let's start by understanding the Entities. If you are familiar with Domain Driven Design (DDD), you already know how important are the Domain components to an app. When the design is robust, there is a zero chance that the state of the app failes due to validation or null errors. Domain models have strict rules so it is very hard to create instances with inconsistent states.
+Let's begin with the Entities. If you are familiar with Domain Driven Design (DDD), you already know how important are the Domain components to an app. When the design is robust, there is a zero chance that the state of the app failes due to validation or null errors. Domain models have strict rules so it is very hard to create instances with inconsistent states.
 
 The sum of all your Entities is the state of the whole feature. This state will be kept alive as long as its Use Case exists. Since we create it when the app is executed (using a provider), this reference is alive until the app is removed from memory.
 
@@ -11,32 +12,33 @@ So it is important to understand that this state needs initial values and rules 
 
 1. Entities don't depend on other files or libraries except for the clean framework import. This is the most central layer, so it should not need anything, not even from other features. Shared enums are even problematic, since feature requirements could change, forcing you to refactor the affected features. 
 
-1. Attributes should be final and have initial values on construction. Some of them could be required values, inserted at the time the UseCase is created as well (explained in the following section).
+2. Attributes should be final and have initial values on construction. Some of them could be required values, inserted at the time the UseCase is created as well (explained in the following section).
 
-1. Use proper data types instead of relaying on parsers. For example, use DateTime instead of a String for a date attribute. You can parse the date in Presenters and Gateways.
+3. Use proper data types instead of relaying on parsers. For example, use DateTime instead of a String for a date attribute. You can parse the date in Presenters and Gateways.
 
-1. It is OK to create a hierarchy of entities, but keep a single ancestor that the Use Case can create easily. Composition is much better than inheritance. Functional constructs like Either and Unions are useful here as well.
+4. It is OK to create a hierarchy of entities, but keep a single ancestor that the Use Case can create easily. Composition is much better than inheritance. Functional constructs like Either and Unions are useful here as well.
 
-1. Add generators like **copyWith** to create instances based on current values. This simplifies the Use Case code.
+5. Add generators like **copyWith** to create instances based on current values. This simplifies the Use Case code.
 
 It is OK to add methods to validate the consistency of the data. For example:
 
 ```dart
 
-class AccountEntity extends Entity{
-  AccountEntity({required this.isRegistered, this.userName});
+class AccountEntity extends Entity {
+  AccountEntity({this.isRegistered = false, this.userName});
 
   final bool isRegistered;
-  final UserNameEntity userName;
+  final UserNameEntity? userName;
 }
 
 class UserNameEntity extends Entity{
-  UserNameEntity({required this.firstName, this.lastName}) : assert(firstName.isNotEmpty() && lastName.isNotEmpty);
+  UserNameEntity({required this.firstName, required this.lastName})
+    : assert(firstName.isNotEmpty && lastName.isNotEmpty);
 
   final String firstName;
   final String lastName;
 
-  String get fullName => firstName + ' ' + lastName;
+  String get fullName => '$firstName $lastName';
 }
 ```
 
@@ -118,7 +120,7 @@ But to create outputs on demand and wait for some kind of response from the outs
 ```dart
   void fetchUserData(){
     await request(
-      FetchUserDataOutput(),
+      FetchUserDataGatewayOutput(),
       onSuccess: (UserDataInput input) {
         return entity.copyWith(name: input.name);
       },
@@ -129,7 +131,7 @@ But to create outputs on demand and wait for some kind of response from the outs
   }
 ```
 
-The request method creates a Future where the instance of **FetchUserDataOuput** is published. If no one is listening to this specific type of output, an error is thrown. During development you might attach dummy Gateways to help you complete the Use Case behavior without the need to write any outside code.
+The request method creates a Future where the instance of **FetchUserDataGatewayOutput** is published. If no one is listening to this specific type of output, an error is thrown. During development you might attach dummy Gateways to help you complete the Use Case behavior without the need to write any outside code.
 
 The request has two callbacks, for success and failures respectively.
 
@@ -158,97 +160,189 @@ When Gateways and Presenters need to send Inputs to the Use Case, both can use t
 Gateways do this for you internally, but Presenters are free to use this method at anytime instead of calling a specific method on the UseCase.
 
 <aside class="positive">
-Inputs are better than calling methods since you don't require any knowledge on the Use Case implemetation, as we demonstrated on the previous section. If the feature is very simple, you can opt to use methods directly to have less code overall.
+Inputs are better than calling methods since you don't require any knowledge on the Use Case implementation, as we demonstrated on the previous section. If the feature is very simple, you can opt to use methods directly to have less code overall.
 </aside>
 
-### Testing and Coding Use Cases
 
-Now we are ready to continue the feature implementation we started on the previous section. Let's start with the test for the third Gherkin scenario:
+### Codelab
+To better understand the flow and project structure, we'll create an application that will fetch data from a service and display it on a screen.
 
-#### test/features/add_machine/presentation/add_machine_ui_test.dart
+For this example, we will use the [PokéAPI](https://pokeapi.co/).
+
+<Image src="/assets/pokemon-app.png" caption="Pokemon App" width="300"/>
+
+### Coding Use Cases
+
+We will start by entity. Create a new directory called `features` inside the `lib` directory.
+Inside the `features` directory, create a new directory called `home` and then `domain` inside it,
+create a new file called `home_entity.dart`.
+
+#### lib/features/home/domain/home_entity.dart
 ```dart
-  /// Given I have entered a number on the Add Machine feature
-  /// When I write another number and press "Add"
-  /// Then the total shown will be the sum of both numbers.
-  uiTest(
-    'AddMachineUI unit test - Scenario 3',
-    context: ProvidersContext(),
-    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
-    verify: (tester) async {
-      final numberField = find.byKey(Key('NumberField'));
-      expect(numberField, findsOneWidget);
+import 'package:clean_framework/clean_framework.dart';
 
-      await tester.enterText(numberField, '15');
+enum HomeStatus { initial, loading, loaded, failed }
 
-      final addButton = find.byKey(Key('AddButton'));
-      expect(addButton, findsOneWidget);
+class HomeEntity extends Entity {
+  HomeEntity({
+    this.pokemons = const [],
+    this.pokemonNameQuery = '',
+    this.status = HomeStatus.initial,
+    this.isRefresh = false,
+  });
 
-      await tester.tap(addButton);
-      await tester.pumpAndSettle();
-
-      final sumTotalWidget = find.byKey(Key('SumTotalWidget'));
-      expect(sumTotalWidget, findsOneWidget);
-
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('15')), findsOneWidget);
-
-      await tester.enterText(numberField, '7');
-      await tester.tap(addButton);
-      await tester.pumpAndSettle();
-
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('22')), findsOneWidget);
-    },
-  );
-
-  // Replace the provider with these lines:
-  final addMachineUseCaseProvider = UseCaseProvider(
-    (_) => StaticUseCase([
-      AddMachineUIOutput(total: 0),
-      AddMachineUIOutput(total: 15),
-      AddMachineUIOutput(total: 22),
-    ]),
-  );
-```
-
-This is basically a copy/paste of the previous test, the only needed change is the use case fake now returning an additional output.
-
-Once we have this test coded and passing, its time for some major refactoring on all three tests, since now we want to use a production-worthy use case. Let's add the new Entity and Use Case into their corresponding place inside the domain folder:
-
-#### lib/features/add_machine/domain/add_machine_add_entity.dart
-```dart
-class AddMachineEntity extends Entity {
-  AddMachineEntity(this.total);
-
-  final int total;
+  final List<PokemonData> pokemons;
+  final String pokemonNameQuery;
+  final HomeStatus status;
+  final bool isRefresh;
 
   @override
-  List<Object?> get props => [total];
+  List<Object?> get props {
+    return [pokemons, pokemonNameQuery, status, isRefresh];
+  }
+
+  @override
+  HomeEntity copyWith({
+    List<PokemonData>? pokemons,
+    String? pokemonNameQuery,
+    HomeStatus? status,
+    bool? isRefresh,
+  }) {
+    return HomeEntity(
+      pokemons: pokemons ?? this.pokemons,
+      pokemonNameQuery: pokemonNameQuery ?? this.pokemonNameQuery,
+      status: status ?? this.status,
+      isRefresh: isRefresh ?? this.isRefresh,
+    );
+  }
+}
+
+class PokemonData extends Entity {
+  PokemonData({
+    required this.name,
+    required this.imageUrl,
+  });
+
+  final String name;
+  final String imageUrl;
+
+  @override
+  List<Object?> get props => [name, imageUrl];
 }
 ```
 
-#### lib/features/add_machine/domain/add_machine_use_case.dart
+The next step will be to create the Use Case.
+Create a new file called `home_use_case.dart` inside the `domain` directory.
+
+#### lib/features/home/domain/home_use_case.dart
 ```dart
-class AddMachineUseCase extends UseCase<AddMachineEntity> {
-  AddMachineUseCase()
+import 'package:clean_framework/clean_framework.dart';
+
+import 'home_entity.dart';
+
+class HomeUseCase extends UseCase<HomeEntity> {
+  HomeUseCase() : super(entity: HomeEntity());
+
+  Future<void> fetchPokemons({bool isRefresh = false}) async {
+    if (!isRefresh) {
+      entity = entity.copyWith(status: HomeStatus.loading);
+    }
+
+    // TODO: Make a request to fetch the pokemons
+
+    if (isRefresh) {
+      entity = entity.copyWith(isRefresh: false, status: HomeStatus.loaded);
+    }
+  }
+}
+```
+
+After creating the Use Case, we need to create an UI Output.
+This will be used by the Presenter later to display the data on the screen.
+Create a new file called `home_ui_output.dart` inside the `domain` directory.
+
+#### lib/features/home/domain/home_ui_output.dart
+```dart
+import 'package:clean_framework/clean_framework.dart';
+
+import 'home_entity.dart';
+
+class HomeUIOutput extends Output {
+  HomeUIOutput({
+    required this.pokemons,
+    required this.status,
+    required this.isRefresh,
+  });
+
+  final List<PokemonData> pokemons;
+  final HomeStatus status;
+  final bool isRefresh;
+
+  @override
+  List<Object?> get props => [pokemons, status, isRefresh];
+}
+```
+
+Now we need to create an output transformer so that the raw data in Use Case(i.e. Entity)
+can be transformed into UI Output.
+Create the following class in the Use Case.
+
+```dart
+class HomeUIOutputTransformer
+    extends OutputTransformer<HomeEntity, HomeUIOutput> {
+  @override
+  HomeUIOutput transform(HomeEntity entity) {
+    final filteredPokemons = entity.pokemons.where(
+      (pokemon) {
+        final pokeName = pokemon.name.toLowerCase();
+        return pokeName.contains(entity.pokemonNameQuery.toLowerCase());
+      },
+    );
+
+    return HomeUIOutput(
+      pokemons: filteredPokemons.toList(growable: false),
+      status: entity.status,
+      isRefresh: entity.isRefresh,
+    );
+  }
+}
+```
+
+And since we need to take search input from the UI as well to filter the pokemons,
+we need to create an input & input transformer as well.
+Add the following classes to the file.
+
+```dart
+class PokemonSearchInput extends Input {
+  PokemonSearchInput({required this.name});
+
+  final String name;
+}
+
+class PokemonSearchInputTransformer
+    extends InputTransformer<HomeEntity, PokemonSearchInput> {
+  @override
+  HomeEntity transform(HomeEntity entity, PokemonSearchInput input) {
+    return entity.copyWith(pokemonNameQuery: input.name);
+  }
+}
+```
+
+Finally these transformers need to be added to the Use Case.
+
+```dart
+class HomeUseCase extends UseCase<HomeEntity> {
+  HomeUseCase()
       : super(
-          entity: AddMachineEntity(0),
+          entity: HomeEntity(),
           transformers: [
-            OutputTransformer.from(
-              (entity) => AddMachineUIOutput(total: entity.total),
-            ),
-            InputTransformer<AddMachineEntity, AddMachineAddNumberInput>.from(
-              (entity, input) => AddMachineEntity(entity.total + input.number),
-            ),
+            HomeUIOutputTransformer(),
+            PokemonSearchInputTransformer(),
           ],
         );
+
+  ...
 }
 ```
-
-#### test/features/add_machine/presentation/add_machine_ui_test.dart
-```dart
-// rest of code above, this is the only change:
-final addMachineUseCaseProvider = UseCaseProvider((_) => AddMachineUseCase());
-```
-
-After these changes, all 3 tests pass as normal, very easy refactor, right?
 
 Congratulations if you made it until this point, on the next section we will plug-in a Gateway,

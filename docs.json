@@ -9,8 +9,8 @@
     ["Basics",[
         ["Overview","/codelabs/clean-framework/intro"],
         ["Project Structure","/codelabs/clean-framework/project-structure"],
-        ["UI Layer","/codelabs/clean-framework/ui-layer"],
         ["Domain Layer","/codelabs/clean-framework/domain-layer"],
+        ["UI Layer","/codelabs/clean-framework/ui-layer"],
         ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
         ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
       ]
