@@ -7,6 +7,7 @@
   "sidebar": [
     ["Installation", "/"],
     ["Basics",[
+        ["Migrating to v2", "/codelabs/clean-framework/migration-guide"],
         ["Overview","/codelabs/clean-framework/intro"],
         ["Project Structure","/codelabs/clean-framework/project-structure"],
         ["UI Layer","/codelabs/clean-framework/ui-layer"],
