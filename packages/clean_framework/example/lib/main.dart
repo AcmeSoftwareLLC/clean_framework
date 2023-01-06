@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/routing/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';

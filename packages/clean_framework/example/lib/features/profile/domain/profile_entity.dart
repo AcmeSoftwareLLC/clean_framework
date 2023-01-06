@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/profile/models/pokemon_profile_model.dart';
 
 class ProfileEntity extends Entity {

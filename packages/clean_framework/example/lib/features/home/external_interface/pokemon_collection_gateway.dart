@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_core.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
 

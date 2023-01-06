@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 
 class RestSuccessResponse<T extends Object> extends SuccessResponse {
   const RestSuccessResponse({required this.data});

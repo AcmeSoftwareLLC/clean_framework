@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_core.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:flutter/material.dart';
 

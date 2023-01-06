@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/last_login/presentation/last_login_presenter.dart';
 import 'package:flutter/material.dart';
 

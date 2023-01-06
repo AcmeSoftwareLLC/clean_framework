@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';

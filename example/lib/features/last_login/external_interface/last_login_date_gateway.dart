@@ -1,5 +1,4 @@
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/last_login/domain/last_login_use_case.dart';
 import 'package:example/providers.dart';
 import 'package:clean_framework_firestore/clean_framework_firestore.dart';

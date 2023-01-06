@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:equatable/equatable.dart';
 
 class CountryInput extends Input with EquatableMixin {
