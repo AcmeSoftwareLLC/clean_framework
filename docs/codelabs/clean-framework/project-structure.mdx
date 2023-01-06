@@ -1,18 +1,3 @@
-# Setup
-To start using the Clean Framework components, you need to add the library on the pubspec.yaml of the project.
-Use the latest version available.
-
-### Adding `clean_framework` package as a dependency
-
-The project depends on the `clean_framework package`.
-
-In the `pubspec.yaml`, add the following to `dependencies` section:
-![clean_framework](https://img.shields.io/pub/v/clean_framework?label=%20clean_framework%3A%20&style=flat-square)
-
-Or _you can just add the package directly using the following command:_
-```
-flutter pub add clean_framework
-```
 ### Project Structure
 
 We suggest you organize your app into Features, with the assumption that features don't depend on each other.
@@ -22,20 +7,20 @@ Each feature could be organized in this way:
 
 ```
 lib
-    providers_loader.dart
+    providers.dart
     features
         feature
             domain
-                feature_usecase.dart
                 feature_entity.dart
-                feature_outputs.dart
-                feature_inputs.dart
-            presentation
-                feature_presenter.dart
-                feature_view_model.dart
-                feature_ui.dart
+                feature_ui_output.dart
+                feature_use_case.dart
+                feature_input.dart
             external_interface
                 feature_gateway.dart
+            presentation
+                feature_presenter.dart
+                feature_ui.dart
+                feature_view_model.dart
 ```
 
 Notice that the name of the feature is a prefix for all the files inside.
@@ -59,21 +44,17 @@ so probably splitting the providers by feature could work better.
 This is an example on how this file can be coded:
 
 ```dart
-final myNewFeatureUseCaseProvider = UseCaseProvider<MyNewFeatureEntity, MyNewFeatureUseCase>(
-  (_) => LastLoginUseCase(),
+final featureUseCaseProvider = UseCaseProvider(FeatureUseCase.new);
+
+final featureGatewayProvider = GatewayProvider(
+  FeatureGateway.new
+  useCases: [featureUseCaseProvider],
 );
 
-final myNewFeatureGatewayProvider = GatewayProvider<MyNewFeatureGateway>(
-  (_) => MyNewFeatureGateway(),
+final graphQLExternalInterfaceProvider = ExternalInterfaceProvider(
+  GraphQLExternalInterface.new
+  gateways: [featureGatewayProvider],
 );
-
-void loadProviders() {
-  myNewFeatureUseCaseProvider.getUseCaseFromContext(providersContext);
-
-  myNewFeatureGatewayProvider.getGateway(providersContext);
-
-  restExternalInterface.getExternalInterface(providersContext);
-}
 ```
 
 Clean Framework uses **Riverpod** for the Providers behavior,
@@ -83,18 +64,20 @@ specially coming from a strict OO formation. Justifying why this is useful and d
 please refer to the [Riverpod documentation](https://riverpod.dev/docs/concepts/providers),
 since the creator already did a great job explaining this approach.
 
-Providers create instances lazyly, but some of the listeners need to be connected before use cases make any request.
-That is why we use a global function to "touch" all gateway and external interfaces providers to ensure they are created when the app starts.
+Providers create instances lazily, but some of the listeners need to be connected before use cases make any request.
+That is why we need to "touch" all gateway and external interfaces providers to ensure they are created when the app starts.
 
-The last consideration is to remember to use the function on the main function:
+Adding external interface providers to the `externalInterfaceProviders` in **AppProviderScope**
+will ensure that all external interfaces are created.
 
 ```dart
 void main() {
-  loadProviders();
-  runApp(MyApp());
+  runApp(
+    AppProviderScope(
+      externalInterfaceProviders: [
+        graphQLExternalInterfaceProvider,
+      ],
+    ),
+  );
 }
 ```
-<aside class="positive">
-While working on this codelab, it won't be necessary to have this file from the beginning,
-you will see a box like this one to let you know when it will be needed.
-</aside>

@@ -1,19 +1,20 @@
 {
-  "name": "Clean Framework Codelabs",
+  "name": "Clean Framework",
   "theme": "#0984E3",
   "logo":"/assets/icon_logomark.png",
   "logoDark":"/assets/icon_logomark_dark.png",
   "favicon":"/assets/icon_logomark.png",
   "sidebar": [
     ["Installation", "/"],
-    ["Clean Framework Layers",[
-      ["Introduction","/codelabs/clean-framework/intro"],
-      ["Setup","/codelabs/clean-framework/setup"],
-      ["UI Layer","/codelabs/clean-framework/ui-layer"],
-      ["Domain Layer","/codelabs/clean-framework/domain-layer"],
-      ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
-      ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
-      ]
+    ["Basics",[
+        ["Migrating to v2", "/codelabs/clean-framework/migration-guide"],
+        ["Overview","/codelabs/clean-framework/intro"],
+        ["Project Structure","/codelabs/clean-framework/project-structure"],
+        ["UI Layer","/codelabs/clean-framework/ui-layer"],
+        ["Domain Layer","/codelabs/clean-framework/domain-layer"],
+        ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"],
+        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"]
+    ]
     ],
     ["Feature Flags",
       [

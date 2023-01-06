@@ -22,8 +22,9 @@ abstract class UI<V extends ViewModel> extends StatefulWidget {
 class _UIState<V extends ViewModel> extends State<UI<V>> {
   @override
   Widget build(BuildContext context) {
-    return widget._create!
-        .call((viewModel) => widget.build(context, viewModel));
+    return widget._create!.call(
+      (viewModel) => widget.build(context, viewModel),
+    );
   }
 }
 
