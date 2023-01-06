@@ -166,9 +166,7 @@ Inputs are better than calling methods since you don't require any knowledge on 
 
 ### Coding Use Cases
 
-We will start by entity. Create a new directory called `features` inside the `lib` directory.
-Inside the `features` directory, create a new directory called `home` and then `domain` inside it,
-create a new file called `home_entity.dart`.
+We will start implementing the Use Case now.
 
 #### lib/features/home/domain/home_entity.dart
 ```dart
@@ -281,8 +279,7 @@ can be transformed into UI Output.
 Create the following class in the Use Case.
 
 ```dart
-class HomeUIOutputTransformer
-    extends OutputTransformer<HomeEntity, HomeUIOutput> {
+class HomeUIOutputTransformer extends OutputTransformer<HomeEntity, HomeUIOutput> {
   @override
   HomeUIOutput transform(HomeEntity entity) {
     final filteredPokemons = entity.pokemons.where(
@@ -312,8 +309,7 @@ class PokemonSearchInput extends Input {
   final String name;
 }
 
-class PokemonSearchInputTransformer
-    extends InputTransformer<HomeEntity, PokemonSearchInput> {
+class PokemonSearchInputTransformer extends InputTransformer<HomeEntity, PokemonSearchInput> {
   @override
   HomeEntity transform(HomeEntity entity, PokemonSearchInput input) {
     return entity.copyWith(pokemonNameQuery: input.name);
@@ -339,4 +335,4 @@ class HomeUseCase extends UseCase<HomeEntity> {
 ```
 
 Congratulations if you made it until this point,
-on the next section we will connect the UI layer to the Use Case.
+on the next section we will plug-in gateway to the domain.
