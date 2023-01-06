@@ -1,7 +1,10 @@
 # Adapter Layer: Gateways
 We already learned part of this layer components with the Presenter and View Model.
-The only thing left to learn here are the Gateways, which handle Outputs used as requests,
-and create Inputs to be processed by the Use Case.
+
+The Gateway is the last piece of the puzzle.
+It is the one that connects the Use Case to the External Interface.
+It is the one that translates the Output into a Request, and the Response into an Input, for Use Case.
+
 <Image src="/assets/adapter_layer.png" caption="Adaptive Layer"/>
 
 Let's look at a simple example first:
@@ -54,157 +57,197 @@ For WatcherGateways, the **onFailure** method happens when the subscription coul
 
 ### Coding the Gateway
 
-Let's go back to the code of the Add Machine app we used on the previous section. The only scenario we have to code is the one that confirms the number is reset everytime you open the app.
+Now let's create a Gateway that takes output from the previously created `HomeUseCase`
+and creates appropriate input from the data received from `PokemonExternalInterface`.
 
-Creating a test for that is trivial, since we can either add an integration test that does the steps, or create a setup idential to a state where the app has closed the feature.
-
-But none of this will require us to write a Gateway or External Interface, so we will need to modify the requirements. Let's assume that the stakeholders found it was more helpful if we retrieved the previous calculated total each time with opened the feature.
-
-This change will require that the apps "remembers" the last total in some way, which will easily require an External Interface. We don't have to decide right now how we are going to store the number. It is more important to finish the implementation the simplest way possible, which is to keep the number in memory inside the External Interface.
-
-Right now we will only care about our Gateway, and how the Use Case will talk to it. So before we jump into the code, lets code the test that needs to pass:
-
-#### test/features/add_machine/presentation/add_machine_ui_test.dart
+#### lib/features/home/external_interface/pokemon_collection_gateway.dart
 ```dart
-  /// Given I have added one or more numbers on the Add Machine feature
-  /// When I navigate away and open the feature again
-  /// Then the total shown is the previous total that was shown.
-
-uiTest(
-    'AddMachineUI unit test - Scenario 4',
-    context: context,
-    builder: () => AddMachineUI(provider: addMachineUseCaseProvider),
-    setup: () {
-      final gateway = AddMachineGetTotalGateway(context: context, provider: addMachineUseCaseProvider);
-      gateway.transport = (request) async => Right(AddMachineGetTotalResponse(740));
-
-      final gatewayProvider = GatewayProvider((_) => gateway);
-      gatewayProvider.getGateway(context);
-    },
-    verify: (tester) async {
-      expect(find.descendant(of: sumTotalWidget, matching: find.text('740')), findsOneWidget);
-    },
-  );
-
-//...
-final context = ProvidersContext();
-final addMachineUseCaseProvider = UseCaseProvider((_) => AddMachineUseCase());
-
-```
-
-This time we use another type of helper, **ProviderTester** is a bit more flexible, since it can be used to test components that are not UI objects, while still providing a providers context.
-
-Here we are assuming we will have a Home widget that loads our feature UI, and shows us the total. We have to make the app now show that number instead of a 0. This number will be created by the Gateway for now, later we will move it to the External Interface.
-
-<aside class="positive">
-When adding gateways on tests, we can directly "connect" the transport method so we can insert whatever response we need for the test.
-</aside>
-
-Now, lets jump into the Gateway code:
-
-#### lib/features/add_machine/external_interface/add_machine_get_total_gateway.dart
-```dart
-class AddMachineGetTotalGateway extends Gateway<
-    AddMachineGetTotalOutput,
-    AddMachineGetTotalRequest,
-    AddMachineGetTotalResponse,
-    AddMachineGetTotalInput> {
-  AddMachineGetTotalGateway({
-    ProvidersContext? context,
-    UseCaseProvider? provider,
-    UseCase? useCase,
-  }) : super(context: context, provider: provider, useCase: useCase);
-
+class PokemonCollectionGateway extends Gateway<PokemonCollectionGatewayOutput, PokemonCollectionRequest, PokemonSuccessResponse, PokemonCollectionSuccessInput> {
   @override
-  buildRequest(AddMachineGetTotalOutput output) {
-    return AddMachineGetTotalRequest();
+  PokemonCollectionRequest buildRequest(PokemonCollectionGatewayOutput output) {
+    return PokemonCollectionRequest();
   }
 
   @override
-  FailureInput onFailure(covariant FailureResponse failureResponse) {
-    throw UnimplementedError();
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
   }
 
   @override
-  onSuccess(AddMachineGetTotalResponse response) {
-    return AddMachineGetTotalInput(response.number);
+  PokemonCollectionSuccessInput onSuccess(PokemonSuccessResponse response) {
+    final deserializer = Deserializer(response.data);
+
+    return PokemonCollectionSuccessInput(
+      pokemonIdentities: deserializer.getList(
+        'results',
+        converter: PokemonIdentity.fromJson,
+      ),
+    );
   }
 }
 
-class AddMachineGetTotalRequest extends Request {}
-
-class AddMachineGetTotalResponse extends SuccessResponse {
-  final int number;
-
-  AddMachineGetTotalResponse(this.number);
+class PokemonCollectionGatewayOutput extends Output {
+  @override
+  List<Object?> get props => [];
 }
-```
 
-As we learned previously, our Gateway will be associated only with a **AddMachineGetTotalOutput**, which will get translated into a **AddMachineGetTotalRequest** object. The output doesn't send any extra data, so our Request is also empty.
+class PokemonCollectionSuccessInput extends SuccessInput {
+  PokemonCollectionSuccessInput({required this.pokemonIdentities});
 
-The **AddMachineGetTotalResponse** will hold the preserved number that we retrieve on the External Interface, so the Gateway needs to get it on a successful response and produce a valid **AddMachineGetTotalInput** that the Use Case can process.
+  final List<PokemonIdentity> pokemonIdentities;
+}
 
-And with this code, the only thing we need to do is make the UseCase do a request to actually retrieve the number:
+final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
 
-#### lib/features/add_machine/domain/add_machine_use_case.dart
-```dart
-class AddMachineUseCase extends UseCase<AddMachineEntity> {
-  AddMachineUseCase()
-      : super(
-          entity: AddMachineEntity(0),
-          transformers: [
-            OutputTransformer.from(
-              (entity) => AddMachineUIOutput(total: entity.total),
-            ),
-            InputTransformer<AddMachineEntity, AddMachineAddNumberInput>.from(
-              (entity, input) => AddMachineEntity(entity.total + input.number),
-            ),
-          ],
-        ) {
-    onCreate();
-  }
+class PokemonCollectionRequest extends GetPokemonRequest {
+  @override
+  String get resource => 'pokemon';
 
-  void onCreate() {
-    request(
-      AddMachineGetTotalOutput(),
-      onSuccess: (input) {
-        return AddMachineEntity(input.number);
-      },
-      onFailure: (_) => entity,
+  @override
+  Map<String, dynamic> get queryParams => {'limit': 1000};
+}
+
+class PokemonIdentity {
+  PokemonIdentity({required this.name, required this.id});
+
+  final String name;
+  final String id;
+
+  factory PokemonIdentity.fromJson(Map<String, dynamic> json) {
+    final deserializer = Deserializer(json);
+
+    final match = _pokemonResUrlRegex.firstMatch(deserializer.getString('url'));
+
+    return PokemonIdentity(
+      name: deserializer.getString('name'),
+      id: match?.group(1) ?? '0',
     );
   }
 }
 ```
 
-Here we are adding a way to trigger a request. This **onCreate** method will be used by the Presenter once the UI is built, as follows:
+Now that we have all the necessary pieces, we can now attach them to each other.
+This is done through providers. Let's get back to where we create our first provider
+i.e. `lib/providers.dart` and add two more providers as below.
 
-#### lib/features/add_machine/presentation/add_machine_presenter.dart
+### lib/providers.dart
 ```dart
-class AddMachinePresenter extends Presenter<AddMachineViewModel,
-    AddMachineUIOutput, AddMachineUseCase> {
-  AddMachinePresenter({
-    required super.provider,
+final pokemonCollectionGateway = GatewayProvider(
+  PokemonCollectionGateway.new,
+  useCases: [
+    homeUseCaseProvider,
+  ],
+);
+
+final pokemonExternalInterfaceProvider = ExternalInterfaceProvider(
+  PokemonExternalInterface.new,
+  gateways: [
+    pokemonCollectionGateway,
+  ],
+);
+```
+
+Note: Here we are attaching the `PokemonCollectionGateway` to the `PokemonExternalInterface`
+and the `HomeUseCase` to the `PokemonCollectionGateway`.
+
+After this, let's add the `pokemonExternalInterfaceProvider` to the `AppProviderScope`,
+so that it's initialized beforehand any requests is made to it.
+
+### lib/main.dart
+```dart
+return AppProviderScope(
+  externalInterfaceProviders: [
+    pokemonExternalInterfaceProvider,
+  ,
+  ...,
+);
+```
+
+Let's try running the app now. Is it working fine?
+No, right?
+We're still getting the static data from the `Presenter`.
+
+Remember that, `Presenter`s are also part of the adapter layer as it bridges between the use case and the UI.
+Let's fill in the gaps now. Head back to the `HomePresenter` and update it as below.
+
+#### lib/features/home/presentation/home_presenter.dart
+```dart
+class HomePresenter
+    extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> {
+  HomePresenter({
+    super.key,
     required super.builder,
-  });
+  }) : super(provider: homeUseCaseProvider);
 
   @override
-  AddMachineViewModel createViewModel(useCase, output) => AddMachineViewModel(
-      total: output.total.toString(),
-      onAddNumber: (number) => _onAddNumber(useCase, number),
-  );
-
-  void _onAddNumber(useCase, String number) {
-    useCase.setInput<AddMachineAddNumberInput>(AddMachineAddNumberInput(int.parse(number)));
+  void onLayoutReady(BuildContext context, HomeUseCase useCase) {
+    useCase.fetchPokemons();
   }
 
   @override
-  void onLayoutReady(context, AddMachineUseCase useCase) => useCase.onCreate();
+  HomeViewModel createViewModel(HomeUseCase useCase, HomeUIOutput output) {
+    return HomeViewModel(
+      pokemons: output.pokemons.map((pokemon) {
+        return PokemonViewModel(name: pokemon.name, imageUrl: pokemon.imageUrl);
+      }).toList(growable: false),
+      onSearch: (query) => useCase.setInput(PokemonSearchInput(name: query)),
+      onRefresh: () => useCase.fetchPokemons(isRefresh: true),
+      onRetry: useCase.fetchPokemons,
+      isLoading: output.status == HomeStatus.loading,
+      hasFailedLoading: output.status == HomeStatus.failed,
+    );
+  }
+
+  @override
+  void onOutputUpdate(BuildContext context, HomeUIOutput output) {
+    if (output.isRefresh) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            output.status == HomeStatus.failed
+                ? 'Sorry, failed refreshing pokemons!'
+                : 'Refreshed pokemons successfully!',
+          ),
+        ),
+      );
+    }
+  }
 }
 ```
 
-To be able to use a specific Use Case, we had to include the name of the class in the generics declaration.
+Now let's make a request from Use Case. Head back to `HomeUseCase` and update the todo as below.
 
-With the **onLayoutReady** override we are able to call any method on the use case the first time the UI is built.
+```dart
+await request<PokemonCollectionGatewayOutput, PokemonCollectionSuccessInput>(
+  PokemonCollectionGatewayOutput(),
+  onSuccess: (success) {
+    final pokemons = success.pokemonIdentities.map(_resolvePokemon);
 
-If all these changes are correct and the new test passes, congratulations! You now have attached a custom Gateway to your feature!
+    return entity.copyWith(
+      pokemons: pokemons.toList(growable: false),
+      status: HomeStatus.loaded,
+      isRefresh: isRefresh,
+    );
+  },
+  onFailure: (failure) {
+    return entity.copyWith(
+       status: HomeStatus.failed,
+       isRefresh: isRefresh,
+    );
+  },
+);
 
+...
+
+PokemonData _resolvePokemon(PokemonIdentity pokemon) {
+  return PokemonData(
+    name: pokemon.name.toUpperCase(),
+    imageUrl: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg',
+  );
+}
+```
+
+Try running the app now. It should be working fine now.
+
+The full example with the detail page implementation can be
+[found here](https://github.com/MattHamburger/clean_framework/tree/main/packages/clean_framework/example).
