@@ -11,9 +11,9 @@
         ["Project Structure","/codelabs/clean-framework/project-structure"],
         ["UI Layer","/codelabs/clean-framework/ui-layer"],
         ["Domain Layer","/codelabs/clean-framework/domain-layer"],
-        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
-        ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"]
-      ]
+        ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"],
+        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"]
+    ]
     ],
     ["Feature Flags",
       [
