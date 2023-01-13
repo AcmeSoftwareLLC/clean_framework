@@ -38,7 +38,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           _requestController.add(requestCompleter);
           return requestCompleter.future;
         } else {
-          return this.request(req).future;
+          return this.request(req);
         }
       },
     );
@@ -48,11 +48,11 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
       StreamController.broadcast();
 
   @visibleForTesting
-  RequestCompleter<R, S> request(R request) {
+  Future<Either<FailureResponse, S>> request(R request) {
     final requestCompleter = RequestCompleter<R, S>(request);
 
     _requestController.add(requestCompleter);
-    return requestCompleter;
+    return requestCompleter.future;
   }
 
   void handleRequest();
