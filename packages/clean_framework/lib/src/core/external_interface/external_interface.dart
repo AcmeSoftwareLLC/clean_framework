@@ -28,18 +28,32 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     gateway.feedResponse(
       (request) async {
         final req = request as R;
-        final requestCompleter = gateway is WatcherGateway
-            ? _StreamRequestCompleter<R, S>(req, gateway.yieldResponse)
-            : _RequestCompleter<R, S>(req);
 
-        _requestController.add(requestCompleter);
-        return requestCompleter.future;
+        if (gateway is WatcherGateway) {
+          final requestCompleter = _StreamRequestCompleter<R, S>(
+            req,
+            gateway.yieldResponse,
+          );
+
+          _requestController.add(requestCompleter);
+          return requestCompleter.future;
+        } else {
+          return this.request(req).future;
+        }
       },
     );
   }
 
   final _RequestController<R, S> _requestController =
       StreamController.broadcast();
+
+  @visibleForTesting
+  RequestCompleter<R, S> request(R request) {
+    final requestCompleter = RequestCompleter<R, S>(request);
+
+    _requestController.add(requestCompleter);
+    return requestCompleter;
+  }
 
   void handleRequest();
 
@@ -91,15 +105,15 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 }
 
 typedef _RequestController<R extends Request, S extends SuccessResponse>
-    = StreamController<_RequestCompleter<R, S>>;
+    = StreamController<RequestCompleter<R, S>>;
 
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
 typedef RequestHandler<E extends Request, S extends SuccessResponse>
     = FutureOr<void> Function(E request, ResponseSender<S> send);
 
-class _RequestCompleter<R extends Request, S extends SuccessResponse> {
-  _RequestCompleter(this.request) : _completer = Completer();
+class RequestCompleter<R extends Request, S extends SuccessResponse> {
+  RequestCompleter(this.request) : _completer = Completer();
 
   final R request;
   final Completer<Either<FailureResponse, S>> _completer;
@@ -116,7 +130,7 @@ class _RequestCompleter<R extends Request, S extends SuccessResponse> {
 }
 
 class _StreamRequestCompleter<R extends Request, S extends SuccessResponse>
-    extends _RequestCompleter<R, S> {
+    extends RequestCompleter<R, S> {
   _StreamRequestCompleter(super.request, this.emitSuccess);
 
   final void Function(S) emitSuccess;
