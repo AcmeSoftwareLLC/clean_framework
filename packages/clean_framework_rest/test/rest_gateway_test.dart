@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_legacy.dart';
-import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:clean_framework_rest/clean_framework_rest_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
