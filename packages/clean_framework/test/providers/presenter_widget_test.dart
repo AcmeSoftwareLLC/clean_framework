@@ -104,18 +104,18 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
 class TestUseCase extends UseCase<EntityFake> {
   TestUseCase()
       : super(
-          entity: EntityFake(),
+          entity: const EntityFake(),
           transformers: [
             OutputTransformer.from((entity) => TestOutput(entity.value)),
           ],
         );
 
   Future<void> fetch() async {
-    entity = EntityFake(value: 'a');
+    entity = const EntityFake(value: 'a');
 
     await Future<void>.delayed(const Duration(milliseconds: 100));
 
-    entity = EntityFake(value: 'b');
+    entity = const EntityFake(value: 'b');
   }
 }
 

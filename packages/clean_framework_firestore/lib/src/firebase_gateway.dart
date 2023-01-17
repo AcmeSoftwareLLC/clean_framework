@@ -11,5 +11,7 @@ abstract class FirebaseGateway<O extends Output, R extends FirebaseRequest,
   }) : super(context: context, provider: provider);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
+  }
 }

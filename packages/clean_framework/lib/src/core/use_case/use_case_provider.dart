@@ -10,18 +10,17 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
     N extends ProviderBase<E>> extends CleanFrameworkProvider<N> {
   UseCaseProviderBase({required super.provider});
 
-  Future<Refreshable<U>> get notifier => _initCompleter.future;
+  final StreamController<Refreshable<U>> _notifierController =
+      StreamController.broadcast();
+
+  Stream<Refreshable<U>> get notifier => _notifierController.stream;
 
   @visibleForOverriding
   Refreshable<U> buildNotifier();
 
   void init() {
-    if (!_initCompleter.isCompleted) {
-      _initCompleter.complete(buildNotifier());
-    }
+    _notifierController.add(buildNotifier());
   }
-
-  final Completer<Refreshable<U>> _initCompleter = Completer();
 
   O subscribe<O extends Output>(WidgetRef ref) {
     return ref.watch(_listenForOutputChange(ref));

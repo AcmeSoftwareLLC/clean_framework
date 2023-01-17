@@ -203,7 +203,7 @@ class GatewayFake extends GraphQLGateway {
 
   @override
   SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 
@@ -217,7 +217,7 @@ class MutationGatewayFake extends GraphQLGateway {
 
   @override
   SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 
