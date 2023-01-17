@@ -12,4 +12,7 @@ void main() {
 class EntityFake extends Entity {
   @override
   List<Object?> get props => [];
+
+  @override
+  EntityFake copyWith() => EntityFake();
 }

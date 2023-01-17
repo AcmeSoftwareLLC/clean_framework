@@ -31,7 +31,7 @@ class UseCaseFake<S extends SuccessInput> extends Fake
 
   @override
   void setInput<T extends Input>(T input) {
-    _entity = _entity.merge('success with input');
+    _entity = _entity.copyWith(value: 'success with input');
   }
 
   @override
@@ -44,10 +44,10 @@ class UseCaseFake<S extends SuccessInput> extends Fake
   Future<void> doFakeRequest<O extends Output>(O output) async {
     await request(
       output,
-      onFailure: (failure) => _entity.merge('failure'),
+      onFailure: (failure) => _entity.copyWith(value: 'failure'),
       onSuccess: (success) {
         successInput = success as S?;
-        return _entity.merge('success');
+        return _entity.copyWith(value: 'success');
       },
     );
   }
@@ -61,5 +61,8 @@ class EntityFake extends Entity {
   @override
   List<Object?> get props => [value];
 
-  EntityFake merge(String newValue) => EntityFake(value: newValue);
+  @override
+  EntityFake copyWith({String? value}) {
+    return EntityFake(value: value ?? this.value);
+  }
 }

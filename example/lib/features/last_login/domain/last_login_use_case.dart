@@ -16,12 +16,12 @@ class LastLoginUseCase extends UseCase<LastLoginEntity> {
         );
 
   Future<void> fetchCurrentDate() async {
-    entity = entity.merge(state: LastLoginState.loading);
+    entity = entity.copyWith(state: LastLoginState.loading);
 
     await request(
       LastLoginDateOutput(),
       onSuccess: (LastLoginDateInput input) {
-        return entity.merge(
+        return entity.copyWith(
           state: LastLoginState.idle,
           lastLogin: input.lastLogin,
         );

@@ -45,12 +45,12 @@ void main() {
 
     var output = useCase.getOutput<LastLoginUIOutput>();
 
-    // on a failure, the usecase keeps the old data
+    // on a failure, the use case keeps the old data
     expect(output, LastLoginUIOutput(lastLogin: DateTime.parse('1900-01-01')));
   });
 
   test('Entity merge', () {
-    final entity = LastLoginEntity().merge(lastLogin: currentDate);
+    final entity = LastLoginEntity().copyWith(lastLogin: currentDate);
     expect(entity, LastLoginEntity(lastLogin: currentDate));
   });
 }

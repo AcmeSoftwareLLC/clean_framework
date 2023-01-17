@@ -8,5 +8,5 @@ abstract class Entity extends Equatable {
   @override
   bool get stringify => true;
 
-  external Entity copyWith();
+  Entity copyWith();
 }

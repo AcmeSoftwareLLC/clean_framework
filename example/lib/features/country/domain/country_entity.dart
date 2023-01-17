@@ -28,7 +28,8 @@ class CountryEntity extends Entity {
     ];
   }
 
-  CountryEntity merge({
+  @override
+  CountryEntity copyWith({
     bool? isLoading,
     List<CountryInput>? countries,
     Map<String, String>? continents,

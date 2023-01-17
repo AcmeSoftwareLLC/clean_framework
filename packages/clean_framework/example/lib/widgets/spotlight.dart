@@ -8,7 +8,7 @@ import 'package:palette_generator/palette_generator.dart';
 class Spotlight extends StatefulWidget {
   const Spotlight({
     super.key,
-    required this.cacheKey,
+    required this.imageUrl,
     required this.heroTag,
     required this.builder,
     this.placeholderBuilder,
@@ -16,7 +16,7 @@ class Spotlight extends StatefulWidget {
     this.height,
   });
 
-  final String cacheKey;
+  final String imageUrl;
   final String heroTag;
   final WidgetBuilder builder;
   final WidgetBuilder? placeholderBuilder;
@@ -118,14 +118,11 @@ class _SpotlightState extends State<Spotlight> {
   }
 
   Future<String> _loadFileFromCache() async {
-    final file = await DefaultCacheManager().getSingleFile(
-      '',
-      key: widget.cacheKey,
-    );
+    final file = await DefaultCacheManager().getSingleFile(widget.imageUrl);
     final rawSvg = await file.readAsString();
 
     if (rawSvg.isNotEmpty) {
-      final drawable = await svg.fromSvgString(rawSvg, widget.cacheKey);
+      final drawable = await svg.fromSvgString(rawSvg, widget.imageUrl);
       final picture = drawable.toPicture();
       final image = await picture.toImage(100, 100);
       _palette = await PaletteGenerator.fromImage(image);
