@@ -22,16 +22,16 @@ class RandomCatUseCase extends UseCase<RandomCatEntity> {
   Future<void> fetch() async {
     return debounce(
       action: () async {
-        entity = entity.merge(isLoading: true);
+        entity = entity.copyWith(isLoading: true);
 
         await request<RandomCatGatewayOutput, RandomCatSuccessInput>(
           RandomCatGatewayOutput(),
-          onSuccess: (successInput) => entity.merge(
+          onSuccess: (successInput) => entity.copyWith(
             isLoading: false,
             id: successInput.id,
             url: successInput.url,
           ),
-          onFailure: (failure) => entity.merge(isLoading: false),
+          onFailure: (failure) => entity.copyWith(isLoading: false),
         );
       },
       tag: 'fetch',

@@ -160,7 +160,7 @@ class TestUseCase extends UseCase<TestEntity> {
           transformers: [
             OutputTransformer.from((entity) => TestOutput(entity.foo)),
             InputTransformer<TestEntity, TestSuccessInput>.from(
-              (entity, input) => entity.merge(foo: input.foo),
+              (entity, input) => entity.copyWith(foo: input.foo),
             ),
           ],
         );
@@ -168,23 +168,23 @@ class TestUseCase extends UseCase<TestEntity> {
   Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
       const TestDirectOutput('123'),
-      onFailure: (_) => entity.merge(foo: 'failure'),
-      onSuccess: (success) => entity.merge(foo: success.foo),
+      onFailure: (_) => entity.copyWith(foo: 'failure'),
+      onSuccess: (success) => entity.copyWith(foo: success.foo),
     );
   }
 
   Future<void> fetchDataImmediatelyWithFailure() async {
     await request<TestDirectOutput, TestSuccessInput>(
       const TestDirectOutput('123'),
-      onFailure: (_) => entity.merge(foo: 'failure'),
-      onSuccess: (success) => entity.merge(foo: success.foo),
+      onFailure: (_) => entity.copyWith(foo: 'failure'),
+      onSuccess: (success) => entity.copyWith(foo: success.foo),
     );
   }
 
   Future<void> fetchDataEventually() async {
     await request<TestSubscriptionOutput, SuccessInput>(
       const TestSubscriptionOutput('123'),
-      onFailure: (_) => entity.merge(foo: 'failure'),
+      onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
     );
@@ -244,7 +244,8 @@ class TestEntity extends Entity {
   @override
   List<Object?> get props => [foo];
 
-  TestEntity merge({String? foo}) => TestEntity(foo: foo ?? this.foo);
+  @override
+  TestEntity copyWith({String? foo}) => TestEntity(foo: foo ?? this.foo);
 }
 
 class TestOutput extends Output {

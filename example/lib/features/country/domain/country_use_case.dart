@@ -36,19 +36,19 @@ class CountryUseCase extends UseCase<CountryEntity> {
     String? continentId,
     bool isRefresh = false,
   }) async {
-    if (!isRefresh) entity = entity.merge(isLoading: true, errorMessage: '');
+    if (!isRefresh) entity = entity.copyWith(isLoading: true, errorMessage: '');
 
     final _continentId = continentId ?? entity.selectedContinentId;
 
     return request<CountryGatewayOutput, CountrySuccessInput>(
       CountryGatewayOutput(continentCode: _continentId),
-      onSuccess: (successInput) => entity.merge(
+      onSuccess: (successInput) => entity.copyWith(
         countries: successInput.countries,
         isLoading: false,
         continentId: _continentId,
         errorMessage: '',
       ),
-      onFailure: (failure) => entity.merge(
+      onFailure: (failure) => entity.copyWith(
         isLoading: false,
         errorMessage: failure.message,
       ),

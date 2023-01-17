@@ -132,14 +132,17 @@ class TestUseCase extends UseCase<TestEntity> {
 class TestEntity extends Entity {
   @override
   List<Object?> get props => [];
-  TestEntity merge({String? foo}) => TestEntity();
+
+  @override
+  TestEntity copyWith({String? foo}) => TestEntity();
 }
 
 class TestEntity2 extends TestEntity {
   @override
   List<Object?> get props => [];
+
   @override
-  TestEntity2 merge({String? foo}) => TestEntity2();
+  TestEntity2 copyWith({String? foo}) => TestEntity2();
 }
 
 class TestOutput extends Output {

@@ -41,6 +41,7 @@ class HomeUI extends UI<HomeViewModel> {
                 onTap: () => context.router.go(
                   Routes.profile,
                   params: {'pokemon_name': pokemon.name},
+                  queryParams: {'image': pokemon.imageUrl},
                 ),
               );
             },

@@ -6,9 +6,13 @@ import 'package:clean_framework_example/widgets/spotlight.dart';
 import 'package:flutter/material.dart';
 
 class ProfileUI extends UI<ProfileViewModel> {
-  ProfileUI({required this.pokemonName});
+  ProfileUI({
+    required this.pokemonName,
+    required this.pokemonImageUrl,
+  });
 
   final String pokemonName;
+  final String pokemonImageUrl;
 
   @override
   ProfilePresenter create(PresenterBuilder<ProfileViewModel> builder) {
@@ -27,7 +31,7 @@ class ProfileUI extends UI<ProfileViewModel> {
       body: Spotlight(
         height: 200,
         heroTag: pokemonName,
-        cacheKey: pokemonName,
+        imageUrl: pokemonImageUrl,
         builder: (context) {
           final pokeTypes = viewModel.pokemonTypes;
 

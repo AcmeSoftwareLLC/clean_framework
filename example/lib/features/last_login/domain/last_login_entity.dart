@@ -13,7 +13,8 @@ class LastLoginEntity extends Entity {
   })  : state = state ?? LastLoginState.idle,
         lastLogin = lastLogin ?? DateTime.parse('1900-01-01');
 
-  LastLoginEntity merge({
+  @override
+  LastLoginEntity copyWith({
     LastLoginState? state,
     DateTime? lastLogin,
   }) {

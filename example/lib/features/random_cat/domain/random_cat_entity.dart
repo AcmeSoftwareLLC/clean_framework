@@ -14,7 +14,8 @@ class RandomCatEntity extends Entity {
   @override
   List<Object?> get props => [isLoading, id, url];
 
-  RandomCatEntity merge({
+  @override
+  RandomCatEntity copyWith({
     bool? isLoading,
     int? id,
     String? url,
