@@ -7,7 +7,7 @@ import 'package:clean_framework_example/features/profile/domain/profile_use_case
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
-final homeUseCaseProvider = UseCaseProvider(
+final homeUseCaseProvider = UseCaseProvider.autoDispose(
   HomeUseCase.new,
   (bridge) {
     bridge.connect(
