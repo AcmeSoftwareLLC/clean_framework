@@ -60,6 +60,22 @@ class HomeUI extends UI<HomeViewModel> {
         bottom: viewModel.isLoading || viewModel.hasFailedLoading
             ? null
             : PokemonSearchField(onChanged: viewModel.onSearch),
+        actions: [
+          if (viewModel.lastViewedPokemon.isNotEmpty)
+            Text.rich(
+              TextSpan(
+                text: 'Last Viewed: ',
+                children: [
+                  TextSpan(
+                    text: viewModel.lastViewedPokemon,
+                    style: textTheme.labelSmall,
+                  ),
+                ],
+                style: textTheme.bodySmall,
+              ),
+            ),
+          const SizedBox(width: 16),
+        ],
       ),
       body: child,
     );

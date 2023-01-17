@@ -14,6 +14,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
           transformers: [
             HomeUIOutputTransformer(),
             PokemonSearchInputTransformer(),
+            LastViewedPokemonInputTransformer(),
           ],
         );
 
@@ -76,6 +77,7 @@ class HomeUIOutputTransformer
       pokemons: filteredPokemons.toList(growable: false),
       status: entity.status,
       isRefresh: entity.isRefresh,
+      lastViewedPokemon: entity.lastViewedPokemon,
     );
   }
 }
@@ -85,5 +87,19 @@ class PokemonSearchInputTransformer
   @override
   HomeEntity transform(HomeEntity entity, PokemonSearchInput input) {
     return entity.copyWith(pokemonNameQuery: input.name);
+  }
+}
+
+class LastViewedPokemonInput extends Input {
+  LastViewedPokemonInput({required this.name});
+
+  final String name;
+}
+
+class LastViewedPokemonInputTransformer
+    extends InputTransformer<HomeEntity, LastViewedPokemonInput> {
+  @override
+  HomeEntity transform(HomeEntity entity, LastViewedPokemonInput input) {
+    return entity.copyWith(lastViewedPokemon: input.name);
   }
 }

@@ -3,6 +3,7 @@ import 'package:clean_framework_example/features/profile/models/pokemon_profile_
 
 class ProfileEntity extends Entity {
   ProfileEntity({
+    this.name = '',
     this.types = const [],
     this.description = '',
     this.height = 0,
@@ -10,6 +11,7 @@ class ProfileEntity extends Entity {
     this.stats = const [],
   });
 
+  final String name;
   final List<String> types;
   final String description;
   final int height;
@@ -17,10 +19,11 @@ class ProfileEntity extends Entity {
   final List<PokemonStatModel> stats;
 
   @override
-  List<Object?> get props => [types, description, height, weight, stats];
+  List<Object?> get props => [name, types, description, height, weight, stats];
 
   @override
   ProfileEntity copyWith({
+    String? name,
     List<String>? types,
     String? description,
     int? height,
@@ -28,6 +31,7 @@ class ProfileEntity extends Entity {
     List<PokemonStatModel>? stats,
   }) {
     return ProfileEntity(
+      name: name ?? this.name,
       types: types ?? this.types,
       description: description ?? this.description,
       height: height ?? this.height,

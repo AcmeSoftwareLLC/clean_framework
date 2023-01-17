@@ -9,16 +9,18 @@ class HomeEntity extends Entity {
     this.pokemonNameQuery = '',
     this.status = HomeStatus.initial,
     this.isRefresh = false,
+    this.lastViewedPokemon = '',
   });
 
   final List<PokemonModel> pokemons;
   final String pokemonNameQuery;
   final HomeStatus status;
   final bool isRefresh;
+  final String lastViewedPokemon;
 
   @override
   List<Object?> get props {
-    return [pokemons, pokemonNameQuery, status, isRefresh];
+    return [pokemons, pokemonNameQuery, status, isRefresh, lastViewedPokemon];
   }
 
   @override
@@ -27,12 +29,14 @@ class HomeEntity extends Entity {
     String? pokemonNameQuery,
     HomeStatus? status,
     bool? isRefresh,
+    String? lastViewedPokemon,
   }) {
     return HomeEntity(
       pokemons: pokemons ?? this.pokemons,
       pokemonNameQuery: pokemonNameQuery ?? this.pokemonNameQuery,
       status: status ?? this.status,
       isRefresh: isRefresh ?? this.isRefresh,
+      lastViewedPokemon: lastViewedPokemon ?? this.lastViewedPokemon,
     );
   }
 }
