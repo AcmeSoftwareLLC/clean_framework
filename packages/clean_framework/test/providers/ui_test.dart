@@ -71,7 +71,7 @@ class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
         );
 
   @override
-  TestOutput subscribe(_) => TestOutput('bar');
+  TestOutput subscribe(_) => const TestOutput('bar');
 
   @override
   TestViewModel createViewModel(_, TestOutput output) {
@@ -88,7 +88,7 @@ class TestViewModel extends ViewModel {
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override

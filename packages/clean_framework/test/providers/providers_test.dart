@@ -99,7 +99,7 @@ class TestBridgeGateway
     required super.publisherUseCase,
   });
   @override
-  SuccessInput onResponse(TestOutput output) => SuccessInput();
+  SuccessInput onResponse(TestOutput output) => const SuccessInput();
 }
 
 class TestGateway extends Gateway {
@@ -110,12 +110,12 @@ class TestGateway extends Gateway {
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
   SuccessInput onSuccess(SuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 

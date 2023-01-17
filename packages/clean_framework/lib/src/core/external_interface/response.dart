@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class Response extends Equatable {
   const Response();
+
   @override
   bool get stringify => true;
 }

@@ -12,7 +12,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        TestGatewayOutput('Acme Software'),
+        const TestGatewayOutput('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -31,7 +31,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        TestGatewayOutput('Acme Software'),
+        const TestGatewayOutput('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -49,7 +49,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        TestGatewayOutput('Acme Software'),
+        const TestGatewayOutput('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -68,7 +68,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        TestGatewayOutput('Acme Software'),
+        const TestGatewayOutput('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -109,7 +109,7 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
 }
 
 class TestGatewayOutput extends Output {
-  TestGatewayOutput(this.name);
+  const TestGatewayOutput(this.name);
 
   final String name;
 
@@ -118,7 +118,7 @@ class TestGatewayOutput extends Output {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.message);
+  const TestSuccessInput(this.message);
 
   final String message;
 }

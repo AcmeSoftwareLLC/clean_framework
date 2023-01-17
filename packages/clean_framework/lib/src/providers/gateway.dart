@@ -76,7 +76,9 @@ abstract class WatcherGateway<
   }) : super(context: context, provider: provider);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
+  }
 
   @nonVirtual
   void yieldResponse(P response) {

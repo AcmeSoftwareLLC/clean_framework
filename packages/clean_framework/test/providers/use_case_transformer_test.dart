@@ -16,7 +16,7 @@ void main() {
     });
 
     test('input transformer', () {
-      final useCase = TestUseCase()..setInput(FooInput('hello'));
+      final useCase = TestUseCase()..setInput(const FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
@@ -26,13 +26,13 @@ void main() {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
 
   final String foo;
 }
 
 class TestEntity extends Entity {
-  TestEntity({
+  const TestEntity({
     this.foo = '',
     this.bar = 0,
   });
@@ -58,7 +58,7 @@ class TestEntity extends Entity {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          entity: TestEntity(),
+          entity: const TestEntity(),
           transformers: [
             FooOutputTransformer(),
             FooInputTransformer(),
@@ -76,12 +76,12 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 class FooInput extends Input {
-  FooInput(this.foo);
+  const FooInput(this.foo);
   final String foo;
 }
 
 class FooOutput extends Output {
-  FooOutput(this.foo);
+  const FooOutput(this.foo);
   final String foo;
 
   @override
@@ -89,7 +89,7 @@ class FooOutput extends Output {
 }
 
 class BarOutput extends Output {
-  BarOutput(this.bar);
+  const BarOutput(this.bar);
   final int bar;
 
   @override

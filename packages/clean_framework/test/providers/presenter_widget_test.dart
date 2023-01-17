@@ -120,7 +120,7 @@ class TestUseCase extends UseCase<EntityFake> {
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override

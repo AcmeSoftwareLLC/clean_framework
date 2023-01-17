@@ -14,25 +14,25 @@ void main() {
     });
 
     test('entity updates with setter', () {
-      expect(useCase.entity, TestEntity());
+      expect(useCase.entity, const TestEntity());
 
       useCase.entity = useCase.entity.copyWith(foo: 'bar');
-      expect(useCase.entity, TestEntity(foo: 'bar'));
+      expect(useCase.entity, const TestEntity(foo: 'bar'));
     });
 
     test('entity updates with setInput', () {
-      expect(useCase.entity, TestEntity());
+      expect(useCase.entity, const TestEntity());
 
-      useCase.setInput(TestInput(foo: 'input'));
-      expect(useCase.entity, TestEntity(foo: 'input'));
+      useCase.setInput(const TestInput(foo: 'input'));
+      expect(useCase.entity, const TestEntity(foo: 'input'));
     });
 
     test(
       'entity update fails w/ setInput if no appropriate transformer is found',
       () {
-        expect(useCase.entity, TestEntity());
+        expect(useCase.entity, const TestEntity());
         expect(
-          () => useCase.setInput(NoTransformerTestInput(foo: 'input')),
+          () => useCase.setInput(const NoTransformerTestInput(foo: 'input')),
           throwsStateError,
         );
       },
@@ -41,21 +41,21 @@ void main() {
     test(
       'getOutput() success',
       () {
-        expect(useCase.entity, TestEntity());
+        expect(useCase.entity, const TestEntity());
 
-        useCase.setInput(TestInput(foo: 'input'));
+        useCase.setInput(const TestInput(foo: 'input'));
 
         final output = useCase.getOutput<TestOutput>();
-        expect(output, TestOutput(foo: 'input'));
+        expect(output, const TestOutput(foo: 'input'));
       },
     );
 
     test(
       'getOutput() fails when no appropriate transformer is found',
       () {
-        expect(useCase.entity, TestEntity());
+        expect(useCase.entity, const TestEntity());
 
-        useCase.setInput(TestInput(foo: 'input'));
+        useCase.setInput(const TestInput(foo: 'input'));
 
         expect(useCase.getOutput<NoTransformerTestOutput>, throwsStateError);
       },
@@ -64,7 +64,7 @@ void main() {
     test(
       'successful request',
       () async {
-        expect(useCase.entity, TestEntity());
+        expect(useCase.entity, const TestEntity());
 
         useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
           (output) async {
@@ -76,12 +76,12 @@ void main() {
         );
 
         await useCase.request<TestGatewayOutput, TestSuccessInput>(
-          TestGatewayOutput(name: 'World'),
+          const TestGatewayOutput(name: 'World'),
           onSuccess: (success) => TestEntity(foo: success.message),
-          onFailure: (failure) => TestEntity(foo: 'failure'),
+          onFailure: (failure) => const TestEntity(foo: 'failure'),
         );
 
-        expect(useCase.entity, TestEntity(foo: 'Hello World!'));
+        expect(useCase.entity, const TestEntity(foo: 'Hello World!'));
       },
     );
 
@@ -90,9 +90,9 @@ void main() {
       () async {
         expect(
           () => useCase.request<TestGatewayOutput, TestSuccessInput>(
-            TestGatewayOutput(name: 'World'),
-            onSuccess: (success) => TestEntity(),
-            onFailure: (failure) => TestEntity(),
+            const TestGatewayOutput(name: 'World'),
+            onSuccess: (success) => const TestEntity(),
+            onFailure: (failure) => const TestEntity(),
           ),
           throwsStateError,
         );
@@ -127,7 +127,7 @@ void main() {
         'performs action immediately first '
         'and then only after the duration elapses',
         () async {
-          useCase.entity = TestEntity(foo: '@');
+          useCase.entity = const TestEntity(foo: '@');
 
           String getChar() => useCase.entity.foo;
 
@@ -184,7 +184,7 @@ void main() {
         'performs action only after the duration elapses; '
         'when immediate is false',
         () async {
-          useCase.entity = TestEntity(foo: 'A');
+          useCase.entity = const TestEntity(foo: 'A');
 
           String getChar() => useCase.entity.foo;
 
@@ -244,7 +244,7 @@ void main() {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          entity: TestEntity(),
+          entity: const TestEntity(),
           transformers: [
             TestInputTransformer(),
             TestOutputTransformer(),
@@ -253,7 +253,7 @@ class TestUseCase extends UseCase<TestEntity> {
 }
 
 class TestEntity extends Entity {
-  TestEntity({this.foo = ''});
+  const TestEntity({this.foo = ''});
 
   final String foo;
 
@@ -265,19 +265,19 @@ class TestEntity extends Entity {
 }
 
 class TestInput extends Input {
-  TestInput({required this.foo});
+  const TestInput({required this.foo});
 
   final String foo;
 }
 
 class NoTransformerTestInput extends Input {
-  NoTransformerTestInput({required this.foo});
+  const NoTransformerTestInput({required this.foo});
 
   final String foo;
 }
 
 class TestOutput extends Output {
-  TestOutput({required this.foo});
+  const TestOutput({required this.foo});
 
   final String foo;
 
@@ -286,7 +286,7 @@ class TestOutput extends Output {
 }
 
 class TestGatewayOutput extends Output {
-  TestGatewayOutput({required this.name});
+  const TestGatewayOutput({required this.name});
 
   final String name;
 
@@ -295,13 +295,13 @@ class TestGatewayOutput extends Output {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput({required this.message});
+  const TestSuccessInput({required this.message});
 
   final String message;
 }
 
 class NoTransformerTestOutput extends Output {
-  NoTransformerTestOutput({required this.foo});
+  const NoTransformerTestOutput({required this.foo});
 
   final String foo;
 

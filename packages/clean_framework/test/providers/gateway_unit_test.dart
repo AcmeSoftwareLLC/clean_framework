@@ -12,7 +12,7 @@ void main() {
       return const Either.right(TestResponse('success'));
     };
 
-    await useCase.doFakeRequest(TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'success'));
   });
@@ -24,7 +24,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'failure'));
   });
@@ -37,7 +37,7 @@ void main() {
         return const Either.right(TestResponse('success'));
       };
 
-    await useCase.doFakeRequest(TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'success'));
 
@@ -53,7 +53,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
     expect(useCase.entity, EntityFake(value: 'failure'));
   });
@@ -76,7 +76,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -96,7 +96,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -119,12 +119,12 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-  TestDirectOutput(this.id);
+  const TestDirectOutput(this.id);
   final String id;
 
   @override
@@ -132,7 +132,7 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-  TestSubscriptionOutput(this.id);
+  const TestSubscriptionOutput(this.id);
   final String id;
 
   @override

@@ -26,7 +26,7 @@ void main() {
     });
 
     test('input transformer', () {
-      useCase.setInput(FooInput('hello'));
+      useCase.setInput(const FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
@@ -56,7 +56,7 @@ void main() {
     });
 
     test('input transformer', () {
-      useCase.setInput(FooInput('hello'));
+      useCase.setInput(const FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
@@ -86,11 +86,11 @@ void main() {
     });
 
     test('input filter', () {
-      useCase.setInput(FooInput('hello'));
+      useCase.setInput(const FooInput('hello'));
 
       expect(useCase.entity.foo, 'hello');
 
-      expect(useCase.getOutput<FooOutput>(), FooOutput('hello'));
+      expect(useCase.getOutput<FooOutput>(), const FooOutput('hello'));
     });
   });
 }
@@ -100,7 +100,7 @@ abstract class TestUseCase extends UseCase<TestEntity> {
     super.transformers,
     super.inputFilters,
     super.outputFilters,
-  }) : super(entity: TestEntity());
+  }) : super(entity: const TestEntity());
 
   void updateFoo(String foo) {
     entity = entity.copyWith(foo: foo);
@@ -151,13 +151,13 @@ class FilterTestUseCase extends TestUseCase {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
 
   final String foo;
 }
 
 class TestEntity extends Entity {
-  TestEntity({
+  const TestEntity({
     this.foo = '',
     this.bar = 0,
   });
@@ -181,12 +181,12 @@ class TestEntity extends Entity {
 }
 
 class FooInput extends Input {
-  FooInput(this.foo);
+  const FooInput(this.foo);
   final String foo;
 }
 
 class FooOutput extends Output {
-  FooOutput(this.foo);
+  const FooOutput(this.foo);
   final String foo;
 
   @override
@@ -194,7 +194,7 @@ class FooOutput extends Output {
 }
 
 class BarOutput extends Output {
-  BarOutput(this.bar);
+  const BarOutput(this.bar);
   final int bar;
 
   @override

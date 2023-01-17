@@ -2,17 +2,21 @@ import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class Input {}
+abstract class Input {
+  const Input();
+}
 
-class SuccessInput extends Input {}
+class SuccessInput extends Input {
+  const SuccessInput();
+}
 
 class FailureInput extends Input {
-  FailureInput({this.message = ''});
+  const FailureInput({this.message = ''});
 
   final String message;
 }
 
 class NoSubscriptionFailureInput<O extends Output> extends FailureInput {
-  NoSubscriptionFailureInput()
+  const NoSubscriptionFailureInput()
       : super(message: 'No subscription exists for this request of $O');
 }
