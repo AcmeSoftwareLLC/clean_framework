@@ -55,8 +55,10 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   void initState() {
     super.initState();
     widget._provider
-      ..init()
-      ..notifier.then((_) => widget.onLayoutReady(context, _useCase!));
+      ..notifier.first.then((_) {
+        widget.onLayoutReady(context, _useCase!);
+      })
+      ..init();
   }
 
   @override

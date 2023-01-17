@@ -13,6 +13,6 @@ abstract class RestGateway<O extends Output, R extends RestRequest,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput();
+    return FailureInput(message: failureResponse.message);
   }
 }

@@ -1,8 +1,7 @@
 import 'dart:async';
 
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/src/core/clean_framework_provider.dart';
-import 'package:clean_framework/src/core/use_case/entity.dart';
-import 'package:clean_framework/src/core/use_case/use_case.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
@@ -10,18 +9,17 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
     N extends ProviderBase<E>> extends CleanFrameworkProvider<N> {
   UseCaseProviderBase({required super.provider});
 
-  Future<Refreshable<U>> get notifier => _initCompleter.future;
+  final StreamController<Refreshable<U>> _notifierController =
+      StreamController.broadcast();
+
+  Stream<Refreshable<U>> get notifier => _notifierController.stream;
 
   @visibleForOverriding
   Refreshable<U> buildNotifier();
 
   void init() {
-    if (!_initCompleter.isCompleted) {
-      _initCompleter.complete(buildNotifier());
-    }
+    _notifierController.add(buildNotifier());
   }
-
-  final Completer<Refreshable<U>> _initCompleter = Completer();
 
   O subscribe<O extends Output>(WidgetRef ref) {
     return ref.watch(_listenForOutputChange(ref));
@@ -46,8 +44,20 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
 
 class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     extends UseCaseProviderBase<E, U, StateNotifierProvider<U, E>> {
-  UseCaseProvider(U Function() create)
-      : super(provider: StateNotifierProvider((_) => create()));
+  UseCaseProvider(
+    U Function() create, [
+    UseCaseProviderConnector<E, U>? connector,
+  ]) : super(
+          provider: StateNotifierProvider(
+            (ref) {
+              final useCase = create();
+              connector?.call(
+                UseCaseProviderBridge._(useCase, ref),
+              );
+              return useCase;
+            },
+          ),
+        );
 
   static const autoDispose = AutoDisposeUseCaseProviderBuilder();
 
@@ -57,8 +67,20 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
 
 class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
     extends UseCaseProviderBase<E, U, AutoDisposeStateNotifierProvider<U, E>> {
-  AutoDisposeUseCaseProvider(U Function() create)
-      : super(provider: StateNotifierProvider.autoDispose((_) => create()));
+  AutoDisposeUseCaseProvider(
+    U Function() create, [
+    UseCaseProviderConnector<E, U>? connector,
+  ]) : super(
+          provider: StateNotifierProvider.autoDispose(
+            (ref) {
+              final useCase = create();
+              connector?.call(
+                UseCaseProviderBridge._(useCase, ref),
+              );
+              return useCase;
+            },
+          ),
+        );
 
   @override
   Refreshable<U> buildNotifier() => call().notifier;
@@ -68,8 +90,32 @@ class AutoDisposeUseCaseProviderBuilder {
   const AutoDisposeUseCaseProviderBuilder();
 
   AutoDisposeUseCaseProvider<E, U> call<E extends Entity, U extends UseCase<E>>(
-    U Function() create,
-  ) {
-    return AutoDisposeUseCaseProvider(create);
+    U Function() create, [
+    UseCaseProviderConnector<E, U>? connector,
+  ]) {
+    return AutoDisposeUseCaseProvider(create, connector);
+  }
+}
+
+typedef UseCaseProviderConnector<E extends Entity, U extends UseCase<E>> = void
+    Function(UseCaseProviderBridge<E, U> bridge);
+
+class UseCaseProviderBridge<BE extends Entity, BU extends UseCase<BE>> {
+  UseCaseProviderBridge._(this.useCase, Ref<BE> ref) : _ref = ref;
+
+  final BU useCase;
+  final Ref<BE> _ref;
+
+  void connect<E extends Entity, U extends UseCase<E>, T>(
+    UseCaseProvider<E, U> provider,
+    void Function(T? previous, T next) connector, {
+    required T Function(E entity) selector,
+    bool fireImmediately = false,
+  }) {
+    _ref.listen<T>(
+      provider().select(selector),
+      connector,
+      fireImmediately: fireImmediately,
+    );
   }
 }

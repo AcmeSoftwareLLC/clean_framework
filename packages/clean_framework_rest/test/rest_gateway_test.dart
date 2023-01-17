@@ -13,7 +13,7 @@ void main() {
       };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
 
     final request = gateway.buildRequest(TestOutput());
     expect(request.params, request.data);
@@ -27,7 +27,7 @@ void main() {
     };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('other requests', () {
@@ -50,7 +50,7 @@ class TestGateway extends RestGateway<TestOutput, TestRequest, SuccessInput> {
 
   @override
   SuccessInput onSuccess(RestSuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 

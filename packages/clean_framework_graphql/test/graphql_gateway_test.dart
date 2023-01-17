@@ -15,7 +15,7 @@ void main() {
       };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
 
     final request = gateway.buildRequest(TestOutput());
     expect(request.variables, null);
@@ -30,7 +30,7 @@ void main() {
     };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 }
 
@@ -45,7 +45,7 @@ class TestGateway
 
   @override
   SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 

@@ -99,29 +99,6 @@ void main() {
       },
     );
 
-    test('throws error on duplicate subscription for same output', () {
-      useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
-        (output) async {
-          final out = output as TestGatewayOutput;
-          return Either.right(
-            TestSuccessInput(message: 'Hello ${out.name}!'),
-          );
-        },
-      );
-
-      expect(
-        () => useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
-          (output) async {
-            final out = output as TestGatewayOutput;
-            return Either.right(
-              TestSuccessInput(message: 'Hello ${out.name}!'),
-            );
-          },
-        ),
-        throwsStateError,
-      );
-    });
-
     group('debounce', () {
       test(
         'performs action immediately first '

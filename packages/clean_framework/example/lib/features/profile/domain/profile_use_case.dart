@@ -38,6 +38,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
         final profile = success.profile;
 
         return entity.copyWith(
+          name: name,
           types: profile.types,
           height: profile.height,
           weight: profile.weight,

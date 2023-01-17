@@ -19,7 +19,7 @@ abstract class Gateway<O extends Output, R extends Request,
     _useCaseProviders = providers;
 
     for (final useCaseProvider in providers) {
-      useCaseProvider.notifier.then(
+      useCaseProvider.notifier.listen(
         (notifier) {
           ref
               .read(notifier)
@@ -77,7 +77,7 @@ abstract class WatcherGateway<
   @nonVirtual
   void yieldResponse(P response) {
     for (final useCaseProvider in _useCaseProviders) {
-      useCaseProvider.notifier.then(
+      useCaseProvider.notifier.listen(
         (notifier) {
           _ref.read(notifier).setInput(onSuccess(response));
         },

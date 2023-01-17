@@ -14,10 +14,6 @@ typedef RequestSubscription<I extends Input> = Result<I> Function(dynamic);
 extension RequestSubscriptionMapExtension<I extends Input>
     on RequestSubscriptionMap<I> {
   void add<O extends Output>(RequestSubscription<I> subscription) {
-    if (this[O] != null) {
-      throw StateError('A subscription for $O already exists.');
-    }
-
     this[O] = subscription;
   }
 

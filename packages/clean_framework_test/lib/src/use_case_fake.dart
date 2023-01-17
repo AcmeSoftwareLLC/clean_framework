@@ -11,7 +11,7 @@ class UseCaseFake<S extends SuccessInput> extends Fake
     implements UseCase<EntityFake> {
   UseCaseFake({this.output});
 
-  EntityFake _entity = EntityFake();
+  EntityFake _entity = const EntityFake();
   late RequestSubscription subscription;
   S? successInput;
   final Output? output;
@@ -54,7 +54,8 @@ class UseCaseFake<S extends SuccessInput> extends Fake
 }
 
 class EntityFake extends Entity {
-  EntityFake({this.value = 'initial'});
+  const EntityFake({this.value = 'initial'});
+
   final String value;
 
   @override
