@@ -1,6 +1,7 @@
 # Changelog
-## 1.5.0
-**Nov 1, 2022**
+## 2.0.0
+**Jan 17, 2022**
+**Breaking Change**
 - Removed dependencies on sub packages. Sub-packages can be added separately as per the requirement.
 ```text
 Sub-packages:
@@ -10,6 +11,14 @@ Sub-packages:
 - clean_framework_firestore
 - clean_framework_test
 ```
+- Added `AppProviderScope`
+- Remove old feature flagging classes in favor of new open feature based classes
+- Simplified Either implementation
+- Introduced `transformers` to **UseCase**; use cases are now lazily instantiated
+- Simplified provider creation and usage
+- Added `UseCaseProvider.autoDispose`
+
+For migration guide, please refer to [the docs](https://docs.page/MattHamburger/clean_framework/codelabs/clean-framework/migration-guide).
 
 ## 1.5.0
 **Nov 1, 2022**

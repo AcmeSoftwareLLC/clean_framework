@@ -13,7 +13,7 @@ abstract class Gateway<O extends Output, R extends Request,
     P extends SuccessResponse, S extends SuccessInput> {
   void attach(
     ProviderRef<Object> ref, {
-    required List<UseCaseProvider> providers,
+    required List<UseCaseProviderBase> providers,
   }) {
     _ref = ref;
     _useCaseProviders = providers;
@@ -30,7 +30,7 @@ abstract class Gateway<O extends Output, R extends Request,
   }
 
   late final ProviderRef<Object> _ref;
-  late final List<UseCaseProvider> _useCaseProviders;
+  late final List<UseCaseProviderBase> _useCaseProviders;
 
   @visibleForTesting
   @nonVirtual

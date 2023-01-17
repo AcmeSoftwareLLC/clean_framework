@@ -8,10 +8,10 @@ abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
     super.key,
-    required UseCaseProvider provider,
+    required UseCaseProviderBase provider,
     required this.builder,
   }) : _provider = provider;
-  final UseCaseProvider _provider;
+  final UseCaseProviderBase _provider;
   final PresenterBuilder<V> builder;
 
   @override

@@ -6,32 +6,34 @@ import 'package:clean_framework/src/core/use_case/use_case.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-class UseCaseProvider<E extends Entity, U extends UseCase<E>>
-    extends CleanFrameworkProvider<StateNotifierProvider<U, E>> {
-  UseCaseProvider(U Function() create)
-      : super(provider: StateNotifierProvider((_) => create()));
+abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
+    N extends ProviderBase<E>> extends CleanFrameworkProvider<N> {
+  UseCaseProviderBase({required super.provider});
 
-  Future<AlwaysAliveRefreshable<U>> get notifier => _initCompleter.future;
+  Future<Refreshable<U>> get notifier => _initCompleter.future;
+
+  @visibleForOverriding
+  Refreshable<U> buildNotifier();
 
   void init() {
     if (!_initCompleter.isCompleted) {
-      _initCompleter.complete(call().notifier);
+      _initCompleter.complete(buildNotifier());
     }
   }
 
-  final Completer<AlwaysAliveRefreshable<U>> _initCompleter = Completer();
+  final Completer<Refreshable<U>> _initCompleter = Completer();
 
   O subscribe<O extends Output>(WidgetRef ref) {
     return ref.watch(_listenForOutputChange(ref));
   }
 
-  U getUseCase(WidgetRef ref) => ref.read(call().notifier);
+  U getUseCase(WidgetRef ref) => ref.read(buildNotifier());
 
   void listen<O extends Output>(WidgetRef ref, void Function(O?, O) listener) {
     ref.listen<O>(_listenForOutputChange(ref), listener);
   }
 
-  AlwaysAliveProviderListenable<O> _listenForOutputChange<O extends Output>(
+  ProviderListenable<O> _listenForOutputChange<O extends Output>(
     WidgetRef ref,
   ) {
     final useCase = getUseCase(ref);
@@ -39,5 +41,35 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   }
 
   @visibleForTesting
-  U read(ProviderContainer container) => container.read(call().notifier);
+  U read(ProviderContainer container) => container.read(buildNotifier());
+}
+
+class UseCaseProvider<E extends Entity, U extends UseCase<E>>
+    extends UseCaseProviderBase<E, U, StateNotifierProvider<U, E>> {
+  UseCaseProvider(U Function() create)
+      : super(provider: StateNotifierProvider((_) => create()));
+
+  static const autoDispose = AutoDisposeUseCaseProviderBuilder();
+
+  @override
+  Refreshable<U> buildNotifier() => call().notifier;
+}
+
+class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
+    extends UseCaseProviderBase<E, U, AutoDisposeStateNotifierProvider<U, E>> {
+  AutoDisposeUseCaseProvider(U Function() create)
+      : super(provider: StateNotifierProvider.autoDispose((_) => create()));
+
+  @override
+  Refreshable<U> buildNotifier() => call().notifier;
+}
+
+class AutoDisposeUseCaseProviderBuilder {
+  const AutoDisposeUseCaseProviderBuilder();
+
+  AutoDisposeUseCaseProvider<E, U> call<E extends Entity, U extends UseCase<E>>(
+    U Function() create,
+  ) {
+    return AutoDisposeUseCaseProvider(create);
+  }
 }

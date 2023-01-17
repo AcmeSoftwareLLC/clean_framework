@@ -8,7 +8,7 @@ import 'package:clean_framework_example/features/profile/external_interface/poke
 
 final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 
-final profileUseCaseProvider = UseCaseProvider(ProfileUseCase.new);
+final profileUseCaseProvider = UseCaseProvider.autoDispose(ProfileUseCase.new);
 
 final pokemonCollectionGateway = GatewayProvider(
   PokemonCollectionGateway.new,

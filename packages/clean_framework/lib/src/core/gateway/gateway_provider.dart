@@ -8,7 +8,7 @@ class GatewayProvider<G extends Gateway>
     extends CleanFrameworkProvider<Provider<G>> {
   GatewayProvider(
     G Function() create, {
-    List<UseCaseProvider> useCases = const [],
+    List<UseCaseProviderBase> useCases = const [],
   }) : super(
           provider: Provider(
             (ref) => create()..attach(ref, providers: useCases),
