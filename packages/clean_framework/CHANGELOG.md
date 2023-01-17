@@ -17,6 +17,7 @@ Sub-packages:
 - Introduced `transformers` to **UseCase**; use cases are now lazily instantiated
 - Simplified provider creation and usage
 - Added `UseCaseProvider.autoDispose`
+- Added `UseCaseProviderBridge`
 
 For migration guide, please refer to [the docs](https://docs.page/MattHamburger/clean_framework/codelabs/clean-framework/migration-guide).
 
