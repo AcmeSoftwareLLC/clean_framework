@@ -1,8 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
-import 'package:either_dart/either.dart';
-import 'package:equatable/equatable.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:meta/meta.dart';
 
 abstract class Gateway<O extends Output, R extends Request,
@@ -18,9 +14,8 @@ abstract class Gateway<O extends Output, R extends Request,
           '',
         ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
-    _useCase.subscribe(
-      O,
-      (O output) async => _processRequest(buildRequest(output)),
+    _useCase.subscribe<O, S>(
+      (output) => _processRequest(buildRequest(output as O)),
     );
   }
 
@@ -35,8 +30,8 @@ abstract class Gateway<O extends Output, R extends Request,
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
-      (failureResponse) => Left(_onFailure(failureResponse)),
-      (response) => Right(onSuccess(response)),
+      (failureResponse) => Either.left(_onFailure(failureResponse)),
+      (response) => Either.right(onSuccess(response)),
     );
   }
 
@@ -54,10 +49,9 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
     required UseCase publisherUseCase,
   })  : _subscriberUseCase = subscriberUseCase,
         _publisherUseCase = publisherUseCase {
-    _subscriberUseCase.subscribe(
-      SUBSCRIBER_OUTPUT,
-      (SUBSCRIBER_OUTPUT output) {
-        return Right<FailureInput, SUBSCRIBER_INPUT>(
+    _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
+      (output) {
+        return Either<FailureInput, SUBSCRIBER_INPUT>.right(
           onResponse(
             _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
           ),
@@ -82,7 +76,9 @@ abstract class WatcherGateway<
   }) : super(context: context, provider: provider);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) => FailureInput();
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
+  }
 
   @nonVirtual
   void yieldResponse(P response) {
@@ -92,49 +88,3 @@ abstract class WatcherGateway<
 
 typedef Transport<R extends Request, P extends SuccessResponse>
     = Future<Either<FailureResponse, P>> Function(R request);
-
-@immutable
-abstract class Request {
-  const Request();
-}
-
-@immutable
-abstract class Response extends Equatable {
-  const Response();
-  @override
-  bool get stringify => true;
-}
-
-class SuccessResponse extends Response {
-  const SuccessResponse();
-
-  @override
-  List<Object?> get props => [];
-}
-
-abstract class FailureResponse extends Response {
-  const FailureResponse({this.message = ''});
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
-}
-
-class TypedFailureResponse<T extends Object> extends FailureResponse {
-  const TypedFailureResponse({
-    required this.type,
-    this.errorData = const {},
-    super.message,
-  });
-
-  final T type;
-  final Map<String, Object?> errorData;
-
-  @override
-  List<Object?> get props => [...super.props, type, errorData];
-}
-
-class UnknownFailureResponse extends FailureResponse {
-  UnknownFailureResponse([Object? error]) : super(message: error.toString());
-}

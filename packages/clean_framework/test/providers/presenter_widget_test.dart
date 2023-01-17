@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -104,23 +104,23 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
 class TestUseCase extends UseCase<EntityFake> {
   TestUseCase()
       : super(
-          entity: EntityFake(),
-          outputFilters: {
-            TestOutput: (EntityFake entity) => TestOutput(entity.value),
-          },
+          entity: const EntityFake(),
+          transformers: [
+            OutputTransformer.from((entity) => TestOutput(entity.value)),
+          ],
         );
 
   Future<void> fetch() async {
-    entity = EntityFake(value: 'a');
+    entity = const EntityFake(value: 'a');
 
     await Future<void>.delayed(const Duration(milliseconds: 100));
 
-    entity = EntityFake(value: 'b');
+    entity = const EntityFake(value: 'b');
   }
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override

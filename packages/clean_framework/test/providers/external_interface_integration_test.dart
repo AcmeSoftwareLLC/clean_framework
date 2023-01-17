@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +11,7 @@ void main() {
   useCaseTest<TestUseCase, TestOutput>(
     'Interface using direct gateway',
     context: context,
-    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
     setup: (provider) {
       final gatewayProvider = GatewayProvider(
         (_) => TestDirectGateway(provider),
@@ -22,14 +21,14 @@ void main() {
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
       final output = useCase.getOutput<TestOutput>();
-      expect(output, TestOutput('success'));
+      expect(output, const TestOutput('success'));
     },
   );
 
   useCaseTest<TestUseCase, TestOutput>(
     'Interface with failure',
     context: context,
-    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
     setup: (provider) {
       final gatewayProvider = GatewayProvider(
         (_) => TestWatcherGatewayWitFailure(provider),
@@ -39,14 +38,14 @@ void main() {
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
       final output = useCase.getOutput<TestOutput>();
-      expect(output, TestOutput('failure'));
+      expect(output, const TestOutput('failure'));
     },
   );
 
   useCaseTest<TestUseCase, TestOutput>(
     'Interface using watcher gateway',
     context: context,
-    build: (_) => TestUseCase(TestEntity(foo: 'bar')),
+    build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
     setup: (provider) {
       final gatewayProvider = GatewayProvider<WatcherGateway>(
         (_) => TestYieldGateway(provider),
@@ -55,10 +54,10 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataEventually(),
     expect: () => [
-      TestOutput('0'),
-      TestOutput('1'),
-      TestOutput('2'),
-      TestOutput('3'),
+      const TestOutput('0'),
+      const TestOutput('1'),
+      const TestOutput('2'),
+      const TestOutput('3'),
     ],
   );
 }
@@ -115,7 +114,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -158,18 +157,17 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
           entity: entity,
-          outputFilters: {
-            TestOutput: (entity) => TestOutput(entity.foo),
-          },
-          inputFilters: {
-            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-                entity.merge(foo: input.foo),
-          },
+          transformers: [
+            OutputTransformer.from((entity) => TestOutput(entity.foo)),
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (entity, input) => entity.merge(foo: input.foo),
+            ),
+          ],
         );
 
   Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
-      TestDirectOutput('123'),
+      const TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
       onSuccess: (success) => entity.merge(foo: success.foo),
     );
@@ -177,7 +175,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataImmediatelyWithFailure() async {
     await request<TestDirectOutput, TestSuccessInput>(
-      TestDirectOutput('123'),
+      const TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
       onSuccess: (success) => entity.merge(foo: success.foo),
     );
@@ -185,7 +183,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataEventually() async {
     await request<TestSubscriptionOutput, SuccessInput>(
-      TestSubscriptionOutput('123'),
+      const TestSubscriptionOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
       onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
@@ -219,12 +217,12 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-  TestDirectOutput(this.id);
+  const TestDirectOutput(this.id);
   final String id;
 
   @override
@@ -232,7 +230,7 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-  TestSubscriptionOutput(this.id);
+  const TestSubscriptionOutput(this.id);
   final String id;
 
   @override
@@ -240,7 +238,7 @@ class TestSubscriptionOutput extends Output {
 }
 
 class TestEntity extends Entity {
-  TestEntity({required this.foo});
+  const TestEntity({required this.foo});
   final String foo;
 
   @override
@@ -250,7 +248,7 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override

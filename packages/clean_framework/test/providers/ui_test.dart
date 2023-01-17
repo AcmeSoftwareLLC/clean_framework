@@ -1,22 +1,10 @@
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  final router = AppRouter(
-    routes: [
-      AppRoute(
-        name: 'test',
-        path: '/',
-        builder: (_, __) => TestUI(),
-      ),
-    ],
-    errorBuilder: (_, __) => Container(),
-  );
 
   uiTest(
     'LastLogin without setup',
@@ -31,13 +19,10 @@ void main() {
     screenSize: const Size(800, 600),
   );
 
-  setupUITest(
-    context: ProvidersContext(),
-    router: router,
-  );
-
   uiTest(
     'LastLogin using router',
+    builder: TestUI.new,
+    context: ProvidersContext(),
     postFrame: (tester) async {
       await tester.pump();
     },
@@ -51,6 +36,7 @@ void main() {
   uiTest(
     'LastLogin',
     builder: TestUI.new,
+    context: ProvidersContext(),
     verify: (tester) async {
       expect(find.byType(type<PresenterFake>()), findsOneWidget);
       expect(find.text('bar'), findsOneWidget);
@@ -85,7 +71,7 @@ class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
         );
 
   @override
-  TestOutput subscribe(_) => TestOutput('bar');
+  TestOutput subscribe(_) => const TestOutput('bar');
 
   @override
   TestViewModel createViewModel(_, TestOutput output) {
@@ -102,7 +88,7 @@ class TestViewModel extends ViewModel {
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override

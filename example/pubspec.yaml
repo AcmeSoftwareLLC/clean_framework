@@ -1,0 +1,33 @@
+name: example
+description: Sandbox with example of all components from clean framework
+version: 1.5.0
+publish_to: none
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  clean_framework: ^1.5.0
+  clean_framework_firestore: ^0.1.0
+  clean_framework_graphql: ^0.1.0
+  clean_framework_rest: ^0.1.0
+  clean_framework_router: ^0.1.0
+  intl: ^0.18.0
+
+dev_dependencies:
+  clean_framework_test: ^0.1.0
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.0.0-nullsafety.7
+  equatable: ^2.0.5
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/flags.json

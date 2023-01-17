@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework/clean_framework_providers.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_graphql/clean_framework_graphql.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,13 +9,13 @@ void main() {
     final useCase = UseCaseFake();
     final gateway = TestGateway(useCase)
       ..transport = (request) async {
-        return const Right<FailureResponse, GraphQLSuccessResponse>(
+        return const Either<FailureResponse, GraphQLSuccessResponse>.right(
           GraphQLSuccessResponse(data: {}),
         );
       };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
 
     final request = gateway.buildRequest(TestOutput());
     expect(request.variables, null);
@@ -24,13 +24,13 @@ void main() {
   test('GraphQLGateway failure response', () async {
     final useCase = UseCaseFake();
     TestGateway(useCase).transport = (request) async {
-      return const Left<FailureResponse, GraphQLSuccessResponse>(
+      return const Either.left(
         GraphQLFailureResponse(type: GraphQLFailureType.operation),
       );
     };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 }
 
@@ -45,7 +45,7 @@ class TestGateway
 
   @override
   SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return SuccessInput();
+    return const SuccessInput();
   }
 }
 

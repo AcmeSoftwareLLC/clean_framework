@@ -1,7 +1,5 @@
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
@@ -11,24 +9,24 @@ void main() {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestDirectGateway(provider).transport = (request) async {
-      return const Right(TestResponse('success'));
+      return const Either.right(TestResponse('success'));
     };
 
-    await useCase.doFakeRequest(TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.entity, EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
   });
 
   test('Gateway unit test for failure on direct output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestDirectGateway(provider).transport = (request) async {
-      return Left(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.entity, EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('Gateway unit test for success on yield output', () async {
@@ -36,28 +34,28 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     final gateway = TestYieldGateway(provider)
       ..transport = (request) async {
-        return const Right(TestResponse('success'));
+        return const Either.right(TestResponse('success'));
       };
 
-    await useCase.doFakeRequest(TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.entity, EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
 
     gateway.yieldResponse(const TestResponse('with yield'));
 
-    expect(useCase.entity, EntityFake(value: 'success with input'));
+    expect(useCase.entity, const EntityFake(value: 'success with input'));
   });
 
   test('Gateway unit test for failure on yield output', () async {
     final useCase = UseCaseFake();
     final provider = UseCaseProvider((_) => useCase);
     TestYieldGateway(provider).transport = (request) async {
-      return Left(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.entity, EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('props', () {
@@ -78,7 +76,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -98,7 +96,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -121,12 +119,12 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-  TestDirectOutput(this.id);
+  const TestDirectOutput(this.id);
   final String id;
 
   @override
@@ -134,7 +132,7 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-  TestSubscriptionOutput(this.id);
+  const TestSubscriptionOutput(this.id);
   final String id;
 
   @override

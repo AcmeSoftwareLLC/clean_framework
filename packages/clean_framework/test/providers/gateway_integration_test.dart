@@ -1,6 +1,4 @@
-import 'package:clean_framework/clean_framework_providers.dart';
-import 'package:clean_framework/src/app_providers_container.dart';
-import 'package:either_dart/either.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 final context = ProvidersContext();
@@ -8,47 +6,43 @@ final context = ProvidersContext();
 void main() {
   test('Gateway transport direct request with success', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-      (_) => TestUseCase(TestEntity(foo: 'bar')),
+      (_) => TestUseCase(const TestEntity(foo: 'bar')),
     );
     TestDirectGateway(provider).transport = (request) async {
-      return const Right<FailureResponse, TestResponse>(
-        TestResponse('success'),
-      );
+      return const Either.right(TestResponse('success'));
     };
 
     final useCase = provider.getUseCaseFromContext(context);
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     final output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('success'));
+    expect(output, const TestOutput('success'));
   });
 
   test('Gateway transport direct request with failure', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-      (_) => TestUseCase(TestEntity(foo: 'bar')),
+      (_) => TestUseCase(const TestEntity(foo: 'bar')),
     );
     TestDirectGateway(provider).transport = (request) async {
-      return Left<FailureResponse, TestResponse>(UnknownFailureResponse());
+      return Either.left(UnknownFailureResponse());
     };
 
     final useCase = provider.getUseCaseFromContext(context);
 
-    await useCase.fetchDataImmediatelly();
+    await useCase.fetchDataImmediately();
 
     final output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('failure'));
+    expect(output, const TestOutput('failure'));
   });
 
   test('Gateway transport delayed request with a yielded success', () async {
     final provider = UseCaseProvider<TestEntity, TestUseCase>(
-      (_) => TestUseCase(TestEntity(foo: 'bar')),
+      (_) => TestUseCase(const TestEntity(foo: 'bar')),
     );
     final gateway = TestYieldGateway(provider)
       ..transport = (request) async {
-        return const Right<FailureResponse, TestResponse>(
-          TestResponse('success'),
-        );
+        return const Either.right(TestResponse('success'));
       };
 
     final useCase = provider.getUseCaseFromContext(context);
@@ -56,24 +50,24 @@ void main() {
     await useCase.fetchDataEventually();
 
     final output = useCase.getOutput<TestOutput>();
-    expect(output, TestOutput('bar'));
+    expect(output, const TestOutput('bar'));
 
     gateway.yieldResponse(const TestResponse('with yield'));
 
     final output2 = useCase.getOutput<TestOutput>();
-    expect(output2, TestOutput('with yield'));
+    expect(output2, const TestOutput('with yield'));
   });
 
   test('BridgeGateway transfer of data', () async {
-    final useCase1 = TestUseCase(TestEntity(foo: 'bar'));
-    final useCase2 = TestUseCase(TestEntity(foo: 'to be replaced'));
+    final useCase1 = TestUseCase(const TestEntity(foo: 'bar'));
+    final useCase2 = TestUseCase(const TestEntity(foo: 'to be replaced'));
 
     TestBridgeGateway(subscriberUseCase: useCase2, publisherUseCase: useCase1);
 
     await useCase2.fetchStateFromOtherUseCase();
     final output = useCase2.getOutput<TestOutput>();
 
-    expect(output, TestOutput('bar'));
+    expect(output, const TestOutput('bar'));
   });
 }
 
@@ -98,7 +92,7 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -118,7 +112,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 
   @override
   FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: 'backend error');
+    return const FailureInput(message: 'backend error');
   }
 
   @override
@@ -131,18 +125,17 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
           entity: entity,
-          outputFilters: {
-            TestOutput: (entity) => TestOutput(entity.foo),
-          },
-          inputFilters: {
-            TestSuccessInput: (TestSuccessInput input, TestEntity entity) =>
-                entity.merge(foo: input.foo),
-          },
+          transformers: [
+            OutputTransformer.from((entity) => TestOutput(entity.foo)),
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (entity, input) => entity.merge(foo: input.foo),
+            ),
+          ],
         );
 
-  Future<void> fetchDataImmediatelly() async {
+  Future<void> fetchDataImmediately() async {
     await request<TestDirectOutput, TestSuccessInput>(
-      TestDirectOutput('123'),
+      const TestDirectOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
       onSuccess: (success) => entity.merge(foo: success.foo),
     );
@@ -150,7 +143,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataEventually() async {
     await request<TestSubscriptionOutput, SuccessInput>(
-      TestSubscriptionOutput('123'),
+      const TestSubscriptionOutput('123'),
       onFailure: (_) => entity.merge(foo: 'failure'),
       onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
@@ -159,7 +152,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchStateFromOtherUseCase() async {
     await request<TestDirectOutput, TestSuccessInput>(
-      TestDirectOutput(''),
+      const TestDirectOutput(''),
       onFailure: (_) => entity,
       onSuccess: (input) {
         return entity.merge(foo: input.foo);
@@ -182,12 +175,12 @@ class TestResponse extends SuccessResponse {
 }
 
 class TestSuccessInput extends SuccessInput {
-  TestSuccessInput(this.foo);
+  const TestSuccessInput(this.foo);
   final String foo;
 }
 
 class TestDirectOutput extends Output {
-  TestDirectOutput(this.id);
+  const TestDirectOutput(this.id);
   final String id;
 
   @override
@@ -195,7 +188,7 @@ class TestDirectOutput extends Output {
 }
 
 class TestSubscriptionOutput extends Output {
-  TestSubscriptionOutput(this.id);
+  const TestSubscriptionOutput(this.id);
   final String id;
 
   @override
@@ -203,7 +196,7 @@ class TestSubscriptionOutput extends Output {
 }
 
 class TestEntity extends Entity {
-  TestEntity({required this.foo});
+  const TestEntity({required this.foo});
   final String foo;
 
   @override
@@ -213,7 +206,7 @@ class TestEntity extends Entity {
 }
 
 class TestOutput extends Output {
-  TestOutput(this.foo);
+  const TestOutput(this.foo);
   final String foo;
 
   @override
