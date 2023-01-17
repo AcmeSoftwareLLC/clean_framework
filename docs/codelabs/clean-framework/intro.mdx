@@ -39,7 +39,7 @@ The goal of this layer is to translate the `Input`s and `Output`s from the Use C
 These components have a similar function as the BDD Adapter. We have two main components, the `Presenter` and the `Gateway`:
 
 #### Presenters
-It's job is to translate `Output`s into `ViewModel`s, which are contain data and behavior _(in the form of callbacks)_.
+It's job is to translate `Output`s into `ViewModel`s, which contains data and behavior _(in the form of callbacks)_.
 This class will hold most of your UI logic that is not business related, like navigation.
 
 Presenters will interact with providers of Use Cases to subscribe to a specific `Output`,
