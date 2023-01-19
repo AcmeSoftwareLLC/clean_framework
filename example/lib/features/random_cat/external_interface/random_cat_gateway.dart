@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/random_cat/domain/random_cat_use_case.dart';
 import 'package:example/providers.dart';
-import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:clean_framework_rest/clean_framework_rest_legacy.dart';
 
 class RandomCatGateway extends RestGateway<RandomCatGatewayOutput,
     RandomCatRequest, RandomCatSuccessInput> {
