@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
+import 'package:clean_framework_rest/clean_framework_rest_legacy.dart';
+import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 
@@ -14,26 +15,33 @@ void main() {
   });
 
   test('RestExternalInterface success response', () async {
+    // for coverage purposes:
+    RestExternalInterface(baseUrl: '', gatewayConnections: []);
+
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay = GatewayFake<TestRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestRequest());
 
+    final result = await gateWay.transport(TestRequest());
     expect(result.isRight, isTrue);
     expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
 
   test('RestExternalInterface connectivity failure', () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay = GatewayFake<TestRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestRequest());
 
+    final result = await gateWay.transport(TestRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -51,12 +59,15 @@ void main() {
       () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestPostMultipartRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestPostMultipartRequest());
 
+    final result = await gateWay.transport(TestPostMultipartRequest());
     expect(result.isRight, isTrue);
     expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
@@ -65,12 +76,15 @@ void main() {
       () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinarySrcPostRequest());
 
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
     expect(result.isRight, isTrue);
     expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
@@ -78,12 +92,14 @@ void main() {
   test('RestExternalInterface binary data request success response', () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestBinaryDataPutRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinaryDataPutRequest());
-
+    final result = await gateWay.transport(TestBinaryDataPutRequest());
     expect(result.isRight, isTrue);
     expect(result.right, JsonRestSuccessResponse(data: testContent));
   });
@@ -91,20 +107,20 @@ void main() {
   test('RestExternalInterface binary data request rest service failure',
       () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestBinaryDataPostRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinaryDataPostRequest());
 
+    final result = await gateWay.transport(TestBinaryDataPostRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      isA<UnknownFailureResponse>().having(
-        (err) => err.message,
-        'message',
-        'Something went wrong',
-      ),
+      isA<UnknownFailureResponse>()
+          .having((err) => err.message, 'message', 'Something went wrong'),
     );
   });
 
@@ -112,20 +128,19 @@ void main() {
       'RestExternalInterface binary data src '
       'request rest service failure on invalid file path', () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay = GatewayFake<TestBinarySrcPutRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinarySrcPutRequest());
 
+    final result = await gateWay.transport(TestBinarySrcPutRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
-      isA<UnknownFailureResponse>().having(
-        (err) => err.message,
-        'message',
-        isNotEmpty,
-      ),
+      isA<UnknownFailureResponse>()
+          .having((err) => err.message, 'message', isNotEmpty),
     );
   });
 
@@ -133,12 +148,15 @@ void main() {
       'RestExternalInterface binary data src '
       'request invalid response service failure', () async {
     final restService = RestServiceFake({'statusCode': 400});
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinarySrcPostRequest());
 
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -156,12 +174,15 @@ void main() {
       'RestExternalInterface binary data '
       'request invalid response service failure', () async {
     final restService = RestServiceFake({'statusCode': 400});
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay =
+        GatewayFake<TestBinarySrcPostRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(TestBinarySrcPostRequest());
 
+    final result = await gateWay.transport(TestBinarySrcPostRequest());
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -176,16 +197,19 @@ void main() {
   });
 
   test('RestExternalInterface bytes rest request success response', () async {
-    RestExternalInterface(baseUrl: '');
+    // for coverage purposes:
+    RestExternalInterface(baseUrl: '', gatewayConnections: []);
 
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(
-      baseUrl: '',
+    final gateWay = GatewayFake<TestBytesRestRequest, RestSuccessResponse>();
+    RestExternalInterface(
       restService: restService,
+      baseUrl: '',
+      gatewayConnections: [() => gateWay],
     );
-    final result = await interface.request(const TestBytesRestRequest());
 
+    final result = await gateWay.transport(const TestBytesRestRequest());
     expect(result.isRight, isTrue);
     expect(
       result.right,

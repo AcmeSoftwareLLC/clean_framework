@@ -86,6 +86,10 @@ void main() {
         );
         await pumpApp(tester);
 
+        // This is to trigger rebuild so that updateShouldNotify is invoked
+        // for AppRouterScope.
+        await pumpApp(tester);
+
         expect(find.text('Home'), findsOneWidget);
         expect(find.text('Detail'), findsNothing);
 
@@ -96,7 +100,10 @@ void main() {
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsOneWidget);
 
-        expect(testRouter.location, '/detail');
+        final element = tester.element(find.byType(MaterialApp));
+        final router = AppRouter.of(element);
+        expect(router.location, '/detail');
+        expect(element.router.location, '/detail');
       },
     );
 
@@ -153,6 +160,48 @@ void main() {
               builder: (_, __) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
+                  Routes.detailWithParam,
+                  params: {'meta': '123'},
+                ),
+              ),
+            ),
+            AppRoute(
+              route: Routes.detailWithParam,
+              builder: (_, state) => OnTapPage(
+                id: 'Detail',
+                value: state.params['meta'],
+              ),
+            ),
+          ],
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        // to Routes.detail
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('Value: 123'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123');
+      },
+    );
+
+    testWidgets(
+      'navigating with params; using to',
+      (tester) async {
+        testRouter = TestRouter(
+          routes: [
+            AppRoute(
+              route: Routes.home,
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                // ignore: deprecated_member_use_from_same_package
+                onTap: (context) => testRouter.to(
                   Routes.detailWithParam,
                   params: {'meta': '123'},
                 ),
@@ -432,6 +481,212 @@ void main() {
     );
 
     testWidgets(
+      'navigating using pushReplacement',
+      (tester) async {
+        testRouter = TestRouter(
+          routes: [
+            AppRoute(
+              route: Routes.home,
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(Routes.subDetail),
+              ),
+              routes: [
+                AppRoute(
+                  route: Routes.subDetail,
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    onTap: (context) => testRouter.pushReplacement(
+                      Routes.moreDetail,
+                    ),
+                  ),
+                  routes: [
+                    AppRoute(
+                      route: Routes.moreDetail,
+                      builder: (_, state) => const OnTapPage(
+                        id: 'More Detail',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        expect(testRouter.location, '/detail');
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/more-detail');
+
+        testRouter.pop();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'navigating using pushReplacementLocation',
+      (tester) async {
+        testRouter = TestRouter(
+          routes: [
+            AppRoute(
+              route: Routes.home,
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(Routes.subDetail),
+              ),
+              routes: [
+                AppRoute(
+                  route: Routes.subDetail,
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    onTap: (context) => testRouter.pushReplacementLocation(
+                      '/detail/more-detail',
+                    ),
+                  ),
+                  routes: [
+                    AppRoute(
+                      route: Routes.moreDetail,
+                      builder: (_, state) => const OnTapPage(
+                        id: 'More Detail',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        expect(testRouter.location, '/detail');
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/more-detail');
+
+        testRouter.pop();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'navigating using pushLocation',
+      (tester) async {
+        testRouter = TestRouter(
+          routes: [
+            AppRoute(
+              route: Routes.home,
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                onTap: (context) => testRouter.push(Routes.subDetail),
+              ),
+              routes: [
+                AppRoute(
+                  route: Routes.subDetail,
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    onTap: (context) => testRouter.pushLocation(
+                      '/detail/more-detail',
+                    ),
+                  ),
+                  routes: [
+                    AppRoute(
+                      route: Routes.moreDetail,
+                      builder: (_, state) => const OnTapPage(
+                        id: 'More Detail',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        expect(testRouter.location, '/detail');
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/more-detail');
+
+        testRouter.pop();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+        expect(find.text('More Detail'), findsNothing);
+
+        // ignore: deprecated_member_use_from_same_package
+        testRouter.back();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+        expect(find.text('More Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
       'navigating using goLocation',
       (tester) async {
         testRouter = TestRouter(
@@ -441,6 +696,55 @@ void main() {
               builder: (_, __) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.goLocation(
+                  '/detail/123?b=456',
+                  extra: 789,
+                ),
+              ),
+              routes: [
+                AppRoute(
+                  route: Routes.subDetailWithParam,
+                  builder: (_, state) => OnTapPage(
+                    id: 'Detail',
+                    value: '${state.params['meta']}${state.queryParams['b']}'
+                        '${state.extra}',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+        await pumpApp(tester);
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+
+        await tester.tap(find.byType(ElevatedButton));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsNothing);
+        expect(find.text('Detail'), findsOneWidget);
+
+        expect(testRouter.location, '/detail/123?b=456');
+
+        testRouter.pop();
+        await tester.pumpAndSettle();
+
+        expect(find.text('Home'), findsOneWidget);
+        expect(find.text('Detail'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'navigating using open',
+      (tester) async {
+        testRouter = TestRouter(
+          routes: [
+            AppRoute(
+              route: Routes.home,
+              builder: (_, __) => OnTapPage(
+                id: 'Home',
+                // ignore: deprecated_member_use_from_same_package
+                onTap: (context) => testRouter.open(
                   '/detail/123?b=456',
                   extra: 789,
                 ),
@@ -920,12 +1224,28 @@ void main() {
         expect(find.text('Detail'), findsNothing);
       },
     );
+
+    test('location from the route', () {
+      testRouter = TestRouter(
+        routes: [
+          AppRoute(
+            route: Routes.home,
+            builder: (_, __) => const OnTapPage(id: 'Home'),
+          ),
+        ],
+      );
+
+      expect(testRouter.locationOf(Routes.home), equals('/'));
+    });
   });
 }
 
 Future<void> pumpApp(WidgetTester tester) {
   return tester.pumpWidget(
-    MaterialApp.router(routerConfig: testRouter.config),
+    AppRouterScope(
+      create: () => testRouter,
+      builder: (context) => MaterialApp.router(routerConfig: testRouter.config),
+    ),
   );
 }
 

@@ -4,6 +4,7 @@ import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
 import 'package:clean_framework/src/core/gateway/gateway.dart';
 import 'package:clean_framework/src/core/gateway/gateway_provider.dart';
+import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 import 'package:meta/meta.dart';
 import 'package:riverpod/riverpod.dart';
@@ -97,9 +98,9 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   Never sendError(Object error) => throw error;
 
   FailureResponse _onError(Object error, R request) {
-    //CleanFrameworkObserver.instance.onExternalError(this, request, error);
+    CleanFrameworkObserver.instance.onExternalError(this, request, error);
     final failure = onError(error);
-    //CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
+    CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
     return failure;
   }
 }

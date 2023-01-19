@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_rest/src/rest_requests.dart';
 import 'package:clean_framework_rest/src/rest_responses.dart';
 import 'package:clean_framework_rest/src/rest_service.dart';
@@ -9,15 +9,16 @@ import 'package:cross_file/cross_file.dart';
 class RestExternalInterface
     extends ExternalInterface<RestRequest, RestSuccessResponse> {
   RestExternalInterface({
+    required List<GatewayConnection<Gateway>> gatewayConnections,
     required String baseUrl,
     Map<String, String> headers = const {},
     RestService? restService,
-  }) : _restService = restService ??
+  })  : _restService = restService ??
             RestService(
               baseUrl: baseUrl,
               headers: headers,
-            );
-
+            ),
+        super(gatewayConnections);
   final RestService _restService;
 
   @override

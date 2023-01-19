@@ -9,7 +9,7 @@ typedef AppRouterState = GoRouterState;
 /// Wrapper class around [GoRouter].
 abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   AppRouter() {
-    _router = configureRouter();
+    _router = configureRouter()..addListener(_onLocationChanged);
   }
 
   late final RouterConfiguration _router;

@@ -1,30 +1,33 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_rest/clean_framework_rest.dart';
+import 'package:clean_framework/clean_framework_legacy.dart';
+import 'package:clean_framework_rest/clean_framework_rest_legacy.dart';
+import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('RestGateway success response', () async {
-    final gateway = TestGateway()
-      ..feedResponse(
-        (request) => const Either.right(
-          RestSuccessResponse(data: {'foo': 'bar'}),
-        ),
-      );
+    final useCase = UseCaseFake();
+    final gateway = TestGateway(useCase)
+      ..transport = (request) async {
+        return const Either.right(RestSuccessResponse(data: {}));
+      };
 
-    final input = await gateway.buildInput(TestOutput());
-    expect(input.isRight, isTrue);
-    expect(input.right.data, {'foo': 'bar'});
+    await useCase.doFakeRequest(TestOutput());
+    expect(useCase.entity, const EntityFake(value: 'success'));
+
+    final request = gateway.buildRequest(TestOutput());
+    expect(request.params, request.data);
+    expect(request.params, isEmpty);
   });
 
   test('RestGateway failure response', () async {
-    final gateway = TestGateway()
-      ..feedResponse(
-        (request) => Either.left(UnknownFailureResponse('failure')),
-      );
+    final useCase = UseCaseFake();
+    TestGateway(useCase).transport = (request) async {
+      return Either.left(UnknownFailureResponse());
+    };
 
-    final input = await gateway.buildInput(TestOutput());
-    expect(input.isLeft, isTrue);
-    expect(input.left, isA<FailureInput>());
+    await useCase.doFakeRequest(TestOutput());
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('other requests', () {
@@ -37,16 +40,17 @@ void main() {
   });
 }
 
-class TestGateway
-    extends RestGateway<TestOutput, TestRequest, TestSuccessInput> {
+class TestGateway extends RestGateway<TestOutput, TestRequest, SuccessInput> {
+  TestGateway(UseCase useCase) : super(useCase: useCase);
+
   @override
   TestRequest buildRequest(TestOutput output) {
     return TestRequest();
   }
 
   @override
-  TestSuccessInput onSuccess(RestSuccessResponse response) {
-    return TestSuccessInput(data: response.data);
+  SuccessInput onSuccess(RestSuccessResponse response) {
+    return const SuccessInput();
   }
 }
 
@@ -78,10 +82,4 @@ class TestPatchRequest extends PatchRestRequest {
 class TestDeleteRequest extends DeleteRestRequest {
   @override
   String get path => 'http://fake.com';
-}
-
-class TestSuccessInput extends SuccessInput {
-  const TestSuccessInput({required this.data});
-
-  final Object data;
 }
