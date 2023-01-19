@@ -208,6 +208,26 @@ void main() {
         'Hello world!',
       );
     });
+
+    test('map into certain type', () {
+      final data = Deserializer(
+        {'key': '2020-01.01'},
+      );
+
+      expect(
+        data.map((rawData) => rawData['key'].toString()),
+        equals('2020-01.01'),
+      );
+    });
+
+    test('deserialize extension to Map works', () {
+      final data = {'key': '2020-01.01'}.deserialize;
+
+      expect(
+        data.map((rawData) => rawData['key'].toString()),
+        equals('2020-01.01'),
+      );
+    });
   });
 }
 
