@@ -12,8 +12,11 @@ class RestExternalInterface
     required String baseUrl,
     Map<String, String> headers = const {},
     RestService? restService,
-  }) : _restService =
-            restService ?? RestService(baseUrl: baseUrl, headers: headers);
+  }) : _restService = restService ??
+            RestService(
+              baseUrl: baseUrl,
+              headers: headers,
+            );
 
   final RestService _restService;
 
