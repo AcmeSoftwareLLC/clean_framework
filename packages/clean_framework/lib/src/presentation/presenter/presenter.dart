@@ -28,6 +28,13 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   @protected
   void onOutputUpdate(BuildContext context, O output) {}
 
+  /// Called whenever a new output is received.
+  @protected
+  @mustCallSuper
+  void onOutput(BuildContext context, OutputState<O> output, V viewModel) {
+    if (output.hasUpdated) onOutputUpdate(context, output.next);
+  }
+
   /// Called whenever the presenter configuration changes.
   @protected
   void didUpdatePresenter(
@@ -75,13 +82,15 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   @override
   Widget build(BuildContext context) {
-    widget._provider.listen<O>(ref, _onOutputChanged);
     final output = widget.subscribe(ref);
-    return widget.builder(widget.createViewModel(_useCase!, output));
-  }
+    final viewModel = widget.createViewModel(_useCase!, output);
 
-  void _onOutputChanged(O? previous, O next) {
-    if (previous != next) widget.onOutputUpdate(context, next);
+    widget._provider.listen<O>(
+      ref,
+      (p, n) => widget.onOutput(context, OutputState(p, n), viewModel),
+    );
+
+    return widget.builder(viewModel);
   }
 
   @override
@@ -94,3 +103,12 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 }
 
 typedef PresenterBuilder<V extends ViewModel> = Widget Function(V viewModel);
+
+class OutputState<O extends Output> {
+  OutputState(this.previous, this.next);
+
+  final O? previous;
+  final O next;
+
+  bool get hasUpdated => previous != next;
+}

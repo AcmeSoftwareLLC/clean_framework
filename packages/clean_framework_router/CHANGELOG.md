@@ -1,4 +1,8 @@
 # Changelog
+## 0.3.0
+**Jan 19, 2023**
+- Upgraded `clean_framework` to v2.
+
 ## 0.2.0-dev.2
 **Nov 3, 2022**
 - Added `AppRouterState` alias.
