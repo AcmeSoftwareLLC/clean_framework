@@ -74,7 +74,56 @@ void main() {
       expect(input.isLeft, isTrue);
       expect(input.left.message, 'Something went wrong');
     });
+
+    test('yielding response will update use case', () async {
+      final container = ProviderContainer();
+
+      _testGatewayProvider
+          .read(container)
+          .yieldResponse(const TestSuccessResponse('Hello World!'));
+
+      _testUseCaseProvider.init();
+
+      final useCase = _testUseCaseProvider.read(container);
+
+      await Future<void>.delayed(Duration.zero);
+
+      expect(useCase.entity, const TestEntity(message: 'Hello World!'));
+    });
   });
+}
+
+final _testGatewayProvider = GatewayProvider(
+  TestWatcherGateway.new,
+  useCases: [_testUseCaseProvider],
+);
+
+final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+
+class TestEntity extends Entity {
+  const TestEntity({this.message = ''});
+
+  final String message;
+
+  @override
+  TestEntity copyWith({String? message}) {
+    return TestEntity(message: message ?? this.message);
+  }
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class TestUseCase extends UseCase<TestEntity> {
+  TestUseCase()
+      : super(
+          entity: const TestEntity(),
+          transformers: [
+            InputTransformer<TestEntity, TestSuccessInput>.from(
+              (e, i) => e.copyWith(message: i.message),
+            ),
+          ],
+        );
 }
 
 class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
