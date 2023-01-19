@@ -85,20 +85,22 @@ class TestPresenter
     extends Presenter<TestViewModel, TestUIOutput, TestUseCase> {
   TestPresenter({
     super.key,
+    PresenterBuilder<TestViewModel>? builder,
     this.message = '',
   }) : super(
           provider: _testUseCaseProvider,
-          builder: (viewModel) {
-            return Column(
-              children: [
-                Text(viewModel.message),
-                ElevatedButton(
-                  onPressed: () => viewModel.update('FOO'),
-                  child: const Text('CLICK'),
-                ),
-              ],
-            );
-          },
+          builder: builder ??
+              (viewModel) {
+                return Column(
+                  children: [
+                    Text(viewModel.message),
+                    ElevatedButton(
+                      onPressed: () => viewModel.update('FOO'),
+                      child: const Text('CLICK'),
+                    ),
+                  ],
+                );
+              },
         );
 
   final String message;
