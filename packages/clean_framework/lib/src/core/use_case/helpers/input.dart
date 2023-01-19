@@ -1,4 +1,3 @@
-import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -14,9 +13,4 @@ class FailureInput extends Input {
   const FailureInput({this.message = ''});
 
   final String message;
-}
-
-class NoSubscriptionFailureInput<O extends Output> extends FailureInput {
-  const NoSubscriptionFailureInput()
-      : super(message: 'No subscription exists for this request of $O');
 }
