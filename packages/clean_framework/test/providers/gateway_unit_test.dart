@@ -59,7 +59,8 @@ void main() {
   });
 
   test('props', () {
-    const response = SuccessResponse();
+    // ignore: prefer_const_constructors
+    final response = SuccessResponse();
     expect(response, const SuccessResponse());
     // If we log the responses and compare the output, that could replace this
     expect(response.stringify, isTrue);

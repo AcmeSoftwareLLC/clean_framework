@@ -26,7 +26,7 @@ class CleanFrameworkObserver {
   /// Called when an [error] is thrown by [ExternalInterface]
   /// for the given [request].
   void onExternalError(
-    ExternalInterface externalInterface,
+    Object externalInterface,
     Request request,
     Object error,
   ) {
@@ -38,7 +38,7 @@ class CleanFrameworkObserver {
 
   /// Called when a [failureResponse] occurs for the given [request].
   void onFailureResponse(
-    ExternalInterface externalInterface,
+    Object externalInterface,
     Request request,
     FailureResponse failureResponse,
   ) {}
