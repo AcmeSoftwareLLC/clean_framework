@@ -26,12 +26,29 @@ void main() {
   );
 
   useCaseTest<TestUseCase, TestOutput>(
+    'Watcher Interface with failure',
+    context: context,
+    build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
+    setup: (provider) {
+      final gatewayProvider = GatewayProvider(
+        (_) => TestWatcherGatewayWithFailure(provider),
+      );
+      TestInterface(gatewayProvider);
+    },
+    execute: (useCase) => useCase.fetchDataImmediately(),
+    verify: (useCase) {
+      final output = useCase.getOutput<TestOutput>();
+      expect(output, const TestOutput('failure'));
+    },
+  );
+
+  useCaseTest<TestUseCase, TestOutput>(
     'Interface with failure',
     context: context,
     build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
     setup: (provider) {
       final gatewayProvider = GatewayProvider(
-        (_) => TestWatcherGatewayWitFailure(provider),
+        (_) => TestGatewayWithFailure(provider),
       );
       TestInterface(gatewayProvider);
     },
@@ -123,9 +140,30 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
   }
 }
 
-class TestWatcherGatewayWitFailure extends WatcherGateway<TestDirectOutput,
+class TestGatewayWithFailure extends Gateway<TestDirectOutput, FailedRequest,
+    TestResponse, TestSuccessInput> {
+  TestGatewayWithFailure(UseCaseProvider provider)
+      : super(provider: provider, context: context);
+
+  @override
+  FailedRequest buildRequest(TestDirectOutput output) {
+    return FailedRequest(output.id);
+  }
+
+  @override
+  TestSuccessInput onSuccess(TestResponse response) {
+    return TestSuccessInput(response.foo);
+  }
+
+  @override
+  FailureInput onFailure(FailureResponse failureResponse) {
+    return FailureInput(message: failureResponse.message);
+  }
+}
+
+class TestWatcherGatewayWithFailure extends WatcherGateway<TestDirectOutput,
     FailedRequest, TestResponse, TestSuccessInput> {
-  TestWatcherGatewayWitFailure(UseCaseProvider provider)
+  TestWatcherGatewayWithFailure(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
