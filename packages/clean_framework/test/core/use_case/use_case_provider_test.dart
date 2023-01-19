@@ -166,6 +166,42 @@ void main() {
       await tester.tap(find.text('CLICK3'));
       await tester.pump();
     });
+
+    testWidgets('listen for output changes', (tester) async {
+      final widget = AppProviderScope(
+        child: MaterialApp(
+          home: Consumer(
+            builder: (context, ref, _) {
+              _testUseCaseProvider.listen<TestOutput>(ref, (o, n) {
+                expect(o, const TestOutput(foo: ''));
+                expect(n, const TestOutput(foo: 'bar'));
+              });
+
+              return ElevatedButton(
+                onPressed: () {
+                  final useCase = _testUseCaseProvider.getUseCase(ref);
+                  useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                },
+                child: const Text('CLICK'),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(widget);
+
+      await tester.tap(find.text('CLICK'));
+      await tester.pump();
+    });
+
+    test('read using container', () {
+      final container = ProviderContainer();
+
+      final useCase = _testUseCaseProvider.read(container);
+
+      expect(useCase, isA<TestUseCase>());
+    });
   });
 }
 
