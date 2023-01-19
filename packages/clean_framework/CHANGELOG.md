@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.1
+**Jan 19, 2022**
+- Added `onOutput` method for **Presenter**
+- Fixed issue with Flutter Web
+
 ## 2.0.0
 **Jan 17, 2022**
 **Breaking Change**
