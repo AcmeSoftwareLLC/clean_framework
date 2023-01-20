@@ -85,12 +85,13 @@ class TestPresenter
     extends Presenter<TestViewModel, TestUIOutput, TestUseCase> {
   TestPresenter({
     super.key,
-    PresenterBuilder<TestViewModel>? builder,
+    WidgetBuilder? builder,
     this.message = '',
   }) : super(
           provider: _testUseCaseProvider,
           builder: builder ??
-              (viewModel) {
+              (context) {
+                final viewModel = ViewModelScope.of<TestViewModel>(context);
                 return Column(
                   children: [
                     Text(viewModel.message),
