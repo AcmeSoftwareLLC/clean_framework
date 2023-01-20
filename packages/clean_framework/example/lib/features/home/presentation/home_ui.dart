@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class HomeUI extends UI<HomeViewModel> {
   @override
-  HomePresenter create(PresenterBuilder<HomeViewModel> builder) {
+  HomePresenter create(WidgetBuilder builder) {
     return HomePresenter(builder: builder);
   }
 

@@ -11,8 +11,9 @@ abstract class Presenter<V extends ViewModel, O extends Output,
     required UseCaseProviderBase provider,
     required this.builder,
   }) : _provider = provider;
+
   final UseCaseProviderBase _provider;
-  final PresenterBuilder<V> builder;
+  final WidgetBuilder builder;
 
   @override
   ConsumerState<Presenter<V, O, U>> createState() => _PresenterState<V, O, U>();
@@ -63,7 +64,9 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     super.initState();
     widget._provider
       ..notifier.first.then((_) {
-        widget.onLayoutReady(context, _useCase!);
+        if (ViewModelScope.maybeOf<V>(context) == null) {
+          widget.onLayoutReady(context, _useCase!);
+        }
       })
       ..init();
   }
@@ -82,15 +85,22 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   @override
   Widget build(BuildContext context) {
-    final output = widget.subscribe(ref);
-    final viewModel = widget.createViewModel(_useCase!, output);
+    var viewModel = ViewModelScope.maybeOf<V>(context);
 
-    widget._provider.listen<O>(
-      ref,
-      (p, n) => widget.onOutput(context, OutputState(p, n), viewModel),
+    if (viewModel == null) {
+      final output = widget.subscribe(ref);
+      viewModel = widget.createViewModel(_useCase!, output);
+
+      widget._provider.listen<O>(
+        ref,
+        (p, n) => widget.onOutput(context, OutputState(p, n), viewModel!),
+      );
+    }
+
+    return ViewModelScope<V>(
+      viewModel: viewModel,
+      child: Builder(builder: widget.builder),
     );
-
-    return widget.builder(viewModel);
   }
 
   @override
@@ -111,4 +121,31 @@ class OutputState<O extends Output> {
   final O next;
 
   bool get hasUpdated => previous != next;
+}
+
+class ViewModelScope<V extends ViewModel> extends InheritedWidget {
+  const ViewModelScope({
+    super.key,
+    required super.child,
+    required this.viewModel,
+  });
+
+  final V viewModel;
+
+  static V of<V extends ViewModel>(BuildContext context) {
+    final viewModel = maybeOf<V>(context);
+    assert(viewModel != null, 'No ViewModelScope<$V> found in context');
+    return viewModel!;
+  }
+
+  static V? maybeOf<V extends ViewModel>(BuildContext context) {
+    final result =
+        context.dependOnInheritedWidgetOfExactType<ViewModelScope<V>>();
+    return result?.viewModel;
+  }
+
+  @override
+  bool updateShouldNotify(ViewModelScope oldWidget) {
+    return oldWidget.viewModel != viewModel;
+  }
 }

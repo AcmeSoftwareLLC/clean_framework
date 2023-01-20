@@ -15,7 +15,7 @@ class ProfileUI extends UI<ProfileViewModel> {
   final String pokemonImageUrl;
 
   @override
-  ProfilePresenter create(PresenterBuilder<ProfileViewModel> builder) {
+  ProfilePresenter create(WidgetBuilder builder) {
     return ProfilePresenter(builder: builder, name: pokemonName);
   }
 
