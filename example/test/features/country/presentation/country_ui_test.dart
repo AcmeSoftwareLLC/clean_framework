@@ -4,7 +4,7 @@ import 'package:example/features/country/presentation/country_ui.dart';
 import 'package:example/providers.dart';
 import 'package:example/routes.dart';
 import 'package:clean_framework_graphql/clean_framework_graphql.dart';
-import 'package:clean_framework_test/clean_framework_test.dart';
+import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

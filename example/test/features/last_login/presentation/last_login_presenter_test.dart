@@ -2,7 +2,7 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:example/features/last_login/domain/last_login_use_case.dart';
 import 'package:example/features/last_login/presentation/last_login_presenter.dart';
 import 'package:example/features/last_login/presentation/last_login_view_model.dart';
-import 'package:clean_framework_test/clean_framework_test.dart';
+import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

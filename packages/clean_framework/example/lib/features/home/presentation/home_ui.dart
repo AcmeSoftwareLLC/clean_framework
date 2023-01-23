@@ -25,28 +25,27 @@ class HomeUI extends UI<HomeViewModel> {
     } else {
       child = RefreshIndicator(
         onRefresh: viewModel.onRefresh,
-        child: Scrollbar(
-          thumbVisibility: true,
-          child: ListView.builder(
-            prototypeItem: SizedBox(height: 176), // 160 + 16
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            itemBuilder: (context, index) {
-              final pokemon = viewModel.pokemons[index];
+        child: ListView.builder(
+          prototypeItem: SizedBox(height: 176), // 160 + 16
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          itemBuilder: (context, index) {
+            final pokemon = viewModel.pokemons[index];
 
-              return PokemonCard(
-                key: ValueKey(pokemon.name),
-                imageUrl: pokemon.imageUrl,
-                name: pokemon.name,
-                heroTag: pokemon.name,
-                onTap: () => context.router.go(
+            return PokemonCard(
+              key: ValueKey(pokemon.name),
+              imageUrl: pokemon.imageUrl,
+              name: pokemon.name,
+              heroTag: pokemon.name,
+              onTap: () {
+                context.router.go(
                   Routes.profile,
                   params: {'pokemon_name': pokemon.name},
                   queryParams: {'image': pokemon.imageUrl},
-                ),
-              );
-            },
-            itemCount: viewModel.pokemons.length,
-          ),
+                );
+              },
+            );
+          },
+          itemCount: viewModel.pokemons.length,
         ),
       );
     }
