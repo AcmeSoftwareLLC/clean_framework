@@ -15,6 +15,8 @@ class ExternalInterfaceProvider<E extends ExternalInterface>
           ),
         );
 
+  Override overrideWith(E interface) => call().overrideWithValue(interface);
+
   @visibleForTesting
   E read(ProviderContainer container) => container.read(call());
 

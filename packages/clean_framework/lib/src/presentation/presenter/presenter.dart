@@ -8,11 +8,12 @@ abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
     super.key,
-    required UseCaseProviderBase provider,
+    required this.provider,
     required this.builder,
-  }) : _provider = provider;
+  });
 
-  final UseCaseProviderBase _provider;
+  @visibleForTesting
+  final UseCaseProviderBase provider;
   final WidgetBuilder builder;
 
   @override
@@ -49,7 +50,7 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   void onDestroy(U useCase) {}
 
   @visibleForTesting
-  O subscribe(WidgetRef ref) => _provider.subscribe<O>(ref);
+  O subscribe(WidgetRef ref) => provider.subscribe<O>(ref);
 }
 
 class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
@@ -62,7 +63,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   @override
   void initState() {
     super.initState();
-    widget._provider
+    widget.provider
       ..notifier.first.then((_) {
         if (ViewModelScope.maybeOf<V>(context) == null) {
           widget.onLayoutReady(context, _useCase!);
@@ -74,7 +75,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _useCase ??= widget._provider.getUseCase(ref) as U;
+    _useCase ??= widget.provider.getUseCase(ref) as U;
   }
 
   @override
@@ -91,7 +92,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
       final output = widget.subscribe(ref);
       viewModel = widget.createViewModel(_useCase!, output);
 
-      widget._provider.listen<O>(
+      widget.provider.listen<O>(
         ref,
         (p, n) => widget.onOutput(context, OutputState(p, n), viewModel!),
       );
@@ -99,7 +100,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
     return ViewModelScope<V>(
       viewModel: viewModel,
-      child: Builder(builder: widget.builder),
+      child: ViewModelBuilder(builder: widget.builder),
     );
   }
 
@@ -110,6 +111,28 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     });
     super.dispose();
   }
+}
+
+class ViewModelBuilder extends StatelessWidget {
+  /// Creates a widget that delegates its build to a callback.
+  ///
+  /// The [builder] argument must not be null.
+  const ViewModelBuilder({
+    super.key,
+    required this.builder,
+  });
+
+  /// Called to obtain the child widget.
+  ///
+  /// This function is called whenever this widget is included in its parent's
+  /// build and the old widget (if any) that it synchronizes with has a distinct
+  /// object identity. Typically the parent's build method will construct
+  /// a new tree of widgets and so a new Builder child will not be [identical]
+  /// to the corresponding old one.
+  final WidgetBuilder builder;
+
+  @override
+  Widget build(BuildContext context) => builder(context);
 }
 
 typedef PresenterBuilder<V extends ViewModel> = Widget Function(V viewModel);
