@@ -11,8 +11,8 @@ import 'package:meta/meta.dart';
 void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
   String description, {
   List<Override> overrides = const [],
-  required Presenter Function(WidgetBuilder) create,
-  required FutureOr<void> Function(U useCase) setup,
+  required Presenter Function(WidgetBuilder builder) create,
+  FutureOr<void> Function(U useCase)? setup,
   Iterable<dynamic> Function()? expect,
   FutureOr<void> Function(WidgetTester tester)? verify,
 }) {
@@ -51,13 +51,34 @@ void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
   });
 }
 
+@isTest
+void presenterCallbackTest<V extends ViewModel, O extends Output,
+    U extends UseCase>(
+  String description, {
+  required U useCase,
+  required Presenter Function(WidgetBuilder builder) create,
+  required FutureOr<void> Function(U useCase) setup,
+  required FutureOr<void> Function(U useCase, V vm) verify,
+}) {
+  test(description, () async {
+    final presenter = create((_) => const SizedBox.shrink());
+
+    await setup(useCase);
+
+    // ignore: invalid_use_of_protected_member
+    final vm = presenter.createViewModel(useCase, useCase.getOutput<O>());
+
+    await verify(useCase, vm as V);
+  });
+}
+
 class _TestBuilder<U extends UseCase> extends ConsumerStatefulWidget {
   const _TestBuilder({
     required this.onInit,
     required this.presenter,
   });
 
-  final FutureOr<void> Function(U) onInit;
+  final FutureOr<void> Function(U)? onInit;
   final Presenter presenter;
 
   @override
@@ -69,13 +90,16 @@ class _TestBuilderState<U extends UseCase>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      // ignore: invalid_use_of_visible_for_testing_member
-      final useCase = widget.presenter.provider.read(
-        ProviderScope.containerOf(context),
-      );
-      widget.onInit(useCase as U);
-    });
+
+    if (widget.onInit != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        // ignore: invalid_use_of_visible_for_testing_member
+        final useCase = widget.presenter.provider.read(
+          ProviderScope.containerOf(context),
+        );
+        widget.onInit!(useCase as U);
+      });
+    }
   }
 
   @override
