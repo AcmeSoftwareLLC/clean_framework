@@ -1,4 +1,10 @@
 # Changelog
+## 0.4.0
+**Jan 24, 2023**
+- Added test helpers for new clean_framework v2 classes. viz. 
+`uiTest`, `presenterTest`, `presenterCallbackTest`, `useCaseTest`, `useCaseBridgeTest`.
+- Test helpers for v1 classes has been moved to `package:clean_framework_test/clean_framework_test_legacy.dart` import.
+
 ## 0.3.0
 **Jan 19, 2023**
 - Upgraded `clean_framework` to v2.
