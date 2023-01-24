@@ -15,6 +15,8 @@ class GatewayProvider<G extends Gateway>
           ),
         );
 
+  Override overrideWith(G gateway) => call().overrideWithValue(gateway);
+
   @visibleForTesting
   G read(ProviderContainer container) => container.read(call());
 }
