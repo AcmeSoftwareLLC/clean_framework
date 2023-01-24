@@ -201,8 +201,34 @@ void main() {
 
       expect(useCase, isA<TestUseCase>());
     });
+
+    test('override use case provider', () {
+      final container = ProviderContainer(
+        overrides: [
+          _testUseCaseProvider.overrideWith(NewTestUseCase()),
+        ],
+      );
+
+      final useCase = _testUseCaseProvider.read(container);
+
+      expect(useCase, isA<NewTestUseCase>());
+    });
+
+    test('override auto dispose use case provider', () {
+      final container = ProviderContainer(
+        overrides: [
+          _testUseCaseProvider2.overrideWith(NewTestUseCase()),
+        ],
+      );
+
+      final useCase = _testUseCaseProvider2.read(container);
+
+      expect(useCase, isA<NewTestUseCase>());
+    });
   });
 }
+
+class NewTestUseCase extends TestUseCase {}
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
