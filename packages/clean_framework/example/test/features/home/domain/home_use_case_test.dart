@@ -4,6 +4,7 @@ import 'package:clean_framework_example/features/home/domain/home_ui_output.dart
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -162,15 +163,16 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeEntity, HomeUIOutput>(
+    useCaseBridgeTest<HomeUseCase, HomeEntity, HomeUIOutput, ProfileUseCase>(
       'update last viewed pokemon',
-      provider: homeUseCaseProvider,
+      from: profileUseCaseProvider,
+      to: homeUseCaseProvider,
       seed: (e) => e.copyWith(
         lastViewedPokemon: 'CHARIZARD',
         status: HomeStatus.loaded,
       ),
       execute: (useCase) {
-        return useCase.setInput(LastViewedPokemonInput(name: 'PIKACHU'));
+        useCase.entity = useCase.entity.copyWith(name: 'PIKACHU');
       },
       expect: () => [
         HomeUIOutput(

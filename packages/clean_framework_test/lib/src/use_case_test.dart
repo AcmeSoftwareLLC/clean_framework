@@ -45,3 +45,44 @@ ProviderContainer
 
   return container;
 }
+
+@isTest
+ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
+    O extends Output, FU extends UseCase>(
+  String description, {
+  required UseCaseProviderBase from,
+  required UseCaseProviderBase to,
+  required FutureOr<void> Function(FU) execute,
+  Iterable<dynamic> Function()? expect,
+  FutureOr<void> Function(TU)? verify,
+  E Function(E)? seed,
+}) {
+  final container = ProviderContainer();
+
+  test(
+    description,
+    () async {
+      final fromUseCase = from.read(container) as FU;
+      final toUseCase = to.read(container) as TU;
+
+      if (seed != null) {
+        toUseCase.entity = seed(toUseCase.entity);
+      }
+
+      Future<void>? expectation;
+      if (expect != null) {
+        expectation = expectLater(
+          toUseCase.stream.map((e) => toUseCase.transformToOutput<O>(e)),
+          emitsInOrder(expect()),
+        );
+      }
+
+      await execute(fromUseCase);
+      await expectation;
+
+      await verify?.call(toUseCase);
+    },
+  );
+
+  return container;
+}
