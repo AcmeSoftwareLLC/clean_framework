@@ -1,4 +1,8 @@
 # Changelog
+## 2.0.2
+**Jan 24, 2022**
+- Added `overrideWith` for providers.
+
 ## 2.0.1
 **Jan 19, 2022**
 - Added `onOutput` method for **Presenter**

@@ -4,35 +4,32 @@ import 'package:flutter/material.dart';
 abstract class UI<V extends ViewModel> extends StatefulWidget {
   UI({
     super.key,
-    PresenterCreator<V>? create,
+    PresenterCreator? create,
   }) {
     _create = create ?? this.create;
   }
-  late final PresenterCreator<V>? _create;
+
+  late final PresenterCreator _create;
+
+  @override
+  State<UI<V>> createState() => _UIState<V>();
 
   Widget build(BuildContext context, V viewModel);
 
-  Presenter create(PresenterBuilder<V> builder);
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _UIState createState() => _UIState<V>();
+  Presenter create(WidgetBuilder builder);
 }
 
 class _UIState<V extends ViewModel> extends State<UI<V>> {
   @override
   Widget build(BuildContext context) {
-    return widget._create!.call(
-      (viewModel) => widget.build(context, viewModel),
+    return widget._create.call(
+      (context) {
+        final viewModel = ViewModelScope.of<V>(context);
+
+        return widget.build(context, viewModel);
+      },
     );
   }
 }
 
-typedef PresenterCreator<V extends ViewModel> = Presenter Function(
-  PresenterBuilder<V> builder,
-);
-
-typedef UIBuilder<V extends ViewModel> = Widget Function(
-  BuildContext context,
-  V viewModel,
-);
+typedef PresenterCreator = Presenter Function(WidgetBuilder builder);

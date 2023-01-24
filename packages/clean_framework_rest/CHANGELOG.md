@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.0
+**Jan 24, 2023**
+- Bumped dependencies to their latest version.
+
 ## 0.3.0
 **Jan 19, 2023**
 - Upgraded `clean_framework` to v2.

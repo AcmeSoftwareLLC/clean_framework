@@ -38,7 +38,10 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   @protected
   set entity(E newEntity) => super.state = newEntity;
 
-  O getOutput<O extends Output>() => _outputFilters<O>(entity);
+  O getOutput<O extends Output>() => transformToOutput(entity);
+
+  @visibleForTesting
+  O transformToOutput<O extends Output>(E entity) => _outputFilters<O>(entity);
 
   void setInput<I extends Input>(I input) {
     entity = _inputFilters<I>(entity, input);

@@ -21,7 +21,7 @@ class SvgPaletteCard extends StatefulWidget {
   });
 
   final String url;
-  final Widget Function(BuildContext, SvgPicture) builder;
+  final Widget Function(BuildContext, SvgPicture?) builder;
   final Duration duration;
   final String? cacheKey;
   final VoidCallback? onTap;
@@ -67,17 +67,17 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
         borderRadius: borderRadius,
         child: AnimatedSwitcher(
           duration: widget.duration,
-          child: _rawSvg.isEmpty
-              ? _buildPlaceHolder(context)
-              : widget.builder(
-                  context,
-                  SvgPicture.string(
+          child: widget.builder(
+            context,
+            _rawSvg.isEmpty
+                ? null
+                : SvgPicture.string(
                     _rawSvg,
                     placeholderBuilder: widget.placeholderBuilder,
                     height: widget.height,
                     width: widget.width,
                   ),
-                ),
+          ),
         ),
       ),
     );
@@ -113,10 +113,5 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
         setState(() {});
       }
     }
-  }
-
-  Widget _buildPlaceHolder(BuildContext context) {
-    return widget.placeholderBuilder?.call(context) ??
-        SizedBox(height: widget.height, width: widget.width);
   }
 }

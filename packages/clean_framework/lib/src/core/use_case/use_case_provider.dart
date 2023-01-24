@@ -14,6 +14,8 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
 
   Stream<Refreshable<U>> get notifier => _notifierController.stream;
 
+  Override overrideWith(U useCase);
+
   @visibleForOverriding
   Refreshable<U> buildNotifier();
 
@@ -63,6 +65,9 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
 
   @override
   Refreshable<U> buildNotifier() => call().notifier;
+
+  @override
+  Override overrideWith(U useCase) => call().overrideWith((_) => useCase);
 }
 
 class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
@@ -84,6 +89,9 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
 
   @override
   Refreshable<U> buildNotifier() => call().notifier;
+
+  @override
+  Override overrideWith(U useCase) => call().overrideWith((_) => useCase);
 }
 
 class AutoDisposeUseCaseProviderBuilder {
