@@ -58,6 +58,20 @@ void main() {
       expect(input.isLeft, isTrue);
       expect(input.left, isA<FailureInput>());
     });
+
+    test('override external interface provider', () {
+      final container = ProviderContainer(
+        overrides: [
+          _testExternalInterfaceProvider.overrideWith(
+            NewTestExternalInterface(),
+          ),
+        ],
+      );
+
+      final interface = _testExternalInterfaceProvider.read(container);
+
+      expect(interface, isA<NewTestExternalInterface>());
+    });
   });
 }
 
@@ -74,6 +88,8 @@ final _testGatewayProvider = GatewayProvider(TestGateway.new);
 final _testWatcherGatewayProvider = GatewayProvider(
   TestWatcherGateway.new,
 );
+
+class NewTestExternalInterface extends TestExternalInterface {}
 
 class TestExternalInterface
     extends ExternalInterface<TestRequest, TestSuccessResponse> {

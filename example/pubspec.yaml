@@ -13,8 +13,8 @@ dependencies:
   clean_framework: ^1.5.0
   clean_framework_firestore: ^0.1.0
   clean_framework_graphql: ^0.1.0
-  clean_framework_rest: ^0.1.0
-  clean_framework_router: ^0.1.0
+  clean_framework_rest: ^0.3.0
+  clean_framework_router: ^0.4.0
   intl: ^0.18.0
 
 dev_dependencies:

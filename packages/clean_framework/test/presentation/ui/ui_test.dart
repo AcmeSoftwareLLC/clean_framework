@@ -43,7 +43,7 @@ class TestUI extends UI<TestViewModel> {
   TestUI({super.key});
 
   @override
-  TestPresenter create(PresenterBuilder<TestViewModel> builder) {
+  TestPresenter create(WidgetBuilder builder) {
     return TestPresenter(builder: builder);
   }
 

@@ -42,7 +42,9 @@ class PokemonCard extends StatelessWidget {
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width / 2,
                 ),
-                child: Hero(tag: heroTag, child: picture),
+                child: picture == null
+                    ? const SizedBox.shrink()
+                    : Hero(tag: heroTag, child: picture),
               ),
             ],
           ),

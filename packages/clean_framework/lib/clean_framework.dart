@@ -11,4 +11,5 @@ export 'package:clean_framework/src/utilities/deserializer.dart';
 export 'package:clean_framework/src/utilities/either.dart';
 export 'package:clean_framework/src/utilities/network_logger.dart';
 export 'package:clean_framework/src/widgets/widgets.dart';
-export 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderContainer;
+export 'package:flutter_riverpod/flutter_riverpod.dart'
+    show ProviderContainer, Provider, Consumer;
