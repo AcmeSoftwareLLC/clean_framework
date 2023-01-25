@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.3
+**Jan 25, 2022**
+- Fixed issue with `overrideWith` for external interface provider.
+- `copyWith` method for `Entity` now throws unimplemented if used without overriding.
+
 ## 2.0.2
 **Jan 24, 2022**
 - Added `overrideWith` for providers.

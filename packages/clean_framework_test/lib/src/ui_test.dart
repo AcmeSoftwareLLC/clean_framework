@@ -124,6 +124,7 @@ void uiTest<V extends ViewModel>(
   required V viewModel,
   required FutureOr<void> Function(WidgetTester) verify,
   List<Override> overrides = const [],
+  Widget Function(BuildContext, Widget)? builder,
 }) {
   testWidgets(
     description,
@@ -134,12 +135,14 @@ void uiTest<V extends ViewModel>(
           child: AppRouterScope(
             create: UITestRouter.new,
             builder: (context) {
-              return MaterialApp(
+              final child = MaterialApp(
                 home: ViewModelScope(
                   viewModel: viewModel,
                   child: ui,
                 ),
               );
+
+              return builder?.call(context, child) ?? child;
             },
           ),
         ),

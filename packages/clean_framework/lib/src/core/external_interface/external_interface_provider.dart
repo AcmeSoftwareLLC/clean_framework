@@ -9,13 +9,20 @@ class ExternalInterfaceProvider<E extends ExternalInterface>
   ExternalInterfaceProvider(
     E Function() create, {
     List<GatewayProvider> gateways = const [],
-  }) : super(
+  })  : _gateways = gateways,
+        super(
           provider: Provider(
             (ref) => create()..attach(ref, providers: gateways),
           ),
         );
 
-  Override overrideWith(E interface) => call().overrideWithValue(interface);
+  final List<GatewayProvider> _gateways;
+
+  Override overrideWith(E interface) {
+    return call().overrideWith(
+      (ref) => interface..attach(ref, providers: _gateways),
+    );
+  }
 
   @visibleForTesting
   E read(ProviderContainer container) => container.read(call());

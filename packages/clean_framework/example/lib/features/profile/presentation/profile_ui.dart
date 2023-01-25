@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
 import 'package:clean_framework_example/widgets/spotlight.dart';
@@ -28,51 +28,54 @@ class ProfileUI extends UI<ProfileViewModel> {
         backgroundColor: Colors.transparent,
       ),
       extendBodyBehindAppBar: true,
-      body: Spotlight(
-        height: 200,
-        heroTag: pokemonName,
-        imageUrl: pokemonImageUrl,
-        builder: (context) {
-          final pokeTypes = viewModel.pokemonTypes;
-
-          return Card(
-            margin: EdgeInsets.zero,
-            elevation: Theme.of(context).brightness == Brightness.light ? 0 : 4,
-            color: Theme.of(context).colorScheme.surface.withAlpha(120),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(48),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 96, 24, 16),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Wrap(
-                      runSpacing: 8,
-                      spacing: 8,
-                      children: pokeTypes.map(_PokeTypeChip.new).toList(),
-                    ),
-                    const SizedBox(height: 24),
-                    AnimatedSize(
-                      duration: const Duration(milliseconds: 300),
-                      child: Text(
-                        viewModel.description,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    _BodyMeasurement(
-                      height: viewModel.height,
-                      weight: viewModel.weight,
-                    ),
-                    const SizedBox(height: 32),
-                    _ProfileStats(stats: viewModel.stats),
-                  ],
-                ),
-              ),
-            ),
+      body: Consumer(
+        builder: (context, ref, child) {
+          return Spotlight(
+            height: 200,
+            heroTag: pokemonName,
+            imageUrl: pokemonImageUrl,
+            builder: (_) => child!,
           );
         },
+        child: Card(
+          margin: EdgeInsets.zero,
+          elevation: Theme.of(context).brightness == Brightness.light ? 0 : 4,
+          color: Theme.of(context).colorScheme.surface.withAlpha(120),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(48),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 96, 24, 16),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Wrap(
+                    runSpacing: 8,
+                    spacing: 8,
+                    children: viewModel.pokemonTypes
+                        .map(_PokeTypeChip.new)
+                        .toList(growable: false),
+                  ),
+                  const SizedBox(height: 24),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 300),
+                    child: Text(
+                      viewModel.description,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  _BodyMeasurement(
+                    height: viewModel.height,
+                    weight: viewModel.weight,
+                  ),
+                  const SizedBox(height: 32),
+                  _ProfileStats(stats: viewModel.stats),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

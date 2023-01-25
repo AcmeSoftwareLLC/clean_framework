@@ -33,6 +33,7 @@ class EvaluationContext extends MapMixin<String, Object> {
   // coverage:ignore-end
 
   EvaluationContext merge(EvaluationContext? other) {
+    // ignore: avoid_returning_this
     if (other == null) return this;
 
     return EvaluationContext(
