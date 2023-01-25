@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
 

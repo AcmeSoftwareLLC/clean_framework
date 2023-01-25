@@ -6,7 +6,6 @@ import 'package:clean_framework_example/features/profile/domain/profile_entity.d
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 final homeUseCaseProvider = UseCaseProvider.autoDispose(
   HomeUseCase.new,
