@@ -13,7 +13,7 @@ class CountryUI extends UI<CountryViewModel> {
 
   @override
   Widget build(BuildContext context, CountryViewModel model) {
-    final headlineStyle = Theme.of(context).textTheme.headline6?.copyWith(
+    final headlineStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
           color: Theme.of(context).scaffoldBackgroundColor,
         );
 
@@ -61,7 +61,7 @@ class CountryUI extends UI<CountryViewModel> {
                 ),
                 child: Text(
                   '$noOfCountries Countries',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ),
               Expanded(

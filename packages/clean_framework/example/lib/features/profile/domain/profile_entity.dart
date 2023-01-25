@@ -40,10 +40,3 @@ class ProfileEntity extends Entity {
     );
   }
 }
-
-class PokemonStat {
-  PokemonStat({required this.name, required this.point});
-
-  final String name;
-  final int point;
-}
