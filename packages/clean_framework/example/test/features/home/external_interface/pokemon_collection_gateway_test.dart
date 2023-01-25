@@ -21,18 +21,20 @@ void main() {
       final gateway = PokemonCollectionGateway()
         ..feedResponse(
           (request) async => Either.right(
-            PokemonSuccessResponse(data: {
-              'results': [
-                {
-                  'name': 'pikachu',
-                  'url': 'https://pokeapi.co/api/v2/pokemon/45/'
-                },
-                {
-                  'name': 'charmander',
-                  'url': 'https://pokeapi.co/api/v2/pokemon/5/'
-                }
-              ]
-            }),
+            PokemonSuccessResponse(
+              data: {
+                'results': [
+                  {
+                    'name': 'pikachu',
+                    'url': 'https://pokeapi.co/api/v2/pokemon/45/'
+                  },
+                  {
+                    'name': 'charmander',
+                    'url': 'https://pokeapi.co/api/v2/pokemon/5/'
+                  }
+                ]
+              },
+            ),
           ),
         );
 
