@@ -32,8 +32,6 @@ void main() {
         ],
       ),
       verify: (tester) async {
-        await tester.pumpAndSettle();
-
         expect(find.text('Pikachu'), findsOneWidget);
       },
     );
