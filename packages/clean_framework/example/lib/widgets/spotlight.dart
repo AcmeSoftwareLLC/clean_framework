@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -14,7 +16,6 @@ class Spotlight extends StatefulWidget {
     this.placeholderBuilder,
     this.width,
     this.height,
-    this.cacheManager,
   });
 
   final String imageUrl;
@@ -23,7 +24,6 @@ class Spotlight extends StatefulWidget {
   final WidgetBuilder? placeholderBuilder;
   final double? width;
   final double? height;
-  final CacheManager? cacheManager;
 
   @override
   State<Spotlight> createState() => _SpotlightState();
@@ -36,7 +36,9 @@ class _SpotlightState extends State<Spotlight> {
   @override
   void initState() {
     super.initState();
-    _loadFileFromCache();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _loadFileFromCache();
+    });
   }
 
   @override
@@ -119,7 +121,7 @@ class _SpotlightState extends State<Spotlight> {
   }
 
   Future<void> _loadFileFromCache() async {
-    final cacheManager = widget.cacheManager ?? DefaultCacheManager();
+    final cacheManager = CacheManagerScope.of(context);
     final file = await cacheManager.getSingleFile(widget.imageUrl);
 
     _rawSvg = await file.readAsString();

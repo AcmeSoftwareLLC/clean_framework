@@ -1,7 +1,7 @@
 import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,9 +14,12 @@ void main() {
   group('ProfileUI tests |', () {
     uiTest(
       'shows pokemon profile correctly',
-      overrides: [
-        cacheManagerProvider.overrideWithValue(TestCacheManager()),
-      ],
+      builder: (context, child) {
+        return CacheManagerScope(
+          cacheManager: TestCacheManager(),
+          child: child,
+        );
+      },
       ui: ProfileUI(pokemonName: 'PIKACHU', pokemonImageUrl: 'test'),
       viewModel: ProfileViewModel(
         description: 'Pikachu is a small, chubby rodent Pokémon.',

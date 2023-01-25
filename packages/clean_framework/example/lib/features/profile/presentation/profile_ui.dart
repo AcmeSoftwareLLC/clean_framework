@@ -2,7 +2,6 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/widgets/spotlight.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +34,6 @@ class ProfileUI extends UI<ProfileViewModel> {
             height: 200,
             heroTag: pokemonName,
             imageUrl: pokemonImageUrl,
-            cacheManager: ref.watch(cacheManagerProvider),
             builder: (_) => child!,
           );
         },

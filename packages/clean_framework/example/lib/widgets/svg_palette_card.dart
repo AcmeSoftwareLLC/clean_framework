@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -18,6 +20,7 @@ class SvgPaletteCard extends StatefulWidget {
     this.width,
     this.height,
     this.margin = EdgeInsets.zero,
+    this.cacheManager,
   });
 
   final String url;
@@ -30,6 +33,7 @@ class SvgPaletteCard extends StatefulWidget {
   final double? width;
   final double? height;
   final EdgeInsetsGeometry margin;
+  final CacheManager? cacheManager;
 
   @override
   State<SvgPaletteCard> createState() => _SvgPaletteCardState();
@@ -42,7 +46,9 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
   @override
   void initState() {
     super.initState();
-    _fetchSvg();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _fetchSvg();
+    });
   }
 
   @override
@@ -85,7 +91,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
 
   Future<void> _fetchSvg() async {
     try {
-      final file = await DefaultCacheManager().getSingleFile(
+      final file = await CacheManagerScope.of(context).getSingleFile(
         widget.url,
         key: widget.cacheKey,
       );

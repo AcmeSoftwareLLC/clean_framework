@@ -8,10 +8,6 @@ import 'package:clean_framework_example/features/profile/external_interface/poke
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-final cacheManagerProvider = Provider<CacheManager>(
-  (ref) => DefaultCacheManager(),
-);
-
 final homeUseCaseProvider = UseCaseProvider.autoDispose(
   HomeUseCase.new,
   (bridge) {
