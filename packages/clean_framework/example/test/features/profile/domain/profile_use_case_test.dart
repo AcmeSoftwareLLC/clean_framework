@@ -84,5 +84,102 @@ void main() {
         ),
       ],
     );
+
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+      'fetches pokemon profile; description failure',
+      provider: profileUseCaseProvider,
+      execute: (useCase) {
+        useCase
+            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+          (output) {
+            return Either.left(FailureInput(message: 'Something went wrong'));
+          },
+        );
+
+        useCase
+            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+          (output) {
+            return Either.right(
+              PokemonProfileSuccessInput(
+                profile: PokemonProfileModel(
+                  types: ['electric'],
+                  height: 4,
+                  weight: 60,
+                  baseExperience: 112,
+                  stats: [
+                    PokemonStatModel(name: 'hp', baseStat: 35),
+                    PokemonStatModel(name: 'attack', baseStat: 55),
+                    PokemonStatModel(name: 'defense', baseStat: 40),
+                    PokemonStatModel(name: 'special-attack', baseStat: 50),
+                    PokemonStatModel(name: 'special-defense', baseStat: 50),
+                    PokemonStatModel(name: 'speed', baseStat: 90),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+
+        useCase.fetchPokemonProfile('pikachu');
+      },
+      expect: () => [
+        ProfileUIOutput(
+          types: ['electric'],
+          description: '',
+          height: 0.4,
+          weight: 6.0,
+          stats: [
+            PokemonStat(name: 'Hp', point: 35),
+            PokemonStat(name: 'Attack', point: 55),
+            PokemonStat(name: 'Defense', point: 40),
+            PokemonStat(name: 'Sp. Attack', point: 50),
+            PokemonStat(name: 'Sp. Defense', point: 50),
+            PokemonStat(name: 'Speed', point: 90),
+          ],
+        ),
+      ],
+    );
+
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+      'fetches pokemon profile; profile/stat failure',
+      provider: profileUseCaseProvider,
+      execute: (useCase) {
+        useCase
+            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+          (output) {
+            return Either.right(
+              PokemonSpeciesSuccessInput(
+                species: PokemonSpeciesModel(
+                  descriptions: [
+                    PokemonDescriptionModel(
+                      language: 'en',
+                      text: 'At will, it can generate powerful electricity.',
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+
+        useCase
+            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+          (output) {
+            return Either.left(FailureInput(message: 'Something went wrong'));
+          },
+        );
+
+        useCase.fetchPokemonProfile('pikachu');
+      },
+      expect: () => [
+        ProfileUIOutput(
+          types: [],
+          description: 'At will, it can generate powerful electricity.',
+          height: 0,
+          weight: 0,
+          stats: [],
+        ),
+      ],
+    );
   });
 }
