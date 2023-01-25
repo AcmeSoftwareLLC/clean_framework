@@ -42,7 +42,9 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
           types: profile.types,
           height: profile.height,
           weight: profile.weight,
-          stats: profile.stats,
+          stats: profile.stats
+              .map((s) => PokemonStatEntity(name: s.name, point: s.baseStat))
+              .toList(growable: false),
         );
       },
       onFailure: (failure) => entity,
@@ -63,7 +65,7 @@ class ProfileUIOutputTransformer
         (s) {
           return PokemonStat(
             name: _kebabToTitleCase(s.name),
-            point: s.baseStat,
+            point: s.point,
           );
         },
       ).toList(growable: false),

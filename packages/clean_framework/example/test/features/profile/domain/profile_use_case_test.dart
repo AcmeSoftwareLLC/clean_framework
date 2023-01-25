@@ -83,6 +83,26 @@ void main() {
           ],
         ),
       ],
+      verify: (useCase) {
+        expect(
+          useCase.entity,
+          ProfileEntity(
+            name: 'pikachu',
+            description: 'At will, it can generate powerful electricity.',
+            height: 4,
+            weight: 60,
+            stats: [
+              PokemonStatEntity(name: 'hp', point: 35),
+              PokemonStatEntity(name: 'attack', point: 55),
+              PokemonStatEntity(name: 'defense', point: 40),
+              PokemonStatEntity(name: 'special-attack', point: 50),
+              PokemonStatEntity(name: 'special-defense', point: 50),
+              PokemonStatEntity(name: 'speed', point: 90),
+            ],
+            types: ['electric'],
+          ),
+        );
+      },
     );
 
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(

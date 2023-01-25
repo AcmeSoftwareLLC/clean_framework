@@ -17,7 +17,8 @@ final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
   },
 );
 
-final _testUseCaseProvider2 = UseCaseProvider.autoDispose(
+final _testUseCaseProvider2 =
+    UseCaseProvider.autoDispose<TestEntity, TestUseCase>(
   TestUseCase.new,
   (bridge) {
     bridge.connect<TestEntity, TestUseCase, String>(
