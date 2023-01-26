@@ -8,14 +8,14 @@ import 'package:clean_framework_example/features/profile/external_interface/poke
 import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/routing/routes.dart';
-import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
+import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('Flow Test', (tester) async {
-    final widget = CacheManagerScope(
+    final widget = AppScope(
       child: AppProviderScope(
         externalInterfaceProviders: [pokemonExternalInterfaceProvider],
         overrides: [

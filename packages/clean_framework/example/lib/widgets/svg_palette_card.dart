@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
+import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -91,7 +91,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
 
   Future<void> _fetchSvg() async {
     try {
-      final file = await CacheManagerScope.of(context).getSingleFile(
+      final file = await AppScope.cacheManagerOf(context).getSingleFile(
         widget.url,
         key: widget.cacheKey,
       );
@@ -110,7 +110,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       final drawable = await svg.fromSvgString(_rawSvg, widget.url);
       final picture = drawable.toPicture();
       final image = await picture.toImage(100, 100);
-      final palette = await PaletteGenerator.fromImage(image);
+      final palette = await AppScope.paletteGeneratorOf(context, image);
 
       if (mounted) {
         _color = widget.backgroundColorBuilder?.call(context, palette) ??
