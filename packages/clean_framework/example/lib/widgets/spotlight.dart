@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
+import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -120,7 +120,7 @@ class _SpotlightState extends State<Spotlight> {
   }
 
   Future<void> _loadFileFromCache() async {
-    final cacheManager = CacheManagerScope.of(context);
+    final cacheManager = AppScope.cacheManagerOf(context);
     final file = await cacheManager.getSingleFile(widget.imageUrl);
 
     _rawSvg = await file.readAsString();
@@ -131,7 +131,7 @@ class _SpotlightState extends State<Spotlight> {
       final picture = drawable.toPicture();
       final image = await picture.toImage(100, 100);
 
-      _palette = await PaletteGenerator.fromImage(image);
+      _palette = await AppScope.paletteGeneratorOf(context, image);
       if (mounted) setState(() {});
     }
   }
