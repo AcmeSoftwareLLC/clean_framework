@@ -7,6 +7,7 @@ import 'package:clean_framework_example/widgets/pokemon_card.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 import '../../../helpers/test_cache_manager.dart';
 
@@ -93,6 +94,13 @@ void main() {
       builder: (context, child) {
         return AppScope(
           cacheManager: TestCacheManager(),
+          paletteGenerator: PaletteGenerator.fromColors(
+            [
+              PaletteColor(Colors.red, 3),
+              PaletteColor(Colors.green, 2),
+              PaletteColor(Colors.blue, 1),
+            ],
+          ),
           child: child,
         );
       },

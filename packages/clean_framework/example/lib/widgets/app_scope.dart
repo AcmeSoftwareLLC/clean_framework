@@ -23,8 +23,8 @@ class AppScope extends InheritedWidget {
     BuildContext context,
     ui.Image image,
   ) async {
-    return _of(context).paletteGenerator ??
-        await PaletteGenerator.fromImage(image);
+    final paletteGenerator = _of(context).paletteGenerator;
+    return paletteGenerator ?? await PaletteGenerator.fromImage(image);
   }
 
   static AppScope _of(BuildContext context) {
