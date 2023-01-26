@@ -2,10 +2,13 @@ import 'package:clean_framework_example/features/home/models/pokemon_model.dart'
 import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example/routing/routes.dart';
+import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
 import 'package:clean_framework_example/widgets/pokemon_card.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../../helpers/test_cache_manager.dart';
 
 void main() {
   group('HomeUI tests |', () {
@@ -87,6 +90,12 @@ void main() {
 
     uiTest(
       'tapping on pokemon navigates to detail page',
+      builder: (context, child) {
+        return CacheManagerScope(
+          cacheManager: TestCacheManager(),
+          child: child,
+        );
+      },
       ui: HomeUI(),
       viewModel: HomeViewModel(
         pokemons: [
@@ -101,6 +110,8 @@ void main() {
         onSearch: (query) {},
       ),
       verify: (tester) async {
+        await tester.pumpAndSettle();
+
         final pikachuCardFinder = find.descendant(
           of: find.byType(PokemonCard),
           matching: find.text('Pikachu'),

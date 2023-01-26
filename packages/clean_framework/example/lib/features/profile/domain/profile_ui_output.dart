@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 
 class ProfileUIOutput extends Output {
   ProfileUIOutput({
@@ -18,4 +17,22 @@ class ProfileUIOutput extends Output {
 
   @override
   List<Object?> get props => [types, description, height, weight, stats];
+}
+
+class PokemonStat {
+  PokemonStat({required this.name, required this.point});
+
+  final String name;
+  final int point;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PokemonStat &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          point == other.point;
+
+  @override
+  int get hashCode => name.hashCode ^ point.hashCode;
 }

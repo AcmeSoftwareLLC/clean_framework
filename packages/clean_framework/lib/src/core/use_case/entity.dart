@@ -8,5 +8,5 @@ abstract class Entity extends Equatable {
   @override
   bool get stringify => true;
 
-  Entity copyWith();
+  Entity copyWith() => throw UnimplementedError('copyWith() not implemented');
 }

@@ -215,6 +215,16 @@ void main() {
         },
       );
     });
+
+    test(
+      'throws unimplemented error when trying to access copyWith; '
+      'if copyWith is not overridden',
+      () async {
+        const entity = NoCopyWithEntity(foo: 'bar');
+
+        expect(() => entity.copyWith(), throwsUnimplementedError);
+      },
+    );
   });
 }
 
@@ -298,4 +308,13 @@ class TestOutputTransformer extends OutputTransformer<TestEntity, TestOutput> {
   TestOutput transform(TestEntity entity) {
     return TestOutput(foo: entity.foo);
   }
+}
+
+class NoCopyWithEntity extends Entity {
+  const NoCopyWithEntity({this.foo = ''});
+
+  final String foo;
+
+  @override
+  List<Object?> get props => [foo];
 }

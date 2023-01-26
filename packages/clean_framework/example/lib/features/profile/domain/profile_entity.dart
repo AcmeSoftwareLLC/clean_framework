@@ -1,5 +1,4 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/models/pokemon_profile_model.dart';
 
 class ProfileEntity extends Entity {
   ProfileEntity({
@@ -16,7 +15,7 @@ class ProfileEntity extends Entity {
   final String description;
   final int height;
   final int weight;
-  final List<PokemonStatModel> stats;
+  final List<PokemonStatEntity> stats;
 
   @override
   List<Object?> get props => [name, types, description, height, weight, stats];
@@ -28,7 +27,7 @@ class ProfileEntity extends Entity {
     String? description,
     int? height,
     int? weight,
-    List<PokemonStatModel>? stats,
+    List<PokemonStatEntity>? stats,
   }) {
     return ProfileEntity(
       name: name ?? this.name,
@@ -41,9 +40,12 @@ class ProfileEntity extends Entity {
   }
 }
 
-class PokemonStat {
-  PokemonStat({required this.name, required this.point});
+class PokemonStatEntity extends Entity {
+  PokemonStatEntity({this.name = '', this.point = 0});
 
   final String name;
   final int point;
+
+  @override
+  List<Object?> get props => [name, point];
 }
