@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_example/routing/routes.dart';
-import 'package:clean_framework_example/widgets/cache_manager_scope.dart';
+import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CacheManagerScope(
+    return AppScope(
       child: AppProviderScope(
         externalInterfaceProviders: [
           pokemonExternalInterfaceProvider,
