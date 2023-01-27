@@ -32,6 +32,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   @protected
+  @useResult
   E get entity => super.state;
 
   @visibleForTesting
@@ -69,5 +70,29 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   void dispose() {
     clearDebounce();
     super.dispose();
+  }
+
+  @override
+  bool updateShouldNotify(E old, E current) {
+    return !_isSilentUpdate && super.updateShouldNotify(old, current);
+  }
+
+  bool _isSilentUpdate = false;
+
+  @protected
+  @visibleForTesting
+
+  /// The [entity] updates within the [updater] will not be notified to the
+  /// [UseCase] listeners, but will silently update it.
+  Future<void> withSilencedUpdate(FutureOr<void> Function() updater) async {
+    assert(
+      !_isSilentUpdate,
+      '\n\nConcurrently running with more than one "withSilencedUpdate" '
+      'modifier is not supported.\n',
+    );
+
+    _isSilentUpdate = true;
+    await updater();
+    _isSilentUpdate = false;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -223,6 +225,64 @@ void main() {
         const entity = NoCopyWithEntity(foo: 'bar');
 
         expect(() => entity.copyWith(), throwsUnimplementedError);
+      },
+    );
+
+    test(
+      'updates within "withSilencedUpdate" are not notified to listeners',
+      () async {
+        expect(useCase.entity, const TestEntity());
+
+        final expectation = expectLater(
+          useCase.stream,
+          emitsInOrder(
+            const [
+              TestEntity(foo: 'bar'),
+              TestEntity(foo: 'baz'),
+            ],
+          ),
+        );
+
+        useCase.entity = const TestEntity(foo: 'bar');
+        expect(useCase.entity, const TestEntity(foo: 'bar'));
+
+        await useCase.withSilencedUpdate(() {
+          // This update in not emitted on the stream above.
+          useCase.entity = const TestEntity(foo: 'bas');
+        });
+        expect(useCase.entity, const TestEntity(foo: 'bas'));
+
+        useCase.entity = const TestEntity(foo: 'baz');
+        expect(useCase.entity, const TestEntity(foo: 'baz'));
+
+        await expectation;
+      },
+    );
+
+    test(
+      'running multiple "withSilencedUpdate" modifier throws assertion error',
+      () async {
+        expect(useCase.entity, const TestEntity());
+
+        useCase.entity = const TestEntity(foo: 'bar');
+        expect(useCase.entity, const TestEntity(foo: 'bar'));
+
+        unawaited(
+          useCase.withSilencedUpdate(() async {
+            useCase.entity = const TestEntity(foo: 'bas');
+
+            await Future<void>.delayed(const Duration(milliseconds: 10));
+          }),
+        );
+        expect(useCase.entity, const TestEntity(foo: 'bas'));
+
+        expect(
+          useCase.withSilencedUpdate(() async {
+            useCase.entity = const TestEntity(foo: 'baz');
+          }),
+          throwsAssertionError,
+        );
+        expect(useCase.entity, const TestEntity(foo: 'bas'));
       },
     );
   });
