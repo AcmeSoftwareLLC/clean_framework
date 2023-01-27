@@ -1,7 +1,6 @@
 import 'package:clean_framework/src/core/core.dart';
 import 'package:clean_framework/src/presentation/presenter/view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class Presenter<V extends ViewModel, O extends Output,
@@ -106,9 +105,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
 
   @override
   void dispose() {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      widget.onDestroy(_useCase!);
-    });
+    widget.onDestroy(_useCase!);
     super.dispose();
   }
 }

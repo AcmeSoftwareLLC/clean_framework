@@ -1,4 +1,10 @@
 # Changelog
+## 2.0.4
+**Jan 27, 2022**
+- Added `withSilencedUpdate` for **UseCase**.
+- `onDestroy` method in **Presenter** will now be called immediately at dispose. Any actions that causes UI to rebuild should be avoided in this method.
+For entity updates that do not need to rebuild the UI, should be wrapped inside `withSilencedUpdate` in UseCase.
+
 ## 2.0.3
 **Jan 25, 2022**
 - Fixed issue with `overrideWith` for external interface provider.
