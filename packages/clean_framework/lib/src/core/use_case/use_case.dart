@@ -80,6 +80,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   bool _isSilentUpdate = false;
 
   @protected
+  @visibleForTesting
 
   /// The [entity] updates within the [updater] will not be notified to the
   /// [UseCase] listeners, but will silently update it.
