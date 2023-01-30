@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
+import 'package:clean_framework_test/src/ui_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +17,7 @@ void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
   FutureOr<void> Function(U useCase)? setup,
   Iterable<dynamic> Function()? expect,
   FutureOr<void> Function(WidgetTester tester)? verify,
+  Widget Function(BuildContext, Widget)? builder,
 }) {
   testWidgets(description, (tester) async {
     final vmController = StreamController<V>();
@@ -27,15 +30,22 @@ void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
     );
 
     await tester.pumpWidget(
-      ProviderScope(
+      AppProviderScope(
         overrides: overrides,
-        child: MaterialApp(
-          home: Scaffold(
-            body: _TestBuilder<U>(
-              onInit: setup,
-              presenter: presenter,
-            ),
-          ),
+        child: AppRouterScope(
+          create: UITestRouter.new,
+          builder: (context) {
+            final child = MaterialApp(
+              home: Scaffold(
+                body: _TestBuilder<U>(
+                  onInit: setup,
+                  presenter: presenter,
+                ),
+              ),
+            );
+
+            return builder?.call(context, child) ?? child;
+          },
         ),
       ),
     );

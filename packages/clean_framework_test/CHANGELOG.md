@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.1
+**Jan 30, 2023**
+- Added `builder` for **uiTest** && **presenterTest**.
+
 ## 0.4.0
 **Jan 24, 2023**
 - Added test helpers for new clean_framework v2 classes. viz. 
