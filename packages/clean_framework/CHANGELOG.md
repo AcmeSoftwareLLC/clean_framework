@@ -1,26 +1,30 @@
 # Changelog
+## 2.0.5
+**Feb 1, 2023**
+- Fixed casting issue with `Deserializer.getList()`
+
 ## 2.0.4
-**Jan 27, 2022**
+**Jan 27, 2023**
 - Added `withSilencedUpdate` for **UseCase**.
 - `onDestroy` method in **Presenter** will now be called immediately at dispose. Any actions that causes UI to rebuild should be avoided in this method.
 For entity updates that do not need to rebuild the UI, should be wrapped inside `withSilencedUpdate` in UseCase.
 
 ## 2.0.3
-**Jan 25, 2022**
+**Jan 25, 2023**
 - Fixed issue with `overrideWith` for external interface provider.
 - `copyWith` method for `Entity` now throws unimplemented if used without overriding.
 
 ## 2.0.2
-**Jan 24, 2022**
+**Jan 24, 2023**
 - Added `overrideWith` for providers.
 
 ## 2.0.1
-**Jan 19, 2022**
+**Jan 19, 2023**
 - Added `onOutput` method for **Presenter**
 - Fixed issue with Flutter Web
 
 ## 2.0.0
-**Jan 17, 2022**
+**Jan 17, 2023**
 **Breaking Change**
 - Removed dependencies on sub packages. Sub-packages can be added separately as per the requirement.
 ```text

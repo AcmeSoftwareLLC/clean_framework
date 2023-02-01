@@ -57,9 +57,9 @@ class Deserializer {
   }) {
     final value = _map[key];
 
-    if (value is List) {
+    if (value is List<Map>) {
       return List<T>.from(
-        value.map((v) => converter(v as Map<String, dynamic>)),
+        value.map((v) => converter(v.cast<String, dynamic>())),
       );
     }
     return defaultValue;

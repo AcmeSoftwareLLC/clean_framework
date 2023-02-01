@@ -6,8 +6,8 @@ import 'package:clean_framework/src/core/gateway/gateway.dart';
 import 'package:clean_framework/src/core/gateway/gateway_provider.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
-import 'package:riverpod/riverpod.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   ExternalInterface() {
