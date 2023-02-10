@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:clean_framework_rest/src/rest_logger.dart';
 import 'package:clean_framework_rest/src/rest_method.dart';
+import 'package:clean_framework_rest/src/rest_service_options.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:http/http.dart';
 import 'package:path/path.dart';
@@ -10,24 +11,16 @@ import 'package:path/path.dart';
 ///
 class RestService {
   /// Default constructor for [RestService].
-  RestService({
-    this.baseUrl = '',
-    this.headers = const {},
-  });
+  RestService({this.options = const RestServiceOptions()});
 
-  /// The base URL of the service.
-  final String baseUrl;
-
-  /// The global headers to be sent with the request.
-  final Map<String, String> headers;
+  /// The configurable options to be sent with the request.
+  final RestServiceOptions options;
 
   Future<T> request<T extends Object>({
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
-    Map<String, String> headers = const {
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
+    Map<String, String> headers = const {},
     Client? client,
   }) async {
     final resolvedClient = RestLoggerClient(client ?? Client());
@@ -48,7 +41,7 @@ class RestService {
       }
 
       request.headers
-        ..addAll(this.headers)
+        ..addAll(options.headers)
         ..addAll(headers);
 
       final response = await resolvedClient.send(request);
@@ -92,9 +85,7 @@ class RestService {
     required RestMethod method,
     required String path,
     Map<String, dynamic> data = const {},
-    Map<String, String> headers = const {
-      'Content-Type': 'multipart/form-data',
-    },
+    Map<String, String> headers = const {},
     Client? client,
   }) async {
     final resolvedClient = client ?? Client();
@@ -122,7 +113,8 @@ class RestService {
         }
       }
       request.headers
-        ..addAll(this.headers)
+        ..addAll(options.headers)
+        ..addAll({'Content-Type': 'multipart/form-data'})
         ..addAll(headers);
 
       final streamedResponse = await resolvedClient.send(request);
@@ -162,7 +154,7 @@ class RestService {
       final request = Request(method.value, uri)..bodyBytes = data;
 
       request.headers
-        ..addAll(this.headers)
+        ..addAll(options.headers)
         ..addAll(headers);
 
       final response =
@@ -196,6 +188,7 @@ class RestService {
   }
 
   Uri _pathToUri(String path) {
+    final baseUrl = options.baseUrl;
     final url = baseUrl.isEmpty ? path : '$baseUrl/$path';
 
     return Uri.parse(url);
