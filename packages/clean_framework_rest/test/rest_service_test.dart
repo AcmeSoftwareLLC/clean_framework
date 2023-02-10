@@ -26,7 +26,9 @@ void main() {
   test(
     'RestService | correct request for multipart form POST request',
     () async {
-      final service = RestService(baseUrl: 'https://fake.com');
+      final service = RestService(
+        options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+      );
       final client = ClientFake();
 
       await service.multipartRequest<Map<String, dynamic>>(
@@ -57,7 +59,9 @@ void main() {
   );
 
   test('RestService no connectivity for multipart request', () async {
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
 
     when(() => client.send(any()))
@@ -85,7 +89,9 @@ void main() {
 
   test('RestService server error | multipart request', () async {
     final content = {'error': 'testError'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -108,7 +114,7 @@ void main() {
       throwsA(
         isA<InvalidResponseRestServiceFailure>()
             .having((res) => res.statusCode, 'statusCode', 500)
-            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.path, 'path', 'https://fake.com/test')
             .having((res) => res.error, 'error', content),
       ),
     );
@@ -117,7 +123,9 @@ void main() {
   test(
     'RestService | correct request for form url encoded POST request',
     () async {
-      final service = RestService(baseUrl: 'https://fake.com');
+      final service = RestService(
+        options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+      );
       final client = ClientFake();
 
       await service.request<Map<String, dynamic>>(
@@ -143,7 +151,9 @@ void main() {
   );
 
   test('RestService | correct request for json POST request', () async {
-    final service = RestService(baseUrl: 'https://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientFake();
 
     await service.request<Map<String, dynamic>>(
@@ -169,7 +179,9 @@ void main() {
 
   test('RestService success', () async {
     final content = {'foo': 'bar'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -205,7 +217,9 @@ void main() {
     final content = [
       {'foo': 'bar'}
     ];
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -233,7 +247,9 @@ void main() {
   });
 
   test('RestService no connectivity', () async {
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
 
     when(() => client.send(any()))
@@ -251,7 +267,9 @@ void main() {
 
   test('RestService server error', () async {
     final content = {'error': 'testError'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -274,7 +292,7 @@ void main() {
       throwsA(
         isA<InvalidResponseRestServiceFailure>()
             .having((res) => res.statusCode, 'statusCode', 500)
-            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.path, 'path', 'https://fake.com/test')
             .having((res) => res.error, 'error', content),
       ),
     );
@@ -282,7 +300,9 @@ void main() {
 
   test('RestService binary request success', () async {
     final content = {'foo': 'bar'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -318,7 +338,9 @@ void main() {
 
   test('RestService binary request server error', () async {
     final content = {'error': 'testError'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -342,7 +364,7 @@ void main() {
       throwsA(
         isA<InvalidResponseRestServiceFailure>()
             .having((res) => res.statusCode, 'statusCode', 500)
-            .having((res) => res.path, 'path', 'http://fake.com/test')
+            .having((res) => res.path, 'path', 'https://fake.com/test')
             .having((res) => res.error, 'error', content),
       ),
     );
@@ -350,7 +372,9 @@ void main() {
 
   test('RestService success, binary bytes response', () async {
     final content = {'foo': 'bar'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
@@ -382,7 +406,9 @@ void main() {
 
   test('RestService success, unknown request type', () async {
     final content = {'foo': 'bar'};
-    final service = RestService(baseUrl: 'http://fake.com');
+    final service = RestService(
+      options: const RestServiceOptions(baseUrl: 'https://fake.com'),
+    );
     final client = ClientMock();
     final streamedResponse = StreamedResponseMock();
     final byteStream = ByteStream.fromBytes(
