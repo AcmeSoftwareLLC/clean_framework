@@ -4,19 +4,15 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_rest/src/rest_requests.dart';
 import 'package:clean_framework_rest/src/rest_responses.dart';
 import 'package:clean_framework_rest/src/rest_service.dart';
+import 'package:clean_framework_rest/src/rest_service_options.dart';
 import 'package:cross_file/cross_file.dart';
 
 class RestExternalInterface
     extends ExternalInterface<RestRequest, RestSuccessResponse> {
   RestExternalInterface({
-    required String baseUrl,
-    Map<String, String> headers = const {},
+    RestServiceOptions options = const RestServiceOptions(),
     RestService? restService,
-  }) : _restService = restService ??
-            RestService(
-              baseUrl: baseUrl,
-              headers: headers,
-            );
+  }) : _restService = restService ?? RestService(options: options);
 
   final RestService _restService;
 

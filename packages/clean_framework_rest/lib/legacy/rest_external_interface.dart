@@ -4,6 +4,7 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_rest/src/rest_requests.dart';
 import 'package:clean_framework_rest/src/rest_responses.dart';
 import 'package:clean_framework_rest/src/rest_service.dart';
+import 'package:clean_framework_rest/src/rest_service_options.dart';
 import 'package:cross_file/cross_file.dart';
 
 class RestExternalInterface
@@ -15,8 +16,7 @@ class RestExternalInterface
     RestService? restService,
   })  : _restService = restService ??
             RestService(
-              baseUrl: baseUrl,
-              headers: headers,
+              options: RestServiceOptions(baseUrl: baseUrl, headers: headers),
             ),
         super(gatewayConnections);
   final RestService _restService;
