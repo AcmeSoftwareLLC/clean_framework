@@ -228,6 +228,26 @@ void main() {
         equals('2020-01.01'),
       );
     });
+
+    test(
+      'throws assertion error if item in list in not a Map when using getList',
+      () {
+        final data = {
+          'key': [1, 2]
+        }.deserialize;
+
+        expect(
+          () => data.getList('key', converter: (v) => v),
+          throwsA(
+            isA<AssertionError>().having(
+              (e) => e.message,
+              'message',
+              '\n\nThe provided object "1" in "[1, 2]" is not a Map.\n',
+            ),
+          ),
+        );
+      },
+    );
   });
 }
 

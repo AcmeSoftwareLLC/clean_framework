@@ -1,4 +1,8 @@
 # Changelog
+## 2.0.6
+**Feb 13, 2023**
+- Fixed `Deserializer.getList()` returning `defaultValue` on some cases.
+
 ## 2.0.5
 **Feb 1, 2023**
 - Fixed casting issue with `Deserializer.getList()`
