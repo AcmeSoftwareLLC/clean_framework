@@ -57,9 +57,18 @@ class Deserializer {
   }) {
     final value = _map[key];
 
-    if (value is List<Map>) {
+    if (value is List) {
       return List<T>.from(
-        value.map((v) => converter(v.cast<String, dynamic>())),
+        value.map(
+          (v) {
+            assert(
+              v is Map,
+              '\n\nThe provided object "$v" in "$value" is not a Map.\n',
+            );
+
+            return converter((v as Map).cast<String, dynamic>());
+          },
+        ),
       );
     }
     return defaultValue;
