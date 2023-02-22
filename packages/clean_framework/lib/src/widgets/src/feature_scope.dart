@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
   const FeatureScope({
-    super.key,
     required this.register,
     required this.child,
+    super.key,
     this.loader,
     this.onLoaded,
   });

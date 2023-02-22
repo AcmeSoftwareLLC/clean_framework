@@ -10,8 +10,8 @@ typedef ContainerBuildCallback = void Function(
 class AppProvidersContainer extends StatelessWidget {
   /// Default constructor.
   AppProvidersContainer({
-    super.key,
     required this.child,
+    super.key,
     ProvidersContext? providersContext,
     ContainerBuildCallback? onBuild,
   })  : _providersContext = providersContext ?? ProvidersContext(),

@@ -1,4 +1,9 @@
 # Changelog
+## 0.4.2
+**Feb 22, 2023**
+- Fixed `presenterTest` helper being stuck on failure.
+- Bumped dependencies to latest version.
+
 ## 0.4.1
 **Jan 30, 2023**
 - Added `builder` for **uiTest** && **presenterTest**.

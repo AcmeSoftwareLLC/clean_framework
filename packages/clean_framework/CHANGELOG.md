@@ -1,4 +1,8 @@
 # Changelog
+## 2.0.7
+**Feb 22, 2023**
+- Bumped dependencies to latest version.
+
 ## 2.0.6
 **Feb 13, 2023**
 - Fixed `Deserializer.getList()` returning `defaultValue` on some cases.

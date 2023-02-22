@@ -10,10 +10,10 @@ typedef FeatureBuilderCallback<T extends Object> = Widget Function(
 
 class FeatureBuilder<T extends Object> extends StatefulWidget {
   const FeatureBuilder({
-    super.key,
     required this.flagKey,
     required this.defaultValue,
     required this.builder,
+    super.key,
     this.evaluationContext,
   });
 

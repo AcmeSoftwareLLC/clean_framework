@@ -66,7 +66,7 @@ void main() {
 }
 
 class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
-  TestPresenter({super.key, required super.builder, this.count})
+  TestPresenter({required super.builder, super.key, this.count})
       : super(provider: provider);
 
   final int? count;

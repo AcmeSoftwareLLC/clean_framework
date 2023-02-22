@@ -5,8 +5,8 @@ import 'package:stack_trace/stack_trace.dart';
 
 class AppProviderScope extends StatelessWidget {
   const AppProviderScope({
-    super.key,
     required this.child,
+    super.key,
     this.externalInterfaceProviders = const [],
     this.overrides = const [],
     this.observers,

@@ -1250,7 +1250,8 @@ Future<void> pumpApp(WidgetTester tester) {
 }
 
 class OnTapPage extends StatelessWidget {
-  const OnTapPage({super.key, required this.id, this.onTap, this.value});
+  const OnTapPage({required this.id, super.key, this.onTap, this.value});
+
   final String id;
   final void Function(BuildContext)? onTap;
   final String? value;

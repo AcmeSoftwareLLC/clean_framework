@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 
 class AppRouterScope extends StatefulWidget {
   const AppRouterScope({
-    super.key,
     required this.create,
     required this.builder,
+    super.key,
   });
 
   final ValueGetter<AppRouter> create;

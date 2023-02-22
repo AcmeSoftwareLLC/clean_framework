@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
-    super.key,
     required this.provider,
     required this.builder,
+    super.key,
   });
 
   @visibleForTesting
@@ -115,8 +115,8 @@ class ViewModelBuilder extends StatelessWidget {
   ///
   /// The [builder] argument must not be null.
   const ViewModelBuilder({
-    super.key,
     required this.builder,
+    super.key,
   });
 
   /// Called to obtain the child widget.
@@ -145,9 +145,9 @@ class OutputState<O extends Output> {
 
 class ViewModelScope<V extends ViewModel> extends InheritedWidget {
   const ViewModelScope({
-    super.key,
     required super.child,
     required this.viewModel,
+    super.key,
   });
 
   final V viewModel;

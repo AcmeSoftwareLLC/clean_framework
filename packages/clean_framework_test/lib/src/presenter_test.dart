@@ -3,28 +3,29 @@ import 'dart:async';
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:clean_framework_test/src/ui_test.dart';
+import 'package:diff_match_patch/diff_match_patch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
 void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
   String description, {
-  List<Override> overrides = const [],
   required Presenter Function(WidgetBuilder builder) create,
+  List<Override> overrides = const [],
   FutureOr<void> Function(U useCase)? setup,
-  Iterable<dynamic> Function()? expect,
-  FutureOr<void> Function(WidgetTester tester)? verify,
+  dynamic Function()? expect,
+  FutureOr<void> Function(ft.WidgetTester tester)? verify,
   Widget Function(BuildContext, Widget)? builder,
 }) {
-  testWidgets(description, (tester) async {
-    final vmController = StreamController<V>();
+  ft.testWidgets(description, (tester) async {
+    final viewModels = <V>[];
 
     final presenter = create(
       (context) {
-        vmController.add(ViewModelScope.of<V>(context));
+        viewModels.add(ViewModelScope.of<V>(context));
         return const SizedBox.shrink();
       },
     );
@@ -51,13 +52,24 @@ void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
     );
     await tester.pump();
 
-    Future<void>? expectation;
+    ft.TestFailure? failure;
     if (expect != null) {
-      expectation = expectLater(vmController.stream, emitsInOrder(expect()));
+      final expected = expect();
+      try {
+        ft.expect(viewModels, ft.wrapMatcher(expected));
+      } on ft.TestFailure catch (f) {
+        if (expected is! List<V>) {
+          failure = f;
+        } else {
+          final diff = _diff(expected: expected, actual: viewModels);
+          failure = ft.TestFailure('${f.message}\n$diff');
+        }
+      }
     }
 
     await verify?.call(tester);
-    if (expectation != null) await expectation;
+
+    if (failure != null) throw failure;
   });
 }
 
@@ -70,7 +82,7 @@ void presenterCallbackTest<V extends ViewModel, O extends Output,
   required FutureOr<void> Function(U useCase) setup,
   required FutureOr<void> Function(U useCase, V vm) verify,
 }) {
-  test(description, () async {
+  ft.test(description, () async {
     final presenter = create((_) => const SizedBox.shrink());
 
     await setup(useCase);
@@ -114,4 +126,45 @@ class _TestBuilderState<U extends UseCase>
 
   @override
   Widget build(BuildContext context) => widget.presenter;
+}
+
+String _diff({required Object expected, required Object actual}) {
+  final differences = diff(expected.toString(), actual.toString());
+  final buffer = StringBuffer()
+    ..writeln(_lineCaption('DIFF'))
+    ..writeln(differences.toPrettyString())
+    ..writeln(_lineCaption('END DIFF'));
+
+  return buffer.toString();
+}
+
+String _lineCaption(String caption) {
+  const totalWidth = 80;
+  final asteriskWidth = (totalWidth - caption.length - 2) ~/ 2;
+
+  return '${'*' * asteriskWidth} $caption ${'*' * asteriskWidth}';
+}
+
+extension on List<Diff> {
+  String toPrettyString() {
+    String identical(String str) => '\u001b[90m$str\u001B[0m';
+    String deletion(String str) => '\u001b[31m[-$str-]\u001B[0m';
+    String insertion(String str) => '\u001b[32m{+$str+}\u001B[0m';
+
+    final buffer = StringBuffer();
+    for (final difference in this) {
+      switch (difference.operation) {
+        case DIFF_EQUAL:
+          buffer.write(identical(difference.text));
+          break;
+        case DIFF_DELETE:
+          buffer.write(deletion(difference.text));
+          break;
+        case DIFF_INSERT:
+          buffer.write(insertion(difference.text));
+          break;
+      }
+    }
+    return buffer.toString();
+  }
 }
