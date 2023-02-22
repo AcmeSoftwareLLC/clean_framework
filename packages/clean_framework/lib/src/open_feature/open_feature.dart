@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'package:clean_framework/src/open_feature/src/core/feature_client.dart';
 import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
 import 'package:clean_framework/src/open_feature/src/hook/hook.dart';
