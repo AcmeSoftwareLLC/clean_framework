@@ -285,6 +285,16 @@ void main() {
         expect(useCase.debugEntity, const TestEntity(foo: 'bas'));
       },
     );
+
+    test(
+      'debugEntityUpdate updates the entity',
+      () async {
+        expect(useCase.debugEntity, const TestEntity());
+
+        useCase.debugEntityUpdate((entity) => entity.copyWith(foo: 'bar'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'bar'));
+      },
+    );
   });
 }
 
