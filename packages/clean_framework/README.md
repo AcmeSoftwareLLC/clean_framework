@@ -14,4 +14,4 @@ Go to [the documentation](https://docs.page/MattHamburger/clean_framework).
 
 ### Tools
 
-<iframe width="384px" height="319px" src="https://plugins.jetbrains.com/embeddable/card/21072"></iframe>
+[Clean Framework IntelliJ Plugin](https://plugins.jetbrains.com/plugin/21072-clean-framework)
