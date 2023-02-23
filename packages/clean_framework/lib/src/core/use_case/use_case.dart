@@ -47,7 +47,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   /// Updates the [entity] with the [newEntity] and notifies all the listeners.
   ///
-  /// For testing purposes, you can use [debugEntityUpdate] to update the entity.
+  /// For testing purposes, you can use [debugEntityUpdate] to update entity.
   set entity(E newEntity) => super.state = newEntity;
 
   /// A development-only way to access [entity] outside of [UseCase].
