@@ -34,6 +34,7 @@ ProviderContainer
       final completer = Completer<void>();
       final subscription = useCase.stream
           .map((e) => useCase.transformToOutput<O>(e))
+          .distinct()
           .listen(outputs.add, onDone: completer.complete);
 
       await execute(useCase);
@@ -90,6 +91,7 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
       final completer = Completer<void>();
       final subscription = toUseCase.stream
           .map((e) => toUseCase.transformToOutput<O>(e))
+          .distinct()
           .listen(outputs.add, onDone: completer.complete);
 
       await execute(fromUseCase);

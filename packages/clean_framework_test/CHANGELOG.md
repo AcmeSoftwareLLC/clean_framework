@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.3
+**Feb 23, 2023**
+- Fixed `useCaseTest` matching against duplicate UI Outputs.
+
 ## 0.4.2
 **Feb 22, 2023**
 - Fixed `presenterTest` and `useCaseTest` helper being stuck on failure.
