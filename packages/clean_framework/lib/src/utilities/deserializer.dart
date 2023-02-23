@@ -52,8 +52,8 @@ class Deserializer {
 
   List<T> getList<T extends Object>(
     String key, {
-    List<T> defaultValue = const [],
     required T Function(Map<String, dynamic>) converter,
+    List<T> defaultValue = const [],
   }) {
     final value = _map[key];
 

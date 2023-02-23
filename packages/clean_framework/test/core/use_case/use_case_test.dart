@@ -16,23 +16,23 @@ void main() {
     });
 
     test('entity updates with setter', () {
-      expect(useCase.entity, const TestEntity());
+      expect(useCase.debugEntity, const TestEntity());
 
-      useCase.entity = useCase.entity.copyWith(foo: 'bar');
-      expect(useCase.entity, const TestEntity(foo: 'bar'));
+      useCase.set(foo: 'bar');
+      expect(useCase.debugEntity, const TestEntity(foo: 'bar'));
     });
 
     test('entity updates with setInput', () {
-      expect(useCase.entity, const TestEntity());
+      expect(useCase.debugEntity, const TestEntity());
 
       useCase.setInput(const TestInput(foo: 'input'));
-      expect(useCase.entity, const TestEntity(foo: 'input'));
+      expect(useCase.debugEntity, const TestEntity(foo: 'input'));
     });
 
     test(
       'entity update fails w/ setInput if no appropriate transformer is found',
       () {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
         expect(
           () => useCase.setInput(const NoTransformerTestInput(foo: 'input')),
           throwsStateError,
@@ -43,7 +43,7 @@ void main() {
     test(
       'getOutput() success',
       () {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
 
         useCase.setInput(const TestInput(foo: 'input'));
 
@@ -55,7 +55,7 @@ void main() {
     test(
       'getOutput() fails when no appropriate transformer is found',
       () {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
 
         useCase.setInput(const TestInput(foo: 'input'));
 
@@ -66,7 +66,7 @@ void main() {
     test(
       'successful request',
       () async {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
 
         useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
           (output) async {
@@ -83,7 +83,7 @@ void main() {
           onFailure: (failure) => const TestEntity(foo: 'failure'),
         );
 
-        expect(useCase.entity, const TestEntity(foo: 'Hello World!'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'Hello World!'));
       },
     );
 
@@ -106,14 +106,14 @@ void main() {
         'performs action immediately first '
         'and then only after the duration elapses',
         () async {
-          useCase.entity = const TestEntity(foo: '@');
+          useCase.set(foo: '@');
 
-          String getChar() => useCase.entity.foo;
+          String getChar() => useCase.debugEntity.foo;
 
           void increment() {
             useCase.debounce(
               action: () {
-                useCase.entity = useCase.entity.copyWith(
+                useCase.set(
                   foo: String.fromCharCode(getChar().codeUnitAt(0) + 1),
                 );
               },
@@ -163,14 +163,14 @@ void main() {
         'performs action only after the duration elapses; '
         'when immediate is false',
         () async {
-          useCase.entity = const TestEntity(foo: 'A');
+          useCase.set(foo: 'A');
 
-          String getChar() => useCase.entity.foo;
+          String getChar() => useCase.debugEntity.foo;
 
           void increment() {
             useCase.debounce(
               action: () {
-                useCase.entity = useCase.entity.copyWith(
+                useCase.set(
                   foo: String.fromCharCode(getChar().codeUnitAt(0) + 1),
                 );
               },
@@ -231,7 +231,7 @@ void main() {
     test(
       'updates within "withSilencedUpdate" are not notified to listeners',
       () async {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
 
         final expectation = expectLater(
           useCase.stream,
@@ -243,17 +243,17 @@ void main() {
           ),
         );
 
-        useCase.entity = const TestEntity(foo: 'bar');
-        expect(useCase.entity, const TestEntity(foo: 'bar'));
+        useCase.set(foo: 'bar');
+        expect(useCase.debugEntity, const TestEntity(foo: 'bar'));
 
         await useCase.withSilencedUpdate(() {
           // This update in not emitted on the stream above.
-          useCase.entity = const TestEntity(foo: 'bas');
+          useCase.set(foo: 'bas');
         });
-        expect(useCase.entity, const TestEntity(foo: 'bas'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'bas'));
 
-        useCase.entity = const TestEntity(foo: 'baz');
-        expect(useCase.entity, const TestEntity(foo: 'baz'));
+        useCase.set(foo: 'baz');
+        expect(useCase.debugEntity, const TestEntity(foo: 'baz'));
 
         await expectation;
       },
@@ -262,27 +262,37 @@ void main() {
     test(
       'running multiple "withSilencedUpdate" modifier throws assertion error',
       () async {
-        expect(useCase.entity, const TestEntity());
+        expect(useCase.debugEntity, const TestEntity());
 
-        useCase.entity = const TestEntity(foo: 'bar');
-        expect(useCase.entity, const TestEntity(foo: 'bar'));
+        useCase.set(foo: 'bar');
+        expect(useCase.debugEntity, const TestEntity(foo: 'bar'));
 
         unawaited(
           useCase.withSilencedUpdate(() async {
-            useCase.entity = const TestEntity(foo: 'bas');
+            useCase.set(foo: 'bas');
 
             await Future<void>.delayed(const Duration(milliseconds: 10));
           }),
         );
-        expect(useCase.entity, const TestEntity(foo: 'bas'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'bas'));
 
         expect(
           useCase.withSilencedUpdate(() async {
-            useCase.entity = const TestEntity(foo: 'baz');
+            useCase.set(foo: 'baz');
           }),
           throwsAssertionError,
         );
-        expect(useCase.entity, const TestEntity(foo: 'bas'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'bas'));
+      },
+    );
+
+    test(
+      'debugEntityUpdate updates the entity',
+      () async {
+        expect(useCase.debugEntity, const TestEntity());
+
+        useCase.debugEntityUpdate((entity) => entity.copyWith(foo: 'bar'));
+        expect(useCase.debugEntity, const TestEntity(foo: 'bar'));
       },
     );
   });
@@ -297,6 +307,10 @@ class TestUseCase extends UseCase<TestEntity> {
             TestOutputTransformer(),
           ],
         );
+
+  void set({required String foo}) {
+    entity = entity.copyWith(foo: foo);
+  }
 }
 
 class TestEntity extends Entity {

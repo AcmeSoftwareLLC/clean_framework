@@ -4,7 +4,8 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:clean_framework_test/src/diff.dart';
+import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
@@ -13,13 +14,13 @@ ProviderContainer
   String description, {
   required UseCaseProviderBase provider,
   required FutureOr<void> Function(U) execute,
-  Iterable<dynamic> Function()? expect,
+  dynamic Function()? expect,
   FutureOr<void> Function(U)? verify,
   E Function(E)? seed,
 }) {
   final container = ProviderContainer();
 
-  test(
+  ft.test(
     description,
     () async {
       final useCase = provider.read(container) as U;
@@ -28,17 +29,32 @@ ProviderContainer
         useCase.entity = seed(useCase.entity);
       }
 
-      Future<void>? expectation;
-      if (expect != null) {
-        expectation = expectLater(
-          useCase.stream.map((e) => useCase.transformToOutput<O>(e)),
-          emitsInOrder(expect()),
-        );
-      }
+      final outputs = <O>[];
+
+      final completer = Completer<void>();
+      final subscription = useCase.stream
+          .map((e) => useCase.transformToOutput<O>(e))
+          .listen(outputs.add, onDone: completer.complete);
 
       await execute(useCase);
-      await expectation;
+      await Future<void>.delayed(Duration.zero);
+      if (useCase.mounted) useCase.dispose();
+      await completer.future;
 
+      if (expect != null) {
+        final dynamic expected = expect();
+        final shallowEquality = '$outputs' == '$expected';
+
+        try {
+          ft.expect(outputs, ft.wrapMatcher(expected));
+        } on ft.TestFailure catch (e) {
+          if (shallowEquality || expected is! List<O>) rethrow;
+          final difference = diff(expected: expected, actual: outputs);
+          throw ft.TestFailure('${e.message}\n$difference');
+        }
+      }
+
+      await subscription.cancel();
       await verify?.call(useCase);
     },
   );
@@ -59,7 +75,7 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
 }) {
   final container = ProviderContainer();
 
-  test(
+  ft.test(
     description,
     () async {
       final fromUseCase = from.read(container) as FU;
@@ -69,17 +85,32 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
         toUseCase.entity = seed(toUseCase.entity);
       }
 
-      Future<void>? expectation;
-      if (expect != null) {
-        expectation = expectLater(
-          toUseCase.stream.map((e) => toUseCase.transformToOutput<O>(e)),
-          emitsInOrder(expect()),
-        );
-      }
+      final outputs = <O>[];
+
+      final completer = Completer<void>();
+      final subscription = toUseCase.stream
+          .map((e) => toUseCase.transformToOutput<O>(e))
+          .listen(outputs.add, onDone: completer.complete);
 
       await execute(fromUseCase);
-      await expectation;
+      await Future<void>.delayed(Duration.zero);
+      if (toUseCase.mounted) toUseCase.dispose();
+      await completer.future;
 
+      if (expect != null) {
+        final dynamic expected = expect();
+        final shallowEquality = '$outputs' == '$expected';
+
+        try {
+          ft.expect(outputs, ft.wrapMatcher(expected));
+        } on ft.TestFailure catch (e) {
+          if (shallowEquality || expected is! List<O>) rethrow;
+          final difference = diff(expected: expected, actual: outputs);
+          throw ft.TestFailure('${e.message}\n$difference');
+        }
+      }
+
+      await subscription.cancel();
       await verify?.call(toUseCase);
     },
   );

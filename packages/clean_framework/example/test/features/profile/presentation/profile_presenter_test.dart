@@ -19,20 +19,22 @@ void main() {
         profileUseCaseProvider.overrideWith(ProfileUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.entity = useCase.entity.copyWith(
-          name: 'Pikachu',
-          description: 'Pikachu is a small, chubby rodent Pokémon.',
-          height: 4,
-          weight: 60,
-          stats: [
-            PokemonStatEntity(name: 'hp', point: 35),
-            PokemonStatEntity(name: 'attack', point: 55),
-            PokemonStatEntity(name: 'defense', point: 40),
-            PokemonStatEntity(name: 'special-attack', point: 50),
-            PokemonStatEntity(name: 'special-defense', point: 50),
-            PokemonStatEntity(name: 'speed', point: 90),
-          ],
-          types: ['electric'],
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            name: 'Pikachu',
+            description: 'Pikachu is a small, chubby rodent Pokémon.',
+            height: 4,
+            weight: 60,
+            stats: [
+              PokemonStatEntity(name: 'hp', point: 35),
+              PokemonStatEntity(name: 'attack', point: 55),
+              PokemonStatEntity(name: 'defense', point: 40),
+              PokemonStatEntity(name: 'special-attack', point: 50),
+              PokemonStatEntity(name: 'special-defense', point: 50),
+              PokemonStatEntity(name: 'speed', point: 90),
+            ],
+            types: ['electric'],
+          ),
         );
       },
       expect: () => [

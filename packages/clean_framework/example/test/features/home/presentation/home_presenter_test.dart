@@ -22,11 +22,13 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.entity = useCase.entity.copyWith(
-          pokemons: [
-            PokemonModel(name: 'Pikachu', imageUrl: ''),
-            PokemonModel(name: 'Bulbasaur', imageUrl: ''),
-          ],
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            pokemons: [
+              PokemonModel(name: 'Pikachu', imageUrl: ''),
+              PokemonModel(name: 'Bulbasaur', imageUrl: ''),
+            ],
+          ),
         );
       },
       expect: () => [
@@ -46,9 +48,11 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.entity = useCase.entity.copyWith(
-          isRefresh: true,
-          status: HomeStatus.loaded,
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            isRefresh: true,
+            status: HomeStatus.loaded,
+          ),
         );
       },
       verify: (tester) {
@@ -66,9 +70,11 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.entity = useCase.entity.copyWith(
-          isRefresh: true,
-          status: HomeStatus.failed,
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            isRefresh: true,
+            status: HomeStatus.failed,
+          ),
         );
       },
       verify: (tester) {
@@ -86,9 +92,11 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.entity = useCase.entity.copyWith(
-          isRefresh: true,
-          status: HomeStatus.failed,
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            isRefresh: true,
+            status: HomeStatus.failed,
+          ),
         );
       },
       verify: (tester) {
