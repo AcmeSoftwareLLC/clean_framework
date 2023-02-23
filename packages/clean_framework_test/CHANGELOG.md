@@ -1,7 +1,7 @@
 # Changelog
 ## 0.4.2
 **Feb 22, 2023**
-- Fixed `presenterTest` helper being stuck on failure.
+- Fixed `presenterTest` and `useCaseTest` helper being stuck on failure.
 - Bumped dependencies to latest version.
 
 ## 0.4.1

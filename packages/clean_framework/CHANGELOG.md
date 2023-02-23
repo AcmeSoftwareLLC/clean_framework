@@ -1,6 +1,7 @@
 # Changelog
 ## 2.0.7
 **Feb 22, 2023**
+- Added `debugEntity` and `debugEntityUpdate` to **UseCase**. The `entity` getter/setter is now protected.
 - Bumped dependencies to latest version.
 
 ## 2.0.6
