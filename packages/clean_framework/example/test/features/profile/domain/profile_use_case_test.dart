@@ -85,7 +85,7 @@ void main() {
       ],
       verify: (useCase) {
         expect(
-          useCase.entity,
+          useCase.debugEntity,
           ProfileEntity(
             name: 'pikachu',
             description: 'At will, it can generate powerful electricity.',

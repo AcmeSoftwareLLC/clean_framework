@@ -37,6 +37,8 @@ ProviderContainer
           .listen(outputs.add, onDone: completer.complete);
 
       await execute(useCase);
+      await Future<void>.delayed(Duration.zero);
+      if (useCase.mounted) useCase.dispose();
       await completer.future;
 
       if (expect != null) {
@@ -91,6 +93,8 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
           .listen(outputs.add, onDone: completer.complete);
 
       await execute(fromUseCase);
+      await Future<void>.delayed(Duration.zero);
+      if (toUseCase.mounted) toUseCase.dispose();
       await completer.future;
 
       if (expect != null) {

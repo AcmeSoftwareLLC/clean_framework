@@ -10,7 +10,7 @@ final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
       selector: (e) => e.foo,
       (previous, next) {
         if (previous != next) {
-          bridge.useCase.entity = bridge.useCase.entity.copyWith(foo: 'bar3');
+          bridge.useCase.set(foo: 'bar3');
         }
       },
     );
@@ -26,7 +26,7 @@ final _testUseCaseProvider2 =
       selector: (e) => e.foo,
       (previous, next) {
         if (previous != next) {
-          bridge.useCase.entity = bridge.useCase.entity.copyWith(foo: 'bar2');
+          bridge.useCase.set(foo: 'bar2');
         }
       },
     );
@@ -55,8 +55,7 @@ void main() {
                 onPressed: () {
                   clicked = true;
 
-                  final useCase = _testUseCaseProvider.getUseCase(ref);
-                  useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                  _testUseCaseProvider.getUseCase(ref).set(foo: 'bar');
                 },
                 child: const Text('CLICK'),
               );
@@ -87,8 +86,7 @@ void main() {
                 onPressed: () {
                   clicked = true;
 
-                  final useCase = _testUseCaseProvider2.getUseCase(ref);
-                  useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                  _testUseCaseProvider2.getUseCase(ref).set(foo: 'bar');
                 },
                 child: const Text('CLICK'),
               );
@@ -122,8 +120,7 @@ void main() {
                     onPressed: () {
                       clicked = true;
 
-                      final useCase = _testUseCaseProvider.getUseCase(ref);
-                      useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                      _testUseCaseProvider.getUseCase(ref).set(foo: 'bar');
                     },
                     child: const Text('CLICK'),
                   );
@@ -146,8 +143,7 @@ void main() {
                     onPressed: () {
                       clicked3 = true;
 
-                      final useCase = _testUseCaseProvider3.getUseCase(ref);
-                      useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                      _testUseCaseProvider3.getUseCase(ref).set(foo: 'bar');
                     },
                     child: const Text('CLICK3'),
                   );
@@ -179,8 +175,7 @@ void main() {
 
               return ElevatedButton(
                 onPressed: () {
-                  final useCase = _testUseCaseProvider.getUseCase(ref);
-                  useCase.entity = useCase.entity.copyWith(foo: 'bar');
+                  _testUseCaseProvider.getUseCase(ref).set(foo: 'bar');
                 },
                 child: const Text('CLICK'),
               );
@@ -239,6 +234,10 @@ class TestUseCase extends UseCase<TestEntity> {
             OutputTransformer.from((e) => TestOutput(foo: e.foo)),
           ],
         );
+
+  void set({required String foo}) {
+    entity = entity.copyWith(foo: foo);
+  }
 }
 
 class TestEntity extends Entity {

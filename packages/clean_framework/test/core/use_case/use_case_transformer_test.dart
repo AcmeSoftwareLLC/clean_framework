@@ -18,8 +18,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.entity.foo, 'hello');
-      expect(useCase.entity.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -28,7 +28,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.entity.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -48,8 +48,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.entity.foo, 'hello');
-      expect(useCase.entity.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -58,7 +58,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.entity.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -78,8 +78,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.entity.foo, 'hello');
-      expect(useCase.entity.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -88,7 +88,7 @@ void main() {
     test('input filter', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.entity.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>(), const FooOutput('hello'));
     });
