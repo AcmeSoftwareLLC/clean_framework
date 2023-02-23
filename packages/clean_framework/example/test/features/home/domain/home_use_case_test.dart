@@ -49,7 +49,7 @@ void main() {
       ],
       verify: (useCase) {
         expect(
-          useCase.entity,
+          useCase.debugEntity,
           HomeEntity(pokemons: pokemons, status: HomeStatus.loaded),
         );
       },
@@ -172,7 +172,7 @@ void main() {
         status: HomeStatus.loaded,
       ),
       execute: (useCase) {
-        useCase.entity = useCase.entity.copyWith(name: 'PIKACHU');
+        useCase.debugEntityUpdate((e) => e.copyWith(name: 'PIKACHU'));
       },
       expect: () => [
         HomeUIOutput(

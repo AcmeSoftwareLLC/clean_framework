@@ -23,7 +23,7 @@ void main() {
         final useCase = container.read(_testUseCaseProvider().notifier);
         await useCase.ping('Hello');
 
-        expect(useCase.entity.pong, 'Hello');
+        expect(useCase.debugEntity.pong, 'Hello');
       },
     );
 

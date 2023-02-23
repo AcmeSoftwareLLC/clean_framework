@@ -65,7 +65,7 @@ class TestUI extends UI<TestViewModel> {
 }
 
 class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
-  PresenterFake({super.key, required super.builder})
+  PresenterFake({required super.builder, super.key})
       : super(
           provider: UseCaseProvider((_) => UseCaseFake()),
         );

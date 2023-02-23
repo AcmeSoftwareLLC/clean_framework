@@ -9,10 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
-    super.key,
     required UseCaseProvider provider,
     required this.builder,
+    super.key,
   }) : _provider = provider;
+
   final UseCaseProvider _provider;
   final PresenterBuilder<V> builder;
 

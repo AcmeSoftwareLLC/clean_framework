@@ -30,14 +30,48 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   final InputFilterMap<E> _inputFilters;
   final RequestSubscriptionMap _requestSubscriptions = {};
 
-  @visibleForTesting
   @protected
   @useResult
+
+  /// The current entity instance of this [UseCase].
+  ///
+  /// Updating this variable will synchronously call all the listeners.
+  /// Notifying the listeners is O(N) with N the number of listeners.
+  ///
+  /// Updating the entity will throw if at least one listener throws.
+  ///
+  /// For testing purposes, you can use [debugEntity] to access the entity.
   E get entity => super.state;
 
-  @visibleForTesting
   @protected
+
+  /// Updates the [entity] with the [newEntity] and notifies all the listeners.
+  ///
+  /// For testing purposes, you can use [debugEntityUpdate] to update the entity.
   set entity(E newEntity) => super.state = newEntity;
+
+  /// A development-only way to access [entity] outside of [UseCase].
+  ///
+  /// The only difference with [entity] is that [debugEntity] is not "protected".\
+  /// Will not work in release mode.
+  ///
+  /// This is useful for tests.
+  E get debugEntity => super.debugState;
+
+  @visibleForTesting
+
+  /// A development-only way to update [entity] outside of [UseCase].
+  E debugEntityUpdate(E Function(E) update) {
+    late E updatedEntity;
+    assert(
+      () {
+        updatedEntity = entity = update(super.debugState);
+        return true;
+      }(),
+      '',
+    );
+    return updatedEntity;
+  }
 
   O getOutput<O extends Output>() => transformToOutput(entity);
 

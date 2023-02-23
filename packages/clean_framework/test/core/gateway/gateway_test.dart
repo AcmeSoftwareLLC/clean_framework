@@ -88,7 +88,7 @@ void main() {
 
       await Future<void>.delayed(Duration.zero);
 
-      expect(useCase.entity, const TestEntity(message: 'Hello World!'));
+      expect(useCase.debugEntity, const TestEntity(message: 'Hello World!'));
     });
   });
 }
