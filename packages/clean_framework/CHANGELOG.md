@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.8
+**Mar 9, 2023**
+- Fixed **WatcherGateway** not updating entity properly.
+- Added `getUseCaseFromContext` to **UseCaseProvider**s.
+
 ## 2.0.7
 **Feb 22, 2023**
 - Added `debugEntity` and `debugEntityUpdate` to **UseCase**. The `entity` getter/setter is now protected.
