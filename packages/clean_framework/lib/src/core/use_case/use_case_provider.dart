@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/src/core/clean_framework_provider.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
@@ -28,6 +29,10 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>,
   }
 
   U getUseCase(WidgetRef ref) => ref.read(buildNotifier());
+
+  U getUseCaseFromContext(BuildContext context) {
+    return read(AppProviderScope.containerOf(context));
+  }
 
   void listen<O extends Output>(WidgetRef ref, void Function(O?, O) listener) {
     ref.listen<O>(_listenForOutputChange(ref), listener);

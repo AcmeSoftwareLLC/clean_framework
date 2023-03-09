@@ -175,7 +175,9 @@ void main() {
 
               return ElevatedButton(
                 onPressed: () {
-                  _testUseCaseProvider.getUseCase(ref).set(foo: 'bar');
+                  _testUseCaseProvider
+                      .getUseCaseFromContext(context)
+                      .set(foo: 'bar');
                 },
                 child: const Text('CLICK'),
               );

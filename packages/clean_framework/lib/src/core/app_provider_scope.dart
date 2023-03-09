@@ -43,6 +43,11 @@ class AppProviderScope extends StatelessWidget {
       ),
     );
   }
+
+  /// Read the current [ProviderContainer] for a [BuildContext].
+  static ProviderContainer containerOf(BuildContext context) {
+    return ProviderScope.containerOf(context);
+  }
 }
 
 class _ProviderInitializer extends StatefulWidget {
