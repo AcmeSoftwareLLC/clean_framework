@@ -15,22 +15,18 @@ abstract class Gateway<O extends Output, R extends Request,
     ProviderRef<Object> ref, {
     required List<UseCaseProviderBase> providers,
   }) {
-    _ref = ref;
-    _useCaseProviders = providers;
-
     for (final useCaseProvider in providers) {
       useCaseProvider.notifier.listen(
         (notifier) {
-          ref
-              .read(notifier)
-              .subscribe<O, S>((output) => buildInput(output as O));
+          final useCase = ref.read(notifier);
+          _useCases.add(useCase);
+          useCase.subscribe<O, S>((output) => buildInput(output as O));
         },
       );
     }
   }
 
-  late final ProviderRef<Object> _ref;
-  late final List<UseCaseProviderBase> _useCaseProviders;
+  final List<UseCase> _useCases = [];
 
   @visibleForTesting
   @nonVirtual
@@ -76,12 +72,8 @@ abstract class WatcherGateway<
 
   @nonVirtual
   void yieldResponse(P response) {
-    for (final useCaseProvider in _useCaseProviders) {
-      useCaseProvider.notifier.listen(
-        (notifier) {
-          _ref.read(notifier).setInput(onSuccess(response));
-        },
-      );
+    for (final useCase in _useCases) {
+      useCase.setInput(onSuccess(response));
     }
   }
 }
