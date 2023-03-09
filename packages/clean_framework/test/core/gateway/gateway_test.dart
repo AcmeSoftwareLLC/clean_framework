@@ -78,17 +78,31 @@ void main() {
     test('yielding response will update use case', () async {
       final container = ProviderContainer();
 
-      _testGatewayProvider
-          .read(container)
-          .yieldResponse(const TestSuccessResponse('Hello World!'));
+      final gateway = _testGatewayProvider.read(container);
+      final useCase = _testUseCaseProvider.read(container);
+
+      final expectation = expectLater(
+        useCase.stream,
+        emitsInOrder(
+          const [
+            TestEntity(message: 'Hello World 1!'),
+            TestEntity(message: 'Hello World 2!'),
+            TestEntity(message: 'Hello World 3!'),
+            TestEntity(message: 'Hello World 4!'),
+            TestEntity(message: 'Hello World 5!'),
+          ],
+        ),
+      );
 
       _testUseCaseProvider.init();
 
-      final useCase = _testUseCaseProvider.read(container);
+      final subscription = Stream.fromIterable([1, 2, 3, 4, 5]).listen((event) {
+        gateway.yieldResponse(TestSuccessResponse('Hello World $event!'));
+      });
 
       await Future<void>.delayed(Duration.zero);
-
-      expect(useCase.debugEntity, const TestEntity(message: 'Hello World!'));
+      await expectation;
+      await subscription.cancel();
     });
   });
 }
