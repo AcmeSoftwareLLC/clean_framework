@@ -62,7 +62,7 @@ Sub-packages:
 - Added `UseCaseProvider.autoDispose`
 - Added `UseCaseProviderBridge`
 
-For migration guide, please refer to [the docs](https://docs.page/MattHamburger/clean_framework/codelabs/clean-framework/migration-guide).
+For migration guide, please refer to [the docs](https://docs.page/AcmeSoftwareLLC/clean_framework/codelabs/clean-framework/migration-guide).
 
 ## 1.5.0
 **Nov 1, 2022**
@@ -146,7 +146,7 @@ CleanFrameworkObserver.instance = CleanFrameworkObserver(enableNetworkLogs: fals
 # [1.1.4] - Dec 8, 2021
 - Added `observers` and `navigatorBuilder` to **AppRouter**.
 - Improved duplication handling logic for `onOutputUpdate`.
-- Added `postFrame` callback to **uiTest**, which overrides the default `pumpAndSettle`. Fixes [#31](https://github.com/MattHamburger/clean_framework/issues/31).
+- Added `postFrame` callback to **uiTest**, which overrides the default `pumpAndSettle`. Fixes [#31](https://github.com/AcmeSoftwareLLC/clean_framework/issues/31).
 - Added `router` argument to **uiTest** to enable navigating between routes inside the test block.
 - Added `setupUITest()` method to setup provider context and router for all the subsequent **uiTest**s.
 
