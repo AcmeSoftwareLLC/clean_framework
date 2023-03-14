@@ -28,7 +28,9 @@ class RestService {
     var uri = _pathToUri(path);
 
     if (method == RestMethod.get) {
-      uri = uri.replace(queryParameters: data);
+      uri = uri.replace(
+        queryParameters: data.map((k, v) => MapEntry(k, v.toString())),
+      );
     }
 
     try {
@@ -41,7 +43,7 @@ class RestService {
       }
 
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll(headers);
 
       final response = await resolvedClient.send(request);
@@ -63,19 +65,10 @@ class RestService {
       } else {
         throw StateError('The type $T is not supported by request');
       }
-
-      // TODO(sarbagyastha): Enable the types of error we should consider later:
-      // } on SocketException {
-      //   print('No Internet connection 😑');
-      // } on HttpException {
-      //   print("Couldn't find the post 😱");
-      // } on FormatException {
-      //   print("Bad response format 👎");
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      //print(e);
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -113,7 +106,7 @@ class RestService {
         }
       }
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll({'Content-Type': 'multipart/form-data'})
         ..addAll(headers);
 
@@ -133,8 +126,8 @@ class RestService {
       return resData;
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -154,7 +147,7 @@ class RestService {
       final request = Request(method.value, uri)..bodyBytes = data;
 
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll(headers);
 
       final response =
@@ -173,8 +166,8 @@ class RestService {
       return resData;
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -195,20 +188,26 @@ class RestService {
   }
 }
 
-class RestServiceFailure {
-  RestServiceFailure([this.message]);
+class RestServiceFailure<T extends Object> {
+  RestServiceFailure({
+    required this.error,
+    this.message,
+    this.stackTrace,
+  });
 
+  final T error;
   final String? message;
+  final StackTrace? stackTrace;
 }
 
-class InvalidResponseRestServiceFailure extends RestServiceFailure {
+class InvalidResponseRestServiceFailure
+    extends RestServiceFailure<Map<String, dynamic>> {
   InvalidResponseRestServiceFailure({
+    required super.error,
     required this.path,
-    required this.error,
     required this.statusCode,
   });
 
   final String path;
   final int statusCode;
-  final Map<String, dynamic> error;
 }

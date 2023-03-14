@@ -305,7 +305,9 @@ class RestServiceFake extends Fake implements RestService {
     Map<String, String> headers = const {},
     Client? client,
   }) async {
-    if (_response.isEmpty) throw RestServiceFailure('Something went wrong');
+    if (_response.isEmpty) {
+      throw RestServiceFailure(error: '', message: 'Something went wrong');
+    }
     if (_response['statusCode'] == 400) {
       throw InvalidResponseRestServiceFailure(
         error: {'error': 'Bad Request'},
@@ -326,7 +328,9 @@ class RestServiceFake extends Fake implements RestService {
     },
     Client? client,
   }) async {
-    if (_response.isEmpty) throw RestServiceFailure('Something went wrong');
+    if (_response.isEmpty) {
+      throw RestServiceFailure(error: '', message: 'Something went wrong');
+    }
     if (_response['statusCode'] == 400) {
       throw InvalidResponseRestServiceFailure(
         error: {'error': 'Bad Request'},

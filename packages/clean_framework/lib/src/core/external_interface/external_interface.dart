@@ -81,15 +81,19 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
             if (handlerCall is Future) {
               unawaited(
                 handlerCall.catchError(
-                  (Object error) => e.completeFailure(_onError(error, request)),
+                  (Object error, StackTrace stackTrace) {
+                    e.completeFailure(
+                      _onError(error, request, stackTrace),
+                    );
+                  },
                 ),
               );
             }
           } else {
             await handler(request, e.complete);
           }
-        } catch (error) {
-          e.completeFailure(_onError(error, request));
+        } catch (error, stackTrace) {
+          e.completeFailure(_onError(error, request, stackTrace));
         }
       },
     );
@@ -97,8 +101,13 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 
   Never sendError(Object error) => throw error;
 
-  FailureResponse _onError(Object error, R request) {
-    CleanFrameworkObserver.instance.onExternalError(this, request, error);
+  FailureResponse _onError(Object error, R request, StackTrace stackTrace) {
+    CleanFrameworkObserver.instance.onExternalError(
+      this,
+      request,
+      error,
+      stackTrace,
+    );
     final failure = onError(error);
     CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
     return failure;

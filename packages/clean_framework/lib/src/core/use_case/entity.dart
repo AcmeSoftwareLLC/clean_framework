@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 @immutable
 abstract class Entity extends Equatable {
@@ -8,5 +8,6 @@ abstract class Entity extends Equatable {
   @override
   bool get stringify => true;
 
+  @useResult
   Entity copyWith() => throw UnimplementedError('copyWith() not implemented');
 }

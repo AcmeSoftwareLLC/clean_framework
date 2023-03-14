@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.9
+**Mar 14, 2023**
+- Bumped dependencies to latest version.
+- Logs error caught by External Interface with stacktrace.
+
 ## 2.0.8
 **Mar 9, 2023**
 - Fixed **WatcherGateway** not updating entity properly.

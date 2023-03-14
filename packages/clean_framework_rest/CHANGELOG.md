@@ -1,4 +1,10 @@
 # Changelog
+## 0.4.2
+**Mar 14, 2023**
+- Bumped dependencies to latest version.
+- `buildHeaders` now has return type of `FutureOr`.
+- Attached actual error with `RestServiceFailure`.
+
 ## 0.4.1
 **Feb 10, 2023**
 - Added `RestServiceOptions` to allow for customizing the `RestService` global headers and baseUrl.

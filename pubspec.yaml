@@ -1,7 +1,8 @@
-name: clean_framework
+name: clean_framework_workspace
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
 
 dev_dependencies:
+  melos: ^3.0.0
   very_good_analysis: ^3.1.0
