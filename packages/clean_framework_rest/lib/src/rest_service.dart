@@ -28,7 +28,9 @@ class RestService {
     var uri = _pathToUri(path);
 
     if (method == RestMethod.get) {
-      uri = uri.replace(queryParameters: data);
+      uri = uri.replace(
+        queryParameters: data.map((k, v) => MapEntry(k, v.toString())),
+      );
     }
 
     try {
