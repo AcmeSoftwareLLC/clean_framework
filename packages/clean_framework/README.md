@@ -1,5 +1,5 @@
 <p align="center">
-<img src="../../images/clean-framework.png" height="100" alt="Clean Framework"/>
+<img src="https://raw.githubusercontent.com/MattHamburger/clean_framework/main/images/clean-framework.png" height="100" alt="Clean Framework"/>
 </p>
 
 <p align="center">
