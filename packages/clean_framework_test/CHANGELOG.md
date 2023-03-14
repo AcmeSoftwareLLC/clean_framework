@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.4
+**Mar 14, 2023**
+- Bumped dependencies to latest version.
+
 ## 0.4.3
 **Feb 23, 2023**
 - Fixed `useCaseTest` matching against duplicate UI Outputs.
