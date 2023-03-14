@@ -98,7 +98,12 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   Never sendError(Object error) => throw error;
 
   FailureResponse _onError(Object error, R request) {
-    CleanFrameworkObserver.instance.onExternalError(this, request, error);
+    CleanFrameworkObserver.instance.onExternalError(
+      this,
+      request,
+      error,
+      StackTrace.current,
+    );
     final failure = onError(error);
     CleanFrameworkObserver.instance.onFailureResponse(this, request, failure);
     return failure;
