@@ -65,8 +65,8 @@ class RestService {
       }
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -124,8 +124,8 @@ class RestService {
       return resData;
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -164,8 +164,8 @@ class RestService {
       return resData;
     } on InvalidResponseRestServiceFailure {
       rethrow;
-    } catch (e) {
-      throw RestServiceFailure(e.toString());
+    } catch (e, s) {
+      throw RestServiceFailure(error: e, message: e.toString(), stackTrace: s);
     } finally {
       resolvedClient.close();
     }
@@ -186,20 +186,26 @@ class RestService {
   }
 }
 
-class RestServiceFailure {
-  RestServiceFailure([this.message]);
+class RestServiceFailure<T extends Object> {
+  RestServiceFailure({
+    required this.error,
+    this.message,
+    this.stackTrace,
+  });
 
+  final T error;
   final String? message;
+  final StackTrace? stackTrace;
 }
 
-class InvalidResponseRestServiceFailure extends RestServiceFailure {
+class InvalidResponseRestServiceFailure
+    extends RestServiceFailure<Map<String, dynamic>> {
   InvalidResponseRestServiceFailure({
+    required super.error,
     required this.path,
-    required this.error,
     required this.statusCode,
   });
 
   final String path;
   final int statusCode;
-  final Map<String, dynamic> error;
 }
