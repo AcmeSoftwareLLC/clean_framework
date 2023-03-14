@@ -41,7 +41,7 @@ class RestService {
       }
 
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll(headers);
 
       final response = await resolvedClient.send(request);
@@ -63,18 +63,9 @@ class RestService {
       } else {
         throw StateError('The type $T is not supported by request');
       }
-
-      // TODO(sarbagyastha): Enable the types of error we should consider later:
-      // } on SocketException {
-      //   print('No Internet connection 😑');
-      // } on HttpException {
-      //   print("Couldn't find the post 😱");
-      // } on FormatException {
-      //   print("Bad response format 👎");
     } on InvalidResponseRestServiceFailure {
       rethrow;
     } catch (e) {
-      //print(e);
       throw RestServiceFailure(e.toString());
     } finally {
       resolvedClient.close();
@@ -113,7 +104,7 @@ class RestService {
         }
       }
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll({'Content-Type': 'multipart/form-data'})
         ..addAll(headers);
 
@@ -154,7 +145,7 @@ class RestService {
       final request = Request(method.value, uri)..bodyBytes = data;
 
       request.headers
-        ..addAll(options.headers)
+        ..addAll(await options.headers)
         ..addAll(headers);
 
       final response =
