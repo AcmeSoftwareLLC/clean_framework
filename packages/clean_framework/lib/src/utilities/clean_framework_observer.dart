@@ -34,8 +34,9 @@ class CleanFrameworkObserver {
     StackTrace stackTrace,
   ) {
     log(
-      error.toString(),
-      name: '${externalInterface.runtimeType}[${request.runtimeType}]',
+      'Error occurred while requesting "${request.runtimeType}" '
+      'for "${externalInterface.runtimeType}"',
+      name: 'Clean Framework',
       stackTrace: stackTrace,
       error: error,
     );
