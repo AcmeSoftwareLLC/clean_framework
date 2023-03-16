@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clean_framework/src/core/dependency/dependency_provider.dart';
 import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
 import 'package:clean_framework/src/core/gateway/gateway.dart';
@@ -10,18 +11,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
-  ExternalInterface() {
-    handleRequest();
-  }
+  DependencyRef? _ref;
 
   @internal
   void attach(
     ProviderRef<Object> ref, {
     required List<GatewayProvider> providers,
   }) {
+    _ref = DependencyRef(ref);
+    handleRequest();
+
     for (final gatewayProvider in providers) {
       _initTransporter(ref.read(gatewayProvider()));
     }
+  }
+
+  @protected
+
+  /// Locates dependency from the [provider].
+  T locate<T extends Object>(DependencyProvider<T> provider) {
+    assert(_ref != null, '$runtimeType has not been attached!');
+    return _ref!.read(provider);
   }
 
   void _initTransporter(Gateway gateway) {

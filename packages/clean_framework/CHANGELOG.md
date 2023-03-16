@@ -1,4 +1,9 @@
 # Changelog
+## 2.0.10
+**Mar 16, 2023**
+- Added `DependencyProvider`.
+- Added `locate` method to **ExternalInterface**.
+
 ## 2.0.9
 **Mar 14, 2023**
 - Bumped dependencies to latest version.

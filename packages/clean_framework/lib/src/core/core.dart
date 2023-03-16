@@ -1,4 +1,5 @@
 export 'app_provider_scope.dart';
+export 'dependency/dependency_provider.dart';
 export 'external_interface/external_interface.dart';
 export 'external_interface/external_interface_provider.dart';
 export 'external_interface/request.dart';
