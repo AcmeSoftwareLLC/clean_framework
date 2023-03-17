@@ -1,4 +1,4 @@
-name: clean_framework_dio
+name: clean_framework_http
 description: External Interface for clean_framework package based on Dio.
 version: 0.1.0
 homepage: https://acmesoftware.com
