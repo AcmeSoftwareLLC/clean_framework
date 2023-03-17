@@ -3,9 +3,8 @@ part of 'external_interface.dart';
 abstract class ExternalInterfaceDelegate {
   ExternalInterface? _externalInterface;
 
-  // ignore: use_setters_to_change_properties
-  @protected
   @nonVirtual
+  // ignore: use_setters_to_change_properties
   void attachTo(ExternalInterface externalInterface) {
     _externalInterface = externalInterface;
   }

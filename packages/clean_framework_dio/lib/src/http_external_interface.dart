@@ -19,6 +19,7 @@ class HttpExternalInterface
 
   @override
   void handleRequest() {
+    headerDelegate?.attachTo(this);
     final dio = locate(httpDependencyProvider)
       ..options = BaseOptions(baseUrl: _httpOptions.baseUrl);
 
