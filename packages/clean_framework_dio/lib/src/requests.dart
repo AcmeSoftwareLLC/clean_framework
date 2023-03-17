@@ -8,9 +8,9 @@ abstract class HttpRequest extends Request {
 
   String get path;
 
-  Object? get data;
+  Object? get data => null;
 
-  Map<String, dynamic>? get queryParameters;
+  Map<String, dynamic>? get queryParameters => null;
 }
 
 abstract class GetHttpRequest extends HttpRequest {
