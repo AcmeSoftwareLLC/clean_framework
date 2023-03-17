@@ -1,17 +1,24 @@
 import 'dart:io';
 
-import 'package:clean_framework_example/core/pokemon/pokemon_external_interface.dart';
+import 'package:clean_framework/clean_framework.dart' hide Response;
+import 'package:clean_framework_example/core/dependency_providers.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
+import 'package:clean_framework_example/providers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
-  var interface = PokemonExternalInterface();
-
   group('PokemonExternalInterface tests |', () {
     test('get request success', () async {
-      final dio = DioMock();
+      final container = ProviderContainer(
+        overrides: [
+          restClientProvider.overrideWith(DioMock()),
+        ],
+      );
+
+      final interface = pokemonExternalInterfaceProvider.read(container);
+      final dio = restClientProvider.read(container);
 
       when(
         () => dio.get<Map<String, dynamic>>(
@@ -25,8 +32,6 @@ void main() {
         ),
       );
 
-      interface = PokemonExternalInterface(dio: dio);
-
       final result = await interface.request(TestPokemonRequest());
 
       expect(result.isRight, isTrue);
@@ -34,7 +39,14 @@ void main() {
     });
 
     test('get request failure', () async {
-      final dio = DioMock();
+      final container = ProviderContainer(
+        overrides: [
+          restClientProvider.overrideWith(DioMock()),
+        ],
+      );
+
+      final interface = pokemonExternalInterfaceProvider.read(container);
+      final dio = restClientProvider.read(container);
 
       when(
         () => dio.get<Map<String, dynamic>>(
@@ -42,8 +54,6 @@ void main() {
           queryParameters: any(named: 'queryParameters'),
         ),
       ).thenThrow(HttpException('No Internet'));
-
-      interface = PokemonExternalInterface(dio: dio);
 
       final result = await interface.request(TestPokemonRequest());
 

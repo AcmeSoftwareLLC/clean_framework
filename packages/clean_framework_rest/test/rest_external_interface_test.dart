@@ -13,10 +13,15 @@ void main() {
     File(fileName).createSync();
   });
 
+  RestExternalInterface build(RestExternalInterface externalInterface) {
+    return ExternalInterfaceProvider(() => externalInterface)
+        .read(ProviderContainer());
+  }
+
   test('RestExternalInterface success response', () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestRequest());
 
     expect(result.isRight, isTrue);
@@ -25,7 +30,7 @@ void main() {
 
   test('RestExternalInterface connectivity failure', () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestRequest());
 
     expect(result.isLeft, isTrue);
@@ -45,7 +50,7 @@ void main() {
       () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestPostMultipartRequest());
 
     expect(result.isRight, isTrue);
@@ -56,7 +61,7 @@ void main() {
       () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinarySrcPostRequest());
 
     expect(result.isRight, isTrue);
@@ -66,7 +71,7 @@ void main() {
   test('RestExternalInterface binary data request success response', () async {
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinaryDataPutRequest());
 
     expect(result.isRight, isTrue);
@@ -76,7 +81,7 @@ void main() {
   test('RestExternalInterface binary data request rest service failure',
       () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinaryDataPostRequest());
 
     expect(result.isLeft, isTrue);
@@ -94,7 +99,7 @@ void main() {
       'RestExternalInterface binary data src '
       'request rest service failure on invalid file path', () async {
     final restService = RestServiceFake({});
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinarySrcPutRequest());
 
     expect(result.isLeft, isTrue);
@@ -112,7 +117,7 @@ void main() {
       'RestExternalInterface binary data src '
       'request invalid response service failure', () async {
     final restService = RestServiceFake({'statusCode': 400});
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinarySrcPostRequest());
 
     expect(result.isLeft, isTrue);
@@ -132,7 +137,7 @@ void main() {
       'RestExternalInterface binary data '
       'request invalid response service failure', () async {
     final restService = RestServiceFake({'statusCode': 400});
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(TestBinarySrcPostRequest());
 
     expect(result.isLeft, isTrue);
@@ -153,7 +158,7 @@ void main() {
 
     final testContent = {'foo': 'bar'};
     final restService = RestServiceFake(testContent);
-    final interface = RestExternalInterface(restService: restService);
+    final interface = build(RestExternalInterface(restService: restService));
     final result = await interface.request(const TestBytesRestRequest());
 
     expect(result.isRight, isTrue);
