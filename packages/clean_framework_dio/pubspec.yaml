@@ -13,5 +13,6 @@ dependencies:
 
 dev_dependencies:
   clean_framework_test: ^0.4.4
-  test: ^1.23.1
+  flutter_test:
+    sdk: flutter
   very_good_analysis: ^4.0.0+1
