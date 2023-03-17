@@ -1,4 +1,8 @@
 # Changelog
+## 0.1.3
+**Mar 17, 2023**
+- Fixed multiple `Dio` instance being shared between external interfaces.
+
 ## 0.1.2
 **Mar 17, 2023**
 - Made timeouts configurable in `HttpOptions`.
