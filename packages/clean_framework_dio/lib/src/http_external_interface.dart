@@ -21,7 +21,13 @@ class HttpExternalInterface
   void handleRequest() {
     headerDelegate?.attachTo(this);
     final dio = locate(httpDependencyProvider)
-      ..options = BaseOptions(baseUrl: _httpOptions.baseUrl);
+      ..options = BaseOptions(
+        baseUrl: _httpOptions.baseUrl,
+        connectTimeout: _httpOptions.connectTimeout,
+        receiveTimeout: _httpOptions.receiveTimeout,
+        sendTimeout: _httpOptions.sendTimeout,
+        validateStatus: _httpOptions.validateStatus,
+      );
 
     on<HttpRequest>(
       (request, send) async {
