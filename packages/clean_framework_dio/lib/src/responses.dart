@@ -24,3 +24,16 @@ class JsonArrayHttpSuccessResponse extends HttpSuccessResponse<List<dynamic>> {
 class BytesHttpSuccessResponse extends HttpSuccessResponse<List<int>> {
   const BytesHttpSuccessResponse(super.data, super.statusCode);
 }
+
+class HttpFailureResponse extends FailureResponse {
+  const HttpFailureResponse({
+    required this.path,
+    required this.statusCode,
+    required super.message,
+    required this.error,
+  });
+
+  final String path;
+  final int statusCode;
+  final Object? error;
+}

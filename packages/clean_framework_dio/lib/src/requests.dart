@@ -16,3 +16,23 @@ abstract class HttpRequest extends Request {
 abstract class GetHttpRequest extends HttpRequest {
   const GetHttpRequest() : super(HttpMethods.get);
 }
+
+abstract class PostHttpRequest extends HttpRequest {
+  const PostHttpRequest() : super(HttpMethods.post);
+}
+
+abstract class PatchHttpRequest extends HttpRequest {
+  const PatchHttpRequest() : super(HttpMethods.patch);
+}
+
+abstract class PutHttpRequest extends HttpRequest {
+  const PutHttpRequest() : super(HttpMethods.put);
+}
+
+abstract class HeadHttpRequest extends HttpRequest {
+  const HeadHttpRequest() : super(HttpMethods.head);
+}
+
+abstract class DeleteHttpRequest extends HttpRequest {
+  const DeleteHttpRequest() : super(HttpMethods.head);
+}
