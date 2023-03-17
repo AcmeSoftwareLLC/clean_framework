@@ -10,6 +10,8 @@ import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
+part 'external_interface_delegate.dart';
+
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   DependencyRef? _ref;
 
@@ -26,9 +28,9 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     }
   }
 
-  @protected
-
   /// Locates dependency from the [provider].
+  @protected
+  @nonVirtual
   T locate<T extends Object>(DependencyProvider<T> provider) {
     assert(_ref != null, '$runtimeType has not been attached!');
     return _ref!.read(provider);

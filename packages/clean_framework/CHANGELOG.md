@@ -1,4 +1,8 @@
 # Changelog
+## 2.1.0
+**Mar 17, 2023**
+- Added `ExternalInterfaceDelegate`.
+
 ## 2.0.10
 **Mar 16, 2023**
 - Added `DependencyProvider`.

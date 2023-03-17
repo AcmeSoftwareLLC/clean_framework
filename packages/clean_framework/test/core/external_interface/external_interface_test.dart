@@ -93,6 +93,7 @@ void main() {
 
       dependency = _testDependencyProvider.read(mockedContainer);
       expect(dependency.value, equals('mocked'));
+      expect(interface.delegate?.value, equals('mocked'));
     });
   });
 }
@@ -106,7 +107,7 @@ class _Dependency {
 final _testDependencyProvider = DependencyProvider((_) => _Dependency('test'));
 
 final _testExternalInterfaceProvider = ExternalInterfaceProvider(
-  TestExternalInterface.new,
+  () => TestExternalInterface(delegate: TextExternalInterfaceDelegate()),
   gateways: [
     _testGatewayProvider,
     _testWatcherGatewayProvider,
@@ -123,8 +124,14 @@ class NewTestExternalInterface extends TestExternalInterface {}
 
 class TestExternalInterface
     extends ExternalInterface<TestRequest, TestSuccessResponse> {
+  TestExternalInterface({this.delegate});
+
+  final TextExternalInterfaceDelegate? delegate;
+
   @override
   void handleRequest() {
+    delegate?.attachTo(this);
+
     on<TestRequest>(
       (request, send) async {
         await Future<void>.delayed(const Duration(milliseconds: 100));
@@ -139,6 +146,7 @@ class TestExternalInterface
   }
 
   @override
+  // ignore: invalid_override_of_non_virtual_member
   T locate<T extends Object>(DependencyProvider<T> provider) {
     return super.locate(provider);
   }
@@ -147,6 +155,10 @@ class TestExternalInterface
   FailureResponse onError(Object error) {
     return UnknownFailureResponse(error);
   }
+}
+
+class TextExternalInterfaceDelegate extends ExternalInterfaceDelegate {
+  String get value => locate(_testDependencyProvider).value;
 }
 
 class TestSuccessResponse extends SuccessResponse {}
