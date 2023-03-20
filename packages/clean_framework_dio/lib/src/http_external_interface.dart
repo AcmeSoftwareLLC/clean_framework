@@ -5,23 +5,29 @@ import 'package:clean_framework_http/src/requests.dart';
 import 'package:clean_framework_http/src/responses.dart';
 import 'package:dio/dio.dart';
 
-final httpDependencyProvider = DependencyProvider((ref) => Dio());
-
 class HttpExternalInterface
     extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
   HttpExternalInterface({
     HttpOptions options = const HttpOptions(),
     this.headerDelegate,
-  }) : _httpOptions = options;
+    Dio? dio,
+  })  : _httpOptions = options,
+        _dio = dio ?? Dio();
 
   final HttpOptions _httpOptions;
   final HttpHeaderDelegate? headerDelegate;
+  final Dio _dio;
 
   @override
   void handleRequest() {
     headerDelegate?.attachTo(this);
-    final dio = locate(httpDependencyProvider)
-      ..options = BaseOptions(baseUrl: _httpOptions.baseUrl);
+    _dio.options = BaseOptions(
+      baseUrl: _httpOptions.baseUrl,
+      connectTimeout: _httpOptions.connectTimeout,
+      receiveTimeout: _httpOptions.receiveTimeout,
+      sendTimeout: _httpOptions.sendTimeout,
+      validateStatus: _httpOptions.validateStatus,
+    );
 
     on<HttpRequest>(
       (request, send) async {
@@ -29,7 +35,7 @@ class HttpExternalInterface
           headers: await headerDelegate?.build(),
         );
 
-        final response = await dio.request<Object>(
+        final response = await _dio.request<Object>(
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
@@ -41,7 +47,10 @@ class HttpExternalInterface
         final data = response.data;
         final statusCode = response.statusCode;
 
-        if (data == null) throw Exception('Data is null');
+        if (data == null) {
+          send(PlainHttpSuccessResponse('', statusCode));
+          return;
+        }
 
         switch (responseType) {
           case ResponseType.json:
