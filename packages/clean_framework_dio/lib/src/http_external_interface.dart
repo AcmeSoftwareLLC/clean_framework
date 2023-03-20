@@ -47,7 +47,10 @@ class HttpExternalInterface
         final data = response.data;
         final statusCode = response.statusCode;
 
-        if (data == null) throw Exception('Data is null');
+        if (data == null) {
+          send(PlainHttpSuccessResponse('', statusCode));
+          return;
+        }
 
         switch (responseType) {
           case ResponseType.json:

@@ -1,4 +1,9 @@
 # Changelog
+## 0.1.4
+**Mar 20, 2023**
+- Bumped dependencies to latest version.
+- Reports `PlainHttpSuccessResponse` instead of throwing on null response data.
+
 ## 0.1.3
 **Mar 17, 2023**
 - Fixed multiple `Dio` instance being shared between external interfaces.
