@@ -1,4 +1,8 @@
 # Changelog
+## 0.1.5
+**Mar 21, 2023**
+- Allows setting `responseType`, `contentType` and `cancelToken` through *HttpRequest*.
+
 ## 0.1.4
 **Mar 20, 2023**
 - Bumped dependencies to latest version.

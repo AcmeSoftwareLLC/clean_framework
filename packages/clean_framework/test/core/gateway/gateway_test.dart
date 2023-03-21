@@ -96,12 +96,14 @@ void main() {
             ),
           ),
         ),
-        throwsA(isA<AssertionError>().having(
-          (e) => e.message,
-          'message',
-          '\n\nThe "TestWatcherGateway" is already attached '
-              'to ExternalInterface<Request, SuccessResponse>.\n',
-        )),
+        throwsA(
+          isA<AssertionError>().having(
+            (e) => e.message,
+            'message',
+            '\n\nThe "TestWatcherGateway" is already attached '
+                'to ExternalInterface<Request, SuccessResponse>.\n',
+          ),
+        ),
       );
     });
 
