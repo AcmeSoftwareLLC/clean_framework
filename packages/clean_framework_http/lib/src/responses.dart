@@ -37,3 +37,9 @@ class HttpFailureResponse extends FailureResponse {
   final int statusCode;
   final Object? error;
 }
+
+class CancelledFailureResponse extends FailureResponse {
+  const CancelledFailureResponse({required super.message, required this.path});
+
+  final String path;
+}

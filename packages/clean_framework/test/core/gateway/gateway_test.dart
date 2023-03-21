@@ -75,6 +75,38 @@ void main() {
       expect(input.left.message, 'Something went wrong');
     });
 
+    test('throws assertion if tried to feed response more than once', () async {
+      final gateway = TestWatcherGateway()
+        ..feedResponse(
+          (request) async => const Either.left(
+            TypedFailureResponse(
+              message: 'Something went wrong',
+              type: 'failure',
+            ),
+          ),
+          source: ExternalInterface,
+        );
+
+      expect(
+        () => gateway.feedResponse(
+          (request) async => const Either.left(
+            TypedFailureResponse(
+              message: 'Something went wrong',
+              type: 'failure',
+            ),
+          ),
+        ),
+        throwsA(
+          isA<AssertionError>().having(
+            (e) => e.message,
+            'message',
+            '\n\nThe "TestWatcherGateway" is already attached '
+                'to ExternalInterface<Request, SuccessResponse>.\n',
+          ),
+        ),
+      );
+    });
+
     test('yielding response will update use case', () async {
       final container = ProviderContainer();
 

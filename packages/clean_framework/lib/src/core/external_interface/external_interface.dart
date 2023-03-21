@@ -54,6 +54,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           return this.request(req);
         }
       },
+      source: runtimeType,
     );
   }
 

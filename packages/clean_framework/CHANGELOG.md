@@ -1,12 +1,17 @@
 # Changelog
+## 2.1.1
+**Mar 21, 2023**
+- Checks for mounted during `request` in UseCase.
+- Throws assertion if duplicate gateway is added to external interfaces.
+
 ## 2.1.0
 **Mar 17, 2023**
-- Added `ExternalInterfaceDelegate`.
+- Adds `ExternalInterfaceDelegate`.
 
 ## 2.0.10
 **Mar 16, 2023**
-- Added `DependencyProvider`.
-- Added `locate` method to **ExternalInterface**.
+- Adds `DependencyProvider`.
+- Adds `locate` method to **ExternalInterface**.
 
 ## 2.0.9
 **Mar 14, 2023**
@@ -15,8 +20,8 @@
 
 ## 2.0.8
 **Mar 9, 2023**
-- Fixed **WatcherGateway** not updating entity properly.
-- Added `getUseCaseFromContext` to **UseCaseProvider**s.
+- Fixes **WatcherGateway** not updating entity properly.
+- Adds `getUseCaseFromContext` to **UseCaseProvider**s.
 
 ## 2.0.7
 **Feb 22, 2023**
