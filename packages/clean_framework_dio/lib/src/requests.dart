@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_http/src/http_methods.dart';
+import 'package:clean_framework_http/clean_framework_http.dart';
 
 abstract class HttpRequest extends Request {
   const HttpRequest(this.method);
@@ -11,6 +11,10 @@ abstract class HttpRequest extends Request {
   Object? get data => null;
 
   Map<String, dynamic>? get queryParameters => null;
+
+  String? get contentType => null;
+
+  HttpResponseType? get responseType => null;
 }
 
 abstract class GetHttpRequest extends HttpRequest {
