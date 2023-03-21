@@ -3,6 +3,9 @@ description: Clean Architecture components library, inspired on the guidelines c
 version: 2.1.1
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework
+screenshots:
+  - description: "Clean Framework"
+    path: screenshots/clean-framework.png
 
 environment:
   sdk: '>=2.17.0 <3.0.0'
