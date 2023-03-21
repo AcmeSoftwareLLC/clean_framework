@@ -31,7 +31,14 @@ abstract class Gateway<O extends Output, R extends Request,
   @visibleForTesting
   @nonVirtual
   // ignore: use_setters_to_change_properties
-  void feedResponse(Responder<R, P> feeder) => _responder = feeder;
+  void feedResponse(Responder<R, P> feeder, {Type? source}) {
+    assert(
+      _source == null,
+      '\n\nThe "$runtimeType" is already attached to ${_source!.type}.\n',
+    );
+
+    _source = _Source(feeder, source);
+  }
 
   @visibleForTesting
   @nonVirtual
@@ -39,14 +46,16 @@ abstract class Gateway<O extends Output, R extends Request,
     return _processRequest(buildRequest(output));
   }
 
-  late final Responder<R, P> _responder;
+  _Source<R, P>? _source;
 
   S onSuccess(covariant P response);
+
   FailureInput onFailure(covariant FailureResponse failureResponse);
+
   R buildRequest(O output);
 
   Future<Either<FailureInput, S>> _processRequest(R request) async {
-    final either = await _responder(request);
+    final either = await _source!.responder(request);
     return either.fold(
       (failureResponse) => Either.left(_onFailure(failureResponse)),
       (response) => Either.right(onSuccess(response)),
@@ -80,3 +89,10 @@ abstract class WatcherGateway<
 
 typedef Responder<R extends Request, P extends SuccessResponse>
     = FutureOr<Either<FailureResponse, P>> Function(R request);
+
+class _Source<R extends Request, P extends SuccessResponse> {
+  _Source(this.responder, this.type);
+
+  final Responder<R, P> responder;
+  final Type? type;
+}
