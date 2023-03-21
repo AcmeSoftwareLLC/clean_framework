@@ -5,6 +5,8 @@ import 'package:clean_framework_http/src/requests.dart';
 import 'package:clean_framework_http/src/responses.dart';
 import 'package:dio/dio.dart';
 
+typedef HttpCancelToken = CancelToken;
+
 class HttpExternalInterface
     extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
   HttpExternalInterface({
@@ -27,12 +29,15 @@ class HttpExternalInterface
       receiveTimeout: _httpOptions.receiveTimeout,
       sendTimeout: _httpOptions.sendTimeout,
       validateStatus: _httpOptions.validateStatus,
+      responseType: _httpOptions.responseType._original,
     );
 
     on<HttpRequest>(
       (request, send) async {
         final options = Options(
           headers: await headerDelegate?.build(),
+          responseType: request.responseType?._original,
+          contentType: request.contentType,
         );
 
         final response = await _dio.request<Object>(
@@ -90,9 +95,13 @@ class HttpExternalInterface
         case DioErrorType.sendTimeout:
         case DioErrorType.receiveTimeout:
         case DioErrorType.badCertificate:
-        case DioErrorType.cancel:
         case DioErrorType.connectionError:
           return UnknownFailureResponse(error.error);
+        case DioErrorType.cancel:
+          return CancelledFailureResponse(
+            message: error.message ?? '',
+            path: error.requestOptions.path,
+          );
         case DioErrorType.unknown:
           break;
       }
@@ -100,4 +109,25 @@ class HttpExternalInterface
 
     return UnknownFailureResponse(error);
   }
+}
+
+/// The transformation to be applied to the response data.
+enum HttpResponseType {
+  /// Transform the response data to JSON object only when the
+  /// content-type of response is "application/json" .
+  json(ResponseType.json),
+
+  /// Transform the response data to a String encoded with UTF8.
+  plain(ResponseType.plain),
+
+  /// Get the response stream without any transformation. The
+  /// Response data will be a [ResponseBody] instance.
+  stream(ResponseType.stream),
+
+  /// Get original bytes, the type of [Response.data] will be List<int>.
+  bytes(ResponseType.bytes);
+
+  const HttpResponseType(this._original);
+
+  final ResponseType _original;
 }

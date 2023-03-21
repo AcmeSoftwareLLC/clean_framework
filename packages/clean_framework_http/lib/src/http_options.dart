@@ -1,3 +1,5 @@
+import 'package:clean_framework_http/clean_framework_http.dart';
+
 class HttpOptions {
   const HttpOptions({
     this.baseUrl = '',
@@ -5,6 +7,7 @@ class HttpOptions {
     this.receiveTimeout,
     this.sendTimeout,
     this.validateStatus,
+    this.responseType = HttpResponseType.json,
   });
 
   final String baseUrl;
@@ -23,4 +26,6 @@ class HttpOptions {
   /// the request will be perceived as successful;
   /// otherwise, considered as failed.
   final bool Function(int? status)? validateStatus;
+
+  final HttpResponseType responseType;
 }
