@@ -95,9 +95,13 @@ class HttpExternalInterface
         case DioErrorType.sendTimeout:
         case DioErrorType.receiveTimeout:
         case DioErrorType.badCertificate:
-        case DioErrorType.cancel:
         case DioErrorType.connectionError:
           return UnknownFailureResponse(error.error);
+        case DioErrorType.cancel:
+          return CancelledFailureResponse(
+            message: error.message ?? '',
+            path: error.requestOptions.path,
+          );
         case DioErrorType.unknown:
           break;
       }
