@@ -5,26 +5,7 @@ import 'package:clean_framework_http/src/requests.dart';
 import 'package:clean_framework_http/src/responses.dart';
 import 'package:dio/dio.dart';
 
-/// The transformation to be applied to the response data.
-enum HttpResponseType {
-  /// Transform the response data to JSON object only when the
-  /// content-type of response is "application/json" .
-  json(ResponseType.json),
-
-  /// Transform the response data to a String encoded with UTF8.
-  plain(ResponseType.plain),
-
-  /// Get the response stream without any transformation. The
-  /// Response data will be a [ResponseBody] instance.
-  stream(ResponseType.stream),
-
-  /// Get original bytes, the type of [Response.data] will be List<int>.
-  bytes(ResponseType.bytes);
-
-  const HttpResponseType(this._original);
-
-  final ResponseType _original;
-}
+typedef HttpCancelToken = CancelToken;
 
 class HttpExternalInterface
     extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
@@ -124,4 +105,25 @@ class HttpExternalInterface
 
     return UnknownFailureResponse(error);
   }
+}
+
+/// The transformation to be applied to the response data.
+enum HttpResponseType {
+  /// Transform the response data to JSON object only when the
+  /// content-type of response is "application/json" .
+  json(ResponseType.json),
+
+  /// Transform the response data to a String encoded with UTF8.
+  plain(ResponseType.plain),
+
+  /// Get the response stream without any transformation. The
+  /// Response data will be a [ResponseBody] instance.
+  stream(ResponseType.stream),
+
+  /// Get original bytes, the type of [Response.data] will be List<int>.
+  bytes(ResponseType.bytes);
+
+  const HttpResponseType(this._original);
+
+  final ResponseType _original;
 }

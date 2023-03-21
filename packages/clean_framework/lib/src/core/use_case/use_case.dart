@@ -97,10 +97,11 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   }) async {
     final input = await _requestSubscriptions<O, S>(output);
 
-    entity = input.fold(onFailure, onSuccess);
+    if (mounted) entity = input.fold(onFailure, onSuccess);
   }
 
   @override
+  @mustCallSuper
   void dispose() {
     clearDebounce();
     super.dispose();
