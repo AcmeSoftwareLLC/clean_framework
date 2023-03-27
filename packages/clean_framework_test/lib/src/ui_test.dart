@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,7 +66,7 @@ class UITestRouter extends AppRouter {
   }
 
   @override
-  void push(
+  Future<T?> push<T extends Object>(
     Enum route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
@@ -78,15 +79,17 @@ class UITestRouter extends AppRouter {
       extra: extra,
       route: route,
     );
+    return SynchronousFuture(null);
   }
 
   @override
-  void pushLocation(String location, {Object? extra}) {
+  Future<T?> pushLocation<T extends Object>(String location, {Object? extra}) {
     _routeData = UITestRouteData(
       action: UITestRouteAction.pushLocation,
       location: location,
       extra: extra,
     );
+    return SynchronousFuture(null);
   }
 
   @override

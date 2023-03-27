@@ -44,6 +44,8 @@ class HttpExternalInterface
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
+
+          // ignore: invalid_use_of_internal_member
           options: DioMixin.checkOptions(request.method.name, options),
         );
 
@@ -90,15 +92,22 @@ class HttpExternalInterface
             path: error.requestOptions.path,
             statusCode: error.response?.statusCode ?? 0,
             error: error.response?.data,
+            stackTrace: error.stackTrace,
           );
         case DioErrorType.connectionTimeout:
         case DioErrorType.sendTimeout:
         case DioErrorType.receiveTimeout:
         case DioErrorType.badCertificate:
         case DioErrorType.connectionError:
-          return UnknownFailureResponse(error.error);
+          return ConnectionHttpFailureResponse(
+            type: HttpErrorType.values.byName(error.type.name),
+            message: error.message ?? '',
+            path: error.requestOptions.path,
+            error: error.error,
+            stackTrace: error.stackTrace,
+          );
         case DioErrorType.cancel:
-          return CancelledFailureResponse(
+          return CancelledHttpFailureResponse(
             message: error.message ?? '',
             path: error.requestOptions.path,
           );

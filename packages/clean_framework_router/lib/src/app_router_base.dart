@@ -20,7 +20,7 @@ abstract class AppRouterBase<R extends Enum> {
   /// Navigates to the given [route]
   /// by pushing it at the top of the previous route.
   /// i.e navigation stack is maintained and previous routes are preserved.
-  void push(
+  Future<T?> push<T extends Object>(
     R route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
@@ -43,7 +43,7 @@ abstract class AppRouterBase<R extends Enum> {
 
   /// Navigates to the given [location]
   /// by pushing it at the top of the previous route.
-  void pushLocation(
+  Future<T?> pushLocation<T extends Object>(
     String location, {
     Object? extra,
   });

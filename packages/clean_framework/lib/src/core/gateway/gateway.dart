@@ -20,7 +20,7 @@ abstract class Gateway<O extends Output, R extends Request,
         (notifier) {
           final useCase = ref.read(notifier);
           _useCases.add(useCase);
-          useCase.subscribe<O, S>((output) => buildInput(output as O));
+          useCase.subscribe<O, S>(buildInput);
         },
       );
     }

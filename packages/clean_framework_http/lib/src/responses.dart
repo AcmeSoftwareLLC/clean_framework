@@ -31,15 +31,43 @@ class HttpFailureResponse extends FailureResponse {
     required this.statusCode,
     required super.message,
     required this.error,
+    required this.stackTrace,
   });
 
   final String path;
   final int statusCode;
   final Object? error;
+  final StackTrace? stackTrace;
 }
 
-class CancelledFailureResponse extends FailureResponse {
-  const CancelledFailureResponse({required super.message, required this.path});
+class CancelledHttpFailureResponse extends FailureResponse {
+  const CancelledHttpFailureResponse({
+    required super.message,
+    required this.path,
+  });
 
   final String path;
+}
+
+class ConnectionHttpFailureResponse
+    extends TypedFailureResponse<HttpErrorType> {
+  const ConnectionHttpFailureResponse({
+    required super.type,
+    required super.message,
+    required this.path,
+    required this.error,
+    required this.stackTrace,
+  });
+
+  final String path;
+  final Object? error;
+  final StackTrace? stackTrace;
+}
+
+enum HttpErrorType {
+  connectionTimeout,
+  sendTimeout,
+  receiveTimeout,
+  badCertificate,
+  connectionError,
 }

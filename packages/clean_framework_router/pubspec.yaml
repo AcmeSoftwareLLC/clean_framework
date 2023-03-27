@@ -1,6 +1,6 @@
 name: clean_framework_router
 description: A wrapper around go_router to make it easier to use with clean_framework.
-version: 0.4.1
+version: 0.4.2
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_router
 
@@ -9,10 +9,10 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^2.0.7
+  clean_framework: ^2.1.1
   flutter:
     sdk: flutter
-  go_router: ^6.0.9
+  go_router: ^6.5.0
 
 dev_dependencies:
   flutter_test:

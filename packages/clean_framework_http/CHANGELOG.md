@@ -1,4 +1,10 @@
 # Changelog
+## 0.2.0
+**Mar 27, 2023**
+- Bumps dependencies to latest version.
+- Adds `ConnectionHttpFailureResponse` to handle connection errors.
+- Renames `CancelledFailureResponse` to `CancelledHttpFailureResponse`.
+
 ## 0.1.5
 **Mar 21, 2023**
 - Allows setting `responseType`, `contentType` and `cancelToken` through *HttpRequest*.

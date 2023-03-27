@@ -15,7 +15,7 @@ abstract class Gateway<O extends Output, R extends Request,
         ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
     _useCase.subscribe<O, S>(
-      (output) => _processRequest(buildRequest(output as O)),
+      (output) => _processRequest(buildRequest(output)),
     );
   }
 

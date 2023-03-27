@@ -83,7 +83,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   }
 
   void subscribe<O extends Output, I extends Input>(
-    RequestSubscription<I> subscription,
+    RequestSubscription<O, I> subscription,
   ) {
     _requestSubscriptions.add<O>(subscription);
   }
