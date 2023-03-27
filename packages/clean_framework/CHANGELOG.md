@@ -1,4 +1,8 @@
 # Changelog
+## 2.1.2
+**Mar 27, 2023**
+- `RequestSubscription` respects output type in subscribe method for **UseCase**.
+
 ## 2.1.1
 **Mar 21, 2023**
 - Checks for mounted during `request` in UseCase.

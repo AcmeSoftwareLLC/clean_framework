@@ -70,9 +70,8 @@ void main() {
 
         useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
           (output) async {
-            final out = output as TestGatewayOutput;
             return Either.right(
-              TestSuccessInput(message: 'Hello ${out.name}!'),
+              TestSuccessInput(message: 'Hello ${output.name}!'),
             );
           },
         );

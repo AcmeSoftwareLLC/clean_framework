@@ -5,16 +5,17 @@ import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 
 typedef RequestSubscriptionMap<I extends Input>
-    = Map<Type, RequestSubscription<I>>;
+    = Map<Type, RequestSubscription<Output, I>>;
 
 typedef Result<I extends Input> = FutureOr<Either<FailureInput, I>>;
 
-typedef RequestSubscription<I extends Input> = Result<I> Function(dynamic);
+typedef RequestSubscription<O extends Output, I extends Input> = Result<I>
+    Function(O);
 
 extension RequestSubscriptionMapExtension<I extends Input>
     on RequestSubscriptionMap<I> {
-  void add<O extends Output>(RequestSubscription<I> subscription) {
-    this[O] = subscription;
+  void add<O extends Output>(RequestSubscription<O, I> subscription) {
+    this[O] = (output) => subscription(output as O);
   }
 
   Result<S> call<O extends Output, S extends SuccessInput>(

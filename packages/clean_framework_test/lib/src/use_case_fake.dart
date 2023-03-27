@@ -36,9 +36,9 @@ class UseCaseFake<S extends SuccessInput> extends Fake
 
   @override
   void subscribe<O extends Output, I extends Input>(
-    RequestSubscription<I> subscription,
+    RequestSubscription<O, I> subscription,
   ) {
-    this.subscription = subscription;
+    this.subscription = (output) => subscription(output as O);
   }
 
   Future<void> doFakeRequest<O extends Output>(O output) async {
