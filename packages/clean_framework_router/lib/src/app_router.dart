@@ -30,7 +30,7 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void push(
+  Future<T?> push<T extends Object>(
     R route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
@@ -60,7 +60,7 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void pushLocation(String location, {Object? extra}) {
+  Future<T?> pushLocation<T extends Object>(String location, {Object? extra}) {
     return _router.push(location, extra: extra);
   }
 

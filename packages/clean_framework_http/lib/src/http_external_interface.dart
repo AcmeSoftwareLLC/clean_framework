@@ -44,6 +44,8 @@ class HttpExternalInterface
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
+
+          // ignore: invalid_use_of_internal_member
           options: DioMixin.checkOptions(request.method.name, options),
         );
 
