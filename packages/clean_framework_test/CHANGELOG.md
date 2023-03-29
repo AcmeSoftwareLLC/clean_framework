@@ -1,7 +1,15 @@
 # Changelog
+## 0.4.6
+**Mar 29, 2023**
+- Added `container` param to `useCaseBridgeTest` & `useCaseTest`.
+
+## 0.4.5
+**Mar 27, 2023**
+- Bumps dependencies to latest version.
+
 ## 0.4.4
 **Mar 14, 2023**
-- Bumped dependencies to latest version.
+- Bumps dependencies to latest version.
 
 ## 0.4.3
 **Feb 23, 2023**
