@@ -4,6 +4,7 @@ import 'package:clean_framework_example/features/home/presentation/home_view_mod
 import 'package:clean_framework_example/routing/routes.dart';
 import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:clean_framework_example/widgets/pokemon_card.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -133,6 +134,13 @@ void main() {
         final routeData = tester.routeData!;
         expect(routeData.route, Routes.profile);
         expect(routeData.params, equals({'pokemon_name': 'Pikachu'}));
+
+        tester.element(find.byType(MaterialApp)).router.pop();
+        await tester.pumpAndSettle();
+
+        final poppedRouteData = tester.poppedRouteData!;
+        expect(poppedRouteData.route, Routes.profile);
+        expect(poppedRouteData.params, equals({'pokemon_name': 'Pikachu'}));
       },
     );
   });

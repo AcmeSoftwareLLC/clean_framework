@@ -43,6 +43,7 @@ class UITestRouteData {
 
 class UITestRouter extends AppRouter {
   UITestRouteData? _routeData;
+  UITestRouteData? _poppedRouteData;
 
   @override
   RouterConfiguration configureRouter() {
@@ -117,7 +118,11 @@ class UITestRouter extends AppRouter {
     );
   }
 
+  @override
+  void pop() => _poppedRouteData = _routeData;
+
   UITestRouteData? get data => _routeData;
+  UITestRouteData? get poppedData => _poppedRouteData;
 }
 
 @isTest
@@ -158,6 +163,11 @@ void uiTest<V extends ViewModel>(
 
 extension UIRouterTesterExtension on WidgetTester {
   UITestRouteData? get routeData {
+    final router = element(find.byType(MaterialApp)).router as UITestRouter;
+    return router.data;
+  }
+
+  UITestRouteData? get poppedRouteData {
     final router = element(find.byType(MaterialApp)).router as UITestRouter;
     return router.data;
   }
