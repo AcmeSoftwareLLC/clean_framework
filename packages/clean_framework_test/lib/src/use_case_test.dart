@@ -17,13 +17,14 @@ ProviderContainer
   dynamic Function()? expect,
   FutureOr<void> Function(U)? verify,
   E Function(E)? seed,
+  ProviderContainer? container,
 }) {
-  final container = ProviderContainer();
+  final providerContainer = container ?? ProviderContainer();
 
   ft.test(
     description,
     () async {
-      final useCase = provider.read(container) as U;
+      final useCase = provider.read(providerContainer) as U;
 
       if (seed != null) {
         useCase.entity = seed(useCase.entity);
@@ -60,7 +61,7 @@ ProviderContainer
     },
   );
 
-  return container;
+  return providerContainer;
 }
 
 @isTest
@@ -73,14 +74,15 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
   Iterable<dynamic> Function()? expect,
   FutureOr<void> Function(TU)? verify,
   E Function(E)? seed,
+  ProviderContainer? container,
 }) {
-  final container = ProviderContainer();
+  final providerContainer = container ?? ProviderContainer();
 
   ft.test(
     description,
     () async {
-      final fromUseCase = from.read(container) as FU;
-      final toUseCase = to.read(container) as TU;
+      final fromUseCase = from.read(providerContainer) as FU;
+      final toUseCase = to.read(providerContainer) as TU;
 
       if (seed != null) {
         toUseCase.entity = seed(toUseCase.entity);
@@ -117,5 +119,5 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
     },
   );
 
-  return container;
+  return providerContainer;
 }
