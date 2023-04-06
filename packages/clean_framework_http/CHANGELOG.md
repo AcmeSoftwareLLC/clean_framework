@@ -1,5 +1,5 @@
 # Changelog
-## 0.3.0
+## 0.3.1
 **Apr 6, 2023**
 - Bumps dependencies to latest version.
 - Adds `HttpExternalInterfaceDelegate`.
