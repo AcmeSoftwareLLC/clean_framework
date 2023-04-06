@@ -1,0 +1,27 @@
+name: clean_framework_http_example
+description: An example app to demonstrate usage of clean_framework_http package.
+publish_to: none
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  clean_framework_router:
+  flutter:
+    sdk: flutter
+  clean_framework: ^2.1.2
+  clean_framework_http:
+    path: ../
+  flutter_svg: ^2.0.4
+  pretty_dio_logger: ^1.3.1
+  shared_preferences: ^2.1.0
+
+dev_dependencies:
+  clean_framework_test:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
