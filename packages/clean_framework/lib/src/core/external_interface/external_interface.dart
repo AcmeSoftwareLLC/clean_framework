@@ -13,6 +13,10 @@ import 'package:meta/meta.dart';
 part 'external_interface_delegate.dart';
 
 abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
+  ExternalInterface({this.delegate});
+
+  final ExternalInterfaceDelegate? delegate;
+
   DependencyRef? _ref;
 
   @internal
@@ -21,6 +25,8 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     required List<GatewayProvider> providers,
   }) {
     _ref = DependencyRef(ref);
+    delegate?.attachTo(this);
+
     handleRequest();
 
     for (final gatewayProvider in providers) {

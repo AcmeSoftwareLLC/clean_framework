@@ -93,7 +93,10 @@ void main() {
 
       dependency = _testDependencyProvider.read(mockedContainer);
       expect(dependency.value, equals('mocked'));
-      expect(interface.delegate?.value, equals('mocked'));
+      expect(
+        (interface.delegate! as TextExternalInterfaceDelegate).value,
+        equals('mocked'),
+      );
     });
   });
 }
@@ -124,14 +127,10 @@ class NewTestExternalInterface extends TestExternalInterface {}
 
 class TestExternalInterface
     extends ExternalInterface<TestRequest, TestSuccessResponse> {
-  TestExternalInterface({this.delegate});
-
-  final TextExternalInterfaceDelegate? delegate;
+  TestExternalInterface({super.delegate});
 
   @override
   void handleRequest() {
-    delegate?.attachTo(this);
-
     on<TestRequest>(
       (request, send) async {
         await Future<void>.delayed(const Duration(milliseconds: 100));

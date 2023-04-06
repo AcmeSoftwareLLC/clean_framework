@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 abstract class HttpExternalInterfaceDelegate extends ExternalInterfaceDelegate {
   /// Builds the base headers for the HTTP request.
-  FutureOr<Map<String, String>?> buildHeaders();
+  FutureOr<Map<String, String>?> buildHeaders() => null;
 
   /// Builds the base options for the HTTP request.
   FutureOr<HttpOptions> buildOptions() => const HttpOptions();

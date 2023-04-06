@@ -13,14 +13,17 @@ class HttpExternalInterface
     extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
   HttpExternalInterface({
     HttpExternalInterfaceDelegate? delegate,
-  }) : _delegate = delegate ?? _DefaultHttpExternalInterfaceDelegate();
+  }) : super(delegate: delegate ?? _DefaultHttpExternalInterfaceDelegate());
 
-  final HttpExternalInterfaceDelegate _delegate;
   final Completer<Dio> _dioCompleter = Completer();
 
   @override
+  HttpExternalInterfaceDelegate get delegate {
+    return super.delegate! as HttpExternalInterfaceDelegate;
+  }
+
+  @override
   void handleRequest() {
-    _delegate.attachTo(this);
     _dioCompleter.complete(_buildDio());
 
     on<HttpRequest>(
@@ -28,7 +31,7 @@ class HttpExternalInterface
         final dio = await _dioCompleter.future;
 
         final options = Options(
-          headers: await _delegate.buildHeaders(),
+          headers: await delegate.buildHeaders(),
           responseType: request.responseType?.original,
           contentType: request.contentType,
         );
@@ -113,7 +116,7 @@ class HttpExternalInterface
   }
 
   Future<Dio> _buildDio() async {
-    final options = await _delegate.buildOptions();
+    final options = await delegate.buildOptions();
 
     final baseOptions = BaseOptions(
       baseUrl: options.baseUrl,
@@ -124,7 +127,7 @@ class HttpExternalInterface
       responseType: options.responseType.original,
     );
 
-    return _delegate.buildDio(baseOptions);
+    return delegate.buildDio(baseOptions);
   }
 }
 
