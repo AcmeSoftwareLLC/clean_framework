@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart' hide Response;
-import 'package:clean_framework_http/src/http_header_delegate.dart';
+import 'package:clean_framework_http/src/http_external_interface_delegate.dart';
 import 'package:clean_framework_http/src/http_options.dart';
 import 'package:clean_framework_http/src/requests.dart';
 import 'package:clean_framework_http/src/responses.dart';
@@ -10,37 +12,31 @@ typedef HttpCancelToken = CancelToken;
 class HttpExternalInterface
     extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
   HttpExternalInterface({
-    HttpOptions options = const HttpOptions(),
-    this.headerDelegate,
-    Dio? dio,
-  })  : _httpOptions = options,
-        _dio = dio ?? Dio();
+    HttpExternalInterfaceDelegate? delegate,
+  }) : super(delegate: delegate ?? _DefaultHttpExternalInterfaceDelegate());
 
-  final HttpOptions _httpOptions;
-  final HttpHeaderDelegate? headerDelegate;
-  final Dio _dio;
+  final Completer<Dio> _dioCompleter = Completer();
+
+  @override
+  HttpExternalInterfaceDelegate get delegate {
+    return super.delegate! as HttpExternalInterfaceDelegate;
+  }
 
   @override
   void handleRequest() {
-    headerDelegate?.attachTo(this);
-    _dio.options = BaseOptions(
-      baseUrl: _httpOptions.baseUrl,
-      connectTimeout: _httpOptions.connectTimeout,
-      receiveTimeout: _httpOptions.receiveTimeout,
-      sendTimeout: _httpOptions.sendTimeout,
-      validateStatus: _httpOptions.validateStatus,
-      responseType: _httpOptions.responseType._original,
-    );
+    _dioCompleter.complete(_buildDio());
 
     on<HttpRequest>(
       (request, send) async {
+        final dio = await _dioCompleter.future;
+
         final options = Options(
-          headers: await headerDelegate?.build(),
-          responseType: request.responseType?._original,
+          headers: await delegate.buildHeaders(),
+          responseType: request.responseType?.original,
           contentType: request.contentType,
         );
 
-        final response = await _dio.request<Object>(
+        final response = await dio.request<dynamic>(
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
@@ -118,6 +114,21 @@ class HttpExternalInterface
 
     return UnknownFailureResponse(error);
   }
+
+  Future<Dio> _buildDio() async {
+    final options = await delegate.buildOptions();
+
+    final baseOptions = BaseOptions(
+      baseUrl: options.baseUrl,
+      connectTimeout: options.connectTimeout,
+      receiveTimeout: options.receiveTimeout,
+      sendTimeout: options.sendTimeout,
+      validateStatus: options.validateStatus,
+      responseType: options.responseType.original,
+    );
+
+    return delegate.buildDio(baseOptions);
+  }
 }
 
 /// The transformation to be applied to the response data.
@@ -136,7 +147,16 @@ enum HttpResponseType {
   /// Get original bytes, the type of [Response.data] will be List<int>.
   bytes(ResponseType.bytes);
 
-  const HttpResponseType(this._original);
+  const HttpResponseType(this.original);
 
-  final ResponseType _original;
+  final ResponseType original;
+}
+
+class _DefaultHttpExternalInterfaceDelegate
+    extends HttpExternalInterfaceDelegate {
+  @override
+  Map<String, String>? buildHeaders() => null;
+
+  @override
+  HttpOptions buildOptions() => const HttpOptions();
 }

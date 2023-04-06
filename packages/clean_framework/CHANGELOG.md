@@ -1,4 +1,8 @@
 # Changelog
+## 2.1.3
+**Apr 6, 2023**
+- Adds `delegate` to `ExternalInterface`.
+
 ## 2.1.2
 **Mar 27, 2023**
 - `RequestSubscription` respects output type in subscribe method for **UseCase**.
