@@ -4,8 +4,6 @@ import 'package:clean_framework_router/src/app_router_scope.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-typedef AppRouterState = GoRouterState;
-
 /// Wrapper class around [GoRouter].
 abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   AppRouter() {
@@ -23,8 +21,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }) {
     return _router.goNamed(
       route.name,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
       extra: extra,
     );
   }
@@ -38,8 +36,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }) {
     return _router.pushNamed(
       route.name,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
       extra: extra,
     );
   }
@@ -53,8 +51,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }) {
     return _router.pushReplacementNamed(
       route.name,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
       extra: extra,
     );
   }
@@ -85,8 +83,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }) {
     return _router.namedLocation(
       route.name,
-      params: params,
-      queryParams: queryParams,
+      pathParameters: params,
+      queryParameters: queryParams,
     );
   }
 
