@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PokemonSearchField extends StatelessWidget with PreferredSizeWidget {
+class PokemonSearchField extends StatelessWidget
+    implements PreferredSizeWidget {
   const PokemonSearchField({super.key, required this.onChanged});
 
   final ValueChanged<String> onChanged;

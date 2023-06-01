@@ -15,15 +15,15 @@ abstract class UI<V extends ViewModel> extends StatefulWidget {
   Presenter create(PresenterBuilder<V> builder);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _UIState createState() => _UIState<V>();
+  State<UI<V>> createState() => _UIState<V>();
 }
 
 class _UIState<V extends ViewModel> extends State<UI<V>> {
   @override
   Widget build(BuildContext context) {
-    return widget._create!
-        .call((viewModel) => widget.build(context, viewModel));
+    return widget._create!.call(
+      (viewModel) => widget.build(context, viewModel),
+    );
   }
 }
 

@@ -23,11 +23,7 @@ class _UIState<V extends ViewModel> extends State<UI<V>> {
   @override
   Widget build(BuildContext context) {
     return widget._create.call(
-      (context) {
-        final viewModel = ViewModelScope.of<V>(context);
-
-        return widget.build(context, viewModel);
-      },
+      (context) => widget.build(context, context.viewModel()),
     );
   }
 }
