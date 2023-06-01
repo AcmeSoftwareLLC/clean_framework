@@ -100,9 +100,9 @@ void uiTest(
   testWidgets(
     description,
     (tester) async {
-      final window = tester.binding.window;
-      if (screenSize != null) {
-        window.physicalSizeTestValue = screenSize * window.devicePixelRatio;
+      final view = tester.binding.platformDispatcher.implicitView;
+      if (view != null && screenSize != null) {
+        view.physicalSize = screenSize * view.devicePixelRatio;
       }
 
       await setup?.call();
@@ -152,7 +152,7 @@ void uiTest(
 
       await verify(tester);
 
-      if (screenSize != null) window.clearPhysicalSizeTestValue();
+      if (view != null && screenSize != null) view.resetPhysicalSize();
     },
     skip: skip,
     timeout: timeout,

@@ -2,6 +2,7 @@ import 'package:clean_framework/src/core/core.dart';
 import 'package:clean_framework/src/presentation/presenter/view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meta/meta.dart';
 
 abstract class Presenter<V extends ViewModel, O extends Output,
     U extends UseCase> extends ConsumerStatefulWidget {
@@ -168,4 +169,9 @@ class ViewModelScope<V extends ViewModel> extends InheritedWidget {
   bool updateShouldNotify(ViewModelScope oldWidget) {
     return oldWidget.viewModel != viewModel;
   }
+}
+
+extension ViewModelScopeExtension on BuildContext {
+  @useResult
+  V viewModel<V extends ViewModel>() => ViewModelScope.of<V>(this);
 }

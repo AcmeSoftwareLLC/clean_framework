@@ -1,4 +1,9 @@
 # Changelog
+## 2.1.4
+**Jun 1, 2023**
+- Bumps dependencies to latest version.
+- Adds `context.viewModel()` extension method to BuildContext.
+
 ## 2.1.3
 **Apr 6, 2023**
 - Adds `delegate` to `ExternalInterface`.
