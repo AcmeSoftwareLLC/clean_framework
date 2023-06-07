@@ -76,7 +76,7 @@ void main() {
           },
         );
 
-        await useCase.request<TestGatewayOutput, TestSuccessInput>(
+        await useCase.request<TestSuccessInput>(
           const TestGatewayOutput(name: 'World'),
           onSuccess: (success) => TestEntity(foo: success.message),
           onFailure: (failure) => const TestEntity(foo: 'failure'),
@@ -90,7 +90,7 @@ void main() {
       'throws if there is no appropriate subscription present',
       () async {
         expect(
-          () => useCase.request<TestGatewayOutput, TestSuccessInput>(
+          () => useCase.request<TestSuccessInput>(
             const TestGatewayOutput(name: 'World'),
             onSuccess: (success) => const TestEntity(),
             onFailure: (failure) => const TestEntity(),

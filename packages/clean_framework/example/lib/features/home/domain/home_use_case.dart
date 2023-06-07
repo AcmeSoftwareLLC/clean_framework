@@ -23,8 +23,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
       entity = entity.copyWith(status: HomeStatus.loading);
     }
 
-    await request<PokemonCollectionGatewayOutput,
-        PokemonCollectionSuccessInput>(
+    await request<PokemonCollectionSuccessInput>(
       PokemonCollectionGatewayOutput(),
       onSuccess: (success) {
         final pokemons = success.pokemonIdentities.map(_resolvePokemon);

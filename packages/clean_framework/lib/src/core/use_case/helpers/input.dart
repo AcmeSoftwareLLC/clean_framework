@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class Input {
+class Input {
   const Input();
 }
 

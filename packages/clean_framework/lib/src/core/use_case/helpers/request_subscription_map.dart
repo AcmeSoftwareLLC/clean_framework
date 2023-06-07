@@ -18,22 +18,21 @@ extension RequestSubscriptionMapExtension<I extends Input>
     this[O] = (output) => subscription(output as O);
   }
 
-  Result<S> call<O extends Output, S extends SuccessInput>(
-    O output,
-  ) async {
-    final subscription = this[O];
+  Result<S> call<S extends SuccessInput>(Output output) async {
+    final outputType = output.runtimeType;
+    final subscription = this[outputType];
 
     if (subscription == null) {
       throw StateError(
-        '\n\nNo subscription for "$O" exists.\n\n'
+        '\n\nNo subscription for "$outputType" exists.\n\n'
         'Please follow the steps below in order to fix this issue:\n'
-        '1. Ensure that the use case that requests "$O" is attached '
+        '1. Ensure that the use case that requests "$outputType" is attached '
         'the appropriate gateway.\n'
         '     AppropriateGatewayProvider(\n'
         '       ...,\n'
         '       useCases: [<<useCaseProvider>>],\n'
         '     )\n'
-        '2. Ensure that the gateway that belongs to "$O" is attached '
+        '2. Ensure that the gateway that belongs to "$outputType" is attached '
         'the appropriate external interface.\n'
         '     AppropriateExternalInterfaceProvider(\n'
         '       ...,\n'

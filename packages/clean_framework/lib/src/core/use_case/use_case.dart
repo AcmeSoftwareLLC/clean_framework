@@ -90,12 +90,12 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   @protected
-  Future<void> request<O extends Output, S extends SuccessInput>(
-    O output, {
+  Future<void> request<S extends SuccessInput>(
+    Output output, {
     required InputCallback<E, S> onSuccess,
     required InputCallback<E, FailureInput> onFailure,
   }) async {
-    final input = await _requestSubscriptions<O, S>(output);
+    final input = await _requestSubscriptions<S>(output);
 
     if (mounted) entity = input.fold(onFailure, onSuccess);
   }

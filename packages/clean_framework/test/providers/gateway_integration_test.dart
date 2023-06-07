@@ -134,7 +134,7 @@ class TestUseCase extends UseCase<TestEntity> {
         );
 
   Future<void> fetchDataImmediately() async {
-    await request<TestDirectOutput, TestSuccessInput>(
+    await request<TestSuccessInput>(
       const TestDirectOutput('123'),
       onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (success) => entity.copyWith(foo: success.foo),
@@ -142,7 +142,7 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 
   Future<void> fetchDataEventually() async {
-    await request<TestSubscriptionOutput, SuccessInput>(
+    await request<SuccessInput>(
       const TestSubscriptionOutput('123'),
       onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (_) => entity, // no changes on the entity are needed,
@@ -151,7 +151,7 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 
   Future<void> fetchStateFromOtherUseCase() async {
-    await request<TestDirectOutput, TestSuccessInput>(
+    await request<TestSuccessInput>(
       const TestDirectOutput(''),
       onFailure: (_) => entity,
       onSuccess: (input) {
