@@ -16,6 +16,10 @@ abstract class HttpRequest extends Request {
   String? get contentType => null;
 
   HttpResponseType? get responseType => null;
+
+  HttpCachePolicy? get cachePolicy => null;
+
+  Duration? get maxStale => null;
 }
 
 abstract class GetHttpRequest extends HttpRequest {

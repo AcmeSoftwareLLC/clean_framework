@@ -5,15 +5,18 @@ homepage: https://acmesoftware.com
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework_http
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: '>=1.17.0'
 
 dependencies:
-  clean_framework: ^2.1.3
-  dio: ^5.1.1
+  clean_framework: ^2.1.4
+  dio: ^5.2.0+1
+  dio_cache_interceptor: ^3.4.2
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   clean_framework_test: ^0.4.7
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^4.0.0+1
+  very_good_analysis: ^5.0.0+1

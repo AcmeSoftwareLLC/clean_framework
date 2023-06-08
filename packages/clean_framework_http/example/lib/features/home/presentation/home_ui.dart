@@ -1,9 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
-
-import 'package:clean_framework_http_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_http_example/features/home/presentation/home_presenter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:clean_framework_http_example/features/home/presentation/home_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg_image/flutter_svg_image.dart';
 
 class HomeUI extends UI<HomeViewModel> {
   HomeUI({super.key});
@@ -36,7 +35,13 @@ class HomeUI extends UI<HomeViewModel> {
                   children: [
                     Text(pokemon.name, style: titleStyle),
                     const Spacer(),
-                    SvgPicture.network(pokemon.imageUrl, width: 150),
+                    Image(
+                      fit: BoxFit.contain,
+                      image: SvgImage.cachedNetwork(
+                        pokemon.imageUrl,
+                        width: 150,
+                      ),
+                    ),
                   ],
                 ),
               ),
