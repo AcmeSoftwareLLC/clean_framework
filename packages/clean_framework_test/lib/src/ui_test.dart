@@ -94,12 +94,12 @@ class UITestRouter extends AppRouter {
   }
 
   @override
-  void pushReplacement(
+  Future<void> pushReplacement(
     Enum route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
     Object? extra,
-  }) {
+  }) async {
     _routeData = UITestRouteData(
       action: UITestRouteAction.pushReplacement,
       params: params,
@@ -110,7 +110,7 @@ class UITestRouter extends AppRouter {
   }
 
   @override
-  void pushReplacementLocation(String location, {Object? extra}) {
+  Future<void> pushReplacementLocation(String location, {Object? extra}) async {
     _routeData = UITestRouteData(
       action: UITestRouteAction.pushReplacementLocation,
       location: location,

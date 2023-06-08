@@ -1,6 +1,6 @@
 name: clean_framework_http
 description: External Interface for clean_framework package based on Dio.
-version: 0.3.1
+version: 0.4.0
 homepage: https://acmesoftware.com
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework_http
 
@@ -9,7 +9,7 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  clean_framework: ^2.1.4
+  clean_framework: ^3.0.0
   dio: ^5.2.0+1
   dio_cache_interceptor: ^3.4.2
   flutter:

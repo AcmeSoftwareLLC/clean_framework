@@ -1,6 +1,6 @@
 name: clean_framework_graphql
 description: A wrapper around graphql to make it easier to use with clean_framework.
-version: 0.4.0
+version: 0.4.1
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_graphql
 
@@ -9,7 +9,7 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^2.1.4
+  clean_framework: ^3.0.0
   flutter:
     sdk: flutter
   gql: ^1.0.0
