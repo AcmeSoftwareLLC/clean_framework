@@ -119,6 +119,39 @@ void main() {
     );
 
     test(
+      'failure request with getInput',
+      () async {
+        expect(useCase.debugEntity, const TestEntity());
+
+        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+          (output) async {
+            return Either.left(
+              FailureInput(message: 'Failed ${output.name}!'),
+            );
+          },
+        );
+
+        final input = await useCase.getInput(
+          const TestGatewayOutput(name: 'World'),
+        );
+
+        useCase.debugEntityUpdate(
+          (entity) {
+            return switch (input) {
+              Success(:final TestSuccessInput input) => TestEntity(
+                  foo: input.message,
+                ),
+              Failure(:final input) => TestEntity(foo: input.message),
+              _ => const TestEntity(foo: 'failure'),
+            };
+          },
+        );
+
+        expect(useCase.debugEntity, const TestEntity(foo: 'Failed World!'));
+      },
+    );
+
+    test(
       'throws if there is no appropriate subscription present',
       () async {
         expect(
