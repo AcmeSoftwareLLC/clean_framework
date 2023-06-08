@@ -107,6 +107,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     }
   }
 
+  @visibleForTesting
   @protected
   Future<UseCaseInput<S>> getInput<S extends SuccessInput>(
     Output output,

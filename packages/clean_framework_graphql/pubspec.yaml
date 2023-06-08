@@ -9,15 +9,15 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^2.0.2
+  clean_framework: ^2.1.4
   flutter:
     sdk: flutter
-  gql: ^0.14.0
+  gql: ^1.0.0
   graphql: ^5.1.3
 
 dev_dependencies:
-  clean_framework_test: ^0.4.0
+  clean_framework_test: ^0.4.7
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0
-  very_good_analysis: ^3.1.0
+  very_good_analysis: ^5.0.0+1
