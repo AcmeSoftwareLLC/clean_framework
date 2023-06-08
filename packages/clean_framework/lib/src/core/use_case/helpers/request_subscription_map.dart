@@ -18,7 +18,7 @@ extension RequestSubscriptionMapExtension<I extends Input>
     this[O] = (output) => subscription(output as O);
   }
 
-  Result<S> call<S extends SuccessInput>(Output output) async {
+  Result<S> getInput<S extends SuccessInput>(Output output) async {
     final outputType = output.runtimeType;
     final subscription = this[outputType];
 

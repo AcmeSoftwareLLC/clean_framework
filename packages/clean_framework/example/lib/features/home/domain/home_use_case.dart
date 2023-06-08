@@ -23,24 +23,22 @@ class HomeUseCase extends UseCase<HomeEntity> {
       entity = entity.copyWith(status: HomeStatus.loading);
     }
 
-    await request<PokemonCollectionSuccessInput>(
-      PokemonCollectionGatewayOutput(),
-      onSuccess: (success) {
-        final pokemons = success.pokemonIdentities.map(_resolvePokemon);
+    final input = await getInput(PokemonCollectionGatewayOutput());
+    switch (input) {
+      case Success(:PokemonCollectionSuccessInput input):
+        final pokemons = input.pokemonIdentities.map(_resolvePokemon);
 
-        return entity.copyWith(
+        entity = entity.copyWith(
           pokemons: pokemons.toList(growable: false),
           status: HomeStatus.loaded,
           isRefresh: isRefresh,
         );
-      },
-      onFailure: (failure) {
-        return entity.copyWith(
+      case _:
+        entity = entity.copyWith(
           status: HomeStatus.failed,
           isRefresh: isRefresh,
         );
-      },
-    );
+    }
 
     if (isRefresh) {
       entity = entity.copyWith(isRefresh: false, status: HomeStatus.loaded);
@@ -55,7 +53,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
   }
 }
 
-class PokemonSearchInput extends Input {
+class PokemonSearchInput extends SuccessInput {
   PokemonSearchInput({required this.name});
 
   final String name;
@@ -89,7 +87,7 @@ class PokemonSearchInputTransformer
   }
 }
 
-class LastViewedPokemonInput extends Input {
+class LastViewedPokemonInput extends SuccessInput {
   LastViewedPokemonInput({required this.name});
 
   final String name;

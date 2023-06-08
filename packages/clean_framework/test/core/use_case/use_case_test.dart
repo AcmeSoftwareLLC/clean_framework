@@ -324,13 +324,13 @@ class TestEntity extends Entity {
   TestEntity copyWith({String? foo}) => TestEntity(foo: foo ?? this.foo);
 }
 
-class TestInput extends Input {
+class TestInput extends SuccessInput {
   const TestInput({required this.foo});
 
   final String foo;
 }
 
-class NoTransformerTestInput extends Input {
+class NoTransformerTestInput extends SuccessInput {
   const NoTransformerTestInput({required this.foo});
 
   final String foo;
