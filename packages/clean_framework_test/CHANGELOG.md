@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.0
+**Jun 8, 2023**
+- Bumps dependencies to latest version.
+
 ## 0.4.7
 **Mar 30, 2023**
 - Fixed issue with `pop` route in ui tests.
