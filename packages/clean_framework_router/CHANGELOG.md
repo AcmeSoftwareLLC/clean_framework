@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.1
+**June 13, 2023**
+- Bumps dependencies to latest version.
+
 ## 0.5.0
 **June 8, 2023**
 - Bumps dependencies to latest version.

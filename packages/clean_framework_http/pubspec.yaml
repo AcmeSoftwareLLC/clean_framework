@@ -10,13 +10,13 @@ environment:
 
 dependencies:
   clean_framework: ^3.0.0
-  dio: ^5.2.0+1
+  dio: ^5.2.1+1
   dio_cache_interceptor: ^3.4.2
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  clean_framework_test: ^0.4.7
+  clean_framework_test: ^0.5.1
   flutter_test:
     sdk: flutter
   very_good_analysis: ^5.0.0+1
