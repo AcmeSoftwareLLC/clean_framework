@@ -127,9 +127,8 @@ class _SpotlightState extends State<Spotlight> {
     if (mounted) setState(() {});
 
     if (_rawSvg!.isNotEmpty) {
-      final drawable = await svg.fromSvgString(_rawSvg!, widget.imageUrl);
-      final picture = drawable.toPicture();
-      final image = await picture.toImage(100, 100);
+      final pictureInfo = await vg.loadPicture(SvgStringLoader(_rawSvg!), null);
+      final image = await pictureInfo.picture.toImage(100, 100);
 
       _palette = await AppScope.paletteGeneratorOf(context, image);
       if (mounted) setState(() {});

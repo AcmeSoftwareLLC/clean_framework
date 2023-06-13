@@ -1,5 +1,7 @@
 import 'package:clean_framework_http/clean_framework_http.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor_sembast_storage/dio_cache_interceptor_sembast_storage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,6 +12,8 @@ class PokemonExternalInterface extends HttpExternalInterface {
 
 class _PokemonHttpExternalInterfaceDelegate
     extends HttpExternalInterfaceDelegate {
+  _PokemonHttpExternalInterfaceDelegate();
+
   @override
   Future<HttpOptions> buildOptions() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,8 +25,9 @@ class _PokemonHttpExternalInterfaceDelegate
   }
 
   @override
-  Dio buildDio(BaseOptions options) {
-    return Dio(options)
+  Future<Dio> buildDio(BaseOptions options) async {
+    final dio = await super.buildDio(options);
+    return dio
       ..interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
@@ -30,5 +35,16 @@ class _PokemonHttpExternalInterfaceDelegate
           compact: false,
         ),
       );
+  }
+
+  @override
+  Future<HttpCacheOptions?> buildCacheOptions() async {
+    final supportDirectory = await getApplicationSupportDirectory();
+
+    return HttpCacheOptions(
+      store: SembastCacheStore(storePath: supportDirectory.path),
+      policy: HttpCachePolicy.forceCache.value,
+      maxStale: const Duration(days: 7),
+    );
   }
 }

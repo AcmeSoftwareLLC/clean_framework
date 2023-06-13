@@ -1,4 +1,10 @@
 # Changelog
+## 3.0.0
+**Jun 8, 2023**
+- Bumps dependencies to latest version.
+- Adds `UseCase.getInput` method.
+- Removes first type param from the `UseCase.request` method.
+
 ## 2.1.4
 **Jun 1, 2023**
 - Bumps dependencies to latest version.

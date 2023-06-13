@@ -20,8 +20,8 @@ class UseCaseFake<S extends SuccessInput> extends Fake
   EntityFake get entity => _entity;
 
   @override
-  Future<void> request<O extends Output, I extends SuccessInput>(
-    O output, {
+  Future<void> request<I extends SuccessInput>(
+    Output output, {
     required InputCallback<EntityFake, I> onSuccess,
     required InputCallback<EntityFake, FailureInput> onFailure,
   }) async {

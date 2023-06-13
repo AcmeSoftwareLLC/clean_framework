@@ -16,7 +16,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   void fetchPokemonProfile(String name) {
     final pokeName = name.toLowerCase();
 
-    request<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+    request<PokemonSpeciesSuccessInput>(
       PokemonSpeciesGatewayOutput(name: pokeName),
       onSuccess: (success) {
         final descriptions = success.species.descriptions.where(
@@ -32,7 +32,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
       onFailure: (failure) => entity,
     );
 
-    request<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+    request<PokemonProfileSuccessInput>(
       PokemonProfileGatewayOutput(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;

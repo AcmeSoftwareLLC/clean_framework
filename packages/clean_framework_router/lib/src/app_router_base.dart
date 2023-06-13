@@ -28,7 +28,7 @@ abstract class AppRouterBase<R extends Enum> {
   });
 
   /// Replaces the top-most page of the page stack with the given [route].
-  void pushReplacement(
+  Future<void> pushReplacement(
     R route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
@@ -50,7 +50,7 @@ abstract class AppRouterBase<R extends Enum> {
 
   /// Replaces the top-most page of the page stack with the given URL [location]
   /// w/ optional query parameters, e.g. `/family/f2/person/p1?color=blue`.
-  void pushReplacementLocation(
+  Future<void> pushReplacementLocation(
     String location, {
     Object? extra,
   });

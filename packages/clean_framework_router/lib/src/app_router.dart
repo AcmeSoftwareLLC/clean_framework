@@ -43,7 +43,7 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void pushReplacement(
+  Future<void> pushReplacement(
     R route, {
     RouterParams params = const {},
     RouterParams queryParams = const {},
@@ -68,7 +68,7 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void pushReplacementLocation(String location, {Object? extra}) {
+  Future<void> pushReplacementLocation(String location, {Object? extra}) {
     return _router.pushReplacement(location, extra: extra);
   }
 

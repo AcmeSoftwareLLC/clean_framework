@@ -6,6 +6,7 @@ import 'package:clean_framework_http/src/http_options.dart';
 import 'package:clean_framework_http/src/requests.dart';
 import 'package:clean_framework_http/src/responses.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 typedef HttpCancelToken = CancelToken;
 
@@ -15,7 +16,7 @@ class HttpExternalInterface
     HttpExternalInterfaceDelegate? delegate,
   }) : super(delegate: delegate ?? _DefaultHttpExternalInterfaceDelegate());
 
-  final Completer<Dio> _dioCompleter = Completer();
+  final Completer<(Dio, HttpCacheOptions?)> _dioCompleter = Completer();
 
   @override
   HttpExternalInterfaceDelegate get delegate {
@@ -28,7 +29,7 @@ class HttpExternalInterface
 
     on<HttpRequest>(
       (request, send) async {
-        final dio = await _dioCompleter.future;
+        final (dio, cacheOptions) = await _dioCompleter.future;
 
         final options = Options(
           headers: await delegate.buildHeaders(),
@@ -36,13 +37,22 @@ class HttpExternalInterface
           contentType: request.contentType,
         );
 
+        final cacheExtra = cacheOptions
+            ?.copyWith(
+              policy: request.cachePolicy?.value,
+              maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
+            )
+            .toExtra();
+
         final response = await dio.request<dynamic>(
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
 
           // ignore: invalid_use_of_internal_member
-          options: DioMixin.checkOptions(request.method.name, options),
+          options: DioMixin.checkOptions(request.method.name, options).copyWith(
+            extra: cacheExtra,
+          ),
         );
 
         final responseType = response.requestOptions.responseType;
@@ -65,14 +75,11 @@ class HttpExternalInterface
             } else {
               throw Exception('Invalid data type: ${data.runtimeType}');
             }
-            break;
           case ResponseType.plain:
             send(PlainHttpSuccessResponse(data.toString(), statusCode));
-            break;
           case ResponseType.bytes:
             final bytes = List<int>.from(data as List);
             send(BytesHttpSuccessResponse(bytes, statusCode));
-            break;
         }
       },
     );
@@ -80,42 +87,39 @@ class HttpExternalInterface
 
   @override
   FailureResponse onError(Object error) {
-    if (error is DioError) {
-      switch (error.type) {
-        case DioErrorType.badResponse:
-          return HttpFailureResponse(
+    if (error is DioException) {
+      return switch (error.type) {
+        DioExceptionType.badResponse => HttpFailureResponse(
             message: error.message ?? '',
             path: error.requestOptions.path,
             statusCode: error.response?.statusCode ?? 0,
             error: error.response?.data,
             stackTrace: error.stackTrace,
-          );
-        case DioErrorType.connectionTimeout:
-        case DioErrorType.sendTimeout:
-        case DioErrorType.receiveTimeout:
-        case DioErrorType.badCertificate:
-        case DioErrorType.connectionError:
-          return ConnectionHttpFailureResponse(
+          ),
+        DioExceptionType.connectionTimeout ||
+        DioExceptionType.sendTimeout ||
+        DioExceptionType.receiveTimeout ||
+        DioExceptionType.badCertificate ||
+        DioExceptionType.connectionError =>
+          ConnectionHttpFailureResponse(
             type: HttpErrorType.values.byName(error.type.name),
             message: error.message ?? '',
             path: error.requestOptions.path,
             error: error.error,
             stackTrace: error.stackTrace,
-          );
-        case DioErrorType.cancel:
-          return CancelledHttpFailureResponse(
+          ),
+        DioExceptionType.cancel => CancelledHttpFailureResponse(
             message: error.message ?? '',
             path: error.requestOptions.path,
-          );
-        case DioErrorType.unknown:
-          break;
-      }
+          ),
+        _ => UnknownFailureResponse(error),
+      };
     }
 
     return UnknownFailureResponse(error);
   }
 
-  Future<Dio> _buildDio() async {
+  Future<(Dio, HttpCacheOptions?)> _buildDio() async {
     final options = await delegate.buildOptions();
 
     final baseOptions = BaseOptions(
@@ -127,7 +131,14 @@ class HttpExternalInterface
       responseType: options.responseType.original,
     );
 
-    return delegate.buildDio(baseOptions);
+    final dio = await delegate.buildDio(baseOptions);
+    final cacheOptions = await delegate.buildCacheOptions();
+
+    if (cacheOptions != null) {
+      dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
+    }
+
+    return (dio, cacheOptions);
   }
 }
 

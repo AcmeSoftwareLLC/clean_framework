@@ -967,10 +967,8 @@ void main() {
               switch (count) {
                 case 1:
                   expect(testRouter.location, '/detail');
-                  break;
                 case 2:
                   expect(testRouter.location, '/more-detail');
-                  break;
               }
               count++;
             },
