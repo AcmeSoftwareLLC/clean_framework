@@ -133,7 +133,7 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase() : super(entity: const TestEntity());
 
   Future<void> ping(String message) {
-    return request<TestGatewayOutput, TestSuccessInput>(
+    return request<TestSuccessInput>(
       TestGatewayOutput(ping: message),
       onSuccess: (input) => entity.copyWith(pong: input.pong),
       onFailure: (input) => entity,

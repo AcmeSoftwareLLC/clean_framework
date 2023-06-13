@@ -76,7 +76,7 @@ void main() {
           },
         );
 
-        await useCase.request<TestGatewayOutput, TestSuccessInput>(
+        await useCase.request<TestSuccessInput>(
           const TestGatewayOutput(name: 'World'),
           onSuccess: (success) => TestEntity(foo: success.message),
           onFailure: (failure) => const TestEntity(foo: 'failure'),
@@ -87,10 +87,75 @@ void main() {
     );
 
     test(
+      'successful request with getInput',
+      () async {
+        expect(useCase.debugEntity, const TestEntity());
+
+        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+          (output) async {
+            return Either.right(
+              TestSuccessInput(message: 'Hello ${output.name}!'),
+            );
+          },
+        );
+
+        final input = await useCase.getInput(
+          const TestGatewayOutput(name: 'World'),
+        );
+
+        useCase.debugEntityUpdate(
+          (entity) {
+            return switch (input) {
+              Success(:final TestSuccessInput input) => TestEntity(
+                  foo: input.message,
+                ),
+              _ => const TestEntity(foo: 'failure'),
+            };
+          },
+        );
+
+        expect(useCase.debugEntity, const TestEntity(foo: 'Hello World!'));
+      },
+    );
+
+    test(
+      'failure request with getInput',
+      () async {
+        expect(useCase.debugEntity, const TestEntity());
+
+        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+          (output) async {
+            return Either.left(
+              FailureInput(message: 'Failed ${output.name}!'),
+            );
+          },
+        );
+
+        final input = await useCase.getInput(
+          const TestGatewayOutput(name: 'World'),
+        );
+
+        useCase.debugEntityUpdate(
+          (entity) {
+            return switch (input) {
+              Success(:final TestSuccessInput input) => TestEntity(
+                  foo: input.message,
+                ),
+              Failure(:final input) => TestEntity(foo: input.message),
+              _ => const TestEntity(foo: 'failure'),
+            };
+          },
+        );
+
+        expect(useCase.debugEntity, const TestEntity(foo: 'Failed World!'));
+      },
+    );
+
+    test(
       'throws if there is no appropriate subscription present',
       () async {
         expect(
-          () => useCase.request<TestGatewayOutput, TestSuccessInput>(
+          () => useCase.request<TestSuccessInput>(
             const TestGatewayOutput(name: 'World'),
             onSuccess: (success) => const TestEntity(),
             onFailure: (failure) => const TestEntity(),
@@ -324,13 +389,13 @@ class TestEntity extends Entity {
   TestEntity copyWith({String? foo}) => TestEntity(foo: foo ?? this.foo);
 }
 
-class TestInput extends Input {
+class TestInput extends SuccessInput {
   const TestInput({required this.foo});
 
   final String foo;
 }
 
-class NoTransformerTestInput extends Input {
+class NoTransformerTestInput extends SuccessInput {
   const NoTransformerTestInput({required this.foo});
 
   final String foo;

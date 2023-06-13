@@ -75,7 +75,7 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 }
 
-class FooInput extends Input {
+class FooInput extends SuccessInput {
   const FooInput(this.foo);
   final String foo;
 }

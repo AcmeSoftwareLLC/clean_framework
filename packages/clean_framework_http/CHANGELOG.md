@@ -1,4 +1,9 @@
 # Changelog
+## 0.4.0
+**Jun 8, 2023**
+- Bumps dependencies to latest version.
+- Adds support for caching.
+
 ## 0.3.1
 **Apr 6, 2023**
 - Bumps dependencies to latest version.

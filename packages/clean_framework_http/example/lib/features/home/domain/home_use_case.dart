@@ -14,7 +14,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
         );
 
   Future<void> fetch() {
-    return request<PokemonGatewayOutput, PokemonSuccessInput>(
+    return request<PokemonSuccessInput>(
       PokemonGatewayOutput(),
       onSuccess: (success) {
         return entity.copyWith(

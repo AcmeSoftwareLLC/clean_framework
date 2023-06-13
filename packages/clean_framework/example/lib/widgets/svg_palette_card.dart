@@ -107,17 +107,17 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
 
   Future<void> _generateColor() async {
     if (_rawSvg.isNotEmpty) {
-      final drawable = await svg.fromSvgString(_rawSvg, widget.url);
-      final picture = drawable.toPicture();
-      final image = await picture.toImage(100, 100);
+      final pictureInfo = await vg.loadPicture(SvgStringLoader(_rawSvg), null);
+      final image = await pictureInfo.picture.toImage(100, 100);
+
+      if (!mounted) return;
       final palette = await AppScope.paletteGeneratorOf(context, image);
 
-      if (mounted) {
-        _color = widget.backgroundColorBuilder?.call(context, palette) ??
-            palette.dominantColor?.color;
+      if (!mounted) return;
+      _color = widget.backgroundColorBuilder?.call(context, palette) ??
+          palette.dominantColor?.color;
 
-        setState(() {});
-      }
+      setState(() {});
     }
   }
 }

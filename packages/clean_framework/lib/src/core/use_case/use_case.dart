@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:clean_framework/src/core/use_case/entity.dart';
+import 'package:clean_framework/src/core/use_case/helpers/use_case_input.dart';
 import 'package:clean_framework/src/core/use_case/use_case_debounce_mixin.dart';
 import 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-export 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
+export 'helpers/use_case_input.dart';
+export 'use_case_helpers.dart';
 
 typedef InputCallback<E extends Entity, I extends Input> = E Function(I);
 
@@ -90,14 +92,29 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   @protected
-  Future<void> request<O extends Output, S extends SuccessInput>(
-    O output, {
+  Future<void> request<S extends SuccessInput>(
+    Output output, {
     required InputCallback<E, S> onSuccess,
     required InputCallback<E, FailureInput> onFailure,
   }) async {
-    final input = await _requestSubscriptions<O, S>(output);
+    final input = await _requestSubscriptions.getInput(output);
 
-    if (mounted) entity = input.fold(onFailure, onSuccess);
+    if (mounted) {
+      entity = input.fold(
+        onFailure,
+        (successInput) => onSuccess(successInput as S),
+      );
+    }
+  }
+
+  @visibleForTesting
+  @protected
+  Future<UseCaseInput<S>> getInput<S extends SuccessInput>(
+    Output output,
+  ) async {
+    final input = await _requestSubscriptions.getInput<S>(output);
+
+    return input.fold(Failure.new, Success.new);
   }
 
   @override

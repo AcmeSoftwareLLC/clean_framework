@@ -28,13 +28,10 @@ extension on List<d.Diff> {
       switch (difference.operation) {
         case d.DIFF_EQUAL:
           buffer.write(identical(difference.text));
-          break;
         case d.DIFF_DELETE:
           buffer.write(deletion(difference.text));
-          break;
         case d.DIFF_INSERT:
           buffer.write(insertion(difference.text));
-          break;
       }
     }
     return buffer.toString();
