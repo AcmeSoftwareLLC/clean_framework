@@ -78,6 +78,10 @@ class HomeUI extends UI<HomeViewModel> {
         ],
       ),
       body: child,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.router.go(Routes.form),
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

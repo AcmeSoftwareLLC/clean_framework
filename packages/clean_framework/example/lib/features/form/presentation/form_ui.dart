@@ -8,8 +8,9 @@ class FormUI extends UI<FormViewModel> {
   FormUI({super.key});
 
   @override
-  FormPresenter create(WidgetBuilder builder) =>
-      FormPresenter(builder: builder);
+  FormPresenter create(WidgetBuilder builder) {
+    return FormPresenter(builder: builder);
+  }
 
   @override
   Widget build(BuildContext context, FormViewModel viewModel) {

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:clean_framework_example/features/form/presentation/form_ui.dart';
 import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_example/routing/routes.dart';
@@ -8,14 +9,20 @@ class PokeRouter extends AppRouter<Routes> {
   @override
   RouterConfiguration configureRouter() {
     return RouterConfiguration(
+      debugLogDiagnostics: true,
       routes: [
         AppRoute(
           route: Routes.home,
           builder: (_, __) => HomeUI(),
           routes: [
+            AppRoute(
+              route: Routes.form,
+              builder: (_, __) => FormUI(),
+            ),
             AppRoute.custom(
               route: Routes.profile,
               builder: (_, state) {
+                print(state.location);
                 return ProfileUI(
                   pokemonName: state.params['pokemon_name'] ?? '',
                   pokemonImageUrl: state.queryParams['image'] ?? '',
