@@ -18,6 +18,8 @@ dependencies:
   flutter_riverpod: ^2.3.6
   meta: '>=1.8.0 <2.0.0'
   stack_trace: '>=1.10.0 <1.12.0'
+  uniform:
+    path: ../../../uniform
 
 dev_dependencies:
   clean_framework_test: ^0.5.1

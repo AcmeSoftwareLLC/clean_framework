@@ -21,15 +21,13 @@ class PokeApp extends StatelessWidget {
             return MaterialApp.router(
               title: 'Clean Framework Example',
               routerConfig: context.router.config,
-              theme: ThemeData.from(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+              theme: ThemeData(
+                colorSchemeSeed: Colors.green,
                 useMaterial3: true,
               ),
-              darkTheme: ThemeData.from(
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.green,
-                  brightness: Brightness.dark,
-                ),
+              darkTheme: ThemeData(
+                colorSchemeSeed: Colors.green,
+                brightness: Brightness.dark,
                 useMaterial3: true,
               ),
               themeMode: ThemeMode.dark,
