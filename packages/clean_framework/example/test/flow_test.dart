@@ -7,7 +7,7 @@ import 'package:clean_framework_example/features/home/presentation/home_ui.dart'
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_example/providers.dart';
-import 'package:clean_framework_example/routing/routes.dart';
+import 'package:clean_framework_example/routing.dart';
 import 'package:clean_framework_example/widgets/app_scope.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';

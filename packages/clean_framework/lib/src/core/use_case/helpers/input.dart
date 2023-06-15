@@ -1,9 +1,7 @@
 import 'package:meta/meta.dart';
 
 @immutable
-class Input {
-  const Input();
-}
+abstract class Input {}
 
 class SuccessInput implements Input {
   const SuccessInput();
