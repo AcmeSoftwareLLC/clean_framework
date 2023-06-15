@@ -29,6 +29,7 @@ class FormUseCase extends UseCase<FormEntity> {
     final formController = entity.formController;
     if (formController.validate()) {
       entity = entity.copyWith(state: FormState.loading);
+      formController.setSubmitted(true);
 
       // Simulates login
       await Future<void>.delayed(const Duration(seconds: 2));
@@ -40,6 +41,7 @@ class FormUseCase extends UseCase<FormEntity> {
         rememberMe: formController.getValue(FormTags.rememberMe) ?? false,
       );
       entity = entity.copyWith(state: FormState.success, userMeta: userMeta);
+      formController.setSubmitted(false);
     }
   }
 }

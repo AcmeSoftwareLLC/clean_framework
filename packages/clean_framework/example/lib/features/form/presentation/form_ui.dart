@@ -50,15 +50,9 @@ class FormUI extends UI<FormViewModel> {
                 label: 'Remember me',
               ),
               const SizedBox(height: 40),
-              InputActionBuilder(
-                builder: (context, controller, _) {
-                  return FilledButton(
-                    onPressed: controller.contains({InputFormState.touched})
-                        ? viewModel.onLogin
-                        : null,
-                    child: const Text('Login'),
-                  );
-                },
+              FormButton(
+                onPressed: viewModel.onLogin,
+                child: const Text('Login'),
               ),
             ],
           ),
