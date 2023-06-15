@@ -1,4 +1,10 @@
 # Changelog
+## 3.0.1
+**Jun 15, 2023**
+- Exports [uniform](https://pub.dev/packages/uniform) package for form management and validation.
+- Example app updates with form feature.
+
+# Changelog
 ## 3.0.0
 **Jun 8, 2023**
 - Bumps dependencies to latest version.
