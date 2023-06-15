@@ -10,6 +10,11 @@ class PokeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(4),
+    );
+    final inputDecorationTheme = InputDecorationTheme(border: inputBorder);
+
     return AppScope(
       child: AppProviderScope(
         externalInterfaceProviders: [
@@ -24,11 +29,13 @@ class PokeApp extends StatelessWidget {
               theme: ThemeData(
                 colorSchemeSeed: Colors.green,
                 useMaterial3: true,
+                inputDecorationTheme: inputDecorationTheme,
               ),
               darkTheme: ThemeData(
                 colorSchemeSeed: Colors.green,
                 brightness: Brightness.dark,
                 useMaterial3: true,
+                inputDecorationTheme: inputDecorationTheme,
               ),
               themeMode: ThemeMode.dark,
             );

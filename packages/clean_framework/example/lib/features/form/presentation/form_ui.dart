@@ -39,9 +39,10 @@ class FormUI extends UI<FormViewModel> {
               DropdownInputField(
                 tag: FormTags.gender,
                 hintText: 'Gender',
-                items: [
+                width: MediaQuery.sizeOf(context).width - 32,
+                menuEntries: [
                   for (final gender in Gender.values)
-                    DropdownMenuItem(value: gender, child: Text(gender.name)),
+                    DropdownMenuEntry(value: gender, label: gender.name),
                 ],
               ),
               const SizedBox(height: 16),

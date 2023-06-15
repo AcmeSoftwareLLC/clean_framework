@@ -29,6 +29,7 @@ class TextInputField extends StatelessWidget {
           ),
           onChanged: controller.onChanged,
           obscureText: obscureText,
+          enabled: !controller.isSubmitted,
         );
       },
     );

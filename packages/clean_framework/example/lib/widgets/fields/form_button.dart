@@ -11,12 +11,12 @@ class FormButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InputActionBuilder(
       builder: (context, controller, _) {
-        final isEnabled = !controller.contains({InputFormState.submitted}) &&
-            controller.contains({InputFormState.touched});
+        final isEnabled = controller.contains({InputFormState.touched}) &&
+            !controller.isSubmitted;
 
         return FilledButton(
           onPressed: isEnabled ? onPressed : null,
-          child: child,
+          child: controller.isSubmitted ? Text('Submitting...') : child,
         );
       },
     );

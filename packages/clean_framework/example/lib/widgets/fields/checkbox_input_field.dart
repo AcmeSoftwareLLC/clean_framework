@@ -19,6 +19,7 @@ class CheckboxInputField extends StatelessWidget {
       builder: (context, controller, _) {
         return CheckboxListTile(
           value: controller.value,
+          enabled: !controller.isSubmitted,
           onChanged: controller.onChanged,
           controlAffinity: ListTileControlAffinity.leading,
           title: Text(label),
