@@ -97,6 +97,6 @@ class LoggedInEmailInputTransformer
     extends InputTransformer<HomeEntity, LoggedInEmailInput> {
   @override
   HomeEntity transform(HomeEntity entity, LoggedInEmailInput input) {
-    return entity.copyWith(recentEmail: input.email);
+    return entity.copyWith(loggedInEmail: input.email);
   }
 }

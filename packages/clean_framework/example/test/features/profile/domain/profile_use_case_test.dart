@@ -14,7 +14,7 @@ void main() {
   group('ProfileUseCase tests |', () {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
       'fetches pokemon profile',
-      provider: profileUseCaseProvider,
+      provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
         useCase
             .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
@@ -58,7 +58,7 @@ void main() {
           },
         );
 
-        useCase.fetchPokemonProfile('pikachu');
+        useCase.fetchPokemonProfile();
       },
       expect: () => [
         ProfileUIOutput(
@@ -107,7 +107,7 @@ void main() {
 
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
       'fetches pokemon profile; description failure',
-      provider: profileUseCaseProvider,
+      provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
         useCase
             .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
@@ -140,7 +140,7 @@ void main() {
           },
         );
 
-        useCase.fetchPokemonProfile('pikachu');
+        useCase.fetchPokemonProfile();
       },
       expect: () => [
         ProfileUIOutput(
@@ -162,7 +162,7 @@ void main() {
 
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
       'fetches pokemon profile; profile/stat failure',
-      provider: profileUseCaseProvider,
+      provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
         useCase
             .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
@@ -189,7 +189,7 @@ void main() {
           },
         );
 
-        useCase.fetchPokemonProfile('pikachu');
+        useCase.fetchPokemonProfile();
       },
       expect: () => [
         ProfileUIOutput(

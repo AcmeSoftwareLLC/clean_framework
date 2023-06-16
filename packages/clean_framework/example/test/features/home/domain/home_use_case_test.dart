@@ -165,10 +165,10 @@ void main() {
 
     useCaseBridgeTest<HomeUseCase, HomeEntity, HomeUIOutput, ProfileUseCase>(
       'update last viewed pokemon',
-      from: profileUseCaseProvider,
+      from: profileUseCaseFamily(''),
       to: homeUseCaseProvider,
       seed: (e) => e.copyWith(
-        recentEmail: 'CHARIZARD',
+        loggedInEmail: 'CHARIZARD',
         status: HomeStatus.loaded,
       ),
       execute: (useCase) {

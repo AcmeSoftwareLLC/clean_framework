@@ -29,14 +29,14 @@ class HomeEntity extends Entity {
     String? pokemonNameQuery,
     HomeStatus? status,
     bool? isRefresh,
-    String? recentEmail,
+    String? loggedInEmail,
   }) {
     return HomeEntity(
       pokemons: pokemons ?? this.pokemons,
       pokemonNameQuery: pokemonNameQuery ?? this.pokemonNameQuery,
       status: status ?? this.status,
       isRefresh: isRefresh ?? this.isRefresh,
-      loggedInEmail: recentEmail ?? this.loggedInEmail,
+      loggedInEmail: loggedInEmail ?? this.loggedInEmail,
     );
   }
 }
