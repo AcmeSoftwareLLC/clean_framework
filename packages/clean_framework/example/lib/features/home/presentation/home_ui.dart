@@ -57,22 +57,25 @@ class HomeUI extends UI<HomeViewModel> {
         titleTextStyle: textTheme.displaySmall!.copyWith(
           fontWeight: FontWeight.w300,
         ),
+        toolbarHeight: 100,
         bottom: viewModel.isLoading || viewModel.hasFailedLoading
             ? null
             : PokemonSearchField(onChanged: viewModel.onSearch),
         actions: [
-          if (viewModel.lastViewedPokemon.isNotEmpty)
-            Text.rich(
-              TextSpan(
-                text: 'Last Viewed: ',
-                children: [
-                  TextSpan(
-                    text: viewModel.lastViewedPokemon,
-                    style: textTheme.labelSmall,
-                  ),
-                ],
-                style: textTheme.bodySmall,
-              ),
+          if (viewModel.loggedInEmail.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Logged in as:',
+                  style: textTheme.labelMedium,
+                ),
+                Text(
+                  viewModel.loggedInEmail,
+                  style: textTheme.labelSmall,
+                ),
+              ],
             ),
           const SizedBox(width: 16),
         ],

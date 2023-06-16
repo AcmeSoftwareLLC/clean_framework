@@ -38,13 +38,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: pokemons,
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
       verify: (useCase) {
@@ -69,13 +69,13 @@ void main() {
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: true,
-            lastViewedPokemon: '',
+            loggedInEmail: '',
           ),
           HomeUIOutput(
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: false,
-            lastViewedPokemon: '',
+            loggedInEmail: '',
           ),
         ];
       },
@@ -94,13 +94,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
     );
@@ -118,13 +118,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: true,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
     );
@@ -158,7 +158,7 @@ void main() {
           ],
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
     );
@@ -168,7 +168,7 @@ void main() {
       from: profileUseCaseProvider,
       to: homeUseCaseProvider,
       seed: (e) => e.copyWith(
-        lastViewedPokemon: 'CHARIZARD',
+        recentEmail: 'CHARIZARD',
         status: HomeStatus.loaded,
       ),
       execute: (useCase) {
@@ -179,7 +179,7 @@ void main() {
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: 'PIKACHU',
+          loggedInEmail: 'PIKACHU',
         ),
       ],
     );

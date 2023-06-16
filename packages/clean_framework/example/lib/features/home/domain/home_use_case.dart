@@ -14,7 +14,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
           transformers: [
             HomeUIOutputTransformer(),
             PokemonSearchInputTransformer(),
-            LastViewedPokemonInputTransformer(),
+            LoggedInEmailInputTransformer(),
           ],
         );
 
@@ -74,7 +74,7 @@ class HomeUIOutputTransformer
       pokemons: filteredPokemons.toList(growable: false),
       status: entity.status,
       isRefresh: entity.isRefresh,
-      lastViewedPokemon: entity.lastViewedPokemon,
+      loggedInEmail: entity.loggedInEmail,
     );
   }
 }
@@ -87,16 +87,16 @@ class PokemonSearchInputTransformer
   }
 }
 
-class LastViewedPokemonInput extends SuccessInput {
-  LastViewedPokemonInput({required this.name});
+class LoggedInEmailInput extends SuccessInput {
+  LoggedInEmailInput({required this.email});
 
-  final String name;
+  final String email;
 }
 
-class LastViewedPokemonInputTransformer
-    extends InputTransformer<HomeEntity, LastViewedPokemonInput> {
+class LoggedInEmailInputTransformer
+    extends InputTransformer<HomeEntity, LoggedInEmailInput> {
   @override
-  HomeEntity transform(HomeEntity entity, LastViewedPokemonInput input) {
-    return entity.copyWith(lastViewedPokemon: input.name);
+  HomeEntity transform(HomeEntity entity, LoggedInEmailInput input) {
+    return entity.copyWith(recentEmail: input.email);
   }
 }
