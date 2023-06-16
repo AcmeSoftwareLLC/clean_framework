@@ -10,15 +10,15 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^2.0.7
-  clean_framework: ^2.1.4
-  clean_framework_router: ^0.4.3
-  dio: ^5.2.0
+  clean_framework: ^3.0.1
+  clean_framework_router: ^0.5.1
+  dio: ^5.2.1+1
   flutter_cache_manager: ^3.3.0
-  flutter_svg: ^2.0.6
+  flutter_svg: ^2.0.7
   palette_generator: ^0.3.3+2
 
 dev_dependencies:
-  clean_framework_test: ^0.4.7
+  clean_framework_test: ^0.5.1
   mocktail: ^0.3.0
   flutter_test:
     sdk: flutter

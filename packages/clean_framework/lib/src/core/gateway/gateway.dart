@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
 import 'package:clean_framework/src/core/use_case/use_case.dart';
-import 'package:clean_framework/src/core/use_case/use_case_provider.dart';
+import 'package:clean_framework/src/core/use_case/provider/use_case_provider.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
