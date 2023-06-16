@@ -7,13 +7,15 @@ import 'package:clean_framework_example/features/profile/external_interface/poke
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
 class ProfileUseCase extends UseCase<ProfileEntity> {
-  ProfileUseCase()
+  ProfileUseCase(this.name)
       : super(
           entity: ProfileEntity(),
           transformers: [ProfileUIOutputTransformer()],
         );
 
-  void fetchPokemonProfile(String name) {
+  final String name;
+
+  void fetchPokemonProfile() {
     final pokeName = name.toLowerCase();
 
     request<PokemonSpeciesSuccessInput>(

@@ -22,7 +22,7 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
   static const family = AutoDisposeUseCaseProviderFamilyBuilder();
 
   @override
-  Refreshable<U> buildNotifier(Object arg) => _internal.notifier;
+  Refreshable<U> buildNotifier() => _internal.notifier;
 
   @override
   Override overrideWith(U useCase) => _internal.overrideWith((_) => useCase);

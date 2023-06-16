@@ -9,9 +9,15 @@ class GatewayProvider<G extends Gateway>
   GatewayProvider(
     G Function() create, {
     List<UseCaseProviderBase> useCases = const [],
+    List<UseCaseProviderFamilyBase> families = const [],
   }) : super(
           provider: Provider(
-            (ref) => create()..attach(ref, providers: useCases),
+            (ref) => create()
+              ..attach(
+                ref,
+                providers: useCases,
+                families: families,
+              ),
           ),
         );
 

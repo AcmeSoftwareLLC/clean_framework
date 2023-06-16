@@ -7,19 +7,20 @@ import 'package:clean_framework_example/features/profile/domain/profile_use_case
 final homeUseCaseProvider = UseCaseProvider.autoDispose(
   HomeUseCase.new,
   (bridge) {
-    bridge.connect(
-      profileUseCaseProvider,
-      selector: (e) => e.name,
-      (oldPokeName, pokeName) {
-        if (oldPokeName != pokeName) {
-          bridge.useCase.setInput(LastViewedPokemonInput(name: pokeName));
-        }
-      },
-    );
+    // bridge.connect(
+    //   profileUseCaseProvider,
+    //   selector: (e) => e.name,
+    //   (oldPokeName, pokeName) {
+    //     if (oldPokeName != pokeName) {
+    //       bridge.useCase.setInput(LastViewedPokemonInput(name: pokeName));
+    //     }
+    //   },
+    // );
   },
 );
 
-final profileUseCaseProvider = UseCaseProvider<ProfileEntity, ProfileUseCase>(
+final profileUseCaseProviderFamily =
+    UseCaseProvider.family<ProfileEntity, ProfileUseCase, String>(
   ProfileUseCase.new,
 );
 

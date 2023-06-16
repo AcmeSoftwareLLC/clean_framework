@@ -9,14 +9,12 @@ class ProfilePresenter
     extends Presenter<ProfileViewModel, ProfileUIOutput, ProfileUseCase> {
   ProfilePresenter({
     required super.builder,
-    required this.name,
-  }) : super(provider: profileUseCaseProvider);
-
-  final String name;
+    required String name,
+  }) : super.family(family: profileUseCaseProviderFamily, arg: name);
 
   @protected
   void onLayoutReady(BuildContext context, ProfileUseCase useCase) {
-    useCase.fetchPokemonProfile(name);
+    useCase.fetchPokemonProfile();
   }
 
   @override

@@ -9,18 +9,16 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
   Override overrideWith(U useCase);
 
   @visibleForOverriding
-  Refreshable<U> buildNotifier(Object arg);
+  Refreshable<U> buildNotifier();
 
-  void init({Object args = const Object()}) {
-    _notifierController.add(buildNotifier(args));
-  }
+  void init() => _notifierController.add(buildNotifier());
 
   O subscribe<O extends Output>(WidgetRef ref) {
     return ref.watch(_outputChangeListener(ref));
   }
 
-  U getUseCase(WidgetRef ref, {Object args = const Object()}) {
-    return ref.read(buildNotifier(args));
+  U getUseCase(WidgetRef ref) {
+    return ref.read(buildNotifier());
   }
 
   U getUseCaseFromContext(BuildContext context) {
@@ -38,7 +36,7 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
   ProviderListenable<O> selector<O extends Output>(U useCase);
 
   @visibleForTesting
-  U read(ProviderContainer container, {Object args = const Object()}) {
-    return container.read(buildNotifier(args));
+  U read(ProviderContainer container) {
+    return container.read(buildNotifier());
   }
 }
