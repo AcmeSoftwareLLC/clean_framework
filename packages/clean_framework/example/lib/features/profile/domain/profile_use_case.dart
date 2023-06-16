@@ -18,6 +18,9 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   void fetchPokemonProfile() {
     final pokeName = name.toLowerCase();
 
+    // If the use case is not auto disposed then we have last fetched data.
+    if (!entity.description.isEmpty) return;
+
     request<PokemonSpeciesSuccessInput>(
       PokemonSpeciesGatewayOutput(name: pokeName),
       onSuccess: (success) {
