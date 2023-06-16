@@ -12,11 +12,11 @@ final pokemonCollectionGateway = GatewayProvider(
 final pokemonProfileGateway = GatewayProvider(
   PokemonProfileGateway.new,
   useCases: [],
-  families: [profileUseCaseProviderFamily],
+  families: [profileUseCaseFamily],
 );
 
 final pokemonSpeciesGateway = GatewayProvider(
   PokemonSpeciesGateway.new,
   useCases: [],
-  families: [profileUseCaseProviderFamily],
+  families: [profileUseCaseFamily],
 );

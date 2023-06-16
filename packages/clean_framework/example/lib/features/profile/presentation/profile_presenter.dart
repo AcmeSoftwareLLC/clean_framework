@@ -10,7 +10,7 @@ class ProfilePresenter
   ProfilePresenter({
     required super.builder,
     required String name,
-  }) : super.family(family: profileUseCaseProviderFamily, arg: name);
+  }) : super.family(family: profileUseCaseFamily, arg: name);
 
   @protected
   void onLayoutReady(BuildContext context, ProfileUseCase useCase) {

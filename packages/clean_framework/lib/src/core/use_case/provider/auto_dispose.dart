@@ -19,8 +19,6 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
 
   late final AutoDisposeStateNotifierProvider<U, E> _internal;
 
-  static const family = AutoDisposeUseCaseProviderFamilyBuilder();
-
   @override
   Refreshable<U> buildNotifier() => _internal.notifier;
 
@@ -43,5 +41,9 @@ class AutoDisposeUseCaseProviderBuilder {
     UseCaseProviderConnector<E, U>? connector,
   ]) {
     return AutoDisposeUseCaseProvider(create, connector);
+  }
+
+  AutoDisposeUseCaseProviderFamilyBuilder get family {
+    return const AutoDisposeUseCaseProviderFamilyBuilder();
   }
 }
