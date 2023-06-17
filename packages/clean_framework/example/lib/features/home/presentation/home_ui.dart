@@ -121,9 +121,11 @@ class _LoadingFailed extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 32),
-            child: Image.asset('assets/sad-flareon.png', height: 300),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 32),
+              child: Image.asset('assets/sad-flareon.png', height: 300),
+            ),
           ),
           const SizedBox(height: 8),
           Text(

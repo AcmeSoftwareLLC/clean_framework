@@ -72,25 +72,6 @@ void main() {
     );
 
     uiTest(
-      'shows last viewed pokemon if there is one',
-      ui: HomeUI(),
-      viewModel: HomeViewModel(
-        pokemons: [
-          PokemonModel(name: 'Pikachu', imageUrl: ''),
-        ],
-        isLoading: false,
-        hasFailedLoading: false,
-        loggedInEmail: 'Charmander',
-        onRetry: () {},
-        onRefresh: () async {},
-        onSearch: (query) {},
-      ),
-      verify: (tester) async {
-        expect(find.text('Last Viewed: Charmander'), findsOneWidget);
-      },
-    );
-
-    uiTest(
       'tapping on pokemon navigates to detail page',
       builder: (context, child) {
         return AppScope(

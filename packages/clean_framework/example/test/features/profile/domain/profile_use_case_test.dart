@@ -14,7 +14,7 @@ void main() {
   group('ProfileUseCase tests |', () {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
       'fetches pokemon profile',
-      provider: profileUseCaseFamily('PIKACHU'),
+      provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
         useCase
             .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
