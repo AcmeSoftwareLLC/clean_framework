@@ -85,7 +85,7 @@ class HomeUI extends UI<HomeViewModel> {
       body: child,
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.router.go(Routes.form),
-        child: Icon(Icons.format_align_center),
+        child: Icon(Icons.login),
       ),
     );
   }
@@ -102,7 +102,7 @@ class HomeUI extends UI<HomeViewModel> {
         context.router.go(
           Routes.profile,
           params: {'pokemon_name': pokemon.name},
-          queryParams: {'image': pokemon.imageUrl},
+          extra: pokemon.imageUrl,
         );
       },
     );

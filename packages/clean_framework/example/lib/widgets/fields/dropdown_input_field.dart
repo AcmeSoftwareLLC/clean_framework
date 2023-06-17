@@ -6,14 +6,12 @@ class DropdownInputField<T extends Object> extends StatelessWidget {
     required this.tag,
     required this.menuEntries,
     this.hintText,
-    this.width,
     super.key,
   });
 
   final Object tag;
   final List<DropdownMenuEntry<T>> menuEntries;
   final String? hintText;
-  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +21,22 @@ class DropdownInputField<T extends Object> extends StatelessWidget {
     return InputFieldBuilder<T>(
       tag: tag,
       builder: (context, controller, _) {
-        return DropdownMenu(
-          width: width,
-          requestFocusOnTap: false,
-          enabled: !controller.isSubmitted,
-          errorText: controller.error.message,
-          hintText: hintText,
-          textStyle: controller.isSubmitted
-              ? textStyle?.copyWith(color: theme.disabledColor)
-              : textStyle,
-          initialSelection: controller.value,
-          dropdownMenuEntries: menuEntries,
-          onSelected: controller.onChanged,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return DropdownMenu(
+              width: constraints.maxWidth,
+              requestFocusOnTap: false,
+              enabled: !controller.isSubmitted,
+              errorText: controller.error.message,
+              hintText: hintText,
+              textStyle: controller.isSubmitted
+                  ? textStyle?.copyWith(color: theme.disabledColor)
+                  : textStyle,
+              initialSelection: controller.value,
+              dropdownMenuEntries: menuEntries,
+              onSelected: controller.onChanged,
+            );
+          },
         );
       },
     );
