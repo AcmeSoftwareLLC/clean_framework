@@ -37,6 +37,18 @@ final _testUseCaseProvider3 = UseCaseProvider<TestEntity, TestUseCase>(
   TestUseCase.new,
 );
 
+final _testUseCaseAutoDisposeFamily =
+    UseCaseProvider.autoDispose.family<TestEntity, TestUseCase, String>(
+  (name) => TestUseCase(name: name),
+  (_) {},
+);
+
+final _testUseCaseFamily =
+    UseCaseProvider.family<TestEntity, TestUseCase, String>(
+  (name) => TestUseCase(name: name),
+  (_) {},
+);
+
 void main() {
   group('UseCase Provider tests |', () {
     testWidgets('output subscription', (tester) async {
@@ -219,9 +231,56 @@ void main() {
         ],
       );
 
-      final useCase = _testUseCaseProvider2.read(container);
+      final useCase = _testUseCaseProvider2().notifier.read(container);
 
       expect(useCase, isA<NewTestUseCase>());
+    });
+  });
+
+  group('UseCase Provider Family tests |', () {
+    test('use case creation', () {
+      final container = ProviderContainer();
+
+      final pikachuUseCase =
+          _testUseCaseAutoDisposeFamily('Pikachu').read(container);
+      final bulbasaurUseCase =
+          _testUseCaseAutoDisposeFamily('Bulbasaur').read(container);
+
+      expect(pikachuUseCase, isA<TestUseCase>());
+      expect(bulbasaurUseCase, isA<TestUseCase>());
+
+      expect(pikachuUseCase.name, 'Pikachu');
+      expect(bulbasaurUseCase.name, 'Bulbasaur');
+    });
+
+    test('family creates new instance of use case for each arg', () {
+      final container = ProviderContainer();
+
+      var oneUseCase = _testUseCaseProvider.read(container);
+      var twoUseCase = _testUseCaseProvider.read(container);
+
+      expect(oneUseCase, equals(twoUseCase));
+
+      oneUseCase = _testUseCaseFamily('1').read(container);
+      twoUseCase = _testUseCaseFamily('2').read(container);
+
+      expect(oneUseCase, isNot(equals(twoUseCase)));
+    });
+
+    test('family notifier', () {
+      _testUseCaseAutoDisposeFamily.notifier.listen(
+        expectAsync1((data) {
+          expect(data.$2, 'test');
+        }),
+      );
+      _testUseCaseFamily.notifier.listen(
+        expectAsync1((data) {
+          expect(data.$2, 'test');
+        }),
+      );
+
+      _testUseCaseAutoDisposeFamily.init('test');
+      _testUseCaseFamily.init('test');
     });
   });
 }
@@ -229,13 +288,15 @@ void main() {
 class NewTestUseCase extends TestUseCase {}
 
 class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase()
+  TestUseCase({this.name = ''})
       : super(
           entity: const TestEntity(),
           transformers: [
             OutputTransformer.from((e) => TestOutput(foo: e.foo)),
           ],
         );
+
+  final String name;
 
   void set({required String foo}) {
     entity = entity.copyWith(foo: foo);

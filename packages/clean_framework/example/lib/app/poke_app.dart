@@ -38,6 +38,7 @@ class PokeApp extends StatelessWidget {
                 inputDecorationTheme: inputDecorationTheme,
               ),
               themeMode: ThemeMode.dark,
+              debugShowCheckedModeBanner: false,
             );
           },
         ),

@@ -7,14 +7,14 @@ class HomeUIOutput extends Output {
     required this.pokemons,
     required this.status,
     required this.isRefresh,
-    required this.lastViewedPokemon,
+    required this.loggedInEmail,
   });
 
   final List<PokemonModel> pokemons;
   final HomeStatus status;
   final bool isRefresh;
-  final String lastViewedPokemon;
+  final String loggedInEmail;
 
   @override
-  List<Object?> get props => [pokemons, status, isRefresh, lastViewedPokemon];
+  List<Object?> get props => [pokemons, status, isRefresh, loggedInEmail];
 }

@@ -24,7 +24,7 @@ void main() {
         ],
         isLoading: false,
         hasFailedLoading: false,
-        lastViewedPokemon: '',
+        loggedInEmail: '',
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
@@ -42,7 +42,7 @@ void main() {
         pokemons: [],
         isLoading: true,
         hasFailedLoading: false,
-        lastViewedPokemon: '',
+        loggedInEmail: '',
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
@@ -59,7 +59,7 @@ void main() {
         pokemons: [],
         isLoading: false,
         hasFailedLoading: true,
-        lastViewedPokemon: '',
+        loggedInEmail: '',
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
@@ -68,25 +68,6 @@ void main() {
         expect(find.text('Oops'), findsOneWidget);
         expect(find.text('I lost my fellow Pokémons'), findsOneWidget);
         expect(find.text('Help Flareon, find her friends'), findsOneWidget);
-      },
-    );
-
-    uiTest(
-      'shows last viewed pokemon if there is one',
-      ui: HomeUI(),
-      viewModel: HomeViewModel(
-        pokemons: [
-          PokemonModel(name: 'Pikachu', imageUrl: ''),
-        ],
-        isLoading: false,
-        hasFailedLoading: false,
-        lastViewedPokemon: 'Charmander',
-        onRetry: () {},
-        onRefresh: () async {},
-        onSearch: (query) {},
-      ),
-      verify: (tester) async {
-        expect(find.text('Last Viewed: Charmander'), findsOneWidget);
       },
     );
 
@@ -113,7 +94,7 @@ void main() {
         ],
         isLoading: false,
         hasFailedLoading: false,
-        lastViewedPokemon: 'Charmander',
+        loggedInEmail: 'Charmander',
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},

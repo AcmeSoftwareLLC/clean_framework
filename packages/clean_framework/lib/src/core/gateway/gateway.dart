@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
+import 'package:clean_framework/src/core/use_case/provider/use_case_provider.dart';
 import 'package:clean_framework/src/core/use_case/use_case.dart';
-import 'package:clean_framework/src/core/use_case/use_case_provider.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,19 +14,27 @@ abstract class Gateway<O extends Output, R extends Request,
   void attach(
     ProviderRef<Object> ref, {
     required List<UseCaseProviderBase> providers,
+    List<UseCaseProviderFamilyBase> families = const [],
   }) {
     for (final useCaseProvider in providers) {
       useCaseProvider.notifier.listen(
-        (notifier) {
-          final useCase = ref.read(notifier);
-          _useCases.add(useCase);
-          useCase.subscribe<O, S>(buildInput);
-        },
+        (notifier) => _subscribe(ref, notifier),
+      );
+    }
+    for (final useCaseProviderFamily in families) {
+      useCaseProviderFamily.notifier.listen(
+        (notifier) => _subscribe(ref, notifier.$1),
       );
     }
   }
 
   final List<UseCase> _useCases = [];
+
+  void _subscribe(ProviderRef<Object> ref, Refreshable<UseCase> notifier) {
+    final useCase = ref.read(notifier);
+    _useCases.add(useCase);
+    useCase.subscribe<O, S>(buildInput);
+  }
 
   @visibleForTesting
   @nonVirtual

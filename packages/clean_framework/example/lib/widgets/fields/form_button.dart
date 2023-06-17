@@ -15,6 +15,9 @@ class FormButton extends StatelessWidget {
             !controller.isSubmitted;
 
         return FilledButton(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size.fromHeight(kMinInteractiveDimension),
+          ),
           onPressed: isEnabled ? onPressed : null,
           child: controller.isSubmitted ? Text('Submitting...') : child,
         );

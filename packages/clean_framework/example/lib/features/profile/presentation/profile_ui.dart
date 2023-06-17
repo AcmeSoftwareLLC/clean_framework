@@ -42,7 +42,7 @@ class ProfileUI extends UI<ProfileViewModel> {
           elevation: Theme.of(context).brightness == Brightness.light ? 0 : 4,
           color: Theme.of(context).colorScheme.surface.withAlpha(120),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(48),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(48)),
           ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 96, 24, 16),

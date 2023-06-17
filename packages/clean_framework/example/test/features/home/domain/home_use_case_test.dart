@@ -4,7 +4,6 @@ import 'package:clean_framework_example/features/home/domain/home_ui_output.dart
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,13 +37,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: pokemons,
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
       verify: (useCase) {
@@ -69,13 +68,13 @@ void main() {
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: true,
-            lastViewedPokemon: '',
+            loggedInEmail: '',
           ),
           HomeUIOutput(
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: false,
-            lastViewedPokemon: '',
+            loggedInEmail: '',
           ),
         ];
       },
@@ -94,13 +93,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
     );
@@ -118,13 +117,13 @@ void main() {
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: true,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
+          loggedInEmail: '',
         ),
       ],
     );
@@ -158,28 +157,7 @@ void main() {
           ],
           status: HomeStatus.loaded,
           isRefresh: false,
-          lastViewedPokemon: '',
-        ),
-      ],
-    );
-
-    useCaseBridgeTest<HomeUseCase, HomeEntity, HomeUIOutput, ProfileUseCase>(
-      'update last viewed pokemon',
-      from: profileUseCaseProvider,
-      to: homeUseCaseProvider,
-      seed: (e) => e.copyWith(
-        lastViewedPokemon: 'CHARIZARD',
-        status: HomeStatus.loaded,
-      ),
-      execute: (useCase) {
-        useCase.debugEntityUpdate((e) => e.copyWith(name: 'PIKACHU'));
-      },
-      expect: () => [
-        HomeUIOutput(
-          pokemons: [],
-          status: HomeStatus.loaded,
-          isRefresh: false,
-          lastViewedPokemon: 'PIKACHU',
+          loggedInEmail: '',
         ),
       ],
     );

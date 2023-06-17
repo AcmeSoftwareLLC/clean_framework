@@ -7,7 +7,7 @@ class HomeViewModel extends ViewModel {
     required this.pokemons,
     required this.isLoading,
     required this.hasFailedLoading,
-    required this.lastViewedPokemon,
+    required this.loggedInEmail,
     required this.onRetry,
     required this.onRefresh,
     required this.onSearch,
@@ -16,7 +16,7 @@ class HomeViewModel extends ViewModel {
   final List<PokemonModel> pokemons;
   final bool isLoading;
   final bool hasFailedLoading;
-  final String lastViewedPokemon;
+  final String loggedInEmail;
 
   final VoidCallback onRetry;
   final AsyncCallback onRefresh;
@@ -24,6 +24,6 @@ class HomeViewModel extends ViewModel {
 
   @override
   List<Object?> get props {
-    return [pokemons, isLoading, hasFailedLoading, lastViewedPokemon];
+    return [pokemons, isLoading, hasFailedLoading, loggedInEmail];
   }
 }

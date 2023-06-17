@@ -10,11 +10,23 @@ abstract class Presenter<V extends ViewModel, O extends Output,
     required this.provider,
     required this.builder,
     super.key,
-  });
+  })  : _arg = const _NoArg(),
+        _family = null;
+
+  Presenter.family({
+    required UseCaseProviderFamilyBase family,
+    required Object arg,
+    required this.builder,
+    super.key,
+  })  : _arg = arg,
+        provider = family(arg),
+        _family = family;
 
   @visibleForTesting
   final UseCaseProviderBase provider;
   final WidgetBuilder builder;
+  final UseCaseProviderFamilyBase? _family;
+  final Object _arg;
 
   @override
   ConsumerState<Presenter<V, O, U>> createState() => _PresenterState<V, O, U>();
@@ -56,6 +68,7 @@ abstract class Presenter<V extends ViewModel, O extends Output,
 class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     extends ConsumerState<Presenter<V, O, U>> {
   U? _useCase;
+  late final UseCaseProviderBase _provider;
 
   @override
   WidgetRef get ref => context as WidgetRef;
@@ -63,19 +76,13 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   @override
   void initState() {
     super.initState();
-    widget.provider
-      ..notifier.first.then((_) {
-        if (ViewModelScope.maybeOf<V>(context) == null) {
-          widget.onLayoutReady(context, _useCase!);
-        }
-      })
-      ..init();
+    _provider = initProvider();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _useCase ??= widget.provider.getUseCase(ref) as U;
+    _useCase ??= _provider.getUseCase(ref) as U;
   }
 
   @override
@@ -92,7 +99,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
       final output = widget.subscribe(ref);
       viewModel = widget.createViewModel(_useCase!, output);
 
-      widget.provider.listen<O>(
+      _provider.listen<O>(
         ref,
         (p, n) => widget.onOutput(context, OutputState(p, n), viewModel!),
       );
@@ -108,6 +115,31 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   void dispose() {
     widget.onDestroy(_useCase!);
     super.dispose();
+  }
+
+  UseCaseProviderBase initProvider() {
+    final provider = widget.provider;
+    final arg = widget._arg;
+
+    if (arg is _NoArg) {
+      provider
+        ..notifier.first.then((_) => setLayoutReadyIfViewModelFound())
+        ..init();
+    } else {
+      widget._family!
+        ..notifier
+            .firstWhere((e) => e.$2 == arg)
+            .then((_) => setLayoutReadyIfViewModelFound())
+        ..init(arg);
+    }
+
+    return provider;
+  }
+
+  void setLayoutReadyIfViewModelFound() {
+    if (ViewModelScope.maybeOf<V>(context) == null) {
+      widget.onLayoutReady(context, _useCase!);
+    }
   }
 }
 
@@ -174,4 +206,8 @@ class ViewModelScope<V extends ViewModel> extends InheritedWidget {
 extension ViewModelScopeExtension on BuildContext {
   @useResult
   V viewModel<V extends ViewModel>() => ViewModelScope.of<V>(this);
+}
+
+class _NoArg extends Object {
+  const _NoArg();
 }

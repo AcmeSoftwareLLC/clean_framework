@@ -63,44 +63,10 @@ void main() {
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
   });
-
-  group('UseCase | legacy filter tests |', () {
-    setUp(() {
-      return useCase = FilterTestUseCase();
-    });
-
-    tearDown(() {
-      useCase.dispose();
-    });
-
-    test('output filter', () {
-      useCase
-        ..updateFoo('hello')
-        ..updateBar(3);
-
-      expect(useCase.debugEntity.foo, 'hello');
-      expect(useCase.debugEntity.bar, 3);
-
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
-      expect(useCase.getOutput<BarOutput>().bar, 3);
-    });
-
-    test('input filter', () {
-      useCase.setInput(const FooInput('hello'));
-
-      expect(useCase.debugEntity.foo, 'hello');
-
-      expect(useCase.getOutput<FooOutput>(), const FooOutput('hello'));
-    });
-  });
 }
 
 abstract class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase({
-    super.transformers,
-    super.inputFilters,
-    super.outputFilters,
-  }) : super(entity: const TestEntity());
+  TestUseCase({super.transformers}) : super(entity: const TestEntity());
 
   void updateFoo(String foo) {
     entity = entity.copyWith(foo: foo);
@@ -132,21 +98,6 @@ class InlineTransformerTestUseCase extends TestUseCase {
               (entity, input) => entity.copyWith(foo: input.foo),
             ),
           ],
-        );
-}
-
-class FilterTestUseCase extends TestUseCase {
-  FilterTestUseCase()
-      : super(
-          outputFilters: {
-            FooOutput: (entity) => FooOutput(entity.foo),
-            BarOutput: (entity) => BarOutput(entity.bar),
-          },
-          inputFilters: {
-            FooInput: (input, entity) {
-              return entity.copyWith(foo: (input as FooInput).foo);
-            },
-          },
         );
 }
 

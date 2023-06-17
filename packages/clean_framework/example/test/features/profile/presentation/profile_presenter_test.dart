@@ -16,7 +16,8 @@ void main() {
         name: 'pikachu',
       ),
       overrides: [
-        profileUseCaseProvider.overrideWith(ProfileUseCaseFake()),
+        profileUseCaseFamily('PIKACHU')
+            .overrideWith(ProfileUseCaseFake('PIKACHU')),
       ],
       setup: (useCase) {
         useCase.debugEntityUpdate(
@@ -48,6 +49,8 @@ void main() {
 }
 
 class ProfileUseCaseFake extends ProfileUseCase {
+  ProfileUseCaseFake(super.name);
+
   @override
-  void fetchPokemonProfile(String name) {}
+  void fetchPokemonProfile() {}
 }

@@ -1,0 +1,28 @@
+name: Deploy to Web
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  web-deploy:
+    name: Web Deploy
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v2
+
+      - name: 'Install Tools'
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+
+      - name: Get package dependencies
+        run: melos bs
+
+      - uses: sarbagyastha/flutter-gh-pages@main
+        with:
+          workingDir: packages/clean_framework/example
