@@ -82,6 +82,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
                     placeholderBuilder: widget.placeholderBuilder,
                     height: widget.height,
                     width: widget.width,
+                    alignment: Alignment.bottomRight,
                   ),
           ),
         ),

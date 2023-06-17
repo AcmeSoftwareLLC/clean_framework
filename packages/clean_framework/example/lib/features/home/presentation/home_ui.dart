@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
@@ -25,27 +27,27 @@ class HomeUI extends UI<HomeViewModel> {
     } else {
       child = RefreshIndicator(
         onRefresh: viewModel.onRefresh,
-        child: ListView.builder(
-          prototypeItem: SizedBox(height: 176), // 160 + 16
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          itemBuilder: (context, index) {
-            final pokemon = viewModel.pokemons[index];
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final minWidth = 240;
+            final crossAxisCount = max(1, constraints.maxWidth ~/ minWidth);
+            final remainingWidth = constraints.maxWidth % minWidth;
 
-            return PokemonCard(
-              key: ValueKey(pokemon.name),
-              imageUrl: pokemon.imageUrl,
-              name: pokemon.name,
-              heroTag: pokemon.name,
-              onTap: () {
-                context.router.go(
-                  Routes.profile,
-                  params: {'pokemon_name': pokemon.name},
-                  queryParams: {'image': pokemon.imageUrl},
-                );
-              },
+            final width = 200 + remainingWidth / crossAxisCount;
+            const height = 300;
+
+            return GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: width / height,
+              ),
+              itemCount: viewModel.pokemons.length,
+              itemBuilder: _itemBuilder,
             );
           },
-          itemCount: viewModel.pokemons.length,
         ),
       );
     }
@@ -85,6 +87,24 @@ class HomeUI extends UI<HomeViewModel> {
         onPressed: () => context.router.go(Routes.form),
         child: Icon(Icons.format_align_center),
       ),
+    );
+  }
+
+  Widget _itemBuilder(BuildContext context, int index) {
+    final pokemon = context.viewModel<HomeViewModel>().pokemons[index];
+
+    return PokemonCard(
+      key: ValueKey(pokemon.name),
+      imageUrl: pokemon.imageUrl,
+      name: pokemon.name,
+      heroTag: pokemon.name,
+      onTap: () {
+        context.router.go(
+          Routes.profile,
+          params: {'pokemon_name': pokemon.name},
+          queryParams: {'image': pokemon.imageUrl},
+        );
+      },
     );
   }
 }

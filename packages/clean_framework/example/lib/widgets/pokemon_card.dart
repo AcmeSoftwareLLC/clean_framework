@@ -21,15 +21,16 @@ class PokemonCard extends StatelessWidget {
       cacheKey: name,
       url: imageUrl,
       onTap: onTap,
-      height: 160,
       margin: EdgeInsets.symmetric(vertical: 8),
       builder: (context, picture) {
         return Padding(
           padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.topLeft,
                 child: Text(
                   name,
                   style: Theme.of(context)
@@ -38,14 +39,11 @@ class PokemonCard extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.w300),
                 ),
               ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width / 2,
-                ),
-                child: picture == null
-                    ? const SizedBox.shrink()
-                    : Hero(tag: heroTag, child: picture),
-              ),
+              const SizedBox(height: 16),
+              Expanded(
+                  child: picture == null
+                      ? const SizedBox.shrink()
+                      : Hero(tag: heroTag, child: picture)),
             ],
           ),
         );
