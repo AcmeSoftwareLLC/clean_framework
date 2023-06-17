@@ -1,4 +1,9 @@
 # Changelog
+## 3.1.0
+**Jun 17, 2023**
+- Adds family for UseCaseProvider. [See the example](https://github.com/AcmeSoftwareLLC/clean_framework/blob/main/packages/clean_framework/example/lib/providers/use_case_providers.dart#L25) for usages.
+- Removes support for legacy use case filters.
+
 ## 3.0.1
 **Jun 15, 2023**
 - Exports [uniform](https://pub.dev/packages/uniform) package for form management and validation.
