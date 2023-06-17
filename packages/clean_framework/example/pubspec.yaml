@@ -22,9 +22,26 @@ dev_dependencies:
   mocktail: ^0.3.0
   flutter_test:
     sdk: flutter
+  icons_launcher: ^2.1.1
 
 flutter:
   uses-material-design: true
 
   assets:
     - assets/
+
+icons_launcher:
+  image_path: ../../../images/clean-framework.png
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+    web:
+      enable: true
+    macos:
+      enable: true
+    windows:
+      enable: true
+    linux:
+      enable: true
