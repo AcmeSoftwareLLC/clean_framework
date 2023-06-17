@@ -136,15 +136,51 @@ void main() {
       await expectation;
       await subscription.cancel();
     });
+
+    test('yielding response will update use case created using family',
+        () async {
+      final container = ProviderContainer();
+
+      final gateway = _testGatewayProvider.read(container);
+      final useCase = _testUseCaseProviderFamily('arg').read(container);
+
+      final expectation = expectLater(
+        useCase.stream,
+        emitsInOrder(
+          const [
+            TestEntity(message: 'Hello World 1!'),
+            TestEntity(message: 'Hello World 2!'),
+            TestEntity(message: 'Hello World 3!'),
+            TestEntity(message: 'Hello World 4!'),
+            TestEntity(message: 'Hello World 5!'),
+          ],
+        ),
+      );
+
+      _testUseCaseProviderFamily.init('arg');
+
+      final subscription = Stream.fromIterable([1, 2, 3, 4, 5]).listen((event) {
+        gateway.yieldResponse(TestSuccessResponse('Hello World $event!'));
+      });
+
+      await Future<void>.delayed(Duration.zero);
+      await expectation;
+      await subscription.cancel();
+    });
   });
 }
 
 final _testGatewayProvider = GatewayProvider(
   TestWatcherGateway.new,
   useCases: [_testUseCaseProvider],
+  families: [_testUseCaseProviderFamily],
 );
 
 final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final _testUseCaseProviderFamily =
+    UseCaseProvider.family<TestEntity, TestUseCase, String>(
+  (_) => TestUseCase(),
+);
 
 class TestEntity extends Entity {
   const TestEntity({this.message = ''});

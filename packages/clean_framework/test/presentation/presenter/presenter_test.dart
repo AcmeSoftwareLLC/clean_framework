@@ -15,6 +15,16 @@ void main() {
       expect(find.text('DEFAULT'), findsOneWidget);
     });
 
+    testWidgets('family variant displays widget correctly', (tester) async {
+      await tester.pumpWidget(
+        AppProviderScope(
+          child: MaterialApp(home: TestPresenter.family(message: 'arg')),
+        ),
+      );
+
+      expect(find.text('DEFAULT'), findsOneWidget);
+    });
+
     testWidgets('output change trigger onOutputUpdate', (tester) async {
       await tester.pumpWidget(
         AppProviderScope(
@@ -81,6 +91,11 @@ void main() {
 
 final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
 
+final _testUseCaseProviderFamily =
+    UseCaseProvider.family<TestEntity, TestUseCase, String>(
+  (name) => TestUseCase(name: name),
+);
+
 class TestPresenter
     extends Presenter<TestViewModel, TestUIOutput, TestUseCase> {
   TestPresenter({
@@ -102,6 +117,26 @@ class TestPresenter
                   ],
                 );
               },
+        );
+
+  TestPresenter.family({
+    super.key,
+    this.message = '',
+  }) : super.family(
+          family: _testUseCaseProviderFamily,
+          arg: message,
+          builder: (context) {
+            final viewModel = ViewModelScope.of<TestViewModel>(context);
+            return Column(
+              children: [
+                Text(viewModel.message),
+                ElevatedButton(
+                  onPressed: () => viewModel.update('FOO'),
+                  child: const Text('CLICK'),
+                ),
+              ],
+            );
+          },
         );
 
   final String message;
@@ -174,7 +209,7 @@ class TestEntity extends Entity {
 }
 
 class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase()
+  TestUseCase({this.name = ''})
       : super(
           entity: const TestEntity(message: 'DEFAULT'),
           transformers: [
@@ -183,6 +218,8 @@ class TestUseCase extends UseCase<TestEntity> {
             ),
           ],
         );
+
+  final String name;
 
   void update(String message) {
     entity = entity.copyWith(message: message);

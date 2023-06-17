@@ -17,12 +17,13 @@ class FormUseCase extends UseCase<FormEntity> {
   Future<void> initForm() async {
     final formController = entity.formController;
     final emailController = formController.getField(FormTags.email);
-    emailController
-      ..setValidators({const EmailInputFieldValidator()})
-      ..setValue('sales@acme-software.com');
+    emailController.setValidators({const EmailInputFieldValidator()});
 
     final passwordController = formController.getField(FormTags.password);
     passwordController.setValidators({const PasswordInputFieldValidator()});
+
+    final genderController = formController.getField(FormTags.gender);
+    genderController.setValue(Gender.male);
   }
 
   Future<void> login() async {

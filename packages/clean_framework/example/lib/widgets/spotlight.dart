@@ -55,11 +55,7 @@ class _SpotlightState extends State<Spotlight> {
             width: size.width,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(48),
-                ),
-                gradient: SweepGradient(
-                  center: FractionalOffset(0.9, 0.5),
+                gradient: LinearGradient(
                   colors: [
                     _getColor((p) => p.dominantColor),
                     _getColor((p) => p.vibrantColor),
@@ -82,7 +78,7 @@ class _SpotlightState extends State<Spotlight> {
                     stops: [
                       for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop
                     ],
-                    radius: pi / 4,
+                    radius: size.width / 600,
                   ),
                 ),
                 child: const SizedBox(),
@@ -90,12 +86,11 @@ class _SpotlightState extends State<Spotlight> {
             ),
           ),
           Positioned.fill(
-            top: size.width / 1.5,
+            top: size.height / 3,
             child: widget.builder(context),
           ),
           Positioned(
-            top: 0,
-            height: size.width * 1.2,
+            top: size.height / 7,
             width: size.width,
             child: Padding(
               padding: const EdgeInsets.all(32),

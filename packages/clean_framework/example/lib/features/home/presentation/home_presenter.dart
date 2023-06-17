@@ -26,7 +26,7 @@ class HomePresenter
       onRetry: useCase.fetchPokemons,
       isLoading: output.status == HomeStatus.loading,
       hasFailedLoading: output.status == HomeStatus.failed,
-      lastViewedPokemon: output.lastViewedPokemon,
+      loggedInEmail: output.loggedInEmail,
     );
   }
 

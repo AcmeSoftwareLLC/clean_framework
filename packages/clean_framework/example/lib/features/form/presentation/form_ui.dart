@@ -17,45 +17,50 @@ class FormUI extends UI<FormViewModel> {
   @override
   Widget build(BuildContext context, FormViewModel viewModel) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Form Demo')),
+      appBar: AppBar(title: const Text('Login')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: InputForm(
-          controller: viewModel.formController,
-          child: Column(
-            children: [
-              const TextInputField(
-                tag: FormTags.email,
-                hintText: 'Email',
-              ),
-              const SizedBox(height: 16),
-              const TextInputField(
-                tag: FormTags.password,
-                hintText: 'Password',
-                obscureText: true,
-                autoValidate: true,
-              ),
-              const SizedBox(height: 16),
-              DropdownInputField(
-                tag: FormTags.gender,
-                hintText: 'Gender',
-                width: MediaQuery.sizeOf(context).width - 32,
-                menuEntries: [
-                  for (final gender in Gender.values)
-                    DropdownMenuEntry(value: gender, label: gender.name),
+        child: Align(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: InputForm(
+              controller: viewModel.formController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const TextInputField(
+                    tag: FormTags.email,
+                    hintText: 'Email',
+                  ),
+                  const SizedBox(height: 16),
+                  const TextInputField(
+                    tag: FormTags.password,
+                    hintText: 'Password',
+                    obscureText: true,
+                    autoValidate: true,
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownInputField(
+                    tag: FormTags.gender,
+                    hintText: 'Gender',
+                    menuEntries: [
+                      for (final gender in Gender.values)
+                        DropdownMenuEntry(value: gender, label: gender.name),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const CheckboxInputField(
+                    tag: FormTags.rememberMe,
+                    label: 'Remember me',
+                  ),
+                  const SizedBox(height: 40),
+                  FormButton(
+                    onPressed: viewModel.onLogin,
+                    child: const Text('Login'),
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
-              const CheckboxInputField(
-                tag: FormTags.rememberMe,
-                label: 'Remember me',
-              ),
-              const SizedBox(height: 40),
-              FormButton(
-                onPressed: viewModel.onLogin,
-                child: const Text('Login'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
