@@ -13,7 +13,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
       - uses: subosito/flutter-action@v2
+
+      - name: 'Install Tools'
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+
+      - name: Get package dependencies
+        run: melos bs
+
       - uses: sarbagyastha/flutter-gh-pages@main
         with:
           workingDir: packages/clean_framework/example
