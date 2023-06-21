@@ -1,4 +1,8 @@
 # Changelog
+## 3.2.0
+**Jul 21, 2023**
+- Upgrades `uniform` package.
+
 ## 3.1.0
 **Jun 17, 2023**
 - Adds family for UseCaseProvider. [See the example](https://github.com/AcmeSoftwareLLC/clean_framework/blob/main/packages/clean_framework/example/lib/providers/use_case_providers.dart#L25) for usages.

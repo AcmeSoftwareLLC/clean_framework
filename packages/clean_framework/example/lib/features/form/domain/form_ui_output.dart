@@ -7,13 +7,17 @@ class FormUIOutput extends Output {
     required this.isLoading,
     required this.isLoggedIn,
     required this.userMeta,
+    required this.requireGender,
   });
 
   final FormController formController;
   final bool isLoading;
   final bool isLoggedIn;
   final UserMeta userMeta;
+  final bool requireGender;
 
   @override
-  List<Object> get props => [formController, isLoading, isLoggedIn, userMeta];
+  List<Object> get props {
+    return [formController, isLoading, isLoggedIn, userMeta, requireGender];
+  }
 }

@@ -14,7 +14,7 @@ class FormPresenter
 
   @override
   void onLayoutReady(BuildContext context, FormUseCase useCase) {
-    useCase.initForm();
+    useCase.fetchAndPrefillData();
   }
 
   @override
@@ -26,6 +26,7 @@ class FormPresenter
       formController: output.formController,
       isLoading: output.isLoading,
       isLoggedIn: output.isLoggedIn,
+      requireGender: output.requireGender,
       onLogin: useCase.login,
     );
   }
@@ -48,7 +49,6 @@ class FormPresenter
                 Text('Email: ${meta.email}'),
                 Text('Password: ${meta.password}'),
                 Text('Gender: ${meta.gender}'),
-                Text('Remember Me?: ${meta.rememberMe}'),
               ],
             ),
             actions: [

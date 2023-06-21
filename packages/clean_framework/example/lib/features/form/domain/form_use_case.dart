@@ -12,18 +12,38 @@ class FormUseCase extends UseCase<FormEntity> {
             ),
           ),
           transformers: [FormUIOutputTransformer()],
-        );
+        ) {
+    _emailController = TextFieldController.create(
+      entity.formController,
+      tag: FormTags.email,
+    )..setValidators({const EmailInputFieldValidator()});
+    _passwordController = TextFieldController.create(
+      entity.formController,
+      tag: FormTags.password,
+      autoValidate: true,
+    )..setValidators({const PasswordInputFieldValidator()});
+    _genderController = FieldController.create(
+      entity.formController,
+      tag: FormTags.gender,
+    )..setInitialValue(Gender.female);
 
-  Future<void> initForm() async {
-    final formController = entity.formController;
-    final emailController = formController.getField(FormTags.email);
-    emailController.setValidators({const EmailInputFieldValidator()});
+    FieldController<bool>.create(
+      entity.formController,
+      tag: FormTags.selectGender,
+    )
+      ..setInitialValue(true)
+      ..onUpdate(_onSelectGenderUpdate);
+  }
 
-    final passwordController = formController.getField(FormTags.password);
-    passwordController.setValidators({const PasswordInputFieldValidator()});
+  late final TextFieldController _emailController;
+  late final TextFieldController _passwordController;
+  late final FieldController<Gender> _genderController;
 
-    final genderController = formController.getField(FormTags.gender);
-    genderController.setValue(Gender.male);
+  Future<void> fetchAndPrefillData() async {
+    // Simulates fetching form data from api
+    await Future<void>.delayed(const Duration(seconds: 1));
+
+    entity.formController(FormTags.selectGender).setValue(false);
   }
 
   Future<void> login() async {
@@ -33,17 +53,28 @@ class FormUseCase extends UseCase<FormEntity> {
       formController.setSubmitted(true);
 
       // Simulates login
-      await Future<void>.delayed(const Duration(seconds: 2));
+      await Future<void>.delayed(const Duration(seconds: 1));
 
       final userMeta = UserMeta(
-        email: formController.getValue(FormTags.email) ?? '',
-        password: formController.getValue(FormTags.password) ?? '',
-        gender: formController.getValue<Gender>(FormTags.gender)?.name ?? '',
-        rememberMe: formController.getValue(FormTags.rememberMe) ?? false,
+        email: _emailController.value ?? '',
+        password: _passwordController.value ?? '',
+        gender: _genderController.value?.name ?? '',
       );
       entity = entity.copyWith(state: FormState.success, userMeta: userMeta);
       formController.setSubmitted(false);
+
+      entity = entity.copyWith(state: FormState.initial);
     }
+  }
+
+  void _onSelectGenderUpdate(bool? selectGender) {
+    entity = entity.copyWith(requireGender: selectGender ?? false);
+  }
+
+  @override
+  void dispose() {
+    entity.formController.dispose();
+    super.dispose();
   }
 }
 
@@ -56,6 +87,7 @@ class FormUIOutputTransformer
       isLoading: entity.state == FormState.loading,
       isLoggedIn: entity.state == FormState.success,
       userMeta: entity.userMeta,
+      requireGender: entity.requireGender,
     );
   }
 }
