@@ -4,7 +4,7 @@ enum FormTags {
   email,
   password,
   gender,
-  rememberMe,
+  selectGender,
 }
 
 enum FormState {
@@ -19,24 +19,28 @@ class FormEntity extends Entity {
     required this.formController,
     this.state = FormState.initial,
     this.userMeta = const UserMeta(),
+    this.requireGender = true,
   });
 
   final FormController formController;
   final FormState state;
   final UserMeta userMeta;
+  final bool requireGender;
 
   @override
-  List<Object> get props => [formController, state, userMeta];
+  List<Object> get props => [formController, state, userMeta, requireGender];
 
   @override
   FormEntity copyWith({
     FormState? state,
     UserMeta? userMeta,
+    bool? requireGender,
   }) {
     return FormEntity(
       formController: formController,
       state: state ?? this.state,
       userMeta: userMeta ?? this.userMeta,
+      requireGender: requireGender ?? this.requireGender,
     );
   }
 }
@@ -46,16 +50,14 @@ class UserMeta extends Entity {
     this.email = '',
     this.password = '',
     this.gender = '',
-    this.rememberMe = false,
   });
 
   final String email;
   final String password;
   final String gender;
-  final bool rememberMe;
 
   @override
-  List<Object> get props => [email, password, gender, rememberMe];
+  List<Object> get props => [email, password, gender];
 }
 
 enum Gender {

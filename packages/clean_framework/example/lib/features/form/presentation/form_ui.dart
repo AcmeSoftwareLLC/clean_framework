@@ -37,22 +37,25 @@ class FormUI extends UI<FormViewModel> {
                     tag: FormTags.password,
                     hintText: 'Password',
                     obscureText: true,
-                    autoValidate: true,
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownInputField(
-                    tag: FormTags.gender,
-                    hintText: 'Gender',
-                    menuEntries: [
-                      for (final gender in Gender.values)
-                        DropdownMenuEntry(value: gender, label: gender.name),
-                    ],
                   ),
                   const SizedBox(height: 16),
                   const CheckboxInputField(
-                    tag: FormTags.rememberMe,
-                    label: 'Remember me',
+                    tag: FormTags.selectGender,
+                    label: 'Select Gender?',
                   ),
+                  if (viewModel.requireGender)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: DropdownInputField(
+                        tag: FormTags.gender,
+                        hintText: 'Gender',
+                        menuEntries: [
+                          for (final gender in Gender.values)
+                            DropdownMenuEntry(
+                                value: gender, label: gender.name),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 40),
                   FormButton(
                     onPressed: viewModel.onLogin,

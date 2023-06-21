@@ -15,7 +15,6 @@ class CheckboxInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return InputFieldBuilder<bool>(
       tag: tag,
-      initialValue: false,
       builder: (context, controller, _) {
         return CheckboxListTile(
           value: controller.value,
