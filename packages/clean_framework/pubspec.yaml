@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.3.6
+  logger: ^1.4.0
   meta: '>=1.8.0 <2.0.0'
   stack_trace: '>=1.10.0 <1.12.0'
   uniform: ^2.0.0
