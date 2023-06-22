@@ -1,9 +1,6 @@
 import 'dart:developer';
 
-import 'package:clean_framework/src/core/external_interface/request.dart';
-import 'package:clean_framework/src/core/external_interface/response.dart';
-import 'package:clean_framework/src/core/use_case/helpers/input.dart';
-import 'package:clean_framework/src/providers/external_interface.dart';
+import 'package:clean_framework/src/core/core.dart';
 import 'package:meta/meta.dart';
 
 /// The class to observe failures, route changes and other events.
@@ -49,8 +46,19 @@ class CleanFrameworkObserver {
     FailureResponse failureResponse,
   ) {}
 
-  /// Called when a [failure] occurs in a gateway.
-  void onFailureInput(FailureInput failure) {}
+  /// Called when a success [input] occurs in an use case.
+  void onSuccessInput(
+    UseCase useCase,
+    Output gatewayOutput,
+    SuccessInput input,
+  ) {}
+
+  /// Called when a failure [input] occurs in an use case.
+  void onFailureInput(
+    UseCase useCase,
+    Output gatewayOutput,
+    FailureInput input,
+  ) {}
 
   /// Called when [location] of the route changes.
   void onLocationChanged(String location) {}

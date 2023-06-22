@@ -4,7 +4,6 @@ import 'package:clean_framework/src/core/external_interface/request.dart';
 import 'package:clean_framework/src/core/external_interface/response.dart';
 import 'package:clean_framework/src/core/use_case/provider/use_case_provider.dart';
 import 'package:clean_framework/src/core/use_case/use_case.dart';
-import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
@@ -65,15 +64,9 @@ abstract class Gateway<O extends Output, R extends Request,
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await _source!.responder(request);
     return either.fold(
-      (failureResponse) => Either.left(_onFailure(failureResponse)),
+      (failureResponse) => Either.left(onFailure(failureResponse)),
       (response) => Either.right(onSuccess(response)),
     );
-  }
-
-  FailureInput _onFailure(FailureResponse failureResponse) {
-    final failureInput = onFailure(failureResponse);
-    CleanFrameworkObserver.instance.onFailureInput(failureInput);
-    return failureInput;
   }
 }
 
