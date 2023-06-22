@@ -1,4 +1,9 @@
 # Changelog
+## 3.2.1
+**Jul 22, 2023**
+- Adds `onSuccessInput` and `onFailureInput` to **CleanFrameworkObserver**.
+- Better logging.
+
 ## 3.2.0
 **Jul 21, 2023**
 - Upgrades `uniform` package.
