@@ -1,17 +1,15 @@
-import 'dart:developer';
-
-import 'package:clean_framework/src/core/external_interface/request.dart';
-import 'package:clean_framework/src/core/external_interface/response.dart';
-import 'package:clean_framework/src/core/use_case/helpers/input.dart';
-import 'package:clean_framework/src/providers/external_interface.dart';
-import 'package:meta/meta.dart';
+import 'package:clean_framework/src/core/core.dart';
+import 'package:logger/logger.dart';
 
 /// The class to observe failures, route changes and other events.
 class CleanFrameworkObserver {
   /// Default constructor.
   CleanFrameworkObserver({
     this.enableNetworkLogs = true,
-  });
+    Logger? logger,
+  }) : logger = logger ?? Logger();
+
+  final Logger logger;
 
   /// Enables network logs.
   final bool enableNetworkLogs;
@@ -26,19 +24,17 @@ class CleanFrameworkObserver {
 
   /// Called when an [error] is thrown by [ExternalInterface]
   /// for the given [request].
-  @mustCallSuper
   void onExternalError(
     Object externalInterface,
     Request request,
     Object error,
     StackTrace stackTrace,
   ) {
-    log(
+    logger.e(
       'Error occurred while requesting "${request.runtimeType}" '
       'for "${externalInterface.runtimeType}"',
-      name: 'Clean Framework',
-      stackTrace: stackTrace,
-      error: error,
+      error,
+      stackTrace,
     );
   }
 
@@ -49,8 +45,31 @@ class CleanFrameworkObserver {
     FailureResponse failureResponse,
   ) {}
 
-  /// Called when a [failure] occurs in a gateway.
-  void onFailureInput(FailureInput failure) {}
+  /// Called when a success [input] occurs in an use case.
+  void onSuccessInput(
+    UseCase useCase,
+    Output gatewayOutput,
+    SuccessInput input,
+  ) {
+    logger.d(
+      '[${useCase.runtimeType}] $gatewayOutput\n' '[Success] $input',
+      null,
+      StackTrace.empty,
+    );
+  }
+
+  /// Called when a failure [input] occurs in an use case.
+  void onFailureInput(
+    UseCase useCase,
+    Output gatewayOutput,
+    FailureInput input,
+  ) {
+    logger.d(
+      '[${useCase.runtimeType}] $gatewayOutput\n' '[Failure] ${input.message}',
+      null,
+      StackTrace.empty,
+    );
+  }
 
   /// Called when [location] of the route changes.
   void onLocationChanged(String location) {}

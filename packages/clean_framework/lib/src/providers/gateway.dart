@@ -30,15 +30,9 @@ abstract class Gateway<O extends Output, R extends Request,
   Future<Either<FailureInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
-      (failureResponse) => Either.left(_onFailure(failureResponse)),
+      (failureResponse) => Either.left(onFailure(failureResponse)),
       (response) => Either.right(onSuccess(response)),
     );
-  }
-
-  FailureInput _onFailure(FailureResponse failureResponse) {
-    final failureInput = onFailure(failureResponse);
-    CleanFrameworkObserver.instance.onFailureInput(failureInput);
-    return failureInput;
   }
 }
 
