@@ -4,6 +4,7 @@ import 'package:clean_framework/src/core/use_case/entity.dart';
 import 'package:clean_framework/src/core/use_case/helpers/use_case_input.dart';
 import 'package:clean_framework/src/core/use_case/use_case_debounce_mixin.dart';
 import 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
+import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
@@ -93,14 +94,18 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     required InputCallback<E, S> onSuccess,
     required InputCallback<E, FailureInput> onFailure,
   }) async {
-    final input = await _requestSubscriptions.getInput(output);
+    final input = await _requestSubscriptions.getInput<S>(output);
 
-    if (mounted) {
-      entity = input.fold(
-        onFailure,
-        (successInput) => onSuccess(successInput as S),
-      );
-    }
+    entity = input.fold(
+      (failure) {
+        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
+        return onFailure(failure);
+      },
+      (success) {
+        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
+        return onSuccess(success);
+      },
+    );
   }
 
   @visibleForTesting
@@ -110,7 +115,16 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   ) async {
     final input = await _requestSubscriptions.getInput<S>(output);
 
-    return input.fold(Failure.new, Success.new);
+    return input.fold(
+      (failure) {
+        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
+        return Failure(failure);
+      },
+      (success) {
+        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
+        return Success(success);
+      },
+    );
   }
 
   @override
