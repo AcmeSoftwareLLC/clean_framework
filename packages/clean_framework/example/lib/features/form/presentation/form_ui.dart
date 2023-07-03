@@ -52,7 +52,9 @@ class FormUI extends UI<FormViewModel> {
                         menuEntries: [
                           for (final gender in Gender.values)
                             DropdownMenuEntry(
-                                value: gender, label: gender.name),
+                              value: gender,
+                              label: gender.name,
+                            ),
                         ],
                       ),
                     ),
