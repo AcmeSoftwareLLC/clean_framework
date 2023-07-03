@@ -1,11 +1,15 @@
 # Changelog
+## 3.2.2
+**Jul 3, 2023**
+- Fixes issue with watcher gateway sending inputs multiple times.
+
 ## 3.2.1
-**Jul 22, 2023**
+**Jun 22, 2023**
 - Adds `onSuccessInput` and `onFailureInput` to **CleanFrameworkObserver**.
 - Better logging.
 
 ## 3.2.0
-**Jul 21, 2023**
+**Jun 21, 2023**
 - Upgrades `uniform` package.
 
 ## 3.1.0
