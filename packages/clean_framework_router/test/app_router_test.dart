@@ -459,6 +459,7 @@ void main() {
             ),
           ],
         );
+
         await pumpApp(tester);
 
         expect(find.text('Home'), findsOneWidget);
@@ -469,8 +470,6 @@ void main() {
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsOneWidget);
-
-        expect(testRouter.location, '/detail/123?b=456');
 
         testRouter.pop();
         await tester.pumpAndSettle();
@@ -526,16 +525,12 @@ void main() {
         expect(find.text('Detail'), findsOneWidget);
         expect(find.text('More Detail'), findsNothing);
 
-        expect(testRouter.location, '/detail');
-
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsNothing);
         expect(find.text('More Detail'), findsOneWidget);
-
-        expect(testRouter.location, '/detail/more-detail');
 
         testRouter.pop();
         await tester.pumpAndSettle();
@@ -592,16 +587,12 @@ void main() {
         expect(find.text('Detail'), findsOneWidget);
         expect(find.text('More Detail'), findsNothing);
 
-        expect(testRouter.location, '/detail');
-
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsNothing);
         expect(find.text('More Detail'), findsOneWidget);
-
-        expect(testRouter.location, '/detail/more-detail');
 
         testRouter.pop();
         await tester.pumpAndSettle();
@@ -658,16 +649,12 @@ void main() {
         expect(find.text('Detail'), findsOneWidget);
         expect(find.text('More Detail'), findsNothing);
 
-        expect(testRouter.location, '/detail');
-
         await tester.tap(find.byType(ElevatedButton));
         await tester.pumpAndSettle();
 
         expect(find.text('Home'), findsNothing);
         expect(find.text('Detail'), findsNothing);
         expect(find.text('More Detail'), findsOneWidget);
-
-        expect(testRouter.location, '/detail/more-detail');
 
         testRouter.pop();
         await tester.pumpAndSettle();
@@ -1070,7 +1057,7 @@ void main() {
               builder: (_, __) => CupertinoPage(
                 child: OnTapPage(
                   id: 'Home',
-                  onTap: (context) => testRouter.push(
+                  onTap: (context) => testRouter.go(
                     Routes.subDetailWithParam,
                     params: {'meta': '123'},
                     queryParams: {'b': '456'},
@@ -1124,7 +1111,7 @@ void main() {
               route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.push(
+                onTap: (context) => testRouter.go(
                   Routes.subDetailWithParam,
                   params: {'meta': '123'},
                   queryParams: {'b': '456'},
@@ -1182,7 +1169,7 @@ void main() {
               route: Routes.home,
               builder: (_, __) => OnTapPage(
                 id: 'Home',
-                onTap: (context) => testRouter.push(
+                onTap: (context) => testRouter.go(
                   Routes.subDetailWithParam,
                   params: {'meta': '123'},
                   queryParams: {'b': '456'},

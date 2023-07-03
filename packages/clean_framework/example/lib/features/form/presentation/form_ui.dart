@@ -1,10 +1,9 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/form/domain/form_entity.dart';
+import 'package:clean_framework_example/features/form/presentation/form_presenter.dart';
+import 'package:clean_framework_example/features/form/presentation/form_view_model.dart';
 import 'package:clean_framework_example/widgets/fields.dart';
 import 'package:flutter/material.dart';
-
-import 'package:clean_framework_example/features/form/presentation/form_view_model.dart';
-import 'package:clean_framework_example/features/form/presentation/form_presenter.dart';
 
 class FormUI extends UI<FormViewModel> {
   FormUI({super.key});
@@ -52,7 +51,9 @@ class FormUI extends UI<FormViewModel> {
                         menuEntries: [
                           for (final gender in Gender.values)
                             DropdownMenuEntry(
-                                value: gender, label: gender.name),
+                              value: gender,
+                              label: gender.name,
+                            ),
                         ],
                       ),
                     ),

@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 /// Wrapper class around [GoRouter].
 abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   AppRouter() {
-    _router = configureRouter()..addListener(_onLocationChanged);
+    _router = configureRouter()..routerDelegate.addListener(_onLocationChanged);
   }
 
   late final RouterConfiguration _router;
@@ -90,14 +90,16 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
 
   @override
   VoidCallback addListener(VoidCallback listener) {
-    _router.addListener(listener);
-    return () => _router.removeListener(listener);
+    _router.routerDelegate.addListener(listener);
+    return () => _router.routerDelegate.removeListener(listener);
   }
 
   void refresh() => _router.refresh();
 
   @override
-  String get location => _router.location;
+  String get location {
+    return _router.routerDelegate.currentConfiguration.uri.toString();
+  }
 
   RouterConfig<Object> get config => _router;
 
@@ -126,7 +128,7 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
 
   @override
   void dispose() {
-    _router.removeListener(_onLocationChanged);
+    _router.routerDelegate.removeListener(_onLocationChanged);
   }
 
   static AppRouter of(BuildContext context) {
