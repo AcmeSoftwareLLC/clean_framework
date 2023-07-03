@@ -7,11 +7,11 @@ screenshots:
   - description: 'Clean Framework'
     path: screenshots/clean-framework.png
 topics:
-  - clean_architecture
+  - clean-architecture
   - clean
   - framework
   - form
-  - feature_flag
+  - feature-flag
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
