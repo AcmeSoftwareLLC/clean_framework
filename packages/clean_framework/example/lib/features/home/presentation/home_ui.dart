@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example/routing/routes.dart';
@@ -45,7 +46,10 @@ class HomeUI extends UI<HomeViewModel> {
                 childAspectRatio: width / height,
               ),
               itemCount: viewModel.pokemons.length,
-              itemBuilder: _itemBuilder,
+              itemBuilder: (context, index) => _itemBuilder(
+                context,
+                viewModel.pokemons[index],
+              ),
             );
           },
         ),
@@ -90,9 +94,7 @@ class HomeUI extends UI<HomeViewModel> {
     );
   }
 
-  Widget _itemBuilder(BuildContext context, int index) {
-    final pokemon = context.viewModel<HomeViewModel>().pokemons[index];
-
+  Widget _itemBuilder(BuildContext context, PokemonModel pokemon) {
     return PokemonCard(
       key: ValueKey(pokemon.name),
       imageUrl: pokemon.imageUrl,

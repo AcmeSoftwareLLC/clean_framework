@@ -27,7 +27,7 @@ abstract class Gateway<O extends Output, R extends Request,
     }
   }
 
-  final List<UseCase> _useCases = [];
+  final Set<UseCase> _useCases = {};
 
   void _subscribe(ProviderRef<Object> ref, Refreshable<UseCase> notifier) {
     final useCase = ref.read(notifier);
