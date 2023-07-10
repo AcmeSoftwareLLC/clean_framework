@@ -1,5 +1,9 @@
 export 'package:go_router/go_router.dart'
-    show ShellRoute, StatefulNavigationShell, StatefulShellRoute;
+    show
+        ShellRoute,
+        StatefulNavigationShell,
+        StatefulShellBranch,
+        StatefulShellRoute;
 
 export 'src/app_route.dart';
 export 'src/app_router.dart';
