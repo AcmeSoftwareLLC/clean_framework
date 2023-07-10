@@ -7,10 +7,31 @@ import 'package:go_router/go_router.dart';
 /// Wrapper class around [GoRouter].
 abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   AppRouter() {
+    GoRouter.optionURLReflectsImperativeAPIs = optionURLReflectsImperativeAPIs;
     _router = configureRouter()..routerDelegate.addListener(_onLocationChanged);
   }
 
   late final RouterConfiguration _router;
+
+  /// Whether the imperative API affects browser URL bar.
+  ///
+  /// The Imperative APIs refer to [push], [pushReplacement].
+  ///
+  /// If this option is set to true. The URL bar reflects the top-most [GoRoute]
+  /// regardless the [RouteBase]s underneath.
+  ///
+  /// If this option is set to false. The URL bar reflects the [RouteBase]s
+  /// in the current state but ignores any [RouteBase]s that are results of
+  /// imperative API calls.
+  ///
+  /// Defaults to false.
+  ///
+  /// This option is for backward compatibility. It is strongly suggested
+  /// against setting this value to true, as the URL of the top-most [GoRoute]
+  /// is not always deeplink-able.
+  ///
+  /// This option only affects web platform.
+  bool get optionURLReflectsImperativeAPIs => false;
 
   @override
   void go(

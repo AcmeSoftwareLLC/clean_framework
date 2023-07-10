@@ -1,4 +1,9 @@
 # Changelog
+## 0.5.3
+**July 10, 2023**
+- Bumps dependencies to latest version.
+- Exposes shell route related classes from go_router.
+
 ## 0.5.2
 **July 3, 2023**
 - Bumps dependencies to latest version.
