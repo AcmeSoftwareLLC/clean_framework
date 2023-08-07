@@ -9,7 +9,7 @@ class FormButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InputActionBuilder(
+    return UniformBuilder(
       builder: (context, controller, _) {
         final isEnabled = controller.contains({InputFormState.touched}) &&
             !controller.isSubmitted;

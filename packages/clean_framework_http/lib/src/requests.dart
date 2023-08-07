@@ -43,5 +43,5 @@ abstract class HeadHttpRequest extends HttpRequest {
 }
 
 abstract class DeleteHttpRequest extends HttpRequest {
-  const DeleteHttpRequest({super.cancelToken}) : super(HttpMethods.head);
+  const DeleteHttpRequest({super.cancelToken}) : super(HttpMethods.delete);
 }
