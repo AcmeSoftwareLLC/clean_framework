@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.5
+**August 7, 2023**
+- Bumps dependencies to latest version.
+
 ## 0.5.4
 **July 10, 2023**
 - Exports `StatefulShellBranch`.
