@@ -33,8 +33,8 @@ class CleanFrameworkObserver {
     logger.e(
       'Error occurred while requesting "${request.runtimeType}" '
       'for "${externalInterface.runtimeType}"',
-      error,
-      stackTrace,
+      error: error,
+      stackTrace: stackTrace,
     );
   }
 
@@ -53,8 +53,7 @@ class CleanFrameworkObserver {
   ) {
     logger.d(
       '[${useCase.runtimeType}] $gatewayOutput\n' '[Success] $input',
-      null,
-      StackTrace.empty,
+      stackTrace: StackTrace.empty,
     );
   }
 
@@ -66,8 +65,7 @@ class CleanFrameworkObserver {
   ) {
     logger.d(
       '[${useCase.runtimeType}] $gatewayOutput\n' '[Failure] ${input.message}',
-      null,
-      StackTrace.empty,
+      stackTrace: StackTrace.empty,
     );
   }
 

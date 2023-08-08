@@ -898,7 +898,7 @@ void main() {
             ),
           ],
           redirect: (context, state) {
-            if (state.location == '/detail') return '/more-detail';
+            if (state.uri.toString() == '/detail') return '/more-detail';
             return null;
           },
         );

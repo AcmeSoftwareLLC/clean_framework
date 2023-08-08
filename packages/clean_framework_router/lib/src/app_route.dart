@@ -77,16 +77,18 @@ class AppRouterState {
   });
 
   factory AppRouterState.from(GoRouterState state) {
+    final uri = state.uri;
+
     return AppRouterState._(
       pageKey: state.pageKey,
-      location: state.location,
+      location: uri.toString(),
       matchedLocation: state.matchedLocation,
       name: state.name,
       path: state.path,
       fullPath: state.fullPath,
       params: state.pathParameters,
-      queryParams: state.queryParameters,
-      queryParamsAll: state.queryParametersAll,
+      queryParams: uri.queryParameters,
+      queryParamsAll: uri.queryParametersAll,
       extra: state.extra,
       error: state.error,
     );
