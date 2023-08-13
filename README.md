@@ -14,7 +14,8 @@ Go to [the documentation](https://docs.page/AcmeSoftwareLLC/clean_framework).
 
 ### Example
 
-Example Project: https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework/example
+Example Project: [Link](https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework/example)
+
 Example Web Demo: https://acmesoftwarellc.github.io/clean_framework/
 
 ### Tools
