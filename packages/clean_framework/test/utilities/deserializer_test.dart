@@ -42,7 +42,7 @@ void main() {
     test('should return a map', () {
       final data = Deserializer(
         {
-          'key': {'key': 'value'}
+          'key': {'key': 'value'},
         },
       );
       expect(data.getMap('key'), {'key': 'value'});
@@ -51,7 +51,7 @@ void main() {
     test('should return a list of strings', () {
       final data = Deserializer(
         {
-          'key': ['value']
+          'key': ['value'],
         },
       );
       expect(data.getSimpleList('key'), ['value']);
@@ -60,7 +60,7 @@ void main() {
     test('should return a list of ints', () {
       final data = Deserializer(
         {
-          'key': [1]
+          'key': [1],
         },
       );
       expect(data.getSimpleList('key'), [1]);
@@ -69,7 +69,7 @@ void main() {
     test('should return a list of doubles', () {
       final data = Deserializer(
         {
-          'key': [1.0]
+          'key': [1.0],
         },
       );
       expect(data.getSimpleList('key'), [1.0]);
@@ -78,7 +78,7 @@ void main() {
     test('should return a list of bools', () {
       final data = Deserializer(
         {
-          'key': [true]
+          'key': [true],
         },
       );
       expect(data.getSimpleList('key'), [true]);
@@ -88,14 +88,14 @@ void main() {
       final data = Deserializer(
         {
           'key': [
-            {'key': 'value'}
-          ]
+            {'key': 'value'},
+          ],
         },
       );
       expect(
         data.getSimpleList('key'),
         [
-          {'key': 'value'}
+          {'key': 'value'},
         ],
       );
     });
@@ -105,16 +105,16 @@ void main() {
         {
           'key': [
             [
-              {'key': 'value'}
+              {'key': 'value'},
             ]
-          ]
+          ],
         },
       );
       expect(
         data.getSimpleList('key'),
         [
           [
-            {'key': 'value'}
+            {'key': 'value'},
           ]
         ],
       );
@@ -124,8 +124,8 @@ void main() {
       final data = Deserializer(
         {
           'key': [
-            {'key': 'value'}
-          ]
+            {'key': 'value'},
+          ],
         },
       );
       expect(
@@ -197,7 +197,7 @@ void main() {
     test('nested deserializer', () {
       final data = Deserializer(
         {
-          'key': {'inner_key': 'Hello world!'}
+          'key': {'inner_key': 'Hello world!'},
         },
       );
 
@@ -233,7 +233,7 @@ void main() {
       'throws assertion error if item in list in not a Map when using getList',
       () {
         final data = {
-          'key': [1, 2]
+          'key': [1, 2],
         }.deserialize;
 
         expect(

@@ -281,16 +281,16 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
           'returnType': 'object',
           'variants': {
             'a': [1, 2],
-            'b': [2, 3]
+            'b': [2, 3],
           },
           'defaultVariant': 'a',
-          'state': 'enabled'
+          'state': 'enabled',
         },
         'boolean': {
           'returnType': 'boolean',
           'variants': {'a': true, 'b': false},
           'defaultVariant': 'a',
-          'state': 'enabled'
+          'state': 'enabled',
         },
         'color': {
           'returnType': 'number',
@@ -298,10 +298,10 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
             'red': 4294901760,
             'green': 4278255360,
             'blue': 4278190335,
-            'purple': 4285140397
+            'purple': 4285140397,
           },
           'defaultVariant': 'red',
-          'state': 'enabled'
+          'state': 'enabled',
         },
         'exampleFeatures': {
           'returnType': 'string',
@@ -309,7 +309,7 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
             'query': 'firebase,graphql',
             'restful': 'graphql,rest',
             'traditional': 'rest',
-            'all': 'firebase,graphql,rest'
+            'all': 'firebase,graphql,rest',
           },
           'defaultVariant': 'query',
           'state': 'enabled',
@@ -317,17 +317,17 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
             {
               'action': {'variant': 'restful'},
               'conditions': [
-                {'context': 'platform', 'op': 'equals', 'value': 'iOS'}
-              ]
+                {'context': 'platform', 'op': 'equals', 'value': 'iOS'},
+              ],
             },
             {
               'action': {'variant': 'all'},
               'conditions': [
-                {'context': 'platform', 'op': 'equals', 'value': 'android'}
-              ]
+                {'context': 'platform', 'op': 'equals', 'value': 'android'},
+              ],
             }
-          ]
-        }
+          ],
+        },
       },
     );
   }
