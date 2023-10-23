@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.7
+**October 23, 2023**
+- Added `parentNavigatorKey` and `onExit` to **AppRoute**.
+
 ## 0.5.6
 **October 19, 2023**
 - Bumps dependencies to latest version.

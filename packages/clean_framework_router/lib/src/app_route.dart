@@ -13,6 +13,8 @@ class AppRoute extends GoRoute {
   AppRoute({
     required this.route,
     RouteWidgetBuilder? builder,
+    super.onExit,
+    super.parentNavigatorKey,
     super.routes,
     super.redirect,
   }) : super(
@@ -26,6 +28,8 @@ class AppRoute extends GoRoute {
   AppRoute.page({
     required this.route,
     RoutePageBuilder? builder,
+    super.onExit,
+    super.parentNavigatorKey,
     super.routes,
     super.redirect,
   }) : super(
@@ -40,6 +44,8 @@ class AppRoute extends GoRoute {
     required this.route,
     RouteWidgetBuilder? builder,
     RouteTransitionsBuilder? transitionsBuilder,
+    super.onExit,
+    super.parentNavigatorKey,
     super.routes,
     super.redirect,
   }) : super(
