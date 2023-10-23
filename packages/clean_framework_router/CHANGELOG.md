@@ -1,7 +1,12 @@
 # Changelog
+## 0.5.8
+**October 23, 2023**
+- Adds `result` argument to **pop**.
+- Adds `canPop`.
+
 ## 0.5.7
 **October 23, 2023**
-- Added `parentNavigatorKey` and `onExit` to **AppRoute**.
+- Adds `parentNavigatorKey` and `onExit` to **AppRoute**.
 
 ## 0.5.6
 **October 19, 2023**

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
-typedef RouterParams = Map<String, String>;
+typedef RouterParams<T> = Map<String, T>;
 typedef RouterConfiguration = GoRouter;
 
 abstract class AppRouterBase<R extends Enum> {
@@ -12,8 +12,8 @@ abstract class AppRouterBase<R extends Enum> {
   /// might be cleared based on the composition of new [route].
   void go(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   });
 
@@ -22,16 +22,16 @@ abstract class AppRouterBase<R extends Enum> {
   /// i.e navigation stack is maintained and previous routes are preserved.
   Future<T?> push<T extends Object>(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   });
 
   /// Replaces the top-most page of the page stack with the given [route].
   Future<void> pushReplacement(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   });
 
@@ -55,15 +55,18 @@ abstract class AppRouterBase<R extends Enum> {
     Object? extra,
   });
 
+  /// Returns `true` if the page stack can be navigated back.
+  bool canPop();
+
   /// Navigates the page back to the previous route if available.
-  void pop();
+  void pop<T extends Object?>([T result]);
 
   /// Constructs the full location of the given [route]
   /// with [params] and [queryParams].
   String locationOf(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
   });
 
   /// Register a closure to be called when the navigation stack changes.

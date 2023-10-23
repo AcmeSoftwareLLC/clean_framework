@@ -36,8 +36,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   @override
   void go(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) {
     return _router.goNamed(
@@ -51,8 +51,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   @override
   Future<T?> push<T extends Object>(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) {
     return _router.pushNamed(
@@ -66,8 +66,8 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   @override
   Future<void> pushReplacement(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) {
     return _router.pushReplacementNamed(
@@ -94,13 +94,18 @@ abstract class AppRouter<R extends Enum> implements AppRouterBase<R> {
   }
 
   @override
-  void pop() => _router.pop();
+  bool canPop() => _router.canPop();
+
+  @override
+  void pop<T extends Object?>([T? result]) {
+    return _router.pop(result);
+  }
 
   @override
   String locationOf(
     R route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
   }) {
     return _router.namedLocation(
       route.name,
