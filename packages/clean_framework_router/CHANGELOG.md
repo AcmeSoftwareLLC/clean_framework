@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.9
+**November 24, 2023**
+- Bumps dependencies to latest version.
+
 ## 0.5.8
 **October 23, 2023**
 - Adds `result` argument to **pop**.

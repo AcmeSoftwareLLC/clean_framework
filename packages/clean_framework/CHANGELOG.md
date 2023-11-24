@@ -1,4 +1,8 @@
 # Changelog
+## 3.2.4
+**Nov 24, 2023**
+- Bumps dependencies to latest version.
+
 ## 3.2.3
 **Aug 7, 2023**
 - Bumps dependencies to latest version.
