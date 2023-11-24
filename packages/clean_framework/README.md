@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/AcmeSoftwareLLC/clean_framework/main/images/clean-framework.png" height="100" alt="Clean Framework"/>
+<img src="https://github.com/AcmeSoftwareLLC/clean-framework-intellij/blob/main/src/main/resources/META-INF/pluginIcon.svg" height="100" alt="Clean Framework" />
 </p>
 
 <p align="center">
@@ -10,7 +10,14 @@
 
 Flutter implementation of Clean Architecture, inspired on the guidelines created by Uncle Bob.
 
-Go to [the documentation](https://docs.page/AcmeSoftwareLLC/clean_framework).
+Go to [the documentation](https://cleanframework.acmesoftware.com).
+
+### Example
+
+Example Project: [Link](https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework/example)
+
+Example Web Demo: https://cleanframeworkdemo.acmesoftware.com
 
 ### Tools
+
 [Clean Framework IntelliJ Plugin](https://plugins.jetbrains.com/plugin/21072-clean-framework)

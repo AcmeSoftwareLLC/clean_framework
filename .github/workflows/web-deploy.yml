@@ -26,4 +26,4 @@ jobs:
       - uses: sarbagyastha/flutter-gh-pages@main
         with:
           workingDir: packages/clean_framework/example
-          baseHref: /clean_framework/
+          baseHref: /
