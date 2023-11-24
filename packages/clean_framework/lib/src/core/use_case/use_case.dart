@@ -55,7 +55,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   /// Will not work in release mode.
   ///
   /// This is useful for tests.
-  E get debugEntity => super.debugState;
+  E get debugEntity => super.state;
 
   @visibleForTesting
 
@@ -64,7 +64,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     late E updatedEntity;
     assert(
       () {
-        updatedEntity = entity = update(super.debugState);
+        updatedEntity = entity = update(super.state);
         return true;
       }(),
       '',
