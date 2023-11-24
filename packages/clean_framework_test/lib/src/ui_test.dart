@@ -28,8 +28,8 @@ class UITestRouteData {
 
   final UITestRouteAction action;
   final Object? extra;
-  final RouterParams params;
-  final RouterParams queryParams;
+  final RouterParams<String> params;
+  final RouterParams<dynamic> queryParams;
   final String? location;
   final Enum? route;
 
@@ -53,8 +53,8 @@ class UITestRouter extends AppRouter {
   @override
   void go(
     Enum route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) {
     _routeData = UITestRouteData(
@@ -69,8 +69,8 @@ class UITestRouter extends AppRouter {
   @override
   Future<T?> push<T extends Object>(
     Enum route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) {
     _routeData = UITestRouteData(
@@ -96,8 +96,8 @@ class UITestRouter extends AppRouter {
   @override
   Future<void> pushReplacement(
     Enum route, {
-    RouterParams params = const {},
-    RouterParams queryParams = const {},
+    RouterParams<String> params = const {},
+    RouterParams<dynamic> queryParams = const {},
     Object? extra,
   }) async {
     _routeData = UITestRouteData(
@@ -119,7 +119,7 @@ class UITestRouter extends AppRouter {
   }
 
   @override
-  void pop() => _poppedRouteData = _routeData;
+  void pop<T extends Object?>([T? result]) => _poppedRouteData = _routeData;
 
   UITestRouteData? get data => _routeData;
   UITestRouteData? get poppedData => _poppedRouteData;

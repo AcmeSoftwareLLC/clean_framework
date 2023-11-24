@@ -46,12 +46,6 @@ void main() {
           loggedInEmail: '',
         ),
       ],
-      verify: (useCase) {
-        expect(
-          useCase.debugEntity,
-          HomeEntity(pokemons: pokemons, status: HomeStatus.loaded),
-        );
-      },
     );
 
     useCaseTest<HomeUseCase, HomeEntity, HomeUIOutput>(

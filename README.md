@@ -10,13 +10,13 @@
 
 Flutter implementation of Clean Architecture, inspired on the guidelines created by Uncle Bob.
 
-Go to [the documentation](https://docs.page/AcmeSoftwareLLC/clean_framework).
+Go to [the documentation](https://cleanframework.acmesoftware.com).
 
 ### Example
 
 Example Project: [Link](https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework/example)
 
-Example Web Demo: https://acmesoftwarellc.github.io/clean_framework/
+Example Web Demo: https://cleanframeworkdemo.acmesoftware.com
 
 ### Tools
 
