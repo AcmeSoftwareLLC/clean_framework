@@ -38,12 +38,14 @@ void main() {
           status: HomeStatus.loading,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
         HomeUIOutput(
           pokemons: pokemons,
           status: HomeStatus.loaded,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
       ],
     );
@@ -63,12 +65,14 @@ void main() {
             status: HomeStatus.loaded,
             isRefresh: true,
             loggedInEmail: '',
+            errorMessage: '',
           ),
           HomeUIOutput(
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: false,
             loggedInEmail: '',
+            errorMessage: '',
           ),
         ];
       },
@@ -88,12 +92,14 @@ void main() {
           status: HomeStatus.loading,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
       ],
     );
@@ -112,12 +118,14 @@ void main() {
           status: HomeStatus.failed,
           isRefresh: true,
           loggedInEmail: '',
+          errorMessage: '',
         ),
         HomeUIOutput(
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
       ],
     );
@@ -152,6 +160,7 @@ void main() {
           status: HomeStatus.loaded,
           isRefresh: false,
           loggedInEmail: '',
+          errorMessage: '',
         ),
       ],
     );

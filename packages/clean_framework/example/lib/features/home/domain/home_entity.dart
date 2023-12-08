@@ -10,6 +10,7 @@ class HomeEntity extends Entity {
     this.status = HomeStatus.initial,
     this.isRefresh = false,
     this.loggedInEmail = '',
+    this.errorMessage = '',
   });
 
   final List<PokemonModel> pokemons;
@@ -17,10 +18,18 @@ class HomeEntity extends Entity {
   final HomeStatus status;
   final bool isRefresh;
   final String loggedInEmail;
+  final String errorMessage;
 
   @override
   List<Object?> get props {
-    return [pokemons, pokemonNameQuery, status, isRefresh, loggedInEmail];
+    return [
+      pokemons,
+      pokemonNameQuery,
+      status,
+      isRefresh,
+      loggedInEmail,
+      errorMessage,
+    ];
   }
 
   @override
@@ -30,6 +39,7 @@ class HomeEntity extends Entity {
     HomeStatus? status,
     bool? isRefresh,
     String? loggedInEmail,
+    String? errorMessage,
   }) {
     return HomeEntity(
       pokemons: pokemons ?? this.pokemons,
@@ -37,6 +47,7 @@ class HomeEntity extends Entity {
       status: status ?? this.status,
       isRefresh: isRefresh ?? this.isRefresh,
       loggedInEmail: loggedInEmail ?? this.loggedInEmail,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
@@ -31,6 +32,19 @@ class HomeUseCase extends UseCase<HomeEntity> {
         entity = entity.copyWith(
           pokemons: pokemons.toList(growable: false),
           status: HomeStatus.loaded,
+          isRefresh: isRefresh,
+        );
+      case Failure(:PokemonCollectionFailureInput input):
+        entity = entity.copyWith(
+          errorMessage: switch (input.type) {
+            PokemonFailureType.unauthorized =>
+              'The request was not authorized.',
+            PokemonFailureType.notFound =>
+              'The requested resource was not found.',
+            PokemonFailureType.serverError => 'An server error occurred.',
+            PokemonFailureType.unknown => '',
+          },
+          status: HomeStatus.failed,
           isRefresh: isRefresh,
         );
       case _:
@@ -75,6 +89,7 @@ class HomeUIOutputTransformer
       status: entity.status,
       isRefresh: entity.isRefresh,
       loggedInEmail: entity.loggedInEmail,
+      errorMessage: entity.errorMessage,
     );
   }
 }
