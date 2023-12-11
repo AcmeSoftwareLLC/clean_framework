@@ -40,4 +40,7 @@ class PokemonRequest extends GetHttpRequest {
 
   @override
   Map<String, dynamic>? get queryParameters => {'limit': 1000};
+
+  @override
+  Map<String, String> get headers => {'Domain': 'acmesoftware.com'};
 }
