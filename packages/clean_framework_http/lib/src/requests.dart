@@ -20,6 +20,8 @@ abstract class HttpRequest extends Request {
   HttpCachePolicy? get cachePolicy => null;
 
   Duration? get maxStale => null;
+
+  Map<String, String> get headers => {};
 }
 
 abstract class GetHttpRequest extends HttpRequest {

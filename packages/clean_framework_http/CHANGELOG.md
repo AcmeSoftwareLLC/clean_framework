@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.4.2
+**Dec 11, 2023**
+- Bumps dependencies to latest version.
+- Adds `headers` getter to `HttpRequest`.
+
 ## 0.4.1
 **Aug 7, 2023**
 - Bumps dependencies to latest version.
