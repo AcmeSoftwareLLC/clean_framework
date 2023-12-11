@@ -28,6 +28,7 @@ void main() {
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
+        errorMessage: '',
       ),
       verify: (tester) async {
         expect(find.text('Pikachu'), findsOneWidget);
@@ -46,6 +47,7 @@ void main() {
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
+        errorMessage: '',
       ),
       verify: (tester) async {
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -63,6 +65,7 @@ void main() {
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
+        errorMessage: '',
       ),
       verify: (tester) async {
         expect(find.text('Oops'), findsOneWidget);
@@ -98,6 +101,7 @@ void main() {
         onRetry: () {},
         onRefresh: () async {},
         onSearch: (query) {},
+        errorMessage: '',
       ),
       verify: (tester) async {
         await tester.pumpAndSettle();

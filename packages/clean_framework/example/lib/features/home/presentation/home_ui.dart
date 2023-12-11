@@ -118,6 +118,7 @@ class _LoadingFailed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.viewModel<HomeViewModel>();
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,7 +136,11 @@ class _LoadingFailed extends StatelessWidget {
             style: Theme.of(context).textTheme.displaySmall,
           ),
           const SizedBox(height: 8),
-          Text('I lost my fellow Pokémons'),
+          Text(
+            viewModel.errorMessage.isEmpty
+                ? 'I lost my fellow Pokémons'
+                : viewModel.errorMessage,
+          ),
           const SizedBox(height: 24),
           OutlinedButton(
             onPressed: onRetry,

@@ -27,6 +27,7 @@ class HomePresenter
       isLoading: output.status == HomeStatus.loading,
       hasFailedLoading: output.status == HomeStatus.failed,
       loggedInEmail: output.loggedInEmail,
+      errorMessage: output.errorMessage,
     );
   }
 

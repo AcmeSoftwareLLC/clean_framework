@@ -1,6 +1,13 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+
+class PokemonCollectionFailureInput extends FailureInput {
+  PokemonCollectionFailureInput({required this.type, super.message});
+
+  final PokemonFailureType type;
+}
 
 class PokemonCollectionGateway extends Gateway<
     PokemonCollectionGatewayOutput,
@@ -13,8 +20,13 @@ class PokemonCollectionGateway extends Gateway<
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  PokemonCollectionFailureInput onFailure(
+    PokemonFailureResponse failureResponse,
+  ) {
+    return PokemonCollectionFailureInput(
+      message: failureResponse.message,
+      type: failureResponse.type,
+    );
   }
 
   @override
