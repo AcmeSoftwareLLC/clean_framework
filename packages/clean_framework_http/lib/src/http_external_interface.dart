@@ -31,8 +31,14 @@ class HttpExternalInterface
       (request, send) async {
         final (dio, cacheOptions) = await _dioCompleter.future;
 
+        final rootHeaders = await delegate.buildHeaders();
+        final headers = {
+          ...request.headers,
+          if (rootHeaders != null) ...rootHeaders,
+        };
+
         final options = Options(
-          headers: await delegate.buildHeaders(),
+          headers: headers,
           responseType: request.responseType?.original,
           contentType: request.contentType,
         );
