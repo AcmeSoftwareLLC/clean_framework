@@ -5,6 +5,7 @@ import 'package:clean_framework/src/core/use_case/helpers/use_case_input.dart';
 import 'package:clean_framework/src/core/use_case/use_case_debounce_mixin.dart';
 import 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
+import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
@@ -89,12 +90,20 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   @protected
+  FutureOr<Either<FailureInput, S>> getInternalInput<S extends SuccessInput>(
+    Output output,
+  ) {
+    return _requestSubscriptions.getInput<S>(output);
+  }
+
+  @visibleForTesting
+  @protected
   Future<void> request<S extends SuccessInput>(
     Output output, {
     required InputCallback<E, S> onSuccess,
     required InputCallback<E, FailureInput> onFailure,
   }) async {
-    final input = await _requestSubscriptions.getInput<S>(output);
+    final input = await getInternalInput<S>(output);
 
     entity = input.fold(
       (failure) {
@@ -113,7 +122,7 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   Future<UseCaseInput<S>> getInput<S extends SuccessInput>(
     Output output,
   ) async {
-    final input = await _requestSubscriptions.getInput<S>(output);
+    final input = await getInternalInput<S>(output);
 
     return input.fold(
       (failure) {
