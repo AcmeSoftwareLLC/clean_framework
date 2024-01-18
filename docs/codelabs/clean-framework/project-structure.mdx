@@ -1,9 +1,9 @@
 ### Project Structure
 
 We suggest you organize your app into Features, with the assumption that features don't depend on each other.
-The goal should be to be able to delete a feature completely and don't break any code.
+The goal should be to be able to delete a feature completely without breaking any of the code.
 
-Each feature could be organized in this way:
+Each feature can be organized in this way:
 
 ```
 lib
@@ -23,25 +23,25 @@ lib
                 feature_view_model.dart
 ```
 
-Notice that the name of the feature is a prefix for all the files inside.
-We prefer this naming convention so they are easier to identify on searches,
-but you are free to follow any convention that suits your need.
+Notice that the name of the feature is a prefix for all of the relevant files.
+We prefer to use this naming convention so that files for a given feature are easier to identify in searches,
+but you are free to follow any convention that suits your needs.
 
 The folder structure is also a suggestion,
-you can add multiple layers if the feature begins to grow and have multiple screens and interactions.
+you can add multiple layers if the feature begins to grow and requires multiple screens and interactions.
 
 ### The Providers
 
 Use Cases, Gateways and External Interfaces are instances of classes that are not Flutter Widgets,
-so they are not dependant on the Flutter Context.
-To have access to them, you can "publish" them using the Providers pattern.
+so they are not dependent on the Flutter Context.
+To access them, you can "publish" them using the Providers pattern.
 
-If you notice on the files list shown above,
-outside the features folder we have a file where we list all the providers used on the app.
-For large projects this is probably not the best idea, since this file can be long and bloated,
-so probably splitting the providers by feature could work better.
+As you can see in the file list shown above,
+outside the features folder we have a file called `lib/providers.dart` where we keep all of the providers used in the app.
+For large projects this is probably not the best idea since this file can become long and bloated.
+In that case, it is recommended that you organize the providers by feature.
 
-This is an example on how this file can be coded:
+Here is an example of how the `lib/providers.dart` file can be written:
 
 ```dart
 final featureUseCaseProvider = UseCaseProvider(FeatureUseCase.new);
@@ -57,15 +57,15 @@ final graphQLExternalInterfaceProvider = ExternalInterfaceProvider(
 );
 ```
 
-Clean Framework uses **Riverpod** for the Providers behavior,
-so you can understand why the providers are global instances.
-For anyone not familiar to how Riverpod works, this might seem inappropriate,
-specially coming from a strict OO formation. Justifying why this is useful and desirable,
+Clean Framework uses **Riverpod** for Provider behavior,
+so similarly to Riverpod providers, they are declared globally.
+For anyone not familiar with how Riverpod works, this might seem inappropriate,
+especially coming from a strict OO formation. To see why this is useful and desirable,
 please refer to the [Riverpod documentation](https://riverpod.dev/docs/concepts/providers),
-since the creator already did a great job explaining this approach.
+as the creator already did a great job explaining this approach.
 
-Providers create instances lazily, but some of the listeners need to be connected before use cases make any request.
-That is why we need to "touch" all gateway and external interfaces providers to ensure they are created when the app starts.
+Providers create instances lazily, but some of the listeners need to be connected before use cases can make requests.
+Because of this, we need to "touch" all of the gateway and external interface providers to ensure they are created when the app starts.
 
 Adding external interface providers to the `externalInterfaceProviders` in **AppProviderScope**
 will ensure that all external interfaces are created.

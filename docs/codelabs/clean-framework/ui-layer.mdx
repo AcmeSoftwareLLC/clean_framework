@@ -1,44 +1,44 @@
 # The UI Layer: UI, Presenter and View Model
 
-Lets discuss in more detail the components of the UI Layer
+Lets discuss the components of the UI Layer in more detail.
 
 <Image src="/assets/ui_layer.png" caption="UI Layers"/>
 
 As mentioned on the previous topic,
-the UI component lives on the most external layer of the architecture.
-It means that it is related to specific libraries that conform the frontend of the application,
+the UI component resides in the most external layer of the architecture.
+This means that the UI layer is related to specific libraries that make up the frontend of the application,
 in our case, the Flutter widgets libraries.
 
-When building an app using the Clean Framework classes,
-we try to separate as much as possible any code that is not related to pure UI logic and put that on the Presenter (to send and receive data from internal layers)
+When building an app using Clean Framework,
+we try to separate any code that is not related to pure UI logic from the UI itself as much as possible, and instead we put it in the Presenter (to send and receive data from internal layers)
 and the Use Case (the normal location for business logic).
 
-UI is a class that behaves like a Stateless Widget.
-It will be very rare that a Stateful Widget is needed, since the state usage for important data breaks the layer rules.
-Try to always think on ways the UI widgets without the need for Stateful Widgets.
+The Clean Framework UI class behaves like a Stateless Widget.
+Stateful widgets are rarely used, since the state usage for important data breaks the layer rules.
+Try to avoid using Stateful widgets whenever possible, to avoid breaking the Clean Architecture rules for layers.
 
 All UI implementations require at least one View Model to fetch data from the entities.
 This data comes from Use Case Outputs, which Presenters receive and translate as needed.
 
-The feature you code can be expressed into multiple screens presented to the user,
-and even include small widgets that are inserted in other screens.
+The feature you write can be expressed in multiple screens presented to the user,
+and can even include small widgets that are inserted into other screens.
 These are your entry points to the feature, and as such,
-will require for the UI to listen to the state changes of the feature's Use Case through its Outputs.
-In other words, Use Cases can have multiple Outputs, that can have relationships with many View Models through the Presenters.
+will require the UI to listen to the state changes of the feature's Use Case through its Outputs.
+In other words, Use Cases can have multiple Outputs that can have relationships with many View Models through the Presenters.
 
-View Models are immutable classes, almost pure PODOs (Plain Old Dart Objects).
-We try to make them as lean as possible, because its only responsibility is the passing of digested data fields into the UI object.
+View Models are immutable classes which are almost pure PODOs (Plain Old Dart Objects).
+We try to keep them as lean as possible, as their only responsibility is the passing of digested data to the UI object.
 
-They tend to have only Strings.
-This is intentional since the Presenter has the responsibility of any formatting and parsing done to the data.
+View Models tend to only contain Strings.
+This is intentional, as the Presenter holds the responsibility of performing any formatting or parsing of the data before being passed to the UI.
 
-Finally, the Presenters purpose is to connect and listen to Use Case Providers to interact with the Use Case instance
-and pass messages for user actions done on the UI (through callbacks on the View Model)
-and also to trigger rebuilds on the UI when the state changes causes a new Output to be generated.
-This will be explained in detail on the following sessions, so for now just assume the Presenters associate with only one type of Output.
+Finally, the purpose of the Presenter is to connect and listen to Use Case Providers, to interact with the Use Case instance,
+to handle and pass user interaction events from the UI (through callbacks on the View Model),
+and to trigger rebuilds on the UI when the state changes, causing a new Output to be generated.
+This will be explained in greater detail later, so for now just assume the Presenters associate with only one type of Output.
 
-The most important job of the Presenter is to translate an Output instance
-and create a new View Model everytime the Output is received.
+The most important job of the Presenter is to translate data from an Output,
+and to create a new View Model everytime a new Output is received.
 
 ### Codelab
 To better understand the flow and project structure,
@@ -49,14 +49,14 @@ For this example, we will use the [PokéAPI](https://pokeapi.co/).
 ### Coding the UI Layer
 
 After a feature folder is created, any developer will probably try to start adding Flutter Widgets to build up the code requirements.
-This framework is flexible enough to allow you to start coding components that don't require to have any access
-or even knowledge of any possible dependency (databases, services, cache, etc), because those concerns belong to other layers.
+This framework is flexible enough to allow you to start coding components that don't require access to,
+or even knowledge of, any external dependency (databases, services, cache, etc), because those concerns belong to other layers.
 
 The simplest way to start working on a new feature is to first decide how many UI elements will be required to complete the implementation of the feature.
 
 ### The feature requirements
 
-We are going to code a very simple feature which can be explained in a few Gherkin scenarios:
+We are going to write a very simple feature which can be explained in a few Gherkin scenarios:
 
 
 ```gherkin
@@ -67,13 +67,13 @@ When I type a Pokemon name on the search bar
 Then I will see the list of Pokemon filtered by the search term
 ```
 
-And this is the design of the page, which we have as reference.
+And this is the desired design of the page, which we can use as a reference.
 
 <Image src="/assets/pokemon-app.png" caption="Pokemon App" width="300"/>
 
 
 The first step is to create a view model with the properties that the feature requires.
-Let's create one at `lib/features/home/presentation` directory:
+Let's create one in the `lib/features/home/presentation` directory:
 
 #### lib/features/home/presentation/home_view_model.dart
 ```dart
@@ -115,11 +115,12 @@ class PokemonViewModel extends ViewModel {
 
 The next step is to create a Presenter.
 This class will be responsible for listening to the Use Case outputs and creating the View Model.
-For Presenter, we need to setup a skeleton of Use Case first.
+In order to create the Presenter, we will first need to create the base structure of our domain layer:
+the `Entity`, `Output`, and `UseCase` classes.
 
-Note: Here we'll only create the skeleton of the Use Case, but we'll not implement it yet.
+Note: For now, we're only creating the skeleton of the Use Case. We won't be writing any business logic yet.
 
-Let's create it at `lib/features/home/domain` directory:
+Let's create these three classes in the `lib/features/home/domain` directory:
 
 #### lib/features/home/domain/home_entity.dart
 ```dart
@@ -149,14 +150,14 @@ class HomeUseCase extends UseCase<HomeEntity> {
 }
 ```
 
-After the entity skeleton, let's create a provider for it in the `lib/providers.dart`:
+After creating the `UseCase` skeleton, let's create a provider for it in the `lib/providers.dart` file:
 
 #### lib/providers.dart
 ```dart
 final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 ```
 
-Now let's create the Presenter at `lib/features/home/presentation` directory:
+Now let's create the Presenter in the `lib/features/home/presentation` directory:
 
 ### lib/features/home/presentation/home_presenter.dart
 ```dart
@@ -187,7 +188,7 @@ class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> 
 }
 ```
 
-Then we can create the UI at `lib/features/home/presentation` directory:
+Now we can create the UI class in the `lib/features/home/presentation` directory:
 
 #### lib/features/home/presentation/home_ui.dart
 ```dart
@@ -276,10 +277,10 @@ class _LoadingFailed extends StatelessWidget {
 }
 ```
 
-Finally, set the `HomeUI` as the home for the app.
+Finally, we should provide the `HomeUI` as the home for the app.
 
 Note: Remember to add `AppProviderScope` as the top level widget,
-which hold all the state of providers created by the app.
+which will hold the state of all the providers created by the app.
 
 #### lib/main.dart
 ```dart
@@ -308,7 +309,7 @@ class MyApp extends StatelessWidget {
 
 At this point the app should run perfectly fine with the static data we added in the view model.
 
-Hopefully by now you can appreciate the capacity of the Clean Framework components
+Hopefully, by now you can appreciate the capacity of the Clean Framework components
 to help developers work with the UI layer without the need to first finish the Domain Layer code.
 You can even work in parallel with another developer that is doing it,
 while also having a high coverage on your code.
