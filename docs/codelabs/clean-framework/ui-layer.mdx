@@ -165,7 +165,7 @@ class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> 
 
 As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter from our constructor. We can then start receiving state changes from the domain layer via the `ViewModel createViewModel(UseCase, UIOutput)` function. This is where data is received from our `UseCase` (via the `UIOutput`) and where the `ViewModel` is updated for the UI. Assuming any new or modified data is needed by the UI, such as (for example) the case of displaying a dialog box with variable contents to the user, the logic for that would be handled and the resulting data passed into the `ViewModel` here as well. As stated previously, the Domain layer will be covered in more detail later, but for now, here is a brief overview of the flow of data from the Domain layer to the UI:
 
-`UseCase (buiness logic)` -> `UIOutput (data)` -> `Presenter (createViewModel())` -> `ViewModel (data)` -> `UI (build())`.
+`UseCase (buiness logic)` → `UIOutput (data)` → `Presenter (createViewModel())` → `ViewModel (data)` → `UI (build())`.
 
 Now that all of the prerequisites have been created, we're ready to move on to adding the UI itself.
 
