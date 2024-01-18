@@ -1,6 +1,8 @@
-# Creating a User Interface in Flutter with Clean Framework
+# The UI Layer: UI, Presenter, and View Model
 
-Welcome to a step-by-step guide on how to build a user-friendly interface in Flutter using the Clean Framework. We’ll dive into the essentials of the UI Layer, including UI components, Presenters, and View Models, and then walk through a practical example of building a Pokémon app.
+Now that you've gotten an overview of how Clean Framework projects are typically structured, lets discuss the UI layer in more detail.
+
+<Image src="/assets/ui_layer.png" caption="UI Layers"/>
 
 ## Understanding the UI Layer
 
@@ -23,9 +25,15 @@ We prefer to use Stateless Widgets whenever possible for UI components, in order
 
 ## Building a Pokémon App: A Practical Example
 
-Now, let’s put this into practice by building an app that displays Pokémon data. 
+Now, let’s put this into practice by building an app that displays Pokémon data. Business logic-wise, our app will fetch data from a service and display it on a screen.
+
+For this example, we'll be using the [PokéAPI](https://pokeapi.co/).
 
 ### The Feature Requirements
+
+Once you've set up your feature folder, you might be eager to dive into adding Flutter Widgets. The great thing about this framework is its flexibility; you can start crafting components without needing to worry about dependencies like databases, services, or caches. That's because these concerns are handled by other layers.
+
+A good first step in developing a new feature is to figure out how many UI elements you'll need to bring your idea to life. This approach keeps things straightforward and focused.
 
 Our app will display a list of Pokémon and include a search functionality. Here’s a simple requirement outlined in Gherkin:
 
@@ -41,13 +49,13 @@ Then I will see the list of Pokemon filtered by the search term
 
 Here's what we'll aim to build in this example:
 
-![Pokemon App Design](/assets/pokemon-app.png "Pokemon App Design" width="300")
+<Image src="/assets/pokemon-app.png" caption="Pokemon App" width="300"/>
 
 ### Step 1: Create the View Model
 
 First, we’ll define the `HomeViewModel` with properties such as a list of Pokémon, loading states, and user interaction callbacks: any data that is required by the feature.
 
-#### lib/features/home/presentation/home_view_model.dart
+#### in lib/features/home/presentation/home_view_model.dart
 ```dart
 class HomeViewModel extends ViewModel {
   const HomeViewModel({
@@ -89,7 +97,7 @@ class PokemonViewModel extends ViewModel {
 
 The Presenter listens to Use Case outputs and creates the View Model. But before we can create our Presenter, we need to set up the basic structure of the domain layer: the `Entity`, `Output`, and `UseCase` classes. We'll cover these in greater depth later, but for now, we just need the skeleton of the domain layer.
 
-#### lib/features/home/domain/home_entity.dart
+#### in lib/features/home/domain/home_entity.dart
 ```dart
 class HomeEntity extends Entity {
   @override
@@ -97,7 +105,7 @@ class HomeEntity extends Entity {
 }
 ```
 
-#### lib/features/home/domain/home_ui_output.dart
+#### in lib/features/home/domain/home_ui_output.dart
 ```dart
 class HomeUIOutput extends Output {
   @override
@@ -105,7 +113,7 @@ class HomeUIOutput extends Output {
 }
 ```
 
-#### lib/features/home/domain/home_use_case.dart
+#### in lib/features/home/domain/home_use_case.dart
 ```dart
 class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase() : super(
@@ -119,14 +127,14 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
 Now that our domain layer has been created, let's add a provider so we can interact with our `UseCase` from the `Presenter`:
 
-#### lib/providers.dart
+#### in lib/providers.dart
 ```dart
 final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 ```
 
 Finally, we have all the components needed to create the `Presenter` class. Let's put it all together:
 
-### lib/features/home/presentation/home_presenter.dart
+#### in lib/features/home/presentation/home_presenter.dart
 ```dart
 class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> {
   HomePresenter({
@@ -155,7 +163,7 @@ class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> 
 }
 ```
 
-As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter from our constructor. We can then start receiving state changes from the domain layer via the `ViewModel createViewModel(UseCase, UIOutput)` function. This is where data is received from the `UIOutput` and where the `ViewModel` is updated for the UI. Assuming any new or modified data was needed by the UI, such as in the case of displaying a dialog box with variable contents to the user, the logic for that would be handled and the result passed into the `ViewModel` here as well. As stated previously, the Domain layer will be covered in more detail later, but for now, here is a brief overview of the flow of data from the Domain layer to the UI:
+As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter from our constructor. We can then start receiving state changes from the domain layer via the `ViewModel createViewModel(UseCase, UIOutput)` function. This is where data is received from our `UseCase` (via the `UIOutput`) and where the `ViewModel` is updated for the UI. Assuming any new or modified data is needed by the UI, such as (for example) the case of displaying a dialog box with variable contents to the user, the logic for that would be handled and the resulting data passed into the `ViewModel` here as well. As stated previously, the Domain layer will be covered in more detail later, but for now, here is a brief overview of the flow of data from the Domain layer to the UI:
 
 `UseCase (buiness logic)` -> `UIOutput (data)` -> `Presenter (createViewModel())` -> `ViewModel (data)` -> `UI (build())`.
 
@@ -167,7 +175,7 @@ This is where we start adding widgets to create the visual components of our app
 
 Our UI class is going to be laid out like this:
 
-#### lib/features/home/presentation/home_ui.dart
+#### in lib/features/home/presentation/home_ui.dart
 ```dart
 class HomeUI extends UI<HomeViewModel> {
     HomeUI({super.key});
@@ -186,11 +194,11 @@ class HomeUI extends UI<HomeViewModel> {
 }
 ```
 
-In any Clean Framework UI, two functions are needed (assuming `V` extends `ViewModel`): the `Presenter create(PresenterBuilder<V>)` function, which creates our presenter, and `Widget build(BuildContext, V)` which builds the UI with the widgets we want, providing them with our `ViewModel` containing our presentation-ready data. In summary, all of our pure UI logic goes in the `build` function within the `UI` class.
+In any Clean Framework UI, two functions are needed (assuming `V` is your `ViewModel`): the `Presenter create(PresenterBuilder<V>)` function, which creates our presenter, and `Widget build(BuildContext, V)` which builds the UI with the widgets we want, providing them with our `ViewModel` containing our presentation-ready data. In summary, all of our pure UI logic goes in the `build` function within the `UI` class.
 
-Since a screen with a single line of text isn't very interesting, here's our completed UI that reflects the design we laid out at the beginning of this section:
+Since a screen with a single line of text isn't very interesting, let's add a little more detail. Here is our completed UI that makes use of our data and reflects the design we laid out at the beginning of this section:
 
-#### lib/features/home/presentation/home_ui.dart
+#### in lib/features/home/presentation/home_ui.dart
 ```dart
 class HomeUI extends UI<HomeViewModel> {
   HomeUI({super.key});
@@ -285,7 +293,7 @@ In `main.dart`, we now just need to set up our Flutter app with an `AppProviderS
 
 > **_Note:_** Remember to use `AppProviderScope` as the top-level widget! It holds all of the state providers for the app.
 
-#### lib/main.dart
+#### in lib/main.dart
 ```dart
 void main() {
   runApp(const MyApp());
@@ -310,10 +318,10 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Congratulations, you're finished implementing the UI layer! The app should now run perfectly fine using the static data we added to our view model.
+Congratulations, you're finished implementing the Presentation layer! The app should now run perfectly fine using the static data we gave to our view model.
 
 By now, you've likely seen how Clean Framework simplifies UI development. You don't have to wait for the Domain Layer to be complete before starting on the UI. This means you can work alongside another developer focusing on the Domain Layer, making your development process more efficient and collaborative.
 
 What's really great about this approach is how it streamlines creating MVPs and prototypes. You can quickly get a working version ready for stakeholder and QA team reviews, which helps in gathering early feedback. This not only speeds up the development cycle but also reduces a lot of potential stress for the development team.
 
-Now that our UI layer is complete, we're ready to move on to the Domain layer in the next section.
+Now that our Presentation layer is complete, we're ready to move on to the Domain layer and start adding logic to our app in the next section.
