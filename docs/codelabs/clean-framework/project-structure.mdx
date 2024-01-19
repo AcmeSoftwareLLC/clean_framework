@@ -1,47 +1,38 @@
-### Project Structure
+Let's dive into the typical structure of a Clean Framework project.
 
-We suggest you organize your app into Features, with the assumption that features don't depend on each other.
-The goal should be to be able to delete a feature completely without breaking any of the code.
+**Organizing Your App into Features:**
+We encourage you to organize your app into separate, independent features. The key is that these features should not depend on each other; ideally, a feature should be able to be deleted entirely without breaking any of the code.
 
-Each feature can be organized in this way:
+Here's a suggested layout for each feature:
 
 ```
 lib
     providers.dart
     features
-        feature
+        your_feature
             domain
-                feature_entity.dart
-                feature_ui_output.dart
-                feature_use_case.dart
-                feature_input.dart
+                your_feature_entity.dart
+                your_feature_ui_output.dart
+                your_feature_use_case.dart
+                your_feature_input.dart
             external_interface
-                feature_gateway.dart
+                your_feature_gateway.dart
             presentation
-                feature_presenter.dart
-                feature_ui.dart
-                feature_view_model.dart
+                your_feature_presenter.dart
+                your_feature_ui.dart
+                your_feature_view_model.dart
 ```
 
-Notice that the name of the feature is a prefix for all of the relevant files.
-We prefer to use this naming convention so that files for a given feature are easier to identify in searches,
-but you are free to follow any convention that suits your needs.
+In this structure, each file within a feature begins with the feature's name, making it easier to locate feature-specific files in searches. This naming convention is just a recommendation, and you're welcome to use any system that suits your project.
 
-The folder structure is also a suggestion,
-you can add multiple layers if the feature begins to grow and requires multiple screens and interactions.
+As your feature grows, feel free to expand the folder structure to accommodate multiple screens and interactions.
 
-### The Providers
+**Understanding the Providers:**
+In Clean Framework, components like Use Cases, Gateways, and External Interfaces are not Flutter Widgets. Consequently, they don’t depend on Flutter’s Context. To access them, they are "published" using the Providers pattern.
 
-Use Cases, Gateways and External Interfaces are instances of classes that are not Flutter Widgets,
-so they are not dependent on the Flutter Context.
-To access them, you can "publish" them using the Providers pattern.
+In the project structure, we have a file called `lib/providers.dart` outside the features folder. This file is where all the providers used in the app reside. For larger projects, it's advised to organize the providers according feature to prevent the file from becoming too lengthy.
 
-As you can see in the file list shown above,
-outside the features folder we have a file called `lib/providers.dart` where we keep all of the providers used in the app.
-For large projects this is probably not the best idea since this file can become long and bloated.
-In that case, it is recommended that you organize the providers by feature.
-
-Here is an example of how the `lib/providers.dart` file can be written:
+Here's an example of what the `lib/providers.dart` file might contain:
 
 ```dart
 final featureUseCaseProvider = UseCaseProvider(FeatureUseCase.new);
@@ -57,18 +48,11 @@ final graphQLExternalInterfaceProvider = ExternalInterfaceProvider(
 );
 ```
 
-Clean Framework uses **Riverpod** for Provider behavior,
-so similarly to Riverpod providers, they are declared globally.
-For anyone not familiar with how Riverpod works, this might seem inappropriate,
-especially coming from a strict OO formation. To see why this is useful and desirable,
-please refer to the [Riverpod documentation](https://riverpod.dev/docs/concepts/providers),
-as the creator already did a great job explaining this approach.
+Clean Framework uses **Riverpod** for its provider behavior, which means providers are declared globally. If you're new to Riverpod, this approach may seem unusual. To learn more about why this is desirable, the [Riverpod documentation](https://riverpod.dev/docs/concepts/providers) does a great job of explaining this approach.
 
-Providers create instances lazily, but some of the listeners need to be connected before use cases can make requests.
-Because of this, we need to "touch" all of the gateway and external interface providers to ensure they are created when the app starts.
+Providers in Clean Framework create instances lazily. However, some listeners need to be connected before use cases can make requests. Therefore, it’s necessary to "touch" all gateway and external interface providers to ensure they're created when the app starts.
 
-Adding external interface providers to the `externalInterfaceProviders` in **AppProviderScope**
-will ensure that all external interfaces are created.
+To guarantee all external interfaces are created, add external interface providers to the `externalInterfaceProviders` in the `AppProviderScope` of your `main` function:
 
 ```dart
 void main() {
@@ -81,3 +65,5 @@ void main() {
   );
 }
 ```
+
+Now that we've gone over some of the basics, lets move on to the UI layer and begin writing a simple app!

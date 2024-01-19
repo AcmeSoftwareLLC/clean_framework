@@ -21,7 +21,7 @@ We prefer to use Stateless Widgets whenever possible for UI components, in order
 ### View Models and Presenters
 
 - **View Models**: View Models are designed to be immutable and straightforward, generally only containing strings and necessary data for the UI.
-- **Presenters**: In charge of processing and translating data from the domain layer into a format the UI can use, by creating and updating View Models.
+- **Presenters**: In charge of processing and translating data from the domain layer into a format the UI can use, by creating and updating View Models. All data formatting, parsing, or other modifications done for the UI should be handled by the Presenter.
 
 ## Building a Pokémon App: A Practical Example
 
@@ -31,7 +31,7 @@ For this example, we'll be using the [PokéAPI](https://pokeapi.co/).
 
 ### The Feature Requirements
 
-Once you've set up your feature folder, you might be eager to dive into adding Flutter Widgets. The great thing about this framework is its flexibility; you can start crafting components without needing to worry about dependencies like databases, services, or caches. That's because these concerns are handled by other layers.
+Once you've set up your feature folder, you might be eager to dive into adding Widgets. The great thing about this framework is its flexibility; you can start crafting components without needing to worry about dependencies like databases, services, or caches. That's because these concerns are handled by other layers.
 
 A good first step in developing a new feature is to figure out how many UI elements you'll need to bring your idea to life. This approach keeps things straightforward and focused.
 
@@ -39,7 +39,7 @@ Our app will display a list of Pokémon and include a search functionality. Here
 
 ```gherkin
 Given I have navigated to the Home feature
-Then I will see the list of Pokemon
+Then I will see a list of Pokemon
 And I will see a search bar
 When I type a Pokemon name on the search bar
 Then I will see the list of Pokemon filtered by the search term
@@ -47,15 +47,15 @@ Then I will see the list of Pokemon filtered by the search term
 
 ### Design Reference
 
-Here's what we'll aim to build in this example:
+Here's a visual reference for what we'll aim to build in this example:
 
 <Image src="/assets/pokemon-app.png" caption="Pokemon App" width="300"/>
 
 ### Step 1: Create the View Model
 
-First, we’ll define the `HomeViewModel` with properties such as a list of Pokémon, loading states, and user interaction callbacks: any data that is required by the feature.
+First, we’ll define the `HomeViewModel` with properties such as a list of Pokémon, loading states, and user interaction callbacks: any data that is required by the UI of the feature.
 
-#### in lib/features/home/presentation/home_view_model.dart
+#### in `lib/features/home/presentation/home_view_model.dart`
 ```dart
 class HomeViewModel extends ViewModel {
   const HomeViewModel({
@@ -132,7 +132,7 @@ Now that our domain layer has been created, let's add a provider so we can inter
 final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 ```
 
-Finally, we have all the components needed to create the `Presenter` class. Let's put it all together:
+Finally, we have all the components needed to create the `Presenter` class. Putting it all together, the Presenter looks like this:
 
 #### in lib/features/home/presentation/home_presenter.dart
 ```dart
@@ -163,7 +163,7 @@ class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> 
 }
 ```
 
-As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter from our constructor. We can then start receiving state changes from the domain layer via the `ViewModel createViewModel(UseCase, UIOutput)` function. This is where data is received from our `UseCase` (via the `UIOutput`) and where the `ViewModel` is updated for the UI. Assuming any new or modified data is needed by the UI, such as (for example) the case of displaying a dialog box with variable contents to the user, the logic for that would be handled and the resulting data passed into the `ViewModel` here as well. As stated previously, the Domain layer will be covered in more detail later, but for now, here is a brief overview of the flow of data from the Domain layer to the UI:
+As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter in our constructor. We can then start receiving state changes from the domain layer via the `ViewModel createViewModel(UseCase, UIOutput)` function. This is where data is received from the `UseCase` (via the `UIOutput`) and where the `ViewModel` is updated for the UI. Assuming any new or modified data is needed by the UI, such as (for example) the case of displaying a dialog box with variable contents to the user, the logic for that would be handled and the resulting data passed into the `ViewModel` here as well. As stated previously, the Domain layer will be covered in more detail later, but for now, here is a brief overview of the flow of data from the Domain layer to the UI:
 
 `UseCase (buiness logic)` → `UIOutput (data)` → `Presenter (createViewModel())` → `ViewModel (data)` → `UI (build())`.
 
@@ -194,7 +194,7 @@ class HomeUI extends UI<HomeViewModel> {
 }
 ```
 
-In any Clean Framework UI, two functions are needed (assuming `V` is your `ViewModel`): the `Presenter create(PresenterBuilder<V>)` function, which creates our presenter, and `Widget build(BuildContext, V)` which builds the UI with the widgets we want, providing them with our `ViewModel` containing our presentation-ready data. In summary, all of our pure UI logic goes in the `build` function within the `UI` class.
+In any Clean Framework UI, two functions are needed (assuming `V` is your `ViewModel`): the `Presenter create(PresenterBuilder<V>)` function, which creates our presenter, and `Widget build(BuildContext, V)` which builds the UI with the widgets we want, providing them with the `ViewModel` containing presentation-ready data. In summary, all of the pure UI logic goes in the `build` function within the `UI` class.
 
 Since a screen with a single line of text isn't very interesting, let's add a little more detail. Here is our completed UI that makes use of our data and reflects the design we laid out at the beginning of this section:
 
@@ -289,7 +289,7 @@ Note the use of the View Model in the `build` method: all the data is readily av
 
 ### Launching the App
 
-In `main.dart`, we now just need to set up our Flutter app with an `AppProviderScope` as the top-level widget, and `HomeUI` as the starting point.
+In `main.dart`, we now just need to set up our Flutter app with an `AppProviderScope` as the top-level widget, and `HomeUI` as the starting point by passing it into the `home` parameter of the `AppProviderScope`.
 
 > **_Note:_** Remember to use `AppProviderScope` as the top-level widget! It holds all of the state providers for the app.
 
@@ -318,10 +318,10 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Congratulations, you're finished implementing the Presentation layer! The app should now run perfectly fine using the static data we gave to our view model.
+Congratulations, you're finished implementing the UI layer! The app should now run perfectly fine using the static data we gave to our view model.
 
 By now, you've likely seen how Clean Framework simplifies UI development. You don't have to wait for the Domain Layer to be complete before starting on the UI. This means you can work alongside another developer focusing on the Domain Layer, making your development process more efficient and collaborative.
 
 What's really great about this approach is how it streamlines creating MVPs and prototypes. You can quickly get a working version ready for stakeholder and QA team reviews, which helps in gathering early feedback. This not only speeds up the development cycle but also reduces a lot of potential stress for the development team.
 
-Now that our Presentation layer is complete, we're ready to move on to the Domain layer and start adding logic to our app in the next section.
+In the next section, we'll be going over the Domain layer and begin adding business logic to our Pokémon app.
