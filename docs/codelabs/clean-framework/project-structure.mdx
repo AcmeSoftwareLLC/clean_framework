@@ -25,6 +25,11 @@ lib
 
 In this structure, each file within a feature begins with the feature's name, making it easier to locate feature-specific files in searches. This naming convention is just a recommendation, and you're welcome to use any system that suits your project.
 
+As can be seen, we typically organize the different components of a given feature around the layer they belong to in Clean Architecture: 
+ - `domain`: Contains the feature's Entity, Use Case, and inputs/outputs; all of the core business logic for the feature.
+ - `external_interface`: Contains any `Gateway`s or `ExternalInterface`s required by the Domain layer to interact with external services or dependencies.
+ - `presentation`: Covers the UI layer, which will be explained in the next section, containing the `Presenter`, `UI`, and `ViewModel`s for the feature. All UI-related logic needed by the feature should reside here, chiefly within the `Presenter` class.
+
 As your feature grows, feel free to expand the folder structure to accommodate multiple screens and interactions.
 
 **Understanding the Providers:**
