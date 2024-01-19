@@ -55,7 +55,7 @@ Here's a visual reference for what we'll aim to build in this example:
 
 First, we’ll define the `HomeViewModel` with properties such as a list of Pokémon, loading states, and user interaction callbacks: any data that is required by the UI of the feature.
 
-#### in `lib/features/home/presentation/home_view_model.dart`
+#### File: `lib/features/home/presentation/home_view_model.dart`
 ```dart
 class HomeViewModel extends ViewModel {
   const HomeViewModel({
@@ -97,7 +97,7 @@ class PokemonViewModel extends ViewModel {
 
 The Presenter listens to Use Case outputs and creates the View Model. But before we can create our Presenter, we need to set up the basic structure of the domain layer: the `Entity`, `Output`, and `UseCase` classes. We'll cover these in greater depth later, but for now, we just need the skeleton of the domain layer.
 
-#### in lib/features/home/domain/home_entity.dart
+#### File: `lib/features/home/domain/home_entity.dart`
 ```dart
 class HomeEntity extends Entity {
   @override
@@ -105,7 +105,7 @@ class HomeEntity extends Entity {
 }
 ```
 
-#### in lib/features/home/domain/home_ui_output.dart
+#### File: `lib/features/home/domain/home_ui_output.dart`
 ```dart
 class HomeUIOutput extends Output {
   @override
@@ -113,7 +113,7 @@ class HomeUIOutput extends Output {
 }
 ```
 
-#### in lib/features/home/domain/home_use_case.dart
+#### File: `lib/features/home/domain/home_use_case.dart`
 ```dart
 class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase() : super(
@@ -127,14 +127,14 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
 Now that our domain layer has been created, let's add a provider so we can interact with our `UseCase` from the `Presenter`:
 
-#### in lib/providers.dart
+#### File: `lib/providers.dart`
 ```dart
 final homeUseCaseProvider = UseCaseProvider(HomeUseCase.new);
 ```
 
 Finally, we have all the components needed to create the `Presenter` class. Putting it all together, the Presenter looks like this:
 
-#### in lib/features/home/presentation/home_presenter.dart
+#### File: `lib/features/home/presentation/home_presenter.dart`
 ```dart
 class HomePresenter extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> {
   HomePresenter({
@@ -175,7 +175,7 @@ This is where we start adding widgets to create the visual components of our app
 
 Our UI class is going to be laid out like this:
 
-#### in lib/features/home/presentation/home_ui.dart
+#### File: `lib/features/home/presentation/home_ui.dart`
 ```dart
 class HomeUI extends UI<HomeViewModel> {
     HomeUI({super.key});
@@ -198,7 +198,7 @@ In any Clean Framework UI, two functions are needed (assuming `V` is your `ViewM
 
 Since a screen with a single line of text isn't very interesting, let's add a little more detail. Here is our completed UI that makes use of our data and reflects the design we laid out at the beginning of this section:
 
-#### in lib/features/home/presentation/home_ui.dart
+#### File: `lib/features/home/presentation/home_ui.dart`
 ```dart
 class HomeUI extends UI<HomeViewModel> {
   HomeUI({super.key});
@@ -293,7 +293,7 @@ In `main.dart`, we now just need to set up our Flutter app with an `AppProviderS
 
 > **_Note:_** Remember to use `AppProviderScope` as the top-level widget! It holds all of the state providers for the app.
 
-#### in lib/main.dart
+#### File: `lib/main.dart`
 ```dart
 void main() {
   runApp(const MyApp());

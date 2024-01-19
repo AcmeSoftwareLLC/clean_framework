@@ -160,7 +160,7 @@ Now we'll start actually writing the UseCase.
 
 Start by defining your `HomeEntity`:
 
-#### in lib/features/home/domain/home_entity.dart
+#### File: `lib/features/home/domain/home_entity.dart`
 ```dart
 import 'package:clean_framework/clean_framework.dart';
 
@@ -216,7 +216,7 @@ class PokemonData extends Entity {
 
 Then, we'll create the `HomeUseCase`. Create a new file called `home_use_case.dart` inside the `domain` directory:
 
-#### in lib/features/home/domain/home_use_case.dart
+#### File: `lib/features/home/domain/home_use_case.dart`
 ```dart
 import 'package:clean_framework/clean_framework.dart';
 
@@ -241,7 +241,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
 Once you've set up the Use Case, the next step is to create a UI Output, which the Presenter will use to show data on the screen. For this, you'll need to create a file named `home_ui_output.dart` in the `domain` directory.
 
-#### in lib/features/home/domain/home_ui_output.dart
+#### File: `lib/features/home/domain/home_ui_output.dart`
 ```dart
 import 'package:clean_framework/clean_framework.dart';
 
@@ -267,7 +267,7 @@ Now we need to create an output transformer so that the raw data in Use Case (i.
 can be transformed into a `UIOutput`.
 Create the following class in the Use Case file:
 
-#### in lib/features/home/domain/home_use_case.dart
+#### File: `lib/features/home/domain/home_use_case.dart`
 ```dart
 class HomeUIOutputTransformer extends OutputTransformer<HomeEntity, HomeUIOutput> {
   @override
@@ -290,7 +290,7 @@ class HomeUIOutputTransformer extends OutputTransformer<HomeEntity, HomeUIOutput
 
 To handle search input from the UI for filtering the pokemons, we also need to set up an input and input transformer. So, go ahead and add these classes to the UseCase file as well:
 
-#### in lib/features/home/domain/home_use_case.dart
+#### File: `lib/features/home/domain/home_use_case.dart`
 ```dart
 class PokemonSearchInput extends Input {
   PokemonSearchInput({required this.name});
