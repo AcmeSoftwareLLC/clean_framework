@@ -10,11 +10,11 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
-    extends UseCaseProviderBase<E, U> {
+class UseCaseProvider<US extends UseCaseState, U extends UseCase<US>>
+    extends UseCaseProviderBase<US, U> {
   UseCaseProvider(
     U Function() create, [
-    UseCaseProviderConnector<E, U>? connector,
+    UseCaseProviderConnector<US, U>? connector,
   ]) {
     _internal = StateNotifierProvider(
       (ref) {
@@ -27,7 +27,7 @@ class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
 
   UseCaseProvider._(this._internal);
 
-  late final StateNotifierProvider<U, E> _internal;
+  late final StateNotifierProvider<U, US> _internal;
 
   static const autoDispose = AutoDisposeUseCaseProviderBuilder();
 
@@ -44,5 +44,5 @@ class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
     return _internal.select((_) => useCase.getOutput());
   }
 
-  StateNotifierProvider<U, E> call() => _internal;
+  StateNotifierProvider<U, US> call() => _internal;
 }
