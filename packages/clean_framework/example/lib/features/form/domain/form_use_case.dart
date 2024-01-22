@@ -1,17 +1,17 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/validators/validators.dart';
-import 'package:clean_framework_example/features/form/domain/form_entity.dart';
-import 'package:clean_framework_example/features/form/domain/form_ui_output.dart';
+import 'package:clean_framework_example/features/form/domain/form_state.dart';
+import 'package:clean_framework_example/features/form/domain/form_domain_outputs.dart';
 
-class FormUseCase extends UseCase<FormEntity> {
+class FormUseCase extends UseCase<FormState> {
   FormUseCase()
       : super(
-          useCaseState: FormEntity(
+          useCaseState: FormState(
             formController: FormController(
               validators: {const InputFieldValidator.required()},
             ),
           ),
-          transformers: [FormUIOutputTransformer()],
+          transformers: [FormDomainToUIOutputTransformer()],
         ) {
     _emailController = TextFieldController.create(
       useCaseState.formController,
@@ -49,7 +49,7 @@ class FormUseCase extends UseCase<FormEntity> {
   Future<void> login() async {
     final formController = useCaseState.formController;
     if (formController.validate()) {
-      useCaseState = useCaseState.copyWith(state: FormState.loading);
+      useCaseState = useCaseState.copyWith(state: FormScreenState.loading);
       formController.setSubmitted(true);
 
       // Simulates login
@@ -60,11 +60,11 @@ class FormUseCase extends UseCase<FormEntity> {
         password: _passwordController.value ?? '',
         gender: _genderController.value?.name ?? '',
       );
-      useCaseState =
-          useCaseState.copyWith(state: FormState.success, userMeta: userMeta);
+      useCaseState = useCaseState.copyWith(
+          state: FormScreenState.success, userMeta: userMeta);
       formController.setSubmitted(false);
 
-      useCaseState = useCaseState.copyWith(state: FormState.initial);
+      useCaseState = useCaseState.copyWith(state: FormScreenState.initial);
     }
   }
 
@@ -79,16 +79,16 @@ class FormUseCase extends UseCase<FormEntity> {
   }
 }
 
-class FormUIOutputTransformer
-    extends OutputTransformer<FormEntity, FormUIOutput> {
+class FormDomainToUIOutputTransformer
+    extends OutputTransformer<FormState, FormDomainToUIOutput> {
   @override
-  FormUIOutput transform(FormEntity entity) {
-    return FormUIOutput(
-      formController: entity.formController,
-      isLoading: entity.state == FormState.loading,
-      isLoggedIn: entity.state == FormState.success,
-      userMeta: entity.userMeta,
-      requireGender: entity.requireGender,
+  FormDomainToUIOutput transform(FormState state) {
+    return FormDomainToUIOutput(
+      formController: state.formController,
+      isLoading: state.screenState == FormScreenState.loading,
+      isLoggedIn: state.screenState == FormScreenState.success,
+      userMeta: state.userMeta,
+      requireGender: state.requireGender,
     );
   }
 }

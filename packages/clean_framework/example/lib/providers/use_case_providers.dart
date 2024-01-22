@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_entity.dart';
+import 'package:clean_framework_example/features/form/domain/form_state.dart';
 import 'package:clean_framework_example/features/form/domain/form_use_case.dart';
 import 'package:clean_framework_example/features/home/domain/home_state.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
@@ -26,6 +26,6 @@ final profileUseCaseFamily =
   ProfileUseCase.new,
 );
 
-final formUseCaseProvider = UseCaseProvider<FormEntity, FormUseCase>(
+final formUseCaseProvider = UseCaseProvider<FormState, FormUseCase>(
   FormUseCase.new,
 );

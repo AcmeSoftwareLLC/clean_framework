@@ -7,38 +7,39 @@ enum FormTags {
   selectGender,
 }
 
-enum FormState {
+enum FormScreenState {
   initial,
   loading,
   success,
   failure,
 }
 
-class FormEntity extends UseCaseState {
-  FormEntity({
+class FormState extends UseCaseState {
+  FormState({
     required this.formController,
-    this.state = FormState.initial,
+    this.screenState = FormScreenState.initial,
     this.userMeta = const UserMeta(),
     this.requireGender = true,
   });
 
   final FormController formController;
-  final FormState state;
+  final FormScreenState screenState;
   final UserMeta userMeta;
   final bool requireGender;
 
   @override
-  List<Object> get props => [formController, state, userMeta, requireGender];
+  List<Object> get props =>
+      [formController, screenState, userMeta, requireGender];
 
   @override
-  FormEntity copyWith({
-    FormState? state,
+  FormState copyWith({
+    FormScreenState? state,
     UserMeta? userMeta,
     bool? requireGender,
   }) {
-    return FormEntity(
+    return FormState(
       formController: formController,
-      state: state ?? this.state,
+      screenState: state ?? this.screenState,
       userMeta: userMeta ?? this.userMeta,
       requireGender: requireGender ?? this.requireGender,
     );

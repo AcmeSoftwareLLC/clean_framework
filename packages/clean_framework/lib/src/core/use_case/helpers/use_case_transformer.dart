@@ -1,6 +1,6 @@
-import 'package:clean_framework/src/core/use_case/use_case_state.dart';
 import 'package:clean_framework/src/core/use_case/helpers/input.dart';
 import 'package:clean_framework/src/core/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/use_case_state.dart';
 import 'package:meta/meta.dart';
 
 part 'input_filter_map.dart';

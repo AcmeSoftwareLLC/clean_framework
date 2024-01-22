@@ -1,12 +1,12 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_ui_output.dart';
+import 'package:clean_framework_example/features/form/domain/form_domain_outputs.dart';
 import 'package:clean_framework_example/features/form/domain/form_use_case.dart';
 import 'package:clean_framework_example/features/form/presentation/form_view_model.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class FormPresenter
-    extends Presenter<FormViewModel, FormUIOutput, FormUseCase> {
+    extends Presenter<FormViewModel, FormDomainToUIOutput, FormUseCase> {
   FormPresenter({
     required super.builder,
     super.key,
@@ -20,7 +20,7 @@ class FormPresenter
   @override
   FormViewModel createViewModel(
     FormUseCase useCase,
-    FormUIOutput output,
+    FormDomainToUIOutput output,
   ) {
     return FormViewModel(
       formController: output.formController,
@@ -32,7 +32,7 @@ class FormPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, FormUIOutput output) {
+  void onOutputUpdate(BuildContext context, FormDomainToUIOutput output) {
     if (output.isLoggedIn) {
       showDialog<void>(
         context: context,

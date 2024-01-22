@@ -4,8 +4,8 @@ library clean_framework_legacy;
 export 'package:clean_framework/src/app_providers_container.dart';
 export 'package:clean_framework/src/core/external_interface/request.dart';
 export 'package:clean_framework/src/core/external_interface/response.dart';
-export 'package:clean_framework/src/core/use_case/use_case_state.dart';
 export 'package:clean_framework/src/core/use_case/use_case.dart';
+export 'package:clean_framework/src/core/use_case/use_case_state.dart';
 export 'package:clean_framework/src/open_feature/open_feature.dart';
 export 'package:clean_framework/src/presentation/presenter/presenter.dart'
     show PresenterBuilder;
