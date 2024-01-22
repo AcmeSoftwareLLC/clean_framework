@@ -1,6 +1,6 @@
 part of 'use_case_provider.dart';
 
-class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
+class AutoDisposeUseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
     extends UseCaseProviderBase<E, U> {
   AutoDisposeUseCaseProvider(
     U Function() create, [
@@ -26,7 +26,7 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
   Override overrideWith(U useCase) => _internal.overrideWith((_) => useCase);
 
   @override
-  ProviderListenable<O> selector<O extends Output>(U useCase) {
+  ProviderListenable<O> selector<O extends DomainOutput>(U useCase) {
     return _internal.select((_) => useCase.getOutput());
   }
 
@@ -36,7 +36,8 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
 class AutoDisposeUseCaseProviderBuilder {
   const AutoDisposeUseCaseProviderBuilder();
 
-  AutoDisposeUseCaseProvider<E, U> call<E extends Entity, U extends UseCase<E>>(
+  AutoDisposeUseCaseProvider<E, U>
+      call<E extends UseCaseState, U extends UseCase<E>>(
     U Function() create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {

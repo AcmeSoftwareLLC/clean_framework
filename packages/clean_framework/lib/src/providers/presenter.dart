@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-abstract class Presenter<V extends ViewModel, O extends Output,
+abstract class Presenter<V extends ViewModel, O extends DomainOutput,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
     required UseCaseProvider provider,
@@ -47,8 +47,8 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   O subscribe(WidgetRef ref) => _provider.subscribe<O>(ref);
 }
 
-class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
-    extends ConsumerState<Presenter<V, O, U>> {
+class _PresenterState<V extends ViewModel, O extends DomainOutput,
+    U extends UseCase> extends ConsumerState<Presenter<V, O, U>> {
   U? _useCase;
 
   @override

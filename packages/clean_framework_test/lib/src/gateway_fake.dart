@@ -4,7 +4,7 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class GatewayFake<R extends Request, P extends SuccessResponse> extends Fake
-    implements Gateway<Output, R, P, SuccessInput> {
+    implements Gateway<DomainOutput, R, P, SuccessDomainInput> {
   FailureResponse? failureResponse;
   SuccessResponse? successResponse;
   final Completer<void> hasYielded = Completer();
@@ -14,7 +14,8 @@ class GatewayFake<R extends Request, P extends SuccessResponse> extends Fake
 }
 
 class WatcherGatewayFake<R extends Request, P extends SuccessResponse>
-    extends Fake implements WatcherGateway<Output, R, P, SuccessInput> {
+    extends Fake
+    implements WatcherGateway<DomainOutput, R, P, SuccessDomainInput> {
   FailureResponse? failureResponse;
   P? _successResponse;
   final Completer<P> hasYielded = Completer();

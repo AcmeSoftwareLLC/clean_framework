@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfileUseCase tests |', () {
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
@@ -34,8 +34,8 @@ void main() {
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+            PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
               PokemonProfileSuccessInput(
@@ -61,14 +61,14 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIOutput(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,
           weight: 0,
           stats: [],
         ),
-        ProfileUIOutput(
+        ProfileDomainToUIOutput(
           types: ['electric'],
           description: 'At will, it can generate powerful electricity.',
           height: 0.4,
@@ -85,19 +85,20 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
         useCase
             .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
           (output) {
-            return Either.left(FailureInput(message: 'Something went wrong'));
+            return Either.left(
+                FailureDomainInput(message: 'Something went wrong'));
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+            PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
               PokemonProfileSuccessInput(
@@ -123,7 +124,7 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIOutput(
           types: ['electric'],
           description: '',
           height: 0.4,
@@ -140,7 +141,7 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
@@ -162,17 +163,18 @@ void main() {
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+            PokemonProfileSuccessInput>(
           (output) {
-            return Either.left(FailureInput(message: 'Something went wrong'));
+            return Either.left(
+                FailureDomainInput(message: 'Something went wrong'));
           },
         );
 
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIOutput(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,

@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:mocktail/mocktail.dart';
 
-class UseCaseMock<E extends Entity> extends Mock {
+class UseCaseMock<E extends UseCaseState> extends Mock {
   UseCaseMock({
     required this.entity,
     List<UseCaseTransformer<E>>? transformers,
@@ -14,5 +14,5 @@ class UseCaseMock<E extends Entity> extends Mock {
   final E entity;
   final OutputFilterMap<E> _outputFilters = {};
 
-  O getOutput<O extends Output>() => _outputFilters<O>(entity);
+  O getOutput<O extends DomainOutput>() => _outputFilters<O>(entity);
 }

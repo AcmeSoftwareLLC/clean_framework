@@ -57,7 +57,7 @@ class TestUI extends UI<TestViewModel> {
   }
 
   @override
-  Presenter<ViewModel, Output, UseCase<Entity>> create(
+  Presenter<ViewModel, DomainOutput, UseCase<UseCaseState>> create(
     PresenterBuilder<TestViewModel> builder,
   ) {
     return PresenterFake(builder: builder);
@@ -87,7 +87,7 @@ class TestViewModel extends ViewModel {
   List<Object?> get props => [foo];
 }
 
-class TestOutput extends Output {
+class TestOutput extends DomainOutput {
   const TestOutput(this.foo);
   final String foo;
 

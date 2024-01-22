@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class ProfileUIOutput extends Output {
-  ProfileUIOutput({
+class ProfileDomainToUIOutput extends DomainOutput {
+  ProfileDomainToUIOutput({
     required this.types,
     required this.description,
     required this.height,
@@ -35,4 +35,13 @@ class PokemonStat {
 
   @override
   int get hashCode => name.hashCode ^ point.hashCode;
+}
+
+class PokemonProfileDomainToGatewayOutput extends DomainOutput {
+  PokemonProfileDomainToGatewayOutput({required this.name});
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
 }

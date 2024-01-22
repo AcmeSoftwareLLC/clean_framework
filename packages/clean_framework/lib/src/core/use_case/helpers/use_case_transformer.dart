@@ -1,4 +1,4 @@
-import 'package:clean_framework/src/core/use_case/entity.dart';
+import 'package:clean_framework/src/core/use_case/use_case_state.dart';
 import 'package:clean_framework/src/core/use_case/helpers/input.dart';
 import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:meta/meta.dart';
@@ -6,9 +6,9 @@ import 'package:meta/meta.dart';
 part 'input_filter_map.dart';
 part 'output_filter_map.dart';
 
-abstract class UseCaseTransformer<E extends Entity> {}
+abstract class UseCaseTransformer<E extends UseCaseState> {}
 
-abstract class OutputTransformer<E extends Entity, O extends Output>
+abstract class OutputTransformer<E extends UseCaseState, O extends DomainOutput>
     implements UseCaseTransformer<E> {
   const OutputTransformer() : _transformer = null;
 
@@ -25,14 +25,14 @@ abstract class OutputTransformer<E extends Entity, O extends Output>
   O transform(E entity);
 }
 
-abstract class InputTransformer<E extends Entity, I extends Input>
-    implements UseCaseTransformer<E> {
-  const InputTransformer() : _transformer = null;
+abstract class DomainInputTransformer<E extends UseCaseState,
+    I extends DomainInput> implements UseCaseTransformer<E> {
+  const DomainInputTransformer() : _transformer = null;
 
-  factory InputTransformer.from(E Function(E, I) transformer) =
+  factory DomainInputTransformer.from(E Function(E, I) transformer) =
       _InputFilter<E, I>;
 
-  const InputTransformer._(this._transformer);
+  const DomainInputTransformer._(this._transformer);
 
   final E Function(E, I)? _transformer;
 
@@ -44,7 +44,7 @@ abstract class InputTransformer<E extends Entity, I extends Input>
   E transform(E entity, I input);
 }
 
-class _OutputFilter<E extends Entity, O extends Output>
+class _OutputFilter<E extends UseCaseState, O extends DomainOutput>
     extends OutputTransformer<E, O> {
   const _OutputFilter(super.transformer) : super._();
 
@@ -52,8 +52,8 @@ class _OutputFilter<E extends Entity, O extends Output>
   O transform(E entity) => _transformer!(entity);
 }
 
-class _InputFilter<E extends Entity, I extends Input>
-    extends InputTransformer<E, I> {
+class _InputFilter<E extends UseCaseState, I extends DomainInput>
+    extends DomainInputTransformer<E, I> {
   const _InputFilter(super.transformer) : super._();
 
   @override

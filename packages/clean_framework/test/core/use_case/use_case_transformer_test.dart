@@ -18,8 +18,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugEntity.foo, 'hello');
-      expect(useCase.debugEntity.bar, 3);
+      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugUseCaseState.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -28,7 +28,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugUseCaseState.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -48,8 +48,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugEntity.foo, 'hello');
-      expect(useCase.debugEntity.bar, 3);
+      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugUseCaseState.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -58,7 +58,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugUseCaseState.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -66,14 +66,14 @@ void main() {
 }
 
 abstract class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase({super.transformers}) : super(entity: const TestEntity());
+  TestUseCase({super.transformers}) : super(useCaseState: const TestEntity());
 
   void updateFoo(String foo) {
-    entity = entity.copyWith(foo: foo);
+    useCaseState = useCaseState.copyWith(foo: foo);
   }
 
   void updateBar(int bar) {
-    entity = entity.copyWith(bar: bar);
+    useCaseState = useCaseState.copyWith(bar: bar);
   }
 }
 
@@ -94,20 +94,20 @@ class InlineTransformerTestUseCase extends TestUseCase {
           transformers: [
             OutputTransformer.from((entity) => FooOutput(entity.foo)),
             OutputTransformer.from((entity) => BarOutput(entity.bar)),
-            InputTransformer<TestEntity, FooInput>.from(
+            DomainInputTransformer<TestEntity, FooInput>.from(
               (entity, input) => entity.copyWith(foo: input.foo),
             ),
           ],
         );
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
 
   final String foo;
 }
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({
     this.foo = '',
     this.bar = 0,
@@ -131,12 +131,12 @@ class TestEntity extends Entity {
   }
 }
 
-class FooInput extends SuccessInput {
+class FooInput extends SuccessDomainInput {
   const FooInput(this.foo);
   final String foo;
 }
 
-class FooOutput extends Output {
+class FooOutput extends DomainOutput {
   const FooOutput(this.foo);
   final String foo;
 
@@ -144,7 +144,7 @@ class FooOutput extends Output {
   List<Object?> get props => [foo];
 }
 
-class BarOutput extends Output {
+class BarOutput extends DomainOutput {
   const BarOutput(this.bar);
   final int bar;
 
@@ -166,7 +166,7 @@ class BarOutputTransformer extends OutputTransformer<TestEntity, BarOutput> {
   }
 }
 
-class FooInputTransformer extends InputTransformer<TestEntity, FooInput> {
+class FooInputTransformer extends DomainInputTransformer<TestEntity, FooInput> {
   @override
   TestEntity transform(TestEntity entity, FooInput input) {
     return entity.copyWith(foo: input.foo);

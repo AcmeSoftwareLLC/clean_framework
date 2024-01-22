@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
-class ProfileUseCase extends UseCase<ProfileEntity> {
+class ProfileUseCase extends UseCase<ProfileState> {
   ProfileUseCase(this.name)
       : super(
-          entity: ProfileEntity(),
+          useCaseState: ProfileState(),
           transformers: [ProfileUIOutputTransformer()],
         );
 
@@ -19,7 +19,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     final pokeName = name.toLowerCase();
 
     // If the use case is not auto disposed then we have last fetched data.
-    if (!entity.description.isEmpty) return;
+    if (!useCaseState.description.isEmpty) return;
 
     request<PokemonSpeciesSuccessInput>(
       PokemonSpeciesGatewayOutput(name: pokeName),
@@ -30,38 +30,38 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 
         final randomIndex = Random().nextInt(descriptions.length);
 
-        return entity.copyWith(
+        return useCaseState.copyWith(
           description: descriptions.elementAt(randomIndex).text,
         );
       },
-      onFailure: (failure) => entity,
+      onFailure: (failure) => useCaseState,
     );
 
     request<PokemonProfileSuccessInput>(
-      PokemonProfileGatewayOutput(name: pokeName),
+      PokemonProfileDomainToGatewayOutput(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;
 
-        return entity.copyWith(
+        return useCaseState.copyWith(
           name: name,
           types: profile.types,
           height: profile.height,
           weight: profile.weight,
           stats: profile.stats
-              .map((s) => PokemonStatEntity(name: s.name, point: s.baseStat))
+              .map((s) => PokemonStatState(name: s.name, point: s.baseStat))
               .toList(growable: false),
         );
       },
-      onFailure: (failure) => entity,
+      onFailure: (failure) => useCaseState,
     );
   }
 }
 
 class ProfileUIOutputTransformer
-    extends OutputTransformer<ProfileEntity, ProfileUIOutput> {
+    extends OutputTransformer<ProfileState, ProfileDomainToUIOutput> {
   @override
-  ProfileUIOutput transform(ProfileEntity entity) {
-    return ProfileUIOutput(
+  ProfileDomainToUIOutput transform(ProfileState entity) {
+    return ProfileDomainToUIOutput(
       types: entity.types,
       description: entity.description.replaceAll(RegExp(r'[\n\f]'), ' '),
       height: entity.height / 10,

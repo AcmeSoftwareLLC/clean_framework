@@ -8,8 +8,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugEntity.foo, 'hello');
-      expect(useCase.debugEntity.bar, 3);
+      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugUseCaseState.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -18,20 +18,20 @@ void main() {
     test('input transformer', () {
       final useCase = TestUseCase()..setInput(const FooInput('hello'));
 
-      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugUseCaseState.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
   });
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
 
   final String foo;
 }
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({
     this.foo = '',
     this.bar = 0,
@@ -58,7 +58,7 @@ class TestEntity extends Entity {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          entity: const TestEntity(),
+          useCaseState: const TestEntity(),
           transformers: [
             FooOutputTransformer(),
             FooInputTransformer(),
@@ -67,20 +67,20 @@ class TestUseCase extends UseCase<TestEntity> {
         );
 
   void updateFoo(String foo) {
-    entity = entity.copyWith(foo: foo);
+    useCaseState = useCaseState.copyWith(foo: foo);
   }
 
   void updateBar(int bar) {
-    entity = entity.copyWith(bar: bar);
+    useCaseState = useCaseState.copyWith(bar: bar);
   }
 }
 
-class FooInput extends SuccessInput {
+class FooInput extends SuccessDomainInput {
   const FooInput(this.foo);
   final String foo;
 }
 
-class FooOutput extends Output {
+class FooOutput extends DomainOutput {
   const FooOutput(this.foo);
   final String foo;
 
@@ -88,7 +88,7 @@ class FooOutput extends Output {
   List<Object?> get props => [foo];
 }
 
-class BarOutput extends Output {
+class BarOutput extends DomainOutput {
   const BarOutput(this.bar);
   final int bar;
 
@@ -103,7 +103,7 @@ class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
   }
 }
 
-class FooInputTransformer extends InputTransformer<TestEntity, FooInput> {
+class FooInputTransformer extends DomainInputTransformer<TestEntity, FooInput> {
   @override
   TestEntity transform(TestEntity entity, FooInput input) {
     return entity.copyWith(foo: input.foo);

@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 
-class FormUIOutput extends Output {
+class FormUIOutput extends DomainOutput {
   const FormUIOutput({
     required this.formController,
     required this.isLoading,

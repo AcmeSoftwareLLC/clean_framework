@@ -10,7 +10,7 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<E extends Entity, U extends UseCase<E>>
+class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
     extends UseCaseProviderBase<E, U> {
   UseCaseProvider(
     U Function() create, [
@@ -40,7 +40,7 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   Override overrideWith(U useCase) => _internal.overrideWith((_) => useCase);
 
   @override
-  ProviderListenable<O> selector<O extends Output>(U useCase) {
+  ProviderListenable<O> selector<O extends DomainOutput>(U useCase) {
     return _internal.select((_) => useCase.getOutput());
   }
 

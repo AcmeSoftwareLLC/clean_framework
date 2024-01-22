@@ -1,5 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,13 +8,15 @@ void main() {
   group('PokemonProfileGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonProfileGateway();
-      final gatewayOutput = PokemonProfileGatewayOutput(name: 'pikachu');
+      final gatewayOutput =
+          PokemonProfileDomainToGatewayOutput(name: 'pikachu');
 
       final request = await gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon/pikachu'));
 
-      expect(gatewayOutput, PokemonProfileGatewayOutput(name: 'pikachu'));
+      expect(
+          gatewayOutput, PokemonProfileDomainToGatewayOutput(name: 'pikachu'));
     });
 
     test('success', () async {
@@ -90,7 +93,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonProfileGatewayOutput(name: 'pikachu'),
+        PokemonProfileDomainToGatewayOutput(name: 'pikachu'),
       );
 
       expect(input.isRight, isTrue);
@@ -123,7 +126,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonProfileGatewayOutput(name: 'pikachu'),
+        PokemonProfileDomainToGatewayOutput(name: 'pikachu'),
       );
 
       expect(input.isLeft, isTrue);

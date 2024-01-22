@@ -1,6 +1,7 @@
 part of 'use_case_provider.dart';
 
-abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
+abstract class UseCaseProviderBase<E extends UseCaseState,
+    U extends UseCase<E>> {
   final StreamController<Refreshable<U>> _notifierController =
       StreamController.broadcast();
 
@@ -13,7 +14,7 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
 
   void init() => _notifierController.add(buildNotifier());
 
-  O subscribe<O extends Output>(WidgetRef ref) {
+  O subscribe<O extends DomainOutput>(WidgetRef ref) {
     return ref.watch(_outputChangeListener(ref));
   }
 
@@ -25,15 +26,20 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
     return read(AppProviderScope.containerOf(context));
   }
 
-  void listen<O extends Output>(WidgetRef ref, void Function(O?, O) listener) {
+  void listen<O extends DomainOutput>(
+    WidgetRef ref,
+    void Function(O?, O) listener,
+  ) {
     ref.listen<O>(_outputChangeListener(ref), listener);
   }
 
-  ProviderListenable<O> _outputChangeListener<O extends Output>(WidgetRef ref) {
+  ProviderListenable<O> _outputChangeListener<O extends DomainOutput>(
+    WidgetRef ref,
+  ) {
     return selector(getUseCase(ref));
   }
 
-  ProviderListenable<O> selector<O extends Output>(U useCase);
+  ProviderListenable<O> selector<O extends DomainOutput>(U useCase);
 
   @visibleForTesting
   U read(ProviderContainer container) {

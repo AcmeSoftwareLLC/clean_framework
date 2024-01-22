@@ -3,8 +3,8 @@ import 'package:clean_framework_example/features/home/models/pokemon_model.dart'
 
 enum HomeStatus { initial, loading, loaded, failed }
 
-class HomeEntity extends Entity {
-  HomeEntity({
+class HomeState extends UseCaseState {
+  HomeState({
     this.pokemons = const [],
     this.pokemonNameQuery = '',
     this.status = HomeStatus.initial,
@@ -33,7 +33,7 @@ class HomeEntity extends Entity {
   }
 
   @override
-  HomeEntity copyWith({
+  HomeState copyWith({
     List<PokemonModel>? pokemons,
     String? pokemonNameQuery,
     HomeStatus? status,
@@ -41,7 +41,7 @@ class HomeEntity extends Entity {
     String? loggedInEmail,
     String? errorMessage,
   }) {
-    return HomeEntity(
+    return HomeState(
       pokemons: pokemons ?? this.pokemons,
       pokemonNameQuery: pokemonNameQuery ?? this.pokemonNameQuery,
       status: status ?? this.status,

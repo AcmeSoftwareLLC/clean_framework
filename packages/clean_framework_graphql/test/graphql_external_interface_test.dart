@@ -197,13 +197,13 @@ class GatewayFake extends GraphQLGateway {
   GatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  MutationRequest buildRequest(Output output) {
+  MutationRequest buildRequest(DomainOutput output) {
     return MutationRequest();
   }
 
   @override
-  SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return const SuccessInput();
+  SuccessDomainInput onSuccess(GraphQLSuccessResponse response) {
+    return const SuccessDomainInput();
   }
 }
 
@@ -211,13 +211,13 @@ class MutationGatewayFake extends GraphQLGateway {
   MutationGatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  SuccessfulRequest buildRequest(Output output) {
+  SuccessfulRequest buildRequest(DomainOutput output) {
     return SuccessfulRequest();
   }
 
   @override
-  SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return const SuccessInput();
+  SuccessDomainInput onSuccess(GraphQLSuccessResponse response) {
+    return const SuccessDomainInput();
   }
 }
 

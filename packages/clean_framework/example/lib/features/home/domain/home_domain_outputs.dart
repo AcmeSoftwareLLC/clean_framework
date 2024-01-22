@@ -1,9 +1,9 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/home/domain/home_entity.dart';
+import 'package:clean_framework_example/features/home/domain/home_state.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
-class HomeUIOutput extends Output {
-  HomeUIOutput({
+class HomeDomainToUIOutput extends DomainOutput {
+  HomeDomainToUIOutput({
     required this.pokemons,
     required this.status,
     required this.isRefresh,
@@ -25,4 +25,9 @@ class HomeUIOutput extends Output {
         loggedInEmail,
         errorMessage,
       ];
+}
+
+class PokemonCollectionDomainToGatewayOutput extends DomainOutput {
+  @override
+  List<Object?> get props => [];
 }

@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class HomeUIOutput extends Output {
+class HomeUIOutput extends DomainOutput {
   const HomeUIOutput({required this.pokemons});
 
   final List<PokemonUIOutput> pokemons;
@@ -9,7 +9,7 @@ class HomeUIOutput extends Output {
   List<Object> get props => [pokemons];
 }
 
-class PokemonUIOutput extends Output {
+class PokemonUIOutput extends DomainOutput {
   const PokemonUIOutput({required this.name, required this.url});
 
   final String name;

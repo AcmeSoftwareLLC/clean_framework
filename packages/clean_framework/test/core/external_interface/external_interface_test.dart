@@ -28,7 +28,7 @@ void main() {
       );
 
       expect(input.isLeft, isTrue);
-      expect(input.left, isA<FailureInput>());
+      expect(input.left, isA<FailureDomainInput>());
     });
 
     test('watcher gateway success', () async {
@@ -56,7 +56,7 @@ void main() {
       );
 
       expect(input.isLeft, isTrue);
-      expect(input.left, isA<FailureInput>());
+      expect(input.left, isA<FailureDomainInput>());
     });
 
     test('override external interface provider', () {
@@ -178,8 +178,8 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -196,8 +196,8 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -206,7 +206,7 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestGatewayOutput extends Output {
+class TestGatewayOutput extends DomainOutput {
   const TestGatewayOutput({required this.success});
 
   final bool success;
@@ -215,4 +215,4 @@ class TestGatewayOutput extends Output {
   List<Object?> get props => [success];
 }
 
-class TestSuccessInput extends SuccessInput {}
+class TestSuccessInput extends SuccessDomainInput {}

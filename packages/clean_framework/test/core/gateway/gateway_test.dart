@@ -182,7 +182,7 @@ final _testUseCaseProviderFamily =
   (_) => TestUseCase(),
 );
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({this.message = ''});
 
   final String message;
@@ -199,9 +199,9 @@ class TestEntity extends Entity {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          entity: const TestEntity(),
+          useCaseState: const TestEntity(),
           transformers: [
-            InputTransformer<TestEntity, TestSuccessInput>.from(
+            DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (e, i) => e.copyWith(message: i.message),
             ),
           ],
@@ -216,8 +216,8 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -239,7 +239,7 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestGatewayOutput extends Output {
+class TestGatewayOutput extends DomainOutput {
   const TestGatewayOutput(this.name);
 
   final String name;
@@ -248,7 +248,7 @@ class TestGatewayOutput extends Output {
   List<Object?> get props => [name];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.message);
 
   final String message;

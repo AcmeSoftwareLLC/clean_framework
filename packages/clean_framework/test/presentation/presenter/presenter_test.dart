@@ -172,7 +172,7 @@ class TestPresenter
   }
 }
 
-class TestUIOutput extends Output {
+class TestUIOutput extends DomainOutput {
   const TestUIOutput({required this.message});
 
   final String message;
@@ -194,7 +194,7 @@ class TestViewModel extends ViewModel {
   List<Object?> get props => [message];
 }
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({this.message = ''});
 
   final String message;
@@ -211,7 +211,7 @@ class TestEntity extends Entity {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({this.name = ''})
       : super(
-          entity: const TestEntity(message: 'DEFAULT'),
+          useCaseState: const TestEntity(message: 'DEFAULT'),
           transformers: [
             OutputTransformer.from(
               (entity) => TestUIOutput(message: entity.message),
@@ -222,6 +222,6 @@ class TestUseCase extends UseCase<TestEntity> {
   final String name;
 
   void update(String message) {
-    entity = entity.copyWith(message: message);
+    useCaseState = useCaseState.copyWith(message: message);
   }
 }

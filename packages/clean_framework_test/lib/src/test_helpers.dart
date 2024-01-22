@@ -163,7 +163,7 @@ void uiTest(
 }
 
 @isTest
-void useCaseTest<U extends UseCase, O extends Output>(
+void useCaseTest<U extends UseCase, O extends DomainOutput>(
   String description, {
   required ProvidersContext context,
   required U Function(Ref) build,

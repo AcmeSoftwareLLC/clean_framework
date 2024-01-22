@@ -9,8 +9,8 @@ import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
-ProviderContainer
-    useCaseTest<U extends UseCase<E>, E extends Entity, O extends Output>(
+ProviderContainer useCaseTest<U extends UseCase<E>, E extends UseCaseState,
+    O extends DomainOutput>(
   String description, {
   required UseCaseProviderBase provider,
   required FutureOr<void> Function(U) execute,
@@ -27,7 +27,7 @@ ProviderContainer
       final useCase = provider.read(providerContainer) as U;
 
       if (seed != null) {
-        useCase.entity = seed(useCase.entity);
+        useCase.useCaseState = seed(useCase.useCaseState);
       }
 
       final outputs = <O>[];
@@ -65,8 +65,8 @@ ProviderContainer
 }
 
 @isTest
-ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
-    O extends Output, FU extends UseCase>(
+ProviderContainer useCaseBridgeTest<TU extends UseCase<E>,
+    E extends UseCaseState, O extends DomainOutput, FU extends UseCase>(
   String description, {
   required UseCaseProviderBase from,
   required UseCaseProviderBase to,
@@ -85,7 +85,7 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
       final toUseCase = to.read(providerContainer) as TU;
 
       if (seed != null) {
-        toUseCase.entity = seed(toUseCase.entity);
+        toUseCase.useCaseState = seed(toUseCase.useCaseState);
       }
 
       final outputs = <O>[];

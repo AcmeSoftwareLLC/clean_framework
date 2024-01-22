@@ -23,7 +23,7 @@ void main() {
         final useCase = container.read(_testUseCaseProvider().notifier);
         await useCase.ping('Hello');
 
-        expect(useCase.debugEntity.pong, 'Hello');
+        expect(useCase.debugUseCaseState.pong, 'Hello');
       },
     );
 
@@ -92,8 +92,8 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -114,7 +114,7 @@ class TestSuccessResponse extends SuccessResponse {
   final String pong;
 }
 
-class TestGatewayOutput extends Output {
+class TestGatewayOutput extends DomainOutput {
   const TestGatewayOutput({required this.ping});
 
   final String ping;
@@ -123,25 +123,25 @@ class TestGatewayOutput extends Output {
   List<Object?> get props => [ping];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput({required this.pong});
 
   final String pong;
 }
 
 class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase() : super(entity: const TestEntity());
+  TestUseCase() : super(useCaseState: const TestEntity());
 
   Future<void> ping(String message) {
     return request<TestSuccessInput>(
       TestGatewayOutput(ping: message),
-      onSuccess: (input) => entity.copyWith(pong: input.pong),
-      onFailure: (input) => entity,
+      onSuccess: (input) => useCaseState.copyWith(pong: input.pong),
+      onFailure: (input) => useCaseState,
     );
   }
 }
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({this.pong = ''});
 
   final String pong;

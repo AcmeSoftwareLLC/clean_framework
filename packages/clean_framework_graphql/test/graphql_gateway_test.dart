@@ -15,7 +15,7 @@ void main() {
       };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, const EntityFake(value: 'success'));
+    expect(useCase.useCaseState, const EntityFake(value: 'success'));
 
     final request = gateway.buildRequest(TestOutput());
     expect(request.variables, null);
@@ -30,12 +30,12 @@ void main() {
     };
 
     await useCase.doFakeRequest(TestOutput());
-    expect(useCase.entity, const EntityFake(value: 'failure'));
+    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
   });
 }
 
 class TestGateway
-    extends GraphQLGateway<TestOutput, TestRequest, SuccessInput> {
+    extends GraphQLGateway<TestOutput, TestRequest, SuccessDomainInput> {
   TestGateway(UseCase useCase) : super(useCase: useCase);
 
   @override
@@ -44,12 +44,12 @@ class TestGateway
   }
 
   @override
-  SuccessInput onSuccess(GraphQLSuccessResponse response) {
-    return const SuccessInput();
+  SuccessDomainInput onSuccess(GraphQLSuccessResponse response) {
+    return const SuccessDomainInput();
   }
 }
 
-class TestOutput extends Output {
+class TestOutput extends DomainOutput {
   @override
   List<Object?> get props => [];
 }

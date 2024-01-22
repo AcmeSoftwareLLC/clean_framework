@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<O extends Output, R extends Request,
-    P extends SuccessResponse, S extends SuccessInput> {
+abstract class Gateway<O extends DomainOutput, R extends Request,
+    P extends SuccessResponse, S extends SuccessDomainInput> {
   Gateway({
     ProvidersContext? context,
     UseCaseProvider? provider,
@@ -24,10 +24,10 @@ abstract class Gateway<O extends Output, R extends Request,
   late final Transport<R, P> transport;
 
   S onSuccess(covariant P response);
-  FailureInput onFailure(covariant FailureResponse failureResponse);
+  FailureDomainInput onFailure(covariant FailureResponse failureResponse);
   R buildRequest(O output);
 
-  Future<Either<FailureInput, S>> _processRequest(R request) async {
+  Future<Either<FailureDomainInput, S>> _processRequest(R request) async {
     final either = await transport(request);
     return either.fold(
       (failureResponse) => Either.left(onFailure(failureResponse)),
@@ -36,8 +36,10 @@ abstract class Gateway<O extends Output, R extends Request,
   }
 }
 
-abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
-    PUBLISHER_OUTPUT extends Output, SUBSCRIBER_INPUT extends Input> {
+abstract class BridgeGateway<
+    SUBSCRIBER_OUTPUT extends DomainOutput,
+    PUBLISHER_OUTPUT extends DomainOutput,
+    SUBSCRIBER_INPUT extends DomainInput> {
   BridgeGateway({
     required UseCase subscriberUseCase,
     required UseCase publisherUseCase,
@@ -45,7 +47,7 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
         _publisherUseCase = publisherUseCase {
     _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
       (output) {
-        return Either<FailureInput, SUBSCRIBER_INPUT>.right(
+        return Either<FailureDomainInput, SUBSCRIBER_INPUT>.right(
           onResponse(
             _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
           ),
@@ -60,18 +62,18 @@ abstract class BridgeGateway<SUBSCRIBER_OUTPUT extends Output,
 }
 
 abstract class WatcherGateway<
-    O extends Output,
+    O extends DomainOutput,
     R extends Request,
     P extends SuccessResponse,
-    S extends SuccessInput> extends Gateway<O, R, P, S> {
+    S extends SuccessDomainInput> extends Gateway<O, R, P, S> {
   WatcherGateway({
     required ProvidersContext context,
     required UseCaseProvider provider,
   }) : super(context: context, provider: provider);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @nonVirtual

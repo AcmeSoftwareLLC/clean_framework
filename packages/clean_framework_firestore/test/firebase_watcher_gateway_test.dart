@@ -16,7 +16,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'success'));
+    expect(useCase.useCaseState, const EntityFake(value: 'success'));
   });
 
   test('FirebaseWatcherGateway transport failure', () async {
@@ -30,7 +30,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'failure'));
+    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
   });
 }
 
@@ -54,7 +54,7 @@ class TestGateway extends FirebaseWatcherGateway<TestOutput,
   }
 }
 
-class TestOutput extends Output {
+class TestOutput extends DomainOutput {
   const TestOutput(this.id);
 
   final String id;
@@ -63,7 +63,7 @@ class TestOutput extends Output {
   List<Object?> get props => [id];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
 
   final String foo;

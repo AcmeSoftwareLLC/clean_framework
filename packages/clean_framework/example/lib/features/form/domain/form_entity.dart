@@ -14,7 +14,7 @@ enum FormState {
   failure,
 }
 
-class FormEntity extends Entity {
+class FormEntity extends UseCaseState {
   FormEntity({
     required this.formController,
     this.state = FormState.initial,
@@ -45,7 +45,7 @@ class FormEntity extends Entity {
   }
 }
 
-class UserMeta extends Entity {
+class UserMeta extends UseCaseState {
   const UserMeta({
     this.email = '',
     this.password = '',

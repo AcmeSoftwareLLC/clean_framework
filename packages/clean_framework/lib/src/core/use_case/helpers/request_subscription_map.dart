@@ -4,21 +4,23 @@ import 'package:clean_framework/src/core/use_case/helpers/input.dart';
 import 'package:clean_framework/src/core/use_case/helpers/output.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 
-typedef RequestSubscriptionMap<I extends Input>
-    = Map<Type, RequestSubscription<Output, I>>;
+typedef RequestSubscriptionMap<I extends DomainInput>
+    = Map<Type, RequestSubscription<DomainOutput, I>>;
 
-typedef Result<I extends Input> = FutureOr<Either<FailureInput, I>>;
+typedef Result<I extends DomainInput> = FutureOr<Either<FailureDomainInput, I>>;
 
-typedef RequestSubscription<O extends Output, I extends Input> = Result<I>
-    Function(O);
+typedef RequestSubscription<O extends DomainOutput, I extends DomainInput>
+    = Result<I> Function(O);
 
-extension RequestSubscriptionMapExtension<I extends Input>
+extension RequestSubscriptionMapExtension<I extends DomainInput>
     on RequestSubscriptionMap<I> {
-  void add<O extends Output>(RequestSubscription<O, I> subscription) {
+  void add<O extends DomainOutput>(RequestSubscription<O, I> subscription) {
     this[O] = (output) => subscription(output as O);
   }
 
-  Result<S> getInput<S extends SuccessInput>(Output output) async {
+  Result<S> getDomainInput<S extends SuccessDomainInput>(
+    DomainOutput output,
+  ) async {
     final outputType = output.runtimeType;
     final subscription = this[outputType];
 
@@ -49,6 +51,6 @@ extension RequestSubscriptionMapExtension<I extends Input>
     }
 
     final result = await subscription(output);
-    return result as Either<FailureInput, S>;
+    return result as Either<FailureDomainInput, S>;
   }
 }

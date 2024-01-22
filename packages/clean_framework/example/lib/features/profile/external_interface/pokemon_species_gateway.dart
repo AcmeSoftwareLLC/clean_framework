@@ -11,8 +11,8 @@ class PokemonSpeciesGateway extends Gateway<PokemonSpeciesGatewayOutput,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -23,7 +23,7 @@ class PokemonSpeciesGateway extends Gateway<PokemonSpeciesGatewayOutput,
   }
 }
 
-class PokemonSpeciesGatewayOutput extends Output {
+class PokemonSpeciesGatewayOutput extends DomainOutput {
   PokemonSpeciesGatewayOutput({required this.name});
 
   final String name;
@@ -32,7 +32,7 @@ class PokemonSpeciesGatewayOutput extends Output {
   List<Object?> get props => [name];
 }
 
-class PokemonSpeciesSuccessInput extends SuccessInput {
+class PokemonSpeciesSuccessInput extends SuccessDomainInput {
   PokemonSpeciesSuccessInput({required this.species});
 
   final PokemonSpeciesModel species;

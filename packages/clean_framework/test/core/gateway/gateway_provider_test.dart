@@ -25,17 +25,17 @@ class NewTestGateway extends TestGateway {}
 
 class TestGateway extends Gateway {
   @override
-  Request buildRequest(Output output) {
+  Request buildRequest(DomainOutput output) {
     return const TestRequest('');
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
-  SuccessInput onSuccess(SuccessResponse response) {
+  SuccessDomainInput onSuccess(SuccessResponse response) {
     return const TestSuccessInput('');
   }
 }

@@ -48,8 +48,8 @@ class CleanFrameworkObserver {
   /// Called when a success [input] occurs in an use case.
   void onSuccessInput(
     UseCase useCase,
-    Output gatewayOutput,
-    SuccessInput input,
+    DomainOutput gatewayOutput,
+    SuccessDomainInput input,
   ) {
     logger.d(
       '[${useCase.runtimeType}] $gatewayOutput\n' '[Success] $input',
@@ -60,8 +60,8 @@ class CleanFrameworkObserver {
   /// Called when a failure [input] occurs in an use case.
   void onFailureInput(
     UseCase useCase,
-    Output gatewayOutput,
-    FailureInput input,
+    DomainOutput gatewayOutput,
+    FailureDomainInput input,
   ) {
     logger.d(
       '[${useCase.runtimeType}] $gatewayOutput\n' '[Failure] ${input.message}',

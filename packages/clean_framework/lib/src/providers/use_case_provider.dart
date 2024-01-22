@@ -3,7 +3,7 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UseCaseProvider<E extends Entity, U extends UseCase<E>>
+class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
     implements OverridableProvider<U> {
   UseCaseProvider(this.create)
       : _provider = StateNotifierProvider<U, E>(create);
@@ -19,15 +19,19 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     return context().read(_provider.notifier);
   }
 
-  O subscribe<O extends Output>(WidgetRef ref) {
+  O subscribe<O extends DomainOutput>(WidgetRef ref) {
     return ref.watch(_listenForOutputChange(ref));
   }
 
-  void listen<O extends Output>(WidgetRef ref, void Function(O?, O) listener) {
+  void listen<O extends DomainOutput>(
+    WidgetRef ref,
+    void Function(O?, O) listener,
+  ) {
     ref.listen<O>(_listenForOutputChange(ref), listener);
   }
 
-  AlwaysAliveProviderListenable<O> _listenForOutputChange<O extends Output>(
+  AlwaysAliveProviderListenable<O>
+      _listenForOutputChange<O extends DomainOutput>(
     WidgetRef ref,
   ) {
     final useCase = getUseCase(ref);
@@ -35,4 +39,4 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   }
 }
 
-typedef ProviderListener<E extends Entity> = void Function(E entity);
+typedef ProviderListener<E extends UseCaseState> = void Function(E entity);

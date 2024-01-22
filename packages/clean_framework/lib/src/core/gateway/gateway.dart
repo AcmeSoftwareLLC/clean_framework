@@ -8,8 +8,8 @@ import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<O extends Output, R extends Request,
-    P extends SuccessResponse, S extends SuccessInput> {
+abstract class Gateway<O extends DomainOutput, R extends Request,
+    P extends SuccessResponse, S extends SuccessDomainInput> {
   void attach(
     ProviderRef<Object> ref, {
     required List<UseCaseProviderBase> providers,
@@ -49,7 +49,7 @@ abstract class Gateway<O extends Output, R extends Request,
 
   @visibleForTesting
   @nonVirtual
-  Future<Either<FailureInput, S>> buildInput(O output) {
+  Future<Either<FailureDomainInput, S>> buildInput(O output) {
     return _processRequest(buildRequest(output));
   }
 
@@ -57,11 +57,11 @@ abstract class Gateway<O extends Output, R extends Request,
 
   S onSuccess(covariant P response);
 
-  FailureInput onFailure(covariant FailureResponse failureResponse);
+  FailureDomainInput onFailure(covariant FailureResponse failureResponse);
 
   R buildRequest(O output);
 
-  Future<Either<FailureInput, S>> _processRequest(R request) async {
+  Future<Either<FailureDomainInput, S>> _processRequest(R request) async {
     final either = await _source!.responder(request);
     return either.fold(
       (failureResponse) => Either.left(onFailure(failureResponse)),
@@ -71,13 +71,13 @@ abstract class Gateway<O extends Output, R extends Request,
 }
 
 abstract class WatcherGateway<
-    O extends Output,
+    O extends DomainOutput,
     R extends Request,
     P extends SuccessResponse,
-    S extends SuccessInput> extends Gateway<O, R, P, S> {
+    S extends SuccessDomainInput> extends Gateway<O, R, P, S> {
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @nonVirtual

@@ -2,38 +2,41 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
 
-class PokemonCollectionFailureInput extends FailureInput {
-  PokemonCollectionFailureInput({required this.type, super.message});
+class PokemonCollectionFailureDomainInput extends FailureDomainInput {
+  PokemonCollectionFailureDomainInput({required this.type, super.message});
 
   final PokemonFailureType type;
 }
 
 class PokemonCollectionGateway extends Gateway<
-    PokemonCollectionGatewayOutput,
+    PokemonCollectionDomainToGatewayOutput,
     PokemonCollectionRequest,
     PokemonSuccessResponse,
-    PokemonCollectionSuccessInput> {
+    PokemonCollectionSuccessDomainInput> {
   @override
-  PokemonCollectionRequest buildRequest(PokemonCollectionGatewayOutput output) {
+  PokemonCollectionRequest buildRequest(
+      PokemonCollectionDomainToGatewayOutput output) {
     return PokemonCollectionRequest();
   }
 
   @override
-  PokemonCollectionFailureInput onFailure(
+  PokemonCollectionFailureDomainInput onFailure(
     PokemonFailureResponse failureResponse,
   ) {
-    return PokemonCollectionFailureInput(
+    return PokemonCollectionFailureDomainInput(
       message: failureResponse.message,
       type: failureResponse.type,
     );
   }
 
   @override
-  PokemonCollectionSuccessInput onSuccess(PokemonSuccessResponse response) {
+  PokemonCollectionSuccessDomainInput onSuccess(
+      PokemonSuccessResponse response) {
     final deserializer = Deserializer(response.data);
 
-    return PokemonCollectionSuccessInput(
+    return PokemonCollectionSuccessDomainInput(
       pokemonIdentities: deserializer.getList(
         'results',
         converter: PokemonIdentity.fromJson,
@@ -42,13 +45,8 @@ class PokemonCollectionGateway extends Gateway<
   }
 }
 
-class PokemonCollectionGatewayOutput extends Output {
-  @override
-  List<Object?> get props => [];
-}
-
-class PokemonCollectionSuccessInput extends SuccessInput {
-  PokemonCollectionSuccessInput({required this.pokemonIdentities});
+class PokemonCollectionSuccessDomainInput extends SuccessDomainInput {
+  PokemonCollectionSuccessDomainInput({required this.pokemonIdentities});
 
   final List<PokemonIdentity> pokemonIdentities;
 }

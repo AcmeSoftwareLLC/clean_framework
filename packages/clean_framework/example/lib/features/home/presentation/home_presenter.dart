@@ -1,13 +1,13 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/home/domain/home_entity.dart';
-import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
+import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class HomePresenter
-    extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> {
+    extends Presenter<HomeViewModel, HomeDomainToUIOutput, HomeUseCase> {
   HomePresenter({
     required super.builder,
   }) : super(provider: homeUseCaseProvider);
@@ -18,10 +18,12 @@ class HomePresenter
   }
 
   @override
-  HomeViewModel createViewModel(HomeUseCase useCase, HomeUIOutput output) {
+  HomeViewModel createViewModel(
+      HomeUseCase useCase, HomeDomainToUIOutput output) {
     return HomeViewModel(
       pokemons: output.pokemons,
-      onSearch: (query) => useCase.setInput(PokemonSearchInput(name: query)),
+      onSearch: (query) =>
+          useCase.setInput(PokemonSearchDomainInput(name: query)),
       onRefresh: () => useCase.fetchPokemons(isRefresh: true),
       onRetry: useCase.fetchPokemons,
       isLoading: output.status == HomeStatus.loading,
@@ -32,7 +34,7 @@ class HomePresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, HomeUIOutput output) {
+  void onOutputUpdate(BuildContext context, HomeDomainToUIOutput output) {
     if (output.isRefresh) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

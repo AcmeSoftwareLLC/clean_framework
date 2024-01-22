@@ -1,5 +1,5 @@
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfilePresenter tests |', () {
-    presenterTest<ProfileViewModel, ProfileUIOutput, ProfileUseCase>(
+    presenterTest<ProfileViewModel, ProfileDomainToUIOutput, ProfileUseCase>(
       'creates proper view model',
       create: (builder) => ProfilePresenter(
         builder: builder,
@@ -20,19 +20,19 @@ void main() {
             .overrideWith(ProfileUseCaseFake('PIKACHU')),
       ],
       setup: (useCase) {
-        useCase.debugEntityUpdate(
+        useCase.debugUseCaseStateUpdate(
           (e) => e.copyWith(
             name: 'Pikachu',
             description: 'Pikachu is a small, chubby rodent Pokémon.',
             height: 4,
             weight: 60,
             stats: [
-              PokemonStatEntity(name: 'hp', point: 35),
-              PokemonStatEntity(name: 'attack', point: 55),
-              PokemonStatEntity(name: 'defense', point: 40),
-              PokemonStatEntity(name: 'special-attack', point: 50),
-              PokemonStatEntity(name: 'special-defense', point: 50),
-              PokemonStatEntity(name: 'speed', point: 90),
+              PokemonStatState(name: 'hp', point: 35),
+              PokemonStatState(name: 'attack', point: 55),
+              PokemonStatState(name: 'defense', point: 40),
+              PokemonStatState(name: 'special-attack', point: 50),
+              PokemonStatState(name: 'special-defense', point: 50),
+              PokemonStatState(name: 'speed', point: 90),
             ],
             types: ['electric'],
           ),

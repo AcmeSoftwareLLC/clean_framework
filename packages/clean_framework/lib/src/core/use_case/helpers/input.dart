@@ -1,14 +1,14 @@
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class Input {}
+abstract class DomainInput {}
 
-class SuccessInput implements Input {
-  const SuccessInput();
+class SuccessDomainInput implements DomainInput {
+  const SuccessDomainInput();
 }
 
-class FailureInput implements Input {
-  const FailureInput({this.message = ''});
+class FailureDomainInput implements DomainInput {
+  const FailureDomainInput({this.message = ''});
 
   final String message;
 }

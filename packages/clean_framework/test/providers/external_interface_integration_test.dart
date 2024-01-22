@@ -130,8 +130,8 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
       FutureTestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
@@ -156,8 +156,8 @@ class TestGatewayWithFailure extends Gateway<TestDirectOutput, FailedRequest,
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 }
 
@@ -194,10 +194,10 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
-          entity: entity,
+          useCaseState: entity,
           transformers: [
             OutputTransformer.from((entity) => TestOutput(entity.foo)),
-            InputTransformer<TestEntity, TestSuccessInput>.from(
+            DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (entity, input) => entity.copyWith(foo: input.foo),
             ),
           ],
@@ -206,24 +206,24 @@ class TestUseCase extends UseCase<TestEntity> {
   Future<void> fetchDataImmediately() async {
     await request<TestSuccessInput>(
       const TestDirectOutput('123'),
-      onFailure: (_) => entity.copyWith(foo: 'failure'),
-      onSuccess: (success) => entity.copyWith(foo: success.foo),
+      onFailure: (_) => useCaseState.copyWith(foo: 'failure'),
+      onSuccess: (success) => useCaseState.copyWith(foo: success.foo),
     );
   }
 
   Future<void> fetchDataImmediatelyWithFailure() async {
     await request<TestSuccessInput>(
       const TestDirectOutput('123'),
-      onFailure: (_) => entity.copyWith(foo: 'failure'),
-      onSuccess: (success) => entity.copyWith(foo: success.foo),
+      onFailure: (_) => useCaseState.copyWith(foo: 'failure'),
+      onSuccess: (success) => useCaseState.copyWith(foo: success.foo),
     );
   }
 
   Future<void> fetchDataEventually() async {
-    await request<SuccessInput>(
+    await request<SuccessDomainInput>(
       const TestSubscriptionOutput('123'),
-      onFailure: (_) => entity.copyWith(foo: 'failure'),
-      onSuccess: (_) => entity, // no changes on the entity are needed,
+      onFailure: (_) => useCaseState.copyWith(foo: 'failure'),
+      onSuccess: (_) => useCaseState, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
     );
   }
@@ -254,12 +254,12 @@ class TestResponse extends SuccessResponse {
   List<Object?> get props => [foo];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
   final String foo;
 }
 
-class TestDirectOutput extends Output {
+class TestDirectOutput extends DomainOutput {
   const TestDirectOutput(this.id);
   final String id;
 
@@ -267,7 +267,7 @@ class TestDirectOutput extends Output {
   List<Object?> get props => [id];
 }
 
-class TestSubscriptionOutput extends Output {
+class TestSubscriptionOutput extends DomainOutput {
   const TestSubscriptionOutput(this.id);
   final String id;
 
@@ -275,7 +275,7 @@ class TestSubscriptionOutput extends Output {
   List<Object?> get props => [id];
 }
 
-class TestEntity extends Entity {
+class TestEntity extends UseCaseState {
   const TestEntity({required this.foo});
   final String foo;
 
@@ -286,7 +286,7 @@ class TestEntity extends Entity {
   TestEntity copyWith({String? foo}) => TestEntity(foo: foo ?? this.foo);
 }
 
-class TestOutput extends Output {
+class TestOutput extends DomainOutput {
   const TestOutput(this.foo);
   final String foo;
 

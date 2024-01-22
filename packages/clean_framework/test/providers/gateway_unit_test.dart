@@ -14,7 +14,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'success'));
+    expect(useCase.useCaseState, const EntityFake(value: 'success'));
   });
 
   test('Gateway unit test for failure on direct output', () async {
@@ -26,7 +26,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'failure'));
+    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
   });
 
   test('Gateway unit test for success on yield output', () async {
@@ -39,11 +39,11 @@ void main() {
 
     await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'success'));
+    expect(useCase.useCaseState, const EntityFake(value: 'success'));
 
     gateway.yieldResponse(const TestResponse('with yield'));
 
-    expect(useCase.entity, const EntityFake(value: 'success with input'));
+    expect(useCase.useCaseState, const EntityFake(value: 'success with input'));
   });
 
   test('Gateway unit test for failure on yield output', () async {
@@ -55,7 +55,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.entity, const EntityFake(value: 'failure'));
+    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
   });
 
   test('props', () {
@@ -76,8 +76,8 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
   TestRequest buildRequest(TestDirectOutput output) => TestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
@@ -96,8 +96,8 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
       TestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
@@ -119,12 +119,12 @@ class TestResponse extends SuccessResponse {
   List<Object?> get props => [foo];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
   final String foo;
 }
 
-class TestDirectOutput extends Output {
+class TestDirectOutput extends DomainOutput {
   const TestDirectOutput(this.id);
   final String id;
 
@@ -132,7 +132,7 @@ class TestDirectOutput extends Output {
   List<Object?> get props => [id];
 }
 
-class TestSubscriptionOutput extends Output {
+class TestSubscriptionOutput extends DomainOutput {
   const TestSubscriptionOutput(this.id);
   final String id;
 

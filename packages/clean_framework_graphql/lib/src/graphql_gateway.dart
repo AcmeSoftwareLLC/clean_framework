@@ -3,8 +3,9 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_graphql/src/graphql_requests.dart';
 import 'package:clean_framework_graphql/src/graphql_responses.dart';
 
-abstract class GraphQLGateway<O extends Output, R extends GraphQLRequest,
-    S extends SuccessInput> extends Gateway<O, R, GraphQLSuccessResponse, S> {
+abstract class GraphQLGateway<O extends DomainOutput, R extends GraphQLRequest,
+        S extends SuccessDomainInput>
+    extends Gateway<O, R, GraphQLSuccessResponse, S> {
   GraphQLGateway({
     super.context,
     super.provider,
@@ -12,7 +13,7 @@ abstract class GraphQLGateway<O extends Output, R extends GraphQLRequest,
   });
 
   @override
-  FailureInput onFailure(GraphQLFailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(GraphQLFailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 }
