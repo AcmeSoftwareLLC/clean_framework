@@ -8,3 +8,9 @@ abstract class DomainOutput extends Equatable {
   @override
   bool get stringify => true;
 }
+
+@Deprecated('Use [DomainOutput].')
+abstract class Output extends DomainOutput {
+  @Deprecated('Use [DomainOutput].')
+  const Output() : super();
+}

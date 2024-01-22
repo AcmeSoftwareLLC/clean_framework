@@ -12,3 +12,9 @@ abstract class UseCaseState extends Equatable {
   UseCaseState copyWith() =>
       throw UnimplementedError('copyWith() not implemented');
 }
+
+@Deprecated('Use [UseCaseState]')
+abstract class Entity extends UseCaseState {
+  @Deprecated('Use [UseCaseState]')
+  const Entity() : super();
+}
