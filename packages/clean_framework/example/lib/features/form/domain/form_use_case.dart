@@ -11,7 +11,7 @@ class FormUseCase extends UseCase<FormEntity> {
               validators: {const InputFieldValidator.required()},
             ),
           ),
-          transformers: [FormDomainToUIOutputTransformer()],
+          transformers: [FormDomainToUIModelTransformer()],
         ) {
     _emailController = TextFieldController.create(
       entity.formController,
@@ -79,7 +79,7 @@ class FormUseCase extends UseCase<FormEntity> {
   }
 }
 
-class FormDomainToUIOutputTransformer
+class FormDomainToUIModelTransformer
     extends DomainModelTransformer<FormEntity, FormDomainToUIModel> {
   @override
   FormDomainToUIModel transform(FormEntity entity) {
