@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class DomainInput {}
 
-@Deprecated('Use [DomainInput].')
+@Deprecated('Use DomainInput.')
 abstract class Input extends DomainInput {}
 
 /// Used for the transfer of data into the domain layer (use case) after some
@@ -14,9 +14,9 @@ class SuccessDomainInput implements DomainInput {
   const SuccessDomainInput();
 }
 
-@Deprecated('Use [SuccessDomainInput].')
+@Deprecated('Use SuccessDomainInput.')
 class SuccessInput extends SuccessDomainInput {
-  @Deprecated('Use [SuccessDomainInput].')
+  @Deprecated('Use SuccessDomainInput.')
   const SuccessInput() : super();
 }
 
@@ -28,9 +28,9 @@ class FailureDomainInput implements DomainInput {
   final String message;
 }
 
-@Deprecated('Use [FailureDomainInput].')
+@Deprecated('Use FailureDomainInput.')
 class FailureInput extends FailureDomainInput {
-  @Deprecated('Use [FailureDomainInput].')
+  @Deprecated('Use FailureDomainInput.')
   const FailureInput({this.message = ''}) : super(message: message);
 
   final String message;
