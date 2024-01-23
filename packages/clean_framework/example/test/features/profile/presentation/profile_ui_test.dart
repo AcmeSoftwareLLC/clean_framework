@@ -1,4 +1,4 @@
-import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
 import 'package:clean_framework_example/widgets/app_scope.dart';

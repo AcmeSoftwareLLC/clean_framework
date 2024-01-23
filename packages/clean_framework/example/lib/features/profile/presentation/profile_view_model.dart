@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
 import 'package:flutter/material.dart';
 
 class ProfileViewModel extends ViewModel {

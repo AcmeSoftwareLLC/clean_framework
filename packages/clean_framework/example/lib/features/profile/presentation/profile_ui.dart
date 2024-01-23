@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
 import 'package:clean_framework_example/widgets/spotlight.dart';
