@@ -10,7 +10,9 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase(this.name)
       : super(
           entity: ProfileEntity(),
-          transformers: [ProfileDomainToUIModelTransformer()],
+          transformers: [
+            ProfileDomainToUIModelTransformer(),
+          ],
         );
 
   final String name;
