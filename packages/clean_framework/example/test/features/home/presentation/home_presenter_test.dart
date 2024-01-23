@@ -15,7 +15,7 @@ void main() {
   });
 
   group('HomePresenter tests |', () {
-    presenterTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'creates proper view model',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -41,7 +41,7 @@ void main() {
       ],
     );
 
-    presenterTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows success snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -63,7 +63,7 @@ void main() {
       },
     );
 
-    presenterTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows failure snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -85,7 +85,7 @@ void main() {
       },
     );
 
-    presenterTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows failure snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -107,7 +107,7 @@ void main() {
       },
     );
 
-    presenterCallbackTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterCallbackTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'calls refresh pokemon in use case',
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),
@@ -122,7 +122,7 @@ void main() {
       },
     );
 
-    presenterCallbackTest<HomeViewModel, HomeDomainToUIOutput, HomeUseCase>(
+    presenterCallbackTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'sets search input on search',
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),

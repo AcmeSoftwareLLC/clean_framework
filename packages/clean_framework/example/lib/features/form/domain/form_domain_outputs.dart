@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 
-class FormDomainToUIOutput extends DomainOutput {
-  const FormDomainToUIOutput({
+class FormDomainToUIModel extends DomainModel {
+  const FormDomainToUIModel({
     required this.formController,
     required this.isLoading,
     required this.isLoggedIn,

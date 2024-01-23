@@ -48,11 +48,11 @@ class CleanFrameworkObserver {
   /// Called when a success [input] occurs in an use case.
   void onSuccessInput(
     UseCase useCase,
-    DomainOutput gatewayOutput,
+    DomainModel toGatewayModel,
     SuccessDomainInput input,
   ) {
     logger.d(
-      '[${useCase.runtimeType}] $gatewayOutput\n' '[Success] $input',
+      '[${useCase.runtimeType}] $toGatewayModel\n' '[Success] $input',
       stackTrace: StackTrace.empty,
     );
   }
@@ -60,11 +60,11 @@ class CleanFrameworkObserver {
   /// Called when a failure [input] occurs in an use case.
   void onFailureInput(
     UseCase useCase,
-    DomainOutput gatewayOutput,
+    DomainModel toGatewayModel,
     FailureDomainInput input,
   ) {
     logger.d(
-      '[${useCase.runtimeType}] $gatewayOutput\n' '[Failure] ${input.message}',
+      '[${useCase.runtimeType}] $toGatewayModel\n' '[Failure] ${input.message}',
       stackTrace: StackTrace.empty,
     );
   }

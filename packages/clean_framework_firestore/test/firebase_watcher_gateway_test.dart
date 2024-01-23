@@ -14,7 +14,7 @@ void main() {
       );
     };
 
-    await useCase.doFakeRequest(const TestOutput('123'));
+    await useCase.doFakeRequest(const TestDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'success'));
   });
@@ -28,19 +28,19 @@ void main() {
       );
     };
 
-    await useCase.doFakeRequest(const TestOutput('123'));
+    await useCase.doFakeRequest(const TestDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 }
 
-class TestGateway extends FirebaseWatcherGateway<TestOutput,
+class TestGateway extends FirebaseWatcherGateway<TestDomainModel,
     FirebaseReadIdRequest, FirebaseSuccessResponse, TestSuccessInput> {
   TestGateway(ProvidersContext context, UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  FirebaseReadIdRequest buildRequest(TestOutput output) =>
+  FirebaseReadIdRequest buildRequest(TestDomainModel output) =>
       FirebaseReadIdRequest(
         path: 'fake path',
         id: output.id,
@@ -54,8 +54,8 @@ class TestGateway extends FirebaseWatcherGateway<TestOutput,
   }
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput(this.id);
+class TestDomainModel extends DomainModel {
+  const TestDomainModel(this.id);
 
   final String id;
 

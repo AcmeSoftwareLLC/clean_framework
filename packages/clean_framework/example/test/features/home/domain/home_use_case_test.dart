@@ -24,7 +24,7 @@ void main() {
   ];
 
   group('HomeUseCase test |', () {
-    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIModel>(
       'fetch Pokemon; success',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -33,14 +33,14 @@ void main() {
         return useCase.fetchPokemons();
       },
       expect: () => [
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
           loggedInEmail: '',
           errorMessage: '',
         ),
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: pokemons,
           status: HomeStatus.loaded,
           isRefresh: false,
@@ -50,7 +50,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIModel>(
       'refresh Pokemon; success',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -60,14 +60,14 @@ void main() {
       },
       expect: () {
         return [
-          HomeDomainToUIOutput(
+          HomeDomainToUIModel(
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: true,
             loggedInEmail: '',
             errorMessage: '',
           ),
-          HomeDomainToUIOutput(
+          HomeDomainToUIModel(
             pokemons: pokemons,
             status: HomeStatus.loaded,
             isRefresh: false,
@@ -78,7 +78,7 @@ void main() {
       },
     );
 
-    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIModel>(
       'fetch Pokemon; failure',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -87,14 +87,14 @@ void main() {
         return useCase.fetchPokemons();
       },
       expect: () => [
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
           loggedInEmail: '',
           errorMessage: '',
         ),
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: false,
@@ -104,7 +104,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIModel>(
       'refresh Pokemon; failure',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -113,14 +113,14 @@ void main() {
         return useCase.fetchPokemons(isRefresh: true);
       },
       expect: () => [
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: true,
           loggedInEmail: '',
           errorMessage: '',
         ),
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
@@ -130,7 +130,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIModel>(
       'search pokemon',
       provider: homeUseCaseProvider,
       seed: (e) => e.copyWith(
@@ -150,7 +150,7 @@ void main() {
         return useCase.setInput(PokemonSearchDomainInput(name: 'pika'));
       },
       expect: () => [
-        HomeDomainToUIOutput(
+        HomeDomainToUIModel(
           pokemons: [
             PokemonModel(
               name: 'PIKACHU',
@@ -168,7 +168,7 @@ void main() {
 }
 
 void _mockSuccess(HomeUseCase useCase) {
-  useCase.subscribe<PokemonCollectionDomainToGatewayOutput,
+  useCase.subscribe<PokemonCollectionDomainToGatewayModel,
       PokemonCollectionSuccessDomainInput>(
     (_) async {
       return Either.right(
@@ -184,7 +184,7 @@ void _mockSuccess(HomeUseCase useCase) {
 }
 
 void _mockFailure(HomeUseCase useCase) {
-  useCase.subscribe<PokemonCollectionDomainToGatewayOutput,
+  useCase.subscribe<PokemonCollectionDomainToGatewayModel,
       PokemonCollectionSuccessDomainInput>(
     (_) async {
       return Either.left(FailureDomainInput(message: 'No Internet'));

@@ -25,7 +25,7 @@ class NewTestGateway extends TestGateway {}
 
 class TestGateway extends Gateway {
   @override
-  Request buildRequest(DomainOutput output) {
+  Request buildRequest(DomainModel domainModel) {
     return const TestRequest('');
   }
 

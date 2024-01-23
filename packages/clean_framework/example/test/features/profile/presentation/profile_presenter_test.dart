@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfilePresenter tests |', () {
-    presenterTest<ProfileViewModel, ProfileDomainToUIOutput, ProfileUseCase>(
+    presenterTest<ProfileViewModel, ProfileDomainToUIModel, ProfileUseCase>(
       'creates proper view model',
       create: (builder) => ProfilePresenter(
         builder: builder,

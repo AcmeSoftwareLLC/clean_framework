@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
@@ -12,15 +12,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfileUseCase tests |', () {
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
             return Either.right(
-              PokemonSpeciesSuccessInput(
+              PokemonSpeciesSuccessDomainInput(
                 species: PokemonSpeciesModel(
                   descriptions: [
                     PokemonDescriptionModel(
@@ -34,7 +34,7 @@ void main() {
           },
         );
 
-        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
             PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
@@ -61,14 +61,14 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIOutput(
+        ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,
           weight: 0,
           stats: [],
         ),
-        ProfileDomainToUIOutput(
+        ProfileDomainToUIModel(
           types: ['electric'],
           description: 'At will, it can generate powerful electricity.',
           height: 0.4,
@@ -85,19 +85,19 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
             return Either.left(
                 FailureDomainInput(message: 'Something went wrong'));
           },
         );
 
-        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
             PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
@@ -124,7 +124,7 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIOutput(
+        ProfileDomainToUIModel(
           types: ['electric'],
           description: '',
           height: 0.4,
@@ -141,15 +141,15 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
             return Either.right(
-              PokemonSpeciesSuccessInput(
+              PokemonSpeciesSuccessDomainInput(
                 species: PokemonSpeciesModel(
                   descriptions: [
                     PokemonDescriptionModel(
@@ -163,7 +163,7 @@ void main() {
           },
         );
 
-        useCase.subscribe<PokemonProfileDomainToGatewayOutput,
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
             PokemonProfileSuccessInput>(
           (output) {
             return Either.left(
@@ -174,7 +174,7 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIOutput(
+        ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,

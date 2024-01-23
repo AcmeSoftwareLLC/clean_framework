@@ -4,10 +4,10 @@ import 'package:clean_framework_firestore/src/firebase_requests.dart';
 import 'package:clean_framework_firestore/src/firebase_responses.dart';
 
 abstract class FirebaseWatcherGateway<
-    O extends DomainOutput,
+    M extends DomainModel,
     R extends FirebaseRequest,
     P extends FirebaseSuccessResponse,
-    S extends SuccessDomainInput> extends WatcherGateway<O, R, P, S> {
+    S extends SuccessDomainInput> extends WatcherGateway<M, R, P, S> {
   FirebaseWatcherGateway({
     required super.context,
     required super.provider,

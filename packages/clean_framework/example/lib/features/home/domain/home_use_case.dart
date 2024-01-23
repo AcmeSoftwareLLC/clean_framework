@@ -24,7 +24,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
       entity = entity.copyWith(status: HomeStatus.loading);
     }
 
-    final input = await getInput(PokemonCollectionDomainToGatewayOutput());
+    final input = await getInput(PokemonCollectionDomainToGatewayModel());
     switch (input) {
       case SuccessUseCaseInput(:PokemonCollectionSuccessDomainInput input):
         final pokemons = input.pokemonIdentities.map(_resolvePokemon);
@@ -74,9 +74,9 @@ class PokemonSearchDomainInput extends SuccessDomainInput {
 }
 
 class HomeDomainToUIOutputTransformer
-    extends OutputTransformer<HomeEntity, HomeDomainToUIOutput> {
+    extends DomainModelTransformer<HomeEntity, HomeDomainToUIModel> {
   @override
-  HomeDomainToUIOutput transform(HomeEntity entity) {
+  HomeDomainToUIModel transform(HomeEntity entity) {
     final filteredPokemons = entity.pokemons.where(
       (pokemon) {
         final pokeName = pokemon.name.toLowerCase();
@@ -84,7 +84,7 @@ class HomeDomainToUIOutputTransformer
       },
     );
 
-    return HomeDomainToUIOutput(
+    return HomeDomainToUIModel(
       pokemons: filteredPokemons.toList(growable: false),
       status: entity.status,
       isRefresh: entity.isRefresh,

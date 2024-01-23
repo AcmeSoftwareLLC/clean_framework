@@ -65,7 +65,8 @@ void main() {
   );
 }
 
-class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
+class TestPresenter
+    extends Presenter<TestViewModel, TestDomainModel, TestUseCase> {
   TestPresenter({required super.builder, super.key, this.count})
       : super(provider: provider);
 
@@ -81,11 +82,11 @@ class TestPresenter extends Presenter<TestViewModel, TestOutput, TestUseCase> {
   }
 
   @override
-  TestViewModel createViewModel(_, TestOutput output) =>
+  TestViewModel createViewModel(_, TestDomainModel output) =>
       TestViewModel.fromOutput(output);
 
   @override
-  void onOutputUpdate(BuildContext context, TestOutput output) {
+  void onOutputUpdate(BuildContext context, TestDomainModel output) {
     super.onOutputUpdate(context, output);
     outputUpdateLogs.add(output.foo);
   }
@@ -106,7 +107,8 @@ class TestUseCase extends UseCase<EntityFake> {
       : super(
           entity: const EntityFake(),
           transformers: [
-            OutputTransformer.from((entity) => TestOutput(entity.value)),
+            DomainModelTransformer.from(
+                (entity) => TestDomainModel(entity.value)),
           ],
         );
 
@@ -119,8 +121,8 @@ class TestUseCase extends UseCase<EntityFake> {
   }
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput(this.foo);
+class TestDomainModel extends DomainModel {
+  const TestDomainModel(this.foo);
   final String foo;
 
   @override
@@ -130,7 +132,8 @@ class TestOutput extends DomainOutput {
 class TestViewModel extends ViewModel {
   const TestViewModel(this.foo);
 
-  TestViewModel.fromOutput(TestOutput output) : foo = output.foo.toUpperCase();
+  TestViewModel.fromOutput(TestDomainModel output)
+      : foo = output.foo.toUpperCase();
   final String foo;
 
   @override

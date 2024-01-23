@@ -7,13 +7,14 @@ void main() {
   group('PokemonSpeciesGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonSpeciesGateway();
-      final gatewayOutput = PokemonSpeciesGatewayOutput(name: 'pikachu');
+      final gatewayOutput = PokemonSpeciesDomainToGatewayModel(name: 'pikachu');
 
       final request = await gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon-species/pikachu'));
 
-      expect(gatewayOutput, PokemonSpeciesGatewayOutput(name: 'pikachu'));
+      expect(
+          gatewayOutput, PokemonSpeciesDomainToGatewayModel(name: 'pikachu'));
     });
 
     test('success', () async {
@@ -54,7 +55,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesGatewayOutput(name: 'pikachu'),
+        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isRight, isTrue);
@@ -81,7 +82,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesGatewayOutput(name: 'pikachu'),
+        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isLeft, isTrue);

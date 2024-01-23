@@ -40,7 +40,7 @@ class UseCaseProvider<US extends Entity, U extends UseCase<US>>
   Override overrideWith(U useCase) => _internal.overrideWith((_) => useCase);
 
   @override
-  ProviderListenable<O> selector<O extends DomainOutput>(U useCase) {
+  ProviderListenable<M> selector<M extends DomainModel>(U useCase) {
     return _internal.select((_) => useCase.getOutput());
   }
 

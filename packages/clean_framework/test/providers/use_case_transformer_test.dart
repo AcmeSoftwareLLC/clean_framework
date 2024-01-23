@@ -11,8 +11,8 @@ void main() {
       expect(useCase.debugEntity.foo, 'hello');
       expect(useCase.debugEntity.bar, 3);
 
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
-      expect(useCase.getOutput<BarOutput>().bar, 3);
+      expect(useCase.getOutput<FooDomainModel>().foo, 'hello');
+      expect(useCase.getOutput<BarDomainModel>().bar, 3);
     });
 
     test('input transformer', () {
@@ -20,7 +20,7 @@ void main() {
 
       expect(useCase.debugEntity.foo, 'hello');
 
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
+      expect(useCase.getOutput<FooDomainModel>().foo, 'hello');
     });
   });
 }
@@ -62,7 +62,7 @@ class TestUseCase extends UseCase<TestEntity> {
           transformers: [
             FooOutputTransformer(),
             FooInputTransformer(),
-            OutputTransformer.from((entity) => BarOutput(entity.bar)),
+            DomainModelTransformer.from((entity) => BarDomainModel(entity.bar)),
           ],
         );
 
@@ -80,26 +80,27 @@ class FooInput extends SuccessDomainInput {
   final String foo;
 }
 
-class FooOutput extends DomainOutput {
-  const FooOutput(this.foo);
+class FooDomainModel extends DomainModel {
+  const FooDomainModel(this.foo);
   final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
-class BarOutput extends DomainOutput {
-  const BarOutput(this.bar);
+class BarDomainModel extends DomainModel {
+  const BarDomainModel(this.bar);
   final int bar;
 
   @override
   List<Object?> get props => [bar];
 }
 
-class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
+class FooOutputTransformer
+    extends DomainModelTransformer<TestEntity, FooDomainModel> {
   @override
-  FooOutput transform(TestEntity entity) {
-    return FooOutput(entity.foo);
+  FooDomainModel transform(TestEntity entity) {
+    return FooDomainModel(entity.foo);
   }
 }
 

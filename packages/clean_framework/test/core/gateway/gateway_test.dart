@@ -12,7 +12,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -31,7 +31,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -49,7 +49,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -68,7 +68,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -208,10 +208,10 @@ class TestUseCase extends UseCase<TestEntity> {
         );
 }
 
-class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
     TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);
   }
 
@@ -226,10 +226,10 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
-    TestSuccessResponse, TestSuccessInput> {
+class TestWatcherGateway extends WatcherGateway<TestDomainToGatewayModel,
+    TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);
   }
 
@@ -239,8 +239,8 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestGatewayOutput extends DomainOutput {
-  const TestGatewayOutput(this.name);
+class TestDomainToGatewayModel extends DomainModel {
+  const TestDomainToGatewayModel(this.name);
 
   final String name;
 

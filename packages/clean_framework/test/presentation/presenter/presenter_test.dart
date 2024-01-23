@@ -97,7 +97,7 @@ final _testUseCaseProviderFamily =
 );
 
 class TestPresenter
-    extends Presenter<TestViewModel, TestUIOutput, TestUseCase> {
+    extends Presenter<TestViewModel, TestDomainToUIModel, TestUseCase> {
   TestPresenter({
     super.key,
     WidgetBuilder? builder,
@@ -142,7 +142,8 @@ class TestPresenter
   final String message;
 
   @override
-  TestViewModel createViewModel(TestUseCase useCase, TestUIOutput output) {
+  TestViewModel createViewModel(
+      TestUseCase useCase, TestDomainToUIModel output) {
     return TestViewModel(
       message: output.message,
       update: useCase.update,
@@ -163,7 +164,7 @@ class TestPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, TestUIOutput output) {
+  void onOutputUpdate(BuildContext context, TestDomainToUIModel output) {
     super.onOutputUpdate(context, output);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -172,8 +173,8 @@ class TestPresenter
   }
 }
 
-class TestUIOutput extends DomainOutput {
-  const TestUIOutput({required this.message});
+class TestDomainToUIModel extends DomainModel {
+  const TestDomainToUIModel({required this.message});
 
   final String message;
 
@@ -213,8 +214,8 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: const TestEntity(message: 'DEFAULT'),
           transformers: [
-            OutputTransformer.from(
-              (entity) => TestUIOutput(message: entity.message),
+            DomainModelTransformer.from(
+              (entity) => TestDomainToUIModel(message: entity.message),
             ),
           ],
         );

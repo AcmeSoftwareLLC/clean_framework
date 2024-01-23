@@ -8,7 +8,7 @@ final context = ProvidersContext();
 late UseCaseProvider<TestEntity, TestUseCase> provider;
 
 void main() {
-  useCaseTest<TestUseCase, TestOutput>(
+  useCaseTest<TestUseCase, TestDomainModel>(
     'Interface using direct gateway',
     context: context,
     build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
@@ -20,12 +20,12 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestOutput>();
-      expect(output, const TestOutput('success'));
+      final output = useCase.getOutput<TestDomainModel>();
+      expect(output, const TestDomainModel('success'));
     },
   );
 
-  useCaseTest<TestUseCase, TestOutput>(
+  useCaseTest<TestUseCase, TestDomainModel>(
     'Watcher Interface with failure',
     context: context,
     build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
@@ -37,12 +37,12 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestOutput>();
-      expect(output, const TestOutput('failure'));
+      final output = useCase.getOutput<TestDomainModel>();
+      expect(output, const TestDomainModel('failure'));
     },
   );
 
-  useCaseTest<TestUseCase, TestOutput>(
+  useCaseTest<TestUseCase, TestDomainModel>(
     'Interface with failure',
     context: context,
     build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
@@ -54,12 +54,12 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestOutput>();
-      expect(output, const TestOutput('failure'));
+      final output = useCase.getOutput<TestDomainModel>();
+      expect(output, const TestDomainModel('failure'));
     },
   );
 
-  useCaseTest<TestUseCase, TestOutput>(
+  useCaseTest<TestUseCase, TestDomainModel>(
     'Interface using watcher gateway',
     context: context,
     build: (_) => TestUseCase(const TestEntity(foo: 'bar')),
@@ -71,10 +71,10 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataEventually(),
     expect: () => [
-      const TestOutput('0'),
-      const TestOutput('1'),
-      const TestOutput('2'),
-      const TestOutput('3'),
+      const TestDomainModel('0'),
+      const TestDomainModel('1'),
+      const TestDomainModel('2'),
+      const TestDomainModel('3'),
     ],
   );
 }
@@ -120,13 +120,13 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   }
 }
 
-class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
+class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest,
     TestResponse, TestSuccessInput> {
   TestDirectGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestDirectOutput output) =>
+  TestRequest buildRequest(TestDirectDomainModel output) =>
       FutureTestRequest(output.id);
 
   @override
@@ -140,13 +140,13 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
   }
 }
 
-class TestGatewayWithFailure extends Gateway<TestDirectOutput, FailedRequest,
-    TestResponse, TestSuccessInput> {
+class TestGatewayWithFailure extends Gateway<TestDirectDomainModel,
+    FailedRequest, TestResponse, TestSuccessInput> {
   TestGatewayWithFailure(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  FailedRequest buildRequest(TestDirectOutput output) {
+  FailedRequest buildRequest(TestDirectDomainModel output) {
     return FailedRequest(output.id);
   }
 
@@ -161,13 +161,13 @@ class TestGatewayWithFailure extends Gateway<TestDirectOutput, FailedRequest,
   }
 }
 
-class TestWatcherGatewayWithFailure extends WatcherGateway<TestDirectOutput,
-    FailedRequest, TestResponse, TestSuccessInput> {
+class TestWatcherGatewayWithFailure extends WatcherGateway<
+    TestDirectDomainModel, FailedRequest, TestResponse, TestSuccessInput> {
   TestWatcherGatewayWithFailure(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  FailedRequest buildRequest(TestDirectOutput output) =>
+  FailedRequest buildRequest(TestDirectDomainModel output) =>
       FailedRequest(output.id);
 
   @override
@@ -176,13 +176,13 @@ class TestWatcherGatewayWithFailure extends WatcherGateway<TestDirectOutput,
   }
 }
 
-class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
+class TestYieldGateway extends WatcherGateway<TestSubscriptionDomainModel,
     TestRequest, TestResponse, TestSuccessInput> {
   TestYieldGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestSubscriptionOutput output) =>
+  TestRequest buildRequest(TestSubscriptionDomainModel output) =>
       StreamTestRequest(output.id);
 
   @override
@@ -196,7 +196,8 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: entity,
           transformers: [
-            OutputTransformer.from((entity) => TestOutput(entity.foo)),
+            DomainModelTransformer.from(
+                (entity) => TestDomainModel(entity.foo)),
             DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (entity, input) => entity.copyWith(foo: input.foo),
             ),
@@ -205,7 +206,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataImmediately() async {
     await request<TestSuccessInput>(
-      const TestDirectOutput('123'),
+      const TestDirectDomainModel('123'),
       onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (success) => entity.copyWith(foo: success.foo),
     );
@@ -213,7 +214,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataImmediatelyWithFailure() async {
     await request<TestSuccessInput>(
-      const TestDirectOutput('123'),
+      const TestDirectDomainModel('123'),
       onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (success) => entity.copyWith(foo: success.foo),
     );
@@ -221,7 +222,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> fetchDataEventually() async {
     await request<SuccessDomainInput>(
-      const TestSubscriptionOutput('123'),
+      const TestSubscriptionDomainModel('123'),
       onFailure: (_) => entity.copyWith(foo: 'failure'),
       onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
@@ -259,16 +260,16 @@ class TestSuccessInput extends SuccessDomainInput {
   final String foo;
 }
 
-class TestDirectOutput extends DomainOutput {
-  const TestDirectOutput(this.id);
+class TestDirectDomainModel extends DomainModel {
+  const TestDirectDomainModel(this.id);
   final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
-class TestSubscriptionOutput extends DomainOutput {
-  const TestSubscriptionOutput(this.id);
+class TestSubscriptionDomainModel extends DomainModel {
+  const TestSubscriptionDomainModel(this.id);
   final String id;
 
   @override
@@ -286,8 +287,8 @@ class TestEntity extends Entity {
   TestEntity copyWith({String? foo}) => TestEntity(foo: foo ?? this.foo);
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput(this.foo);
+class TestDomainModel extends DomainModel {
+  const TestDomainModel(this.foo);
   final String foo;
 
   @override

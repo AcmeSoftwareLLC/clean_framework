@@ -21,8 +21,8 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     // If the use case is not auto disposed then we have last fetched data.
     if (!entity.description.isEmpty) return;
 
-    request<PokemonSpeciesSuccessInput>(
-      PokemonSpeciesGatewayOutput(name: pokeName),
+    request<PokemonSpeciesSuccessDomainInput>(
+      PokemonSpeciesDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final descriptions = success.species.descriptions.where(
           (desc) => desc.language == 'en',
@@ -38,7 +38,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     );
 
     request<PokemonProfileSuccessInput>(
-      PokemonProfileDomainToGatewayOutput(name: pokeName),
+      PokemonProfileDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;
 
@@ -58,10 +58,10 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 }
 
 class ProfileDomainToUIOutputTransformer
-    extends OutputTransformer<ProfileEntity, ProfileDomainToUIOutput> {
+    extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
   @override
-  ProfileDomainToUIOutput transform(ProfileEntity entity) {
-    return ProfileDomainToUIOutput(
+  ProfileDomainToUIModel transform(ProfileEntity entity) {
+    return ProfileDomainToUIModel(
       types: entity.types,
       description: entity.description.replaceAll(RegExp(r'[\n\f]'), ' '),
       height: entity.height / 10,

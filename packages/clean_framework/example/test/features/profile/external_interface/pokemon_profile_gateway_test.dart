@@ -8,15 +8,14 @@ void main() {
   group('PokemonProfileGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonProfileGateway();
-      final gatewayOutput =
-          PokemonProfileDomainToGatewayOutput(name: 'pikachu');
+      final gatewayOutput = PokemonProfileDomainToGatewayModel(name: 'pikachu');
 
       final request = await gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon/pikachu'));
 
       expect(
-          gatewayOutput, PokemonProfileDomainToGatewayOutput(name: 'pikachu'));
+          gatewayOutput, PokemonProfileDomainToGatewayModel(name: 'pikachu'));
     });
 
     test('success', () async {
@@ -93,7 +92,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonProfileDomainToGatewayOutput(name: 'pikachu'),
+        PokemonProfileDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isRight, isTrue);
@@ -126,7 +125,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonProfileDomainToGatewayOutput(name: 'pikachu'),
+        PokemonProfileDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isLeft, isTrue);

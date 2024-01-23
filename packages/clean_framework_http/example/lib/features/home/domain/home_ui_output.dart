@@ -1,16 +1,16 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class HomeUIOutput extends DomainOutput {
-  const HomeUIOutput({required this.pokemons});
+class HomeDomainToUIModel extends DomainModel {
+  const HomeDomainToUIModel({required this.pokemons});
 
-  final List<PokemonUIOutput> pokemons;
+  final List<PokemonDomainToUIModel> pokemons;
 
   @override
   List<Object> get props => [pokemons];
 }
 
-class PokemonUIOutput extends DomainOutput {
-  const PokemonUIOutput({required this.name, required this.url});
+class PokemonDomainToUIModel extends DomainModel {
+  const PokemonDomainToUIModel({required this.name, required this.url});
 
   final String name;
   final String url;

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-abstract class Presenter<V extends ViewModel, O extends DomainOutput,
+abstract class Presenter<V extends ViewModel, M extends DomainModel,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
     required UseCaseProvider provider,
@@ -18,10 +18,10 @@ abstract class Presenter<V extends ViewModel, O extends DomainOutput,
   final PresenterBuilder<V> builder;
 
   @override
-  ConsumerState<Presenter<V, O, U>> createState() => _PresenterState<V, O, U>();
+  ConsumerState<Presenter<V, M, U>> createState() => _PresenterState<V, M, U>();
 
   @protected
-  V createViewModel(U useCase, O output);
+  V createViewModel(U useCase, M output);
 
   /// Called when this presenter is inserted into the tree.
   @protected
@@ -29,13 +29,13 @@ abstract class Presenter<V extends ViewModel, O extends DomainOutput,
 
   /// Called whenever the [output] updates.
   @protected
-  void onOutputUpdate(BuildContext context, O output) {}
+  void onOutputUpdate(BuildContext context, M output) {}
 
   /// Called whenever the presenter configuration changes.
   @protected
   void didUpdatePresenter(
     BuildContext context,
-    covariant Presenter<V, O, U> old,
+    covariant Presenter<V, M, U> old,
     U useCase,
   ) {}
 
@@ -44,11 +44,11 @@ abstract class Presenter<V extends ViewModel, O extends DomainOutput,
   void onDestroy(U useCase) {}
 
   @visibleForTesting
-  O subscribe(WidgetRef ref) => _provider.subscribe<O>(ref);
+  M subscribe(WidgetRef ref) => _provider.subscribe<M>(ref);
 }
 
-class _PresenterState<V extends ViewModel, O extends DomainOutput,
-    U extends UseCase> extends ConsumerState<Presenter<V, O, U>> {
+class _PresenterState<V extends ViewModel, M extends DomainModel,
+    U extends UseCase> extends ConsumerState<Presenter<V, M, U>> {
   U? _useCase;
 
   @override
@@ -69,19 +69,19 @@ class _PresenterState<V extends ViewModel, O extends DomainOutput,
   }
 
   @override
-  void didUpdateWidget(covariant Presenter<V, O, U> oldWidget) {
+  void didUpdateWidget(covariant Presenter<V, M, U> oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.didUpdatePresenter(context, oldWidget, _useCase!);
   }
 
   @override
   Widget build(BuildContext context) {
-    widget._provider.listen<O>(ref, _onOutputChanged);
+    widget._provider.listen<M>(ref, _onOutputChanged);
     final output = widget.subscribe(ref);
     return widget.builder(widget.createViewModel(_useCase!, output));
   }
 
-  void _onOutputChanged(O? previous, O next) {
+  void _onOutputChanged(M? previous, M next) {
     if (previous != next) widget.onOutputUpdate(context, next);
   }
 

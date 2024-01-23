@@ -8,7 +8,7 @@ import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<O extends DomainOutput, R extends Request,
+abstract class Gateway<M extends DomainModel, R extends Request,
     P extends SuccessResponse, S extends SuccessDomainInput> {
   void attach(
     ProviderRef<Object> ref, {
@@ -32,7 +32,7 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
   void _subscribe(ProviderRef<Object> ref, Refreshable<UseCase> notifier) {
     final useCase = ref.read(notifier);
     _useCases.add(useCase);
-    useCase.subscribe<O, S>(buildInput);
+    useCase.subscribe<M, S>(buildInput);
   }
 
   @visibleForTesting
@@ -49,7 +49,7 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
 
   @visibleForTesting
   @nonVirtual
-  Future<Either<FailureDomainInput, S>> buildInput(O output) {
+  Future<Either<FailureDomainInput, S>> buildInput(M output) {
     return _processRequest(buildRequest(output));
   }
 
@@ -59,7 +59,7 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
 
   FailureDomainInput onFailure(covariant FailureResponse failureResponse);
 
-  R buildRequest(O output);
+  R buildRequest(M output);
 
   Future<Either<FailureDomainInput, S>> _processRequest(R request) async {
     final either = await _source!.responder(request);
@@ -71,10 +71,10 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
 }
 
 abstract class WatcherGateway<
-    O extends DomainOutput,
+    M extends DomainModel,
     R extends Request,
     P extends SuccessResponse,
-    S extends SuccessDomainInput> extends Gateway<O, R, P, S> {
+    S extends SuccessDomainInput> extends Gateway<M, R, P, S> {
   @override
   FailureDomainInput onFailure(FailureResponse failureResponse) {
     return FailureDomainInput(message: failureResponse.message);

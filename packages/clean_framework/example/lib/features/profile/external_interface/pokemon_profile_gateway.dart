@@ -4,11 +4,11 @@ import 'package:clean_framework_example/core/pokemon/pokemon_success_response.da
 import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/models/pokemon_profile_model.dart';
 
-class PokemonProfileGateway extends Gateway<PokemonProfileDomainToGatewayOutput,
+class PokemonProfileGateway extends Gateway<PokemonProfileDomainToGatewayModel,
     PokemonProfileRequest, PokemonSuccessResponse, PokemonProfileSuccessInput> {
   @override
   PokemonProfileRequest buildRequest(
-      PokemonProfileDomainToGatewayOutput output) {
+      PokemonProfileDomainToGatewayModel output) {
     return PokemonProfileRequest(name: output.name);
   }
 

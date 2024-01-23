@@ -12,7 +12,7 @@ void main() {
       return const Either.right(TestResponse('success'));
     };
 
-    await useCase.doFakeRequest(const TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'success'));
   });
@@ -24,7 +24,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(const TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'failure'));
   });
@@ -37,7 +37,7 @@ void main() {
         return const Either.right(TestResponse('success'));
       };
 
-    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'success'));
 
@@ -53,7 +53,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'failure'));
   });
@@ -67,13 +67,14 @@ void main() {
   });
 }
 
-class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
+class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest,
     TestResponse, TestSuccessInput> {
   TestDirectGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestDirectOutput output) => TestRequest(output.id);
+  TestRequest buildRequest(TestDirectDomainModel output) =>
+      TestRequest(output.id);
 
   @override
   FailureDomainInput onFailure(FailureResponse failureResponse) {
@@ -86,13 +87,13 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
   }
 }
 
-class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
+class TestYieldGateway extends WatcherGateway<TestSubscriptionDomainModel,
     TestRequest, TestResponse, TestSuccessInput> {
   TestYieldGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestSubscriptionOutput output) =>
+  TestRequest buildRequest(TestSubscriptionDomainModel output) =>
       TestRequest(output.id);
 
   @override
@@ -124,16 +125,16 @@ class TestSuccessInput extends SuccessDomainInput {
   final String foo;
 }
 
-class TestDirectOutput extends DomainOutput {
-  const TestDirectOutput(this.id);
+class TestDirectDomainModel extends DomainModel {
+  const TestDirectDomainModel(this.id);
   final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
-class TestSubscriptionOutput extends DomainOutput {
-  const TestSubscriptionOutput(this.id);
+class TestSubscriptionDomainModel extends DomainModel {
+  const TestSubscriptionDomainModel(this.id);
   final String id;
 
   @override

@@ -57,24 +57,24 @@ class TestUI extends UI<TestViewModel> {
   }
 
   @override
-  Presenter<ViewModel, DomainOutput, UseCase<Entity>> create(
+  Presenter<ViewModel, DomainModel, UseCase<Entity>> create(
     PresenterBuilder<TestViewModel> builder,
   ) {
     return PresenterFake(builder: builder);
   }
 }
 
-class PresenterFake extends Presenter<TestViewModel, TestOutput, UseCase> {
+class PresenterFake extends Presenter<TestViewModel, TestDomainModel, UseCase> {
   PresenterFake({required super.builder, super.key})
       : super(
           provider: UseCaseProvider((_) => UseCaseFake()),
         );
 
   @override
-  TestOutput subscribe(_) => const TestOutput('bar');
+  TestDomainModel subscribe(_) => const TestDomainModel('bar');
 
   @override
-  TestViewModel createViewModel(_, TestOutput output) {
+  TestViewModel createViewModel(_, TestDomainModel output) {
     return TestViewModel(output.foo);
   }
 }
@@ -87,8 +87,8 @@ class TestViewModel extends ViewModel {
   List<Object?> get props => [foo];
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput(this.foo);
+class TestDomainModel extends DomainModel {
+  const TestDomainModel(this.foo);
   final String foo;
 
   @override

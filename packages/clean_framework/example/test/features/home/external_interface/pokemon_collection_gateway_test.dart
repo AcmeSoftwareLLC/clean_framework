@@ -8,14 +8,14 @@ void main() {
   group('PokemonCollectionGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonCollectionGateway();
-      final gatewayOutput = PokemonCollectionDomainToGatewayOutput();
+      final gatewayOutput = PokemonCollectionDomainToGatewayModel();
 
       final request = await gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon'));
       expect(request.queryParams, equals({'limit': 1000}));
 
-      expect(gatewayOutput, PokemonCollectionDomainToGatewayOutput());
+      expect(gatewayOutput, PokemonCollectionDomainToGatewayModel());
     });
 
     test('success', () async {
@@ -40,7 +40,7 @@ void main() {
         );
 
       final input =
-          await gateway.buildInput(PokemonCollectionDomainToGatewayOutput());
+          await gateway.buildInput(PokemonCollectionDomainToGatewayModel());
 
       expect(input.isRight, isTrue);
 
@@ -62,7 +62,7 @@ void main() {
         );
 
       final input =
-          await gateway.buildInput(PokemonCollectionDomainToGatewayOutput());
+          await gateway.buildInput(PokemonCollectionDomainToGatewayModel());
 
       expect(input.isLeft, isTrue);
 

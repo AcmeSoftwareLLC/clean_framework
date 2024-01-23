@@ -80,10 +80,10 @@ class FormUseCase extends UseCase<FormEntity> {
 }
 
 class FormDomainToUIOutputTransformer
-    extends OutputTransformer<FormEntity, FormDomainToUIOutput> {
+    extends DomainModelTransformer<FormEntity, FormDomainToUIModel> {
   @override
-  FormDomainToUIOutput transform(FormEntity state) {
-    return FormDomainToUIOutput(
+  FormDomainToUIModel transform(FormEntity state) {
+    return FormDomainToUIModel(
       formController: state.formController,
       isLoading: state.screenState == FormScreenState.loading,
       isLoggedIn: state.screenState == FormScreenState.success,

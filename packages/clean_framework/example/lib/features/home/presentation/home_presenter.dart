@@ -7,7 +7,7 @@ import 'package:clean_framework_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class HomePresenter
-    extends Presenter<HomeViewModel, HomeDomainToUIOutput, HomeUseCase> {
+    extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
   HomePresenter({
     required super.builder,
   }) : super(provider: homeUseCaseProvider);
@@ -19,7 +19,7 @@ class HomePresenter
 
   @override
   HomeViewModel createViewModel(
-      HomeUseCase useCase, HomeDomainToUIOutput output) {
+      HomeUseCase useCase, HomeDomainToUIModel output) {
     return HomeViewModel(
       pokemons: output.pokemons,
       onSearch: (query) =>
@@ -34,7 +34,7 @@ class HomePresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, HomeDomainToUIOutput output) {
+  void onOutputUpdate(BuildContext context, HomeDomainToUIModel output) {
     if (output.isRefresh) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

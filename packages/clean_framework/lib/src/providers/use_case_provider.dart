@@ -19,19 +19,19 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     return context().read(_provider.notifier);
   }
 
-  O subscribe<O extends DomainOutput>(WidgetRef ref) {
+  M subscribe<M extends DomainModel>(WidgetRef ref) {
     return ref.watch(_listenForOutputChange(ref));
   }
 
-  void listen<O extends DomainOutput>(
+  void listen<M extends DomainModel>(
     WidgetRef ref,
-    void Function(O?, O) listener,
+    void Function(M?, M) listener,
   ) {
-    ref.listen<O>(_listenForOutputChange(ref), listener);
+    ref.listen<M>(_listenForOutputChange(ref), listener);
   }
 
-  AlwaysAliveProviderListenable<O>
-      _listenForOutputChange<O extends DomainOutput>(
+  AlwaysAliveProviderListenable<M>
+      _listenForOutputChange<M extends DomainModel>(
     WidgetRef ref,
   ) {
     final useCase = getUseCase(ref);

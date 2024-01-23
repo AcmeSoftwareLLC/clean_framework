@@ -1,25 +1,25 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/core/use_case/helpers/input.dart';
-import 'package:clean_framework/src/core/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_input.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 
 typedef RequestSubscriptionMap<I extends DomainInput>
-    = Map<Type, RequestSubscription<DomainOutput, I>>;
+    = Map<Type, RequestSubscription<DomainModel, I>>;
 
 typedef Result<I extends DomainInput> = FutureOr<Either<FailureDomainInput, I>>;
 
-typedef RequestSubscription<O extends DomainOutput, I extends DomainInput>
-    = Result<I> Function(O);
+typedef RequestSubscription<M extends DomainModel, I extends DomainInput>
+    = Result<I> Function(M);
 
 extension RequestSubscriptionMapExtension<I extends DomainInput>
     on RequestSubscriptionMap<I> {
-  void add<O extends DomainOutput>(RequestSubscription<O, I> subscription) {
-    this[O] = (output) => subscription(output as O);
+  void add<M extends DomainModel>(RequestSubscription<M, I> subscription) {
+    this[M] = (output) => subscription(output as M);
   }
 
   Result<S> getDomainInput<S extends SuccessDomainInput>(
-    DomainOutput output,
+    DomainModel output,
   ) async {
     final outputType = output.runtimeType;
     final subscription = this[outputType];

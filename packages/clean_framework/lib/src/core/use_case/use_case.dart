@@ -73,47 +73,49 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     return updatedEntity;
   }
 
-  O getOutput<O extends DomainOutput>() => transformToOutput(entity);
+  M getOutput<M extends DomainModel>() => transformToOutput(entity);
 
   @visibleForTesting
-  O transformToOutput<O extends DomainOutput>(E entity) =>
-      _outputFilters<O>(entity);
+  M transformToOutput<M extends DomainModel>(E entity) =>
+      _outputFilters<M>(entity);
 
   void setInput<I extends DomainInput>(I input) {
     entity = _inputFilters<I>(entity, input);
   }
 
-  void subscribe<O extends DomainOutput, I extends DomainInput>(
-    RequestSubscription<O, I> subscription,
+  void subscribe<M extends DomainModel, I extends DomainInput>(
+    RequestSubscription<M, I> subscription,
   ) {
-    _requestSubscriptions.add<O>(subscription);
+    _requestSubscriptions.add<M>(subscription);
   }
 
   @visibleForTesting
   @protected
   FutureOr<Either<FailureDomainInput, S>>
       getInternalInput<S extends SuccessDomainInput>(
-    DomainOutput output,
+    DomainModel domainModel,
   ) {
-    return _requestSubscriptions.getDomainInput<S>(output);
+    return _requestSubscriptions.getDomainInput<S>(domainModel);
   }
 
   @visibleForTesting
   @protected
   Future<void> request<S extends SuccessDomainInput>(
-    DomainOutput output, {
+    DomainModel domainModel, {
     required InputCallback<E, S> onSuccess,
     required InputCallback<E, FailureDomainInput> onFailure,
   }) async {
-    final input = await getInternalInput<S>(output);
+    final input = await getInternalInput<S>(domainModel);
 
     entity = input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
         return onFailure(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
         return onSuccess(success);
       },
     );
@@ -122,17 +124,19 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   @visibleForTesting
   @protected
   Future<UseCaseInput<S>> getInput<S extends SuccessDomainInput>(
-    DomainOutput output,
+    DomainModel domainModel,
   ) async {
-    final input = await getInternalInput<S>(output);
+    final input = await getInternalInput<S>(domainModel);
 
     return input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
         return FailureUseCaseInput(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
         return SuccessUseCaseInput(success);
       },
     );

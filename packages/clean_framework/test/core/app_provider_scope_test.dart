@@ -84,10 +84,10 @@ class TestExternalInterface
   }
 }
 
-class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
     TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(ping: output.ping);
   }
 
@@ -114,8 +114,8 @@ class TestSuccessResponse extends SuccessResponse {
   final String pong;
 }
 
-class TestGatewayOutput extends DomainOutput {
-  const TestGatewayOutput({required this.ping});
+class TestDomainToGatewayModel extends DomainModel {
+  const TestDomainToGatewayModel({required this.ping});
 
   final String ping;
 
@@ -134,7 +134,7 @@ class TestUseCase extends UseCase<TestEntity> {
 
   Future<void> ping(String message) {
     return request<TestSuccessInput>(
-      TestGatewayOutput(ping: message),
+      TestDomainToGatewayModel(ping: message),
       onSuccess: (input) => entity.copyWith(pong: input.pong),
       onFailure: (input) => entity,
     );

@@ -6,7 +6,7 @@ import 'package:clean_framework_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class FormPresenter
-    extends Presenter<FormViewModel, FormDomainToUIOutput, FormUseCase> {
+    extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {
   FormPresenter({
     required super.builder,
     super.key,
@@ -20,7 +20,7 @@ class FormPresenter
   @override
   FormViewModel createViewModel(
     FormUseCase useCase,
-    FormDomainToUIOutput output,
+    FormDomainToUIModel output,
   ) {
     return FormViewModel(
       formController: output.formController,
@@ -32,7 +32,7 @@ class FormPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, FormDomainToUIOutput output) {
+  void onOutputUpdate(BuildContext context, FormDomainToUIModel output) {
     if (output.isLoggedIn) {
       showDialog<void>(
         context: context,

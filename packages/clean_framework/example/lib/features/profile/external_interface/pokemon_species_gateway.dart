@@ -3,10 +3,14 @@ import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
 import 'package:clean_framework_example/features/profile/models/pokemon_species_model.dart';
 
-class PokemonSpeciesGateway extends Gateway<PokemonSpeciesGatewayOutput,
-    PokemonSpeciesRequest, PokemonSuccessResponse, PokemonSpeciesSuccessInput> {
+class PokemonSpeciesGateway extends Gateway<
+    PokemonSpeciesDomainToGatewayModel,
+    PokemonSpeciesRequest,
+    PokemonSuccessResponse,
+    PokemonSpeciesSuccessDomainInput> {
   @override
-  PokemonSpeciesRequest buildRequest(PokemonSpeciesGatewayOutput output) {
+  PokemonSpeciesRequest buildRequest(
+      PokemonSpeciesDomainToGatewayModel output) {
     return PokemonSpeciesRequest(name: output.name);
   }
 
@@ -16,15 +20,15 @@ class PokemonSpeciesGateway extends Gateway<PokemonSpeciesGatewayOutput,
   }
 
   @override
-  PokemonSpeciesSuccessInput onSuccess(PokemonSuccessResponse response) {
-    return PokemonSpeciesSuccessInput(
+  PokemonSpeciesSuccessDomainInput onSuccess(PokemonSuccessResponse response) {
+    return PokemonSpeciesSuccessDomainInput(
       species: PokemonSpeciesModel.fromJson(response.data),
     );
   }
 }
 
-class PokemonSpeciesGatewayOutput extends DomainOutput {
-  PokemonSpeciesGatewayOutput({required this.name});
+class PokemonSpeciesDomainToGatewayModel extends DomainModel {
+  PokemonSpeciesDomainToGatewayModel({required this.name});
 
   final String name;
 
@@ -32,8 +36,8 @@ class PokemonSpeciesGatewayOutput extends DomainOutput {
   List<Object?> get props => [name];
 }
 
-class PokemonSpeciesSuccessInput extends SuccessDomainInput {
-  PokemonSpeciesSuccessInput({required this.species});
+class PokemonSpeciesSuccessDomainInput extends SuccessDomainInput {
+  PokemonSpeciesSuccessDomainInput({required this.species});
 
   final PokemonSpeciesModel species;
 }

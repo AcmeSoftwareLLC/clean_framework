@@ -13,7 +13,7 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
 
   void init() => _notifierController.add(buildNotifier());
 
-  O subscribe<O extends DomainOutput>(WidgetRef ref) {
+  M subscribe<M extends DomainModel>(WidgetRef ref) {
     return ref.watch(_outputChangeListener(ref));
   }
 
@@ -25,20 +25,20 @@ abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
     return read(AppProviderScope.containerOf(context));
   }
 
-  void listen<O extends DomainOutput>(
+  void listen<M extends DomainModel>(
     WidgetRef ref,
-    void Function(O?, O) listener,
+    void Function(M?, M) listener,
   ) {
-    ref.listen<O>(_outputChangeListener(ref), listener);
+    ref.listen<M>(_outputChangeListener(ref), listener);
   }
 
-  ProviderListenable<O> _outputChangeListener<O extends DomainOutput>(
+  ProviderListenable<M> _outputChangeListener<M extends DomainModel>(
     WidgetRef ref,
   ) {
     return selector(getUseCase(ref));
   }
 
-  ProviderListenable<O> selector<O extends DomainOutput>(U useCase);
+  ProviderListenable<M> selector<M extends DomainModel>(U useCase);
 
   @visibleForTesting
   U read(ProviderContainer container) {

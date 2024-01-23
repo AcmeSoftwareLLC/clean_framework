@@ -3,7 +3,7 @@ import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 import 'package:clean_framework_example/features/form/domain/form_use_case.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 
 final homeUseCaseProvider =

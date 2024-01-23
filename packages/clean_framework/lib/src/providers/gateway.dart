@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<O extends DomainOutput, R extends Request,
+abstract class Gateway<M extends DomainModel, R extends Request,
     P extends SuccessResponse, S extends SuccessDomainInput> {
   Gateway({
     ProvidersContext? context,
@@ -14,7 +14,7 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
           '',
         ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
-    _useCase.subscribe<O, S>(
+    _useCase.subscribe<M, S>(
       (output) => _processRequest(buildRequest(output)),
     );
   }
@@ -25,7 +25,7 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
 
   S onSuccess(covariant P response);
   FailureDomainInput onFailure(covariant FailureResponse failureResponse);
-  R buildRequest(O output);
+  R buildRequest(M output);
 
   Future<Either<FailureDomainInput, S>> _processRequest(R request) async {
     final either = await transport(request);
@@ -36,20 +36,18 @@ abstract class Gateway<O extends DomainOutput, R extends Request,
   }
 }
 
-abstract class BridgeGateway<
-    SUBSCRIBER_OUTPUT extends DomainOutput,
-    PUBLISHER_OUTPUT extends DomainOutput,
-    SUBSCRIBER_INPUT extends DomainInput> {
+abstract class BridgeGateway<SUBSCRIBER_MODEL extends DomainModel,
+    PUBLISHER_MODEL extends DomainModel, SUBSCRIBER_INPUT extends DomainInput> {
   BridgeGateway({
     required UseCase subscriberUseCase,
     required UseCase publisherUseCase,
   })  : _subscriberUseCase = subscriberUseCase,
         _publisherUseCase = publisherUseCase {
-    _subscriberUseCase.subscribe<SUBSCRIBER_OUTPUT, SUBSCRIBER_INPUT>(
+    _subscriberUseCase.subscribe<SUBSCRIBER_MODEL, SUBSCRIBER_INPUT>(
       (output) {
         return Either<FailureDomainInput, SUBSCRIBER_INPUT>.right(
           onResponse(
-            _publisherUseCase.getOutput<PUBLISHER_OUTPUT>(),
+            _publisherUseCase.getOutput<PUBLISHER_MODEL>(),
           ),
         );
       },
@@ -58,14 +56,14 @@ abstract class BridgeGateway<
   late final UseCase _subscriberUseCase;
   late final UseCase _publisherUseCase;
 
-  SUBSCRIBER_INPUT onResponse(PUBLISHER_OUTPUT output);
+  SUBSCRIBER_INPUT onResponse(PUBLISHER_MODEL output);
 }
 
 abstract class WatcherGateway<
-    O extends DomainOutput,
+    M extends DomainModel,
     R extends Request,
     P extends SuccessResponse,
-    S extends SuccessDomainInput> extends Gateway<O, R, P, S> {
+    S extends SuccessDomainInput> extends Gateway<M, R, P, S> {
   WatcherGateway({
     required ProvidersContext context,
     required UseCaseProvider provider,

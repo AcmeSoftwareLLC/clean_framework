@@ -6,7 +6,7 @@ import 'package:clean_framework_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePresenter extends Presenter<ProfileViewModel,
-    ProfileDomainToUIOutput, ProfileUseCase> {
+    ProfileDomainToUIModel, ProfileUseCase> {
   ProfilePresenter({
     required super.builder,
     required String name,
@@ -20,7 +20,7 @@ class ProfilePresenter extends Presenter<ProfileViewModel,
   @override
   ProfileViewModel createViewModel(
     ProfileUseCase useCase,
-    ProfileDomainToUIOutput output,
+    ProfileDomainToUIModel output,
   ) {
     return ProfileViewModel(
       pokemonTypes: output.types.map(PokemonType.new).toList(growable: false),

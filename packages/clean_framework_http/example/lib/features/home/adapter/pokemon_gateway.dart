@@ -2,10 +2,10 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http/clean_framework_http.dart';
 import 'package:clean_framework_http_example/features/home/adapter/pokemon_model.dart';
 
-class PokemonGateway extends Gateway<PokemonGatewayOutput, PokemonRequest,
-    SuccessResponse, PokemonSuccessInput> {
+class PokemonGateway extends Gateway<PokemonDomainToGatewayModel,
+    PokemonRequest, SuccessResponse, PokemonSuccessInput> {
   @override
-  PokemonRequest buildRequest(PokemonGatewayOutput output) {
+  PokemonRequest buildRequest(PokemonDomainToGatewayModel output) {
     return PokemonRequest();
   }
 
@@ -23,7 +23,7 @@ class PokemonGateway extends Gateway<PokemonGatewayOutput, PokemonRequest,
   }
 }
 
-class PokemonGatewayOutput extends DomainOutput {
+class PokemonDomainToGatewayModel extends DomainModel {
   @override
   List<Object?> get props => [];
 }

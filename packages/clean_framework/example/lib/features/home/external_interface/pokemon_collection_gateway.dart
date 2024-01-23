@@ -11,13 +11,13 @@ class PokemonCollectionFailureDomainInput extends FailureDomainInput {
 }
 
 class PokemonCollectionGateway extends Gateway<
-    PokemonCollectionDomainToGatewayOutput,
+    PokemonCollectionDomainToGatewayModel,
     PokemonCollectionRequest,
     PokemonSuccessResponse,
     PokemonCollectionSuccessDomainInput> {
   @override
   PokemonCollectionRequest buildRequest(
-      PokemonCollectionDomainToGatewayOutput output) {
+      PokemonCollectionDomainToGatewayModel output) {
     return PokemonCollectionRequest();
   }
 

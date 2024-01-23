@@ -15,7 +15,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
   Future<void> fetch() {
     return request<PokemonSuccessInput>(
-      PokemonGatewayOutput(),
+      PokemonDomainToGatewayModel(),
       onSuccess: (success) {
         return entity.copyWith(
           pokemons: success.pokemons.map((p) {
@@ -31,15 +31,15 @@ class HomeUseCase extends UseCase<HomeEntity> {
 }
 
 class HomeUIOutputTransformer
-    extends OutputTransformer<HomeEntity, HomeUIOutput> {
+    extends DomainModelTransformer<HomeEntity, HomeDomainToUIModel> {
   @override
-  HomeUIOutput transform(HomeEntity entity) {
-    return HomeUIOutput(
+  HomeDomainToUIModel transform(HomeEntity entity) {
+    return HomeDomainToUIModel(
       pokemons: entity.pokemons.map((p) {
         final url =
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${p.id}.svg';
 
-        return PokemonUIOutput(name: p.name, url: url);
+        return PokemonDomainToUIModel(name: p.name, url: url);
       }).toList(),
     );
   }

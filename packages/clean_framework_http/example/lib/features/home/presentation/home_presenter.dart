@@ -7,7 +7,7 @@ import 'package:clean_framework_http_example/providers.dart';
 import 'package:flutter/material.dart';
 
 class HomePresenter
-    extends Presenter<HomeViewModel, HomeUIOutput, HomeUseCase> {
+    extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
   HomePresenter({
     required super.builder,
     super.key,
@@ -21,7 +21,7 @@ class HomePresenter
   @override
   HomeViewModel createViewModel(
     HomeUseCase useCase,
-    HomeUIOutput output,
+    HomeDomainToUIModel output,
   ) {
     return HomeViewModel(
       pokemons: output.pokemons

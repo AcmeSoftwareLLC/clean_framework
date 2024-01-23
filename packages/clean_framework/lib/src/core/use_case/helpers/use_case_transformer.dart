@@ -1,6 +1,6 @@
 import 'package:clean_framework/src/core/use_case/entity.dart';
-import 'package:clean_framework/src/core/use_case/helpers/input.dart';
-import 'package:clean_framework/src/core/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_input.dart';
 import 'package:meta/meta.dart';
 
 part 'input_filter_map.dart';
@@ -8,21 +8,21 @@ part 'output_filter_map.dart';
 
 abstract class UseCaseTransformer<E extends Entity> {}
 
-abstract class OutputTransformer<E extends Entity, O extends DomainOutput>
+abstract class DomainModelTransformer<E extends Entity, M extends DomainModel>
     implements UseCaseTransformer<E> {
-  const OutputTransformer() : _transformer = null;
+  const DomainModelTransformer() : _transformer = null;
 
-  factory OutputTransformer.from(O Function(E) transformer) =
-      _OutputFilter<E, O>;
+  factory DomainModelTransformer.from(M Function(E) transformer) =
+      _DomainModelFilter<E, M>;
 
-  const OutputTransformer._(this._transformer);
+  const DomainModelTransformer._(this._transformer);
 
-  final O Function(E)? _transformer;
+  final M Function(E)? _transformer;
 
-  MapEntry<Type, OutputBuilder<E>> get _entry => MapEntry(O, transform);
+  MapEntry<Type, OutputBuilder<E>> get _entry => MapEntry(M, transform);
 
   @protected
-  O transform(E entity);
+  M transform(E entity);
 }
 
 abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
@@ -30,7 +30,7 @@ abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
   const DomainInputTransformer() : _transformer = null;
 
   factory DomainInputTransformer.from(E Function(E, I) transformer) =
-      _InputFilter<E, I>;
+      _DomainInputFilter<E, I>;
 
   const DomainInputTransformer._(this._transformer);
 
@@ -44,17 +44,17 @@ abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
   E transform(E entity, I input);
 }
 
-class _OutputFilter<E extends Entity, O extends DomainOutput>
-    extends OutputTransformer<E, O> {
-  const _OutputFilter(super.transformer) : super._();
+class _DomainModelFilter<E extends Entity, M extends DomainModel>
+    extends DomainModelTransformer<E, M> {
+  const _DomainModelFilter(super.transformer) : super._();
 
   @override
-  O transform(E entity) => _transformer!(entity);
+  M transform(E entity) => _transformer!(entity);
 }
 
-class _InputFilter<E extends Entity, I extends DomainInput>
+class _DomainInputFilter<E extends Entity, I extends DomainInput>
     extends DomainInputTransformer<E, I> {
-  const _InputFilter(super.transformer) : super._();
+  const _DomainInputFilter(super.transformer) : super._();
 
   @override
   E transform(E entity, I input) => _transformer!(entity, input);

@@ -47,8 +47,8 @@ void main() {
 
         useCase.setInput(const TestInput(foo: 'input'));
 
-        final output = useCase.getOutput<TestOutput>();
-        expect(output, const TestOutput(foo: 'input'));
+        final output = useCase.getOutput<TestDomainModel>();
+        expect(output, const TestDomainModel(foo: 'input'));
       },
     );
 
@@ -59,7 +59,8 @@ void main() {
 
         useCase.setInput(const TestInput(foo: 'input'));
 
-        expect(useCase.getOutput<NoTransformerTestOutput>, throwsStateError);
+        expect(
+            useCase.getOutput<NoTransformerTestDomainModel>, throwsStateError);
       },
     );
 
@@ -68,7 +69,7 @@ void main() {
       () async {
         expect(useCase.debugEntity, const TestEntity());
 
-        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+        useCase.subscribe<TestDomainToGatewayModel, TestSuccessInput>(
           (output) async {
             return Either.right(
               TestSuccessInput(message: 'Hello ${output.name}!'),
@@ -77,7 +78,7 @@ void main() {
         );
 
         await useCase.request<TestSuccessInput>(
-          const TestGatewayOutput(name: 'World'),
+          const TestDomainToGatewayModel(name: 'World'),
           onSuccess: (success) => TestEntity(foo: success.message),
           onFailure: (failure) => const TestEntity(foo: 'failure'),
         );
@@ -94,7 +95,7 @@ void main() {
       () async {
         expect(useCase.debugEntity, const TestEntity());
 
-        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+        useCase.subscribe<TestDomainToGatewayModel, TestSuccessInput>(
           (output) async {
             return Either.right(
               TestSuccessInput(message: 'Hello ${output.name}!'),
@@ -103,7 +104,7 @@ void main() {
         );
 
         final input = await useCase.getInput(
-          const TestGatewayOutput(name: 'World'),
+          const TestDomainToGatewayModel(name: 'World'),
         );
 
         useCase.debugEntityUpdate(
@@ -129,7 +130,7 @@ void main() {
       () async {
         expect(useCase.debugEntity, const TestEntity());
 
-        useCase.subscribe<TestGatewayOutput, TestSuccessInput>(
+        useCase.subscribe<TestDomainToGatewayModel, TestSuccessInput>(
           (output) async {
             return Either.left(
               FailureDomainInput(message: 'Failed ${output.name}!'),
@@ -138,7 +139,7 @@ void main() {
         );
 
         final input = await useCase.getInput(
-          const TestGatewayOutput(name: 'World'),
+          const TestDomainToGatewayModel(name: 'World'),
         );
 
         useCase.debugEntityUpdate(
@@ -166,7 +167,7 @@ void main() {
       () async {
         expect(
           () => useCase.request<TestSuccessInput>(
-            const TestGatewayOutput(name: 'World'),
+            const TestDomainToGatewayModel(name: 'World'),
             onSuccess: (success) => const TestEntity(),
             onFailure: (failure) => const TestEntity(),
           ),
@@ -411,8 +412,8 @@ class NoTransformerTestInput extends SuccessDomainInput {
   final String foo;
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput({required this.foo});
+class TestDomainModel extends DomainModel {
+  const TestDomainModel({required this.foo});
 
   final String foo;
 
@@ -420,8 +421,8 @@ class TestOutput extends DomainOutput {
   List<Object?> get props => [foo];
 }
 
-class TestGatewayOutput extends DomainOutput {
-  const TestGatewayOutput({required this.name});
+class TestDomainToGatewayModel extends DomainModel {
+  const TestDomainToGatewayModel({required this.name});
 
   final String name;
 
@@ -435,8 +436,8 @@ class TestSuccessInput extends SuccessDomainInput {
   final String message;
 }
 
-class NoTransformerTestOutput extends DomainOutput {
-  const NoTransformerTestOutput({required this.foo});
+class NoTransformerTestDomainModel extends DomainModel {
+  const NoTransformerTestDomainModel({required this.foo});
 
   final String foo;
 
@@ -452,10 +453,11 @@ class TestInputTransformer
   }
 }
 
-class TestOutputTransformer extends OutputTransformer<TestEntity, TestOutput> {
+class TestOutputTransformer
+    extends DomainModelTransformer<TestEntity, TestDomainModel> {
   @override
-  TestOutput transform(TestEntity entity) {
-    return TestOutput(foo: entity.foo);
+  TestDomainModel transform(TestEntity entity) {
+    return TestDomainModel(foo: entity.foo);
   }
 }
 

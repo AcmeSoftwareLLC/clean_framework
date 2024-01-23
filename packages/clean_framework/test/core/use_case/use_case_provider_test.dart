@@ -59,8 +59,8 @@ void main() {
           home: Consumer(
             builder: (context, ref, _) {
               expect(
-                _testUseCaseProvider.subscribe<TestOutput>(ref),
-                TestOutput(foo: clicked ? 'bar' : ''),
+                _testUseCaseProvider.subscribe<TestDomainModel>(ref),
+                TestDomainModel(foo: clicked ? 'bar' : ''),
               );
 
               return ElevatedButton(
@@ -90,8 +90,8 @@ void main() {
           home: Consumer(
             builder: (context, ref, _) {
               expect(
-                _testUseCaseProvider2.subscribe<TestOutput>(ref),
-                TestOutput(foo: clicked ? 'bar' : ''),
+                _testUseCaseProvider2.subscribe<TestDomainModel>(ref),
+                TestDomainModel(foo: clicked ? 'bar' : ''),
               );
 
               return ElevatedButton(
@@ -124,8 +124,8 @@ void main() {
               Consumer(
                 builder: (context, ref, _) {
                   expect(
-                    _testUseCaseProvider2.subscribe<TestOutput>(ref),
-                    TestOutput(foo: clicked ? 'bar2' : ''),
+                    _testUseCaseProvider2.subscribe<TestDomainModel>(ref),
+                    TestDomainModel(foo: clicked ? 'bar2' : ''),
                   );
 
                   return ElevatedButton(
@@ -141,8 +141,8 @@ void main() {
               Consumer(
                 builder: (context, ref, _) {
                   expect(
-                    _testUseCaseProvider.subscribe<TestOutput>(ref),
-                    TestOutput(
+                    _testUseCaseProvider.subscribe<TestDomainModel>(ref),
+                    TestDomainModel(
                       foo: clicked3
                           ? 'bar3'
                           : clicked
@@ -180,9 +180,9 @@ void main() {
         child: MaterialApp(
           home: Consumer(
             builder: (context, ref, _) {
-              _testUseCaseProvider.listen<TestOutput>(ref, (o, n) {
-                expect(o, const TestOutput(foo: ''));
-                expect(n, const TestOutput(foo: 'bar'));
+              _testUseCaseProvider.listen<TestDomainModel>(ref, (o, n) {
+                expect(o, const TestDomainModel(foo: ''));
+                expect(n, const TestDomainModel(foo: 'bar'));
               });
 
               return ElevatedButton(
@@ -292,7 +292,7 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: const TestEntity(),
           transformers: [
-            OutputTransformer.from((e) => TestOutput(foo: e.foo)),
+            DomainModelTransformer.from((e) => TestDomainModel(foo: e.foo)),
           ],
         );
 
@@ -317,8 +317,8 @@ class TestEntity extends Entity {
   }
 }
 
-class TestOutput extends DomainOutput {
-  const TestOutput({required this.foo});
+class TestDomainModel extends DomainModel {
+  const TestDomainModel({required this.foo});
 
   final String foo;
 

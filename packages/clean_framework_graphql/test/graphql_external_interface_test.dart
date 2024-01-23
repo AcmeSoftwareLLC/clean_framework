@@ -197,7 +197,7 @@ class GatewayFake extends GraphQLGateway {
   GatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  MutationRequest buildRequest(DomainOutput output) {
+  MutationRequest buildRequest(DomainModel domainModel) {
     return MutationRequest();
   }
 
@@ -211,7 +211,7 @@ class MutationGatewayFake extends GraphQLGateway {
   MutationGatewayFake(UseCase useCase) : super(useCase: useCase);
 
   @override
-  SuccessfulRequest buildRequest(DomainOutput output) {
+  SuccessfulRequest buildRequest(DomainModel domainModel) {
     return SuccessfulRequest();
   }
 

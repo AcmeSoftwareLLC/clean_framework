@@ -4,28 +4,29 @@ import 'package:flutter_test/flutter_test.dart';
 
 typedef UseCaseSubscription
     = Future<Either<FailureDomainInput, SuccessDomainInput>> Function(
-  DomainOutput,
+  DomainModel,
 );
 
 class UseCaseFake<S extends SuccessDomainInput> extends Fake
     implements UseCase<EntityFake> {
-  UseCaseFake({this.output});
+  UseCaseFake({this.domainModel});
 
   EntityFake _entity = const EntityFake();
   late RequestSubscription subscription;
   S? successInput;
-  final DomainOutput? output;
+  final DomainModel? domainModel;
 
   @override
   EntityFake get entity => _entity;
 
   @override
   Future<void> request<I extends SuccessDomainInput>(
-    DomainOutput output, {
+    DomainModel domainModel, {
     required InputCallback<EntityFake, I> onSuccess,
     required InputCallback<EntityFake, FailureDomainInput> onFailure,
   }) async {
-    final either = await subscription(output) as Either<FailureDomainInput, I>;
+    final either =
+        await subscription(domainModel) as Either<FailureDomainInput, I>;
     _entity = either.fold(onFailure, onSuccess);
   }
 
@@ -35,15 +36,15 @@ class UseCaseFake<S extends SuccessDomainInput> extends Fake
   }
 
   @override
-  void subscribe<O extends DomainOutput, I extends DomainInput>(
-    RequestSubscription<O, I> subscription,
+  void subscribe<M extends DomainModel, I extends DomainInput>(
+    RequestSubscription<M, I> subscription,
   ) {
-    this.subscription = (output) => subscription(output as O);
+    this.subscription = (output) => subscription(output as M);
   }
 
-  Future<void> doFakeRequest<O extends DomainOutput>(O output) async {
+  Future<void> doFakeRequest<M extends DomainModel>(M domainModel) async {
     await request(
-      output,
+      domainModel,
       onFailure: (failure) => _entity.copyWith(value: 'failure'),
       onSuccess: (success) {
         successInput = success as S?;
