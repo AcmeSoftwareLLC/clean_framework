@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+/// Used for the transfer of data into the domain layer (use case) from external
+/// layers, services, etc.
 @immutable
 abstract class DomainInput {}
 
