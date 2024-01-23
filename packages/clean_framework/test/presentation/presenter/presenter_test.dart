@@ -143,9 +143,11 @@ class TestPresenter
 
   @override
   TestViewModel createViewModel(
-      TestUseCase useCase, TestDomainToUIModel output) {
+    TestUseCase useCase,
+    TestDomainToUIModel domainModel,
+  ) {
     return TestViewModel(
-      message: output.message,
+      message: domainModel.message,
       update: useCase.update,
     );
   }

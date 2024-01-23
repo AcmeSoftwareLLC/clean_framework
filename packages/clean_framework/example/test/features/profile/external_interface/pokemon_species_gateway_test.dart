@@ -1,5 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 import 'package:flutter_test/flutter_test.dart';
 

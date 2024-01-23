@@ -60,7 +60,9 @@ void main() {
         useCase.setInput(const TestInput(foo: 'input'));
 
         expect(
-            useCase.getOutput<NoTransformerTestDomainModel>, throwsStateError);
+          useCase.getOutput<NoTransformerTestDomainModel>,
+          throwsStateError,
+        );
       },
     );
 

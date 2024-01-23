@@ -2,7 +2,7 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
-import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_models.dart';
 
 class PokemonCollectionFailureDomainInput extends FailureDomainInput {
   PokemonCollectionFailureDomainInput({required this.type, super.message});
@@ -17,7 +17,7 @@ class PokemonCollectionGateway extends Gateway<
     PokemonCollectionSuccessDomainInput> {
   @override
   PokemonCollectionRequest buildRequest(
-      PokemonCollectionDomainToGatewayModel output) {
+      PokemonCollectionDomainToGatewayModel domainModel) {
     return PokemonCollectionRequest();
   }
 

@@ -108,7 +108,8 @@ class TestUseCase extends UseCase<EntityFake> {
           entity: const EntityFake(),
           transformers: [
             DomainModelTransformer.from(
-                (entity) => TestDomainModel(entity.value)),
+              (entity) => TestDomainModel(entity.value),
+            ),
           ],
         );
 

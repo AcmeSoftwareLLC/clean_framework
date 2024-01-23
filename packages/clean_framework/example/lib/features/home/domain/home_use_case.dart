@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
-import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
@@ -13,7 +13,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
       : super(
           entity: HomeEntity(),
           transformers: [
-            HomeDomainToUIOutputTransformer(),
+            HomeDomainToUIModelTransformer(),
             PokemonSearchDomainInputTransformer(),
             LoggedInEmailDomainInputTransformer(),
           ],
@@ -73,7 +73,7 @@ class PokemonSearchDomainInput extends SuccessDomainInput {
   final String name;
 }
 
-class HomeDomainToUIOutputTransformer
+class HomeDomainToUIModelTransformer
     extends DomainModelTransformer<HomeEntity, HomeDomainToUIModel> {
   @override
   HomeDomainToUIModel transform(HomeEntity entity) {

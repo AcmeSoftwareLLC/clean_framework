@@ -45,3 +45,12 @@ class PokemonProfileDomainToGatewayModel extends DomainModel {
   @override
   List<Object?> get props => [name];
 }
+
+class PokemonSpeciesDomainToGatewayModel extends DomainModel {
+  PokemonSpeciesDomainToGatewayModel({required this.name});
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}

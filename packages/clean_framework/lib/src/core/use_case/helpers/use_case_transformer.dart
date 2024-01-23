@@ -1,6 +1,6 @@
 import 'package:clean_framework/src/core/use_case/entity.dart';
-import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
 import 'package:clean_framework/src/core/use_case/helpers/domain_input.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
 import 'package:meta/meta.dart';
 
 part 'input_filter_map.dart';

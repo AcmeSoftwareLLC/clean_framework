@@ -128,7 +128,8 @@ class TestUseCase extends UseCase<TestEntity> {
           entity: entity,
           transformers: [
             DomainModelTransformer.from(
-                (entity) => TestDomainModel(entity.foo)),
+              (entity) => TestDomainModel(entity.foo),
+            ),
             DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (entity, input) => entity.copyWith(foo: input.foo),
             ),

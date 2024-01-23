@@ -13,7 +13,7 @@ class FormDomainToUIModel extends DomainModel {
   final FormController formController;
   final bool isLoading;
   final bool isLoggedIn;
-  final UserMeta userMeta;
+  final UserMetaEntity userMeta;
   final bool requireGender;
 
   @override

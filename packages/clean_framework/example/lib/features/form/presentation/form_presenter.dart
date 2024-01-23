@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_domain_outputs.dart';
+import 'package:clean_framework_example/features/form/domain/form_domain_models.dart';
 import 'package:clean_framework_example/features/form/domain/form_use_case.dart';
 import 'package:clean_framework_example/features/form/presentation/form_view_model.dart';
 import 'package:clean_framework_example/providers.dart';
@@ -32,13 +32,13 @@ class FormPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, FormDomainToUIModel output) {
-    if (output.isLoggedIn) {
+  void onOutputUpdate(BuildContext context, FormDomainToUIModel domainModel) {
+    if (domainModel.isLoggedIn) {
       showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (context) {
-          final meta = output.userMeta;
+          final meta = domainModel.userMeta;
 
           return AlertDialog(
             title: const Text('Login Success'),

@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
-import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example/providers.dart';
@@ -34,12 +34,12 @@ class HomePresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, HomeDomainToUIModel output) {
-    if (output.isRefresh) {
+  void onOutputUpdate(BuildContext context, HomeDomainToUIModel domainModel) {
+    if (domainModel.isRefresh) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            output.status == HomeStatus.failed
+            domainModel.status == HomeStatus.failed
                 ? 'Sorry, failed refreshing pokemons!'
                 : 'Refreshed pokemons successfully!',
           ),

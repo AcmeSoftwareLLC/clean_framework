@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/validators/validators.dart';
 import 'package:clean_framework_example/features/form/domain/form_entity.dart';
-import 'package:clean_framework_example/features/form/domain/form_domain_outputs.dart';
+import 'package:clean_framework_example/features/form/domain/form_domain_models.dart';
 
 class FormUseCase extends UseCase<FormEntity> {
   FormUseCase()
@@ -55,7 +55,7 @@ class FormUseCase extends UseCase<FormEntity> {
       // Simulates login
       await Future<void>.delayed(const Duration(seconds: 1));
 
-      final userMeta = UserMeta(
+      final userMeta = UserMetaEntity(
         email: _emailController.value ?? '',
         password: _passwordController.value ?? '',
         gender: _genderController.value?.name ?? '',
@@ -82,13 +82,13 @@ class FormUseCase extends UseCase<FormEntity> {
 class FormDomainToUIOutputTransformer
     extends DomainModelTransformer<FormEntity, FormDomainToUIModel> {
   @override
-  FormDomainToUIModel transform(FormEntity state) {
+  FormDomainToUIModel transform(FormEntity entity) {
     return FormDomainToUIModel(
-      formController: state.formController,
-      isLoading: state.screenState == FormScreenState.loading,
-      isLoggedIn: state.screenState == FormScreenState.success,
-      userMeta: state.userMeta,
-      requireGender: state.requireGender,
+      formController: entity.formController,
+      isLoading: entity.screenState == FormScreenState.loading,
+      isLoggedIn: entity.screenState == FormScreenState.success,
+      userMeta: entity.userMeta,
+      requireGender: entity.requireGender,
     );
   }
 }

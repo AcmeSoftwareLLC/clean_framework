@@ -18,13 +18,13 @@ class FormEntity extends Entity {
   FormEntity({
     required this.formController,
     this.screenState = FormScreenState.initial,
-    this.userMeta = const UserMeta(),
+    this.userMeta = const UserMetaEntity(),
     this.requireGender = true,
   });
 
   final FormController formController;
   final FormScreenState screenState;
-  final UserMeta userMeta;
+  final UserMetaEntity userMeta;
   final bool requireGender;
 
   @override
@@ -34,7 +34,7 @@ class FormEntity extends Entity {
   @override
   FormEntity copyWith({
     FormScreenState? screenState,
-    UserMeta? userMeta,
+    UserMetaEntity? userMeta,
     bool? requireGender,
   }) {
     return FormEntity(
@@ -46,8 +46,8 @@ class FormEntity extends Entity {
   }
 }
 
-class UserMeta extends Entity {
-  const UserMeta({
+class UserMetaEntity extends Entity {
+  const UserMetaEntity({
     this.email = '',
     this.password = '',
     this.gender = '',
