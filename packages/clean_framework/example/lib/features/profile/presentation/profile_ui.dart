@@ -225,10 +225,9 @@ class _PokeTypeChip extends StatelessWidget {
             Text(type.emoji),
             Text(
               type.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: type.color),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: type.color,
+                  ),
             ),
           ],
         ),

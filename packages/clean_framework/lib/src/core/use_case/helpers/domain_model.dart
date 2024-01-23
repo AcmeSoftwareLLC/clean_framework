@@ -12,8 +12,8 @@ abstract class DomainModel extends Equatable {
   bool get stringify => true;
 }
 
-@Deprecated('Use [DomainModel].')
+@Deprecated('Use DomainModel instead.')
 abstract class Output extends DomainModel {
-  @Deprecated('Use [DomainModel].')
+  @Deprecated('Use DomainModel instead.')
   const Output() : super();
 }

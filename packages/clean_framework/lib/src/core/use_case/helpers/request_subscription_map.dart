@@ -15,26 +15,26 @@ typedef RequestSubscription<M extends DomainModel, I extends DomainInput>
 extension RequestSubscriptionMapExtension<I extends DomainInput>
     on RequestSubscriptionMap<I> {
   void add<M extends DomainModel>(RequestSubscription<M, I> subscription) {
-    this[M] = (output) => subscription(output as M);
+    this[M] = (domainModel) => subscription(domainModel as M);
   }
 
   Result<S> getDomainInput<S extends SuccessDomainInput>(
-    DomainModel output,
+    DomainModel domainModel,
   ) async {
-    final outputType = output.runtimeType;
-    final subscription = this[outputType];
+    final domainModelType = domainModel.runtimeType;
+    final subscription = this[domainModelType];
 
     if (subscription == null) {
       throw StateError(
-        '\n\nNo subscription for "$outputType" exists.\n\n'
+        '\n\nNo subscription for "$domainModelType" exists.\n\n'
         'Please follow the steps below in order to fix this issue:\n'
-        '1. Ensure that the use case that requests "$outputType" is attached '
+        '1. Ensure that the use case that requests "$domainModelType" is attached '
         'the appropriate gateway.\n'
         '     AppropriateGatewayProvider(\n'
         '       ...,\n'
         '       useCases: [<<useCaseProvider>>],\n'
         '     )\n'
-        '2. Ensure that the gateway that belongs to "$outputType" is attached '
+        '2. Ensure that the gateway that belongs to "$domainModelType" is attached '
         'the appropriate external interface.\n'
         '     AppropriateExternalInterfaceProvider(\n'
         '       ...,\n'
@@ -50,7 +50,7 @@ extension RequestSubscriptionMapExtension<I extends DomainInput>
       );
     }
 
-    final result = await subscription(output);
+    final result = await subscription(domainModel);
     return result as Either<FailureDomainInput, S>;
   }
 }

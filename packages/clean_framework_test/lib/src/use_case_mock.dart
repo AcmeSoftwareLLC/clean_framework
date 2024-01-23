@@ -12,7 +12,7 @@ class UseCaseMock<E extends Entity> extends Mock {
   }
 
   final E entity;
-  final OutputFilterMap<E> _outputFilters = {};
+  final DomainModelFilterMap<E> _outputFilters = {};
 
   M getOutput<M extends DomainModel>() => _outputFilters<M>(entity);
 }

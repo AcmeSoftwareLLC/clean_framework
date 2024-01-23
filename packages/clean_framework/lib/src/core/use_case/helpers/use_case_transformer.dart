@@ -19,7 +19,7 @@ abstract class DomainModelTransformer<E extends Entity, M extends DomainModel>
 
   final M Function(E)? _transformer;
 
-  MapEntry<Type, OutputBuilder<E>> get _entry => MapEntry(M, transform);
+  MapEntry<Type, DomainModelBuilder<E>> get _entry => MapEntry(M, transform);
 
   @protected
   M transform(E entity);
@@ -36,7 +36,7 @@ abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
 
   final E Function(E, I)? _transformer;
 
-  MapEntry<Type, InputProcessor<E>> get _entry {
+  MapEntry<Type, DomainInputProcessor<E>> get _entry {
     return MapEntry(I, (i, e) => transform(e, i as I));
   }
 

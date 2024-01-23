@@ -1,16 +1,18 @@
 part of 'use_case_transformer.dart';
 
-typedef OutputBuilder<E extends Entity> = DomainModel Function(E);
+typedef DomainModelBuilder<E extends Entity> = DomainModel Function(E);
 
-typedef OutputFilterMap<E extends Entity> = Map<Type, OutputBuilder<E>>;
+typedef DomainModelFilterMap<E extends Entity>
+    = Map<Type, DomainModelBuilder<E>>;
 
-extension OutputFilterMapExtension<E extends Entity> on OutputFilterMap<E> {
+extension DomainModelFilterMapExtension<E extends Entity>
+    on DomainModelFilterMap<E> {
   M call<M extends DomainModel>(E entity) {
     final builder = this[M];
 
     if (builder == null) {
       throw StateError(
-        '\n\nOutput filter not defined for "$M".\n'
+        '\n\nDomain model filter not defined for "$M".\n'
         'Filters available for: ${keys.isEmpty ? 'none' : keys.join(', ')}\n'
         'Dependency: $E\n\n',
       );

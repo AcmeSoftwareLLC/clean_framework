@@ -26,8 +26,8 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     }
   }
 
-  final OutputFilterMap<E> _outputFilters = {};
-  final InputFilterMap<E> _inputFilters = {};
+  final DomainModelFilterMap<E> _outputFilters = {};
+  final DomainInputFilterMap<E> _inputFilters = {};
   final RequestSubscriptionMap _requestSubscriptions = {};
 
   @protected

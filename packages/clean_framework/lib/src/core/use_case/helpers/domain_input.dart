@@ -8,6 +8,8 @@ abstract class DomainInput {}
 @Deprecated('Use [DomainInput].')
 abstract class Input extends DomainInput {}
 
+/// Used for the transfer of data into the domain layer (use case) after some
+/// success response.
 class SuccessDomainInput implements DomainInput {
   const SuccessDomainInput();
 }
@@ -18,6 +20,8 @@ class SuccessInput extends SuccessDomainInput {
   const SuccessInput() : super();
 }
 
+/// Used for the transfer of data into the domain layer (use case) after some
+/// failure response.
 class FailureDomainInput implements DomainInput {
   const FailureDomainInput({this.message = ''});
 
