@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class HomeEntity extends UseCaseState {
+class HomeEntity extends Entity {
   const HomeEntity({this.pokemons = const []});
 
   final List<PokemonEntity> pokemons;

@@ -14,7 +14,7 @@ enum FormScreenState {
   failure,
 }
 
-class FormState extends UseCaseState {
+class FormState extends Entity {
   FormState({
     required this.formController,
     this.screenState = FormScreenState.initial,
@@ -33,20 +33,20 @@ class FormState extends UseCaseState {
 
   @override
   FormState copyWith({
-    FormScreenState? state,
+    FormScreenState? screenState,
     UserMeta? userMeta,
     bool? requireGender,
   }) {
     return FormState(
       formController: formController,
-      screenState: state ?? this.screenState,
+      screenState: screenState ?? this.screenState,
       userMeta: userMeta ?? this.userMeta,
       requireGender: requireGender ?? this.requireGender,
     );
   }
 }
 
-class UserMeta extends UseCaseState {
+class UserMeta extends Entity {
   const UserMeta({
     this.email = '',
     this.password = '',

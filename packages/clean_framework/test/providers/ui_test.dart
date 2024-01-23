@@ -57,7 +57,7 @@ class TestUI extends UI<TestViewModel> {
   }
 
   @override
-  Presenter<ViewModel, DomainOutput, UseCase<UseCaseState>> create(
+  Presenter<ViewModel, DomainOutput, UseCase<Entity>> create(
     PresenterBuilder<TestViewModel> builder,
   ) {
     return PresenterFake(builder: builder);

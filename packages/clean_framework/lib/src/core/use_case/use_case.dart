@@ -12,76 +12,75 @@ import 'package:meta/meta.dart';
 export 'helpers/use_case_input.dart';
 export 'use_case_helpers.dart';
 
-typedef InputCallback<UCS extends UseCaseState, I extends DomainInput> = UCS
-    Function(I);
+typedef InputCallback<E extends Entity, I extends DomainInput> = E Function(I);
 
-abstract class UseCase<UCS extends UseCaseState> extends StateNotifier<UCS>
+abstract class UseCase<E extends Entity> extends StateNotifier<E>
     with UseCaseDebounceMixin {
   UseCase({
-    required UCS useCaseState,
-    List<UseCaseTransformer<UCS>> transformers = const [],
-  }) : super(useCaseState) {
+    required E entity,
+    List<UseCaseTransformer<E>> transformers = const [],
+  }) : super(entity) {
     if (transformers.isNotEmpty) {
       _outputFilters.addTransformers(transformers);
       _inputFilters.addTransformers(transformers);
     }
   }
 
-  final OutputFilterMap<UCS> _outputFilters = {};
-  final InputFilterMap<UCS> _inputFilters = {};
+  final OutputFilterMap<E> _outputFilters = {};
+  final InputFilterMap<E> _inputFilters = {};
   final RequestSubscriptionMap _requestSubscriptions = {};
 
   @protected
   @useResult
 
-  /// The current domain state instance of this [UseCase].
+  /// The current entity instance of this [UseCase].
   ///
   /// Updating this variable will synchronously call all the listeners.
   /// Notifying the listeners is O(N) with N the number of listeners.
   ///
   /// Updating the domain state will throw if at least one listener throws.
   ///
-  /// For testing purposes, you can use [debugUseCaseState] to access the domain state.
-  UCS get useCaseState => super.state;
+  /// For testing purposes, you can use [debugEntity] to access the domain state.
+  E get entity => super.state;
 
   @protected
 
-  /// Updates the [useCaseState] with the [newUseCaseState] and notifies all the listeners.
+  /// Updates the [entity] with the [newEntity] and notifies all the listeners.
   ///
-  /// For testing purposes, you can use [debugUseCaseStateUpdate] to update use case state.
-  set useCaseState(UCS newUseCaseState) => super.state = newUseCaseState;
+  /// For testing purposes, you can use [debugEntityUpdate] to update use case state.
+  set entity(E newEntity) => super.state = newEntity;
 
-  /// A development-only way to access [useCaseState] outside of [UseCase].
+  /// A development-only way to access [entity] outside of [UseCase].
   ///
-  /// The only difference with [useCaseState] is that [debugUseCaseState] is not "protected".\
+  /// The only difference with [entity] is that [debugEntity] is not "protected".\
   /// Will not work in release mode.
   ///
   /// This is useful for tests.
-  UCS get debugUseCaseState => super.state;
+  E get debugEntity => super.state;
 
   @visibleForTesting
 
-  /// A development-only way to update [useCaseState] outside of [UseCase].
-  UCS debugUseCaseStateUpdate(UCS Function(UCS) update) {
-    late UCS updatedUseCaseState;
+  /// A development-only way to update [entity] outside of [UseCase].
+  E debugEntityUpdate(E Function(E) update) {
+    late E updatedEntity;
     assert(
       () {
-        updatedUseCaseState = useCaseState = update(super.state);
+        updatedEntity = entity = update(super.state);
         return true;
       }(),
       '',
     );
-    return updatedUseCaseState;
+    return updatedEntity;
   }
 
-  O getOutput<O extends DomainOutput>() => transformToOutput(useCaseState);
+  O getOutput<O extends DomainOutput>() => transformToOutput(entity);
 
   @visibleForTesting
-  O transformToOutput<O extends DomainOutput>(UCS entity) =>
+  O transformToOutput<O extends DomainOutput>(E entity) =>
       _outputFilters<O>(entity);
 
   void setInput<I extends DomainInput>(I input) {
-    useCaseState = _inputFilters<I>(useCaseState, input);
+    entity = _inputFilters<I>(entity, input);
   }
 
   void subscribe<O extends DomainOutput, I extends DomainInput>(
@@ -103,12 +102,12 @@ abstract class UseCase<UCS extends UseCaseState> extends StateNotifier<UCS>
   @protected
   Future<void> request<S extends SuccessDomainInput>(
     DomainOutput output, {
-    required InputCallback<UCS, S> onSuccess,
-    required InputCallback<UCS, FailureDomainInput> onFailure,
+    required InputCallback<E, S> onSuccess,
+    required InputCallback<E, FailureDomainInput> onFailure,
   }) async {
     final input = await getInternalInput<S>(output);
 
-    useCaseState = input.fold(
+    entity = input.fold(
       (failure) {
         CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
         return onFailure(failure);
@@ -147,7 +146,7 @@ abstract class UseCase<UCS extends UseCaseState> extends StateNotifier<UCS>
   }
 
   @override
-  bool updateShouldNotify(UCS old, UCS current) {
+  bool updateShouldNotify(E old, E current) {
     return !_isSilentUpdate && super.updateShouldNotify(old, current);
   }
 
@@ -156,7 +155,7 @@ abstract class UseCase<UCS extends UseCaseState> extends StateNotifier<UCS>
   @protected
   @visibleForTesting
 
-  /// The [useCaseState] updates within the [updater] will not be notified to the
+  /// The [entity] updates within the [updater] will not be notified to the
   /// [UseCase] listeners, but will silently update it.
   Future<void> withSilencedUpdate(FutureOr<void> Function() updater) async {
     assert(

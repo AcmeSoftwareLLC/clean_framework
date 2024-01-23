@@ -14,7 +14,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
   });
 
   test('Gateway unit test for failure on direct output', () async {
@@ -26,7 +26,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestDirectOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('Gateway unit test for success on yield output', () async {
@@ -39,11 +39,11 @@ void main() {
 
     await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
 
     gateway.yieldResponse(const TestResponse('with yield'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'success with input'));
+    expect(useCase.entity, const EntityFake(value: 'success with input'));
   });
 
   test('Gateway unit test for failure on yield output', () async {
@@ -55,7 +55,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 
   test('props', () {

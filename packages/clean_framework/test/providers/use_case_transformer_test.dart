@@ -8,8 +8,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
-      expect(useCase.debugUseCaseState.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -18,7 +18,7 @@ void main() {
     test('input transformer', () {
       final useCase = TestUseCase()..setInput(const FooInput('hello'));
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -31,7 +31,7 @@ class TestSuccessInput extends SuccessDomainInput {
   final String foo;
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({
     this.foo = '',
     this.bar = 0,
@@ -58,7 +58,7 @@ class TestEntity extends UseCaseState {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          useCaseState: const TestEntity(),
+          entity: const TestEntity(),
           transformers: [
             FooOutputTransformer(),
             FooInputTransformer(),
@@ -67,11 +67,11 @@ class TestUseCase extends UseCase<TestEntity> {
         );
 
   void updateFoo(String foo) {
-    useCaseState = useCaseState.copyWith(foo: foo);
+    entity = entity.copyWith(foo: foo);
   }
 
   void updateBar(int bar) {
-    useCaseState = useCaseState.copyWith(bar: bar);
+    entity = entity.copyWith(bar: bar);
   }
 }
 

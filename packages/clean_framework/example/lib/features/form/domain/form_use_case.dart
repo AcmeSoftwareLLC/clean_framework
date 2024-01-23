@@ -6,7 +6,7 @@ import 'package:clean_framework_example/features/form/domain/form_domain_outputs
 class FormUseCase extends UseCase<FormState> {
   FormUseCase()
       : super(
-          useCaseState: FormState(
+          entity: FormState(
             formController: FormController(
               validators: {const InputFieldValidator.required()},
             ),
@@ -14,21 +14,21 @@ class FormUseCase extends UseCase<FormState> {
           transformers: [FormDomainToUIOutputTransformer()],
         ) {
     _emailController = TextFieldController.create(
-      useCaseState.formController,
+      entity.formController,
       tag: FormTags.email,
     )..setValidators({const EmailInputFieldValidator()});
     _passwordController = TextFieldController.create(
-      useCaseState.formController,
+      entity.formController,
       tag: FormTags.password,
       autoValidate: true,
     )..setValidators({const PasswordInputFieldValidator()});
     _genderController = FieldController.create(
-      useCaseState.formController,
+      entity.formController,
       tag: FormTags.gender,
     )..setInitialValue(Gender.female);
 
     FieldController<bool>.create(
-      useCaseState.formController,
+      entity.formController,
       tag: FormTags.selectGender,
     )
       ..setInitialValue(true)
@@ -43,13 +43,13 @@ class FormUseCase extends UseCase<FormState> {
     // Simulates fetching form data from api
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    useCaseState.formController(FormTags.selectGender).setValue(false);
+    entity.formController(FormTags.selectGender).setValue(false);
   }
 
   Future<void> login() async {
-    final formController = useCaseState.formController;
+    final formController = entity.formController;
     if (formController.validate()) {
-      useCaseState = useCaseState.copyWith(state: FormScreenState.loading);
+      entity = entity.copyWith(screenState: FormScreenState.loading);
       formController.setSubmitted(true);
 
       // Simulates login
@@ -60,21 +60,21 @@ class FormUseCase extends UseCase<FormState> {
         password: _passwordController.value ?? '',
         gender: _genderController.value?.name ?? '',
       );
-      useCaseState = useCaseState.copyWith(
-          state: FormScreenState.success, userMeta: userMeta);
+      entity = entity.copyWith(
+          screenState: FormScreenState.success, userMeta: userMeta);
       formController.setSubmitted(false);
 
-      useCaseState = useCaseState.copyWith(state: FormScreenState.initial);
+      entity = entity.copyWith(screenState: FormScreenState.initial);
     }
   }
 
   void _onSelectGenderUpdate(bool? selectGender) {
-    useCaseState = useCaseState.copyWith(requireGender: selectGender ?? false);
+    entity = entity.copyWith(requireGender: selectGender ?? false);
   }
 
   @override
   void dispose() {
-    useCaseState.formController.dispose();
+    entity.formController.dispose();
     super.dispose();
   }
 }

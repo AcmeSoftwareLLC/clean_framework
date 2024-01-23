@@ -9,7 +9,7 @@ void main() {
   });
 }
 
-class EntityFake extends UseCaseState {
+class EntityFake extends Entity {
   @override
   List<Object?> get props => [];
 

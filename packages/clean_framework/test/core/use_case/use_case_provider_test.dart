@@ -290,7 +290,7 @@ class NewTestUseCase extends TestUseCase {}
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({this.name = ''})
       : super(
-          useCaseState: const TestEntity(),
+          entity: const TestEntity(),
           transformers: [
             OutputTransformer.from((e) => TestOutput(foo: e.foo)),
           ],
@@ -299,11 +299,11 @@ class TestUseCase extends UseCase<TestEntity> {
   final String name;
 
   void set({required String foo}) {
-    useCaseState = useCaseState.copyWith(foo: foo);
+    entity = entity.copyWith(foo: foo);
   }
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({this.foo = ''});
 
   final String foo;

@@ -3,7 +3,7 @@ import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
+class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     implements OverridableProvider<U> {
   UseCaseProvider(this.create)
       : _provider = StateNotifierProvider<U, E>(create);
@@ -39,4 +39,4 @@ class UseCaseProvider<E extends UseCaseState, U extends UseCase<E>>
   }
 }
 
-typedef ProviderListener<E extends UseCaseState> = void Function(E entity);
+typedef ProviderListener<E extends Entity> = void Function(E entity);

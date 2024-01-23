@@ -20,7 +20,7 @@ void main() {
             .overrideWith(ProfileUseCaseFake('PIKACHU')),
       ],
       setup: (useCase) {
-        useCase.debugUseCaseStateUpdate(
+        useCase.debugEntityUpdate(
           (e) => e.copyWith(
             name: 'Pikachu',
             description: 'Pikachu is a small, chubby rodent Pokémon.',

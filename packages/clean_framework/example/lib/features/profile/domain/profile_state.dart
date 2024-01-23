@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class ProfileState extends UseCaseState {
+class ProfileState extends Entity {
   ProfileState({
     this.name = '',
     this.types = const [],
@@ -40,7 +40,7 @@ class ProfileState extends UseCaseState {
   }
 }
 
-class PokemonStatState extends UseCaseState {
+class PokemonStatState extends Entity {
   PokemonStatState({this.name = '', this.point = 0});
 
   final String name;

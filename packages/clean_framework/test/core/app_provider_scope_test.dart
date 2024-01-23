@@ -23,7 +23,7 @@ void main() {
         final useCase = container.read(_testUseCaseProvider().notifier);
         await useCase.ping('Hello');
 
-        expect(useCase.debugUseCaseState.pong, 'Hello');
+        expect(useCase.debugEntity.pong, 'Hello');
       },
     );
 
@@ -130,18 +130,18 @@ class TestSuccessInput extends SuccessDomainInput {
 }
 
 class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase() : super(useCaseState: const TestEntity());
+  TestUseCase() : super(entity: const TestEntity());
 
   Future<void> ping(String message) {
     return request<TestSuccessInput>(
       TestGatewayOutput(ping: message),
-      onSuccess: (input) => useCaseState.copyWith(pong: input.pong),
-      onFailure: (input) => useCaseState,
+      onSuccess: (input) => entity.copyWith(pong: input.pong),
+      onFailure: (input) => entity,
     );
   }
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({this.pong = ''});
 
   final String pong;

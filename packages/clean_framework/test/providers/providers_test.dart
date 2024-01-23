@@ -121,7 +121,7 @@ class TestGateway extends Gateway {
 }
 
 class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase(TestEntity entity) : super(useCaseState: entity);
+  TestUseCase(TestEntity entity) : super(entity: entity);
 
   void doRequest() => request(
         TestOutput(),
@@ -130,7 +130,7 @@ class TestUseCase extends UseCase<TestEntity> {
       );
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   @override
   List<Object?> get props => [];
 

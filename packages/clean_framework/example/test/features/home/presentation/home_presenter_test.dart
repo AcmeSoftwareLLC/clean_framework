@@ -22,7 +22,7 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.debugUseCaseStateUpdate(
+        useCase.debugEntityUpdate(
           (e) => e.copyWith(
             pokemons: [
               PokemonModel(name: 'Pikachu', imageUrl: ''),
@@ -48,7 +48,7 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.debugUseCaseStateUpdate(
+        useCase.debugEntityUpdate(
           (e) => e.copyWith(
             isRefresh: true,
             status: HomeStatus.loaded,
@@ -70,7 +70,7 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.debugUseCaseStateUpdate(
+        useCase.debugEntityUpdate(
           (e) => e.copyWith(
             isRefresh: true,
             status: HomeStatus.failed,
@@ -92,7 +92,7 @@ void main() {
         homeUseCaseProvider.overrideWith(HomeUseCaseFake()),
       ],
       setup: (useCase) {
-        useCase.debugUseCaseStateUpdate(
+        useCase.debugEntityUpdate(
           (e) => e.copyWith(
             isRefresh: true,
             status: HomeStatus.failed,

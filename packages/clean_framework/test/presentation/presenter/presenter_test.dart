@@ -194,7 +194,7 @@ class TestViewModel extends ViewModel {
   List<Object?> get props => [message];
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({this.message = ''});
 
   final String message;
@@ -211,7 +211,7 @@ class TestEntity extends UseCaseState {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({this.name = ''})
       : super(
-          useCaseState: const TestEntity(message: 'DEFAULT'),
+          entity: const TestEntity(message: 'DEFAULT'),
           transformers: [
             OutputTransformer.from(
               (entity) => TestUIOutput(message: entity.message),
@@ -222,6 +222,6 @@ class TestUseCase extends UseCase<TestEntity> {
   final String name;
 
   void update(String message) {
-    useCaseState = useCaseState.copyWith(message: message);
+    entity = entity.copyWith(message: message);
   }
 }

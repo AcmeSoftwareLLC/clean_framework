@@ -17,7 +17,7 @@ class UseCaseFake<S extends SuccessDomainInput> extends Fake
   final DomainOutput? output;
 
   @override
-  EntityFake get useCaseState => _entity;
+  EntityFake get entity => _entity;
 
   @override
   Future<void> request<I extends SuccessDomainInput>(
@@ -53,7 +53,7 @@ class UseCaseFake<S extends SuccessDomainInput> extends Fake
   }
 }
 
-class EntityFake extends UseCaseState {
+class EntityFake extends Entity {
   const EntityFake({this.value = 'initial'});
 
   final String value;

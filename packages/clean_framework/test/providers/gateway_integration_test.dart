@@ -124,7 +124,7 @@ class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity)
       : super(
-          useCaseState: entity,
+          entity: entity,
           transformers: [
             OutputTransformer.from((entity) => TestOutput(entity.foo)),
             DomainInputTransformer<TestEntity, TestSuccessInput>.from(
@@ -136,16 +136,16 @@ class TestUseCase extends UseCase<TestEntity> {
   Future<void> fetchDataImmediately() async {
     await request<TestSuccessInput>(
       const TestDirectOutput('123'),
-      onFailure: (_) => useCaseState.copyWith(foo: 'failure'),
-      onSuccess: (success) => useCaseState.copyWith(foo: success.foo),
+      onFailure: (_) => entity.copyWith(foo: 'failure'),
+      onSuccess: (success) => entity.copyWith(foo: success.foo),
     );
   }
 
   Future<void> fetchDataEventually() async {
     await request<SuccessDomainInput>(
       const TestSubscriptionOutput('123'),
-      onFailure: (_) => useCaseState.copyWith(foo: 'failure'),
-      onSuccess: (_) => useCaseState, // no changes on the entity are needed,
+      onFailure: (_) => entity.copyWith(foo: 'failure'),
+      onSuccess: (_) => entity, // no changes on the entity are needed,
       // the changes should happen on the inputFilter.
     );
   }
@@ -153,9 +153,9 @@ class TestUseCase extends UseCase<TestEntity> {
   Future<void> fetchStateFromOtherUseCase() async {
     await request<TestSuccessInput>(
       const TestDirectOutput(''),
-      onFailure: (_) => useCaseState,
+      onFailure: (_) => entity,
       onSuccess: (input) {
-        return useCaseState.copyWith(foo: input.foo);
+        return entity.copyWith(foo: input.foo);
       },
     );
   }
@@ -195,7 +195,7 @@ class TestSubscriptionOutput extends DomainOutput {
   List<Object?> get props => [id];
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({required this.foo});
   final String foo;
 

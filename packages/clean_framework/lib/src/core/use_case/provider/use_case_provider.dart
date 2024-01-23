@@ -10,7 +10,7 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<US extends UseCaseState, U extends UseCase<US>>
+class UseCaseProvider<US extends Entity, U extends UseCase<US>>
     extends UseCaseProviderBase<US, U> {
   UseCaseProvider(
     U Function() create, [

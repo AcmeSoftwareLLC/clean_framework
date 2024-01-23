@@ -18,8 +18,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
-      expect(useCase.debugUseCaseState.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -28,7 +28,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -48,8 +48,8 @@ void main() {
         ..updateFoo('hello')
         ..updateBar(3);
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
-      expect(useCase.debugUseCaseState.bar, 3);
+      expect(useCase.debugEntity.foo, 'hello');
+      expect(useCase.debugEntity.bar, 3);
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
       expect(useCase.getOutput<BarOutput>().bar, 3);
@@ -58,7 +58,7 @@ void main() {
     test('input transformer', () {
       useCase.setInput(const FooInput('hello'));
 
-      expect(useCase.debugUseCaseState.foo, 'hello');
+      expect(useCase.debugEntity.foo, 'hello');
 
       expect(useCase.getOutput<FooOutput>().foo, 'hello');
     });
@@ -66,14 +66,14 @@ void main() {
 }
 
 abstract class TestUseCase extends UseCase<TestEntity> {
-  TestUseCase({super.transformers}) : super(useCaseState: const TestEntity());
+  TestUseCase({super.transformers}) : super(entity: const TestEntity());
 
   void updateFoo(String foo) {
-    useCaseState = useCaseState.copyWith(foo: foo);
+    entity = entity.copyWith(foo: foo);
   }
 
   void updateBar(int bar) {
-    useCaseState = useCaseState.copyWith(bar: bar);
+    entity = entity.copyWith(bar: bar);
   }
 }
 
@@ -107,7 +107,7 @@ class TestSuccessInput extends SuccessDomainInput {
   final String foo;
 }
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({
     this.foo = '',
     this.bar = 0,

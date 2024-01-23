@@ -1,7 +1,6 @@
 part of 'use_case_provider.dart';
 
-abstract class UseCaseProviderBase<E extends UseCaseState,
-    U extends UseCase<E>> {
+abstract class UseCaseProviderBase<E extends Entity, U extends UseCase<E>> {
   final StreamController<Refreshable<U>> _notifierController =
       StreamController.broadcast();
 

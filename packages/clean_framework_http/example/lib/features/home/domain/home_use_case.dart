@@ -9,7 +9,7 @@ final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
 class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase()
       : super(
-          useCaseState: const HomeEntity(),
+          entity: const HomeEntity(),
           transformers: [HomeUIOutputTransformer()],
         );
 
@@ -17,7 +17,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
     return request<PokemonSuccessInput>(
       PokemonGatewayOutput(),
       onSuccess: (success) {
-        return useCaseState.copyWith(
+        return entity.copyWith(
           pokemons: success.pokemons.map((p) {
             final match = _pokemonResUrlRegex.firstMatch(p.url);
 
@@ -25,7 +25,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
           }).toList(growable: false),
         );
       },
-      onFailure: (failure) => useCaseState,
+      onFailure: (failure) => entity,
     );
   }
 }

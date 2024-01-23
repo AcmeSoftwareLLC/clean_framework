@@ -9,7 +9,7 @@ import 'package:clean_framework_example/features/profile/external_interface/poke
 class ProfileUseCase extends UseCase<ProfileState> {
   ProfileUseCase(this.name)
       : super(
-          useCaseState: ProfileState(),
+          entity: ProfileState(),
           transformers: [ProfileUIOutputTransformer()],
         );
 
@@ -19,7 +19,7 @@ class ProfileUseCase extends UseCase<ProfileState> {
     final pokeName = name.toLowerCase();
 
     // If the use case is not auto disposed then we have last fetched data.
-    if (!useCaseState.description.isEmpty) return;
+    if (!entity.description.isEmpty) return;
 
     request<PokemonSpeciesSuccessInput>(
       PokemonSpeciesGatewayOutput(name: pokeName),
@@ -30,11 +30,11 @@ class ProfileUseCase extends UseCase<ProfileState> {
 
         final randomIndex = Random().nextInt(descriptions.length);
 
-        return useCaseState.copyWith(
+        return entity.copyWith(
           description: descriptions.elementAt(randomIndex).text,
         );
       },
-      onFailure: (failure) => useCaseState,
+      onFailure: (failure) => entity,
     );
 
     request<PokemonProfileSuccessInput>(
@@ -42,7 +42,7 @@ class ProfileUseCase extends UseCase<ProfileState> {
       onSuccess: (success) {
         final profile = success.profile;
 
-        return useCaseState.copyWith(
+        return entity.copyWith(
           name: name,
           types: profile.types,
           height: profile.height,
@@ -52,7 +52,7 @@ class ProfileUseCase extends UseCase<ProfileState> {
               .toList(growable: false),
         );
       },
-      onFailure: (failure) => useCaseState,
+      onFailure: (failure) => entity,
     );
   }
 }

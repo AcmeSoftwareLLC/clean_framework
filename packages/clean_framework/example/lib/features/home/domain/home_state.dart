@@ -3,7 +3,7 @@ import 'package:clean_framework_example/features/home/models/pokemon_model.dart'
 
 enum HomeStatus { initial, loading, loaded, failed }
 
-class HomeState extends UseCaseState {
+class HomeState extends Entity {
   HomeState({
     this.pokemons = const [],
     this.pokemonNameQuery = '',

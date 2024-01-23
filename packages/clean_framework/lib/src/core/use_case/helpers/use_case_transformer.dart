@@ -6,9 +6,9 @@ import 'package:meta/meta.dart';
 part 'input_filter_map.dart';
 part 'output_filter_map.dart';
 
-abstract class UseCaseTransformer<E extends UseCaseState> {}
+abstract class UseCaseTransformer<E extends Entity> {}
 
-abstract class OutputTransformer<E extends UseCaseState, O extends DomainOutput>
+abstract class OutputTransformer<E extends Entity, O extends DomainOutput>
     implements UseCaseTransformer<E> {
   const OutputTransformer() : _transformer = null;
 
@@ -25,8 +25,8 @@ abstract class OutputTransformer<E extends UseCaseState, O extends DomainOutput>
   O transform(E entity);
 }
 
-abstract class DomainInputTransformer<E extends UseCaseState,
-    I extends DomainInput> implements UseCaseTransformer<E> {
+abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
+    implements UseCaseTransformer<E> {
   const DomainInputTransformer() : _transformer = null;
 
   factory DomainInputTransformer.from(E Function(E, I) transformer) =
@@ -44,7 +44,7 @@ abstract class DomainInputTransformer<E extends UseCaseState,
   E transform(E entity, I input);
 }
 
-class _OutputFilter<E extends UseCaseState, O extends DomainOutput>
+class _OutputFilter<E extends Entity, O extends DomainOutput>
     extends OutputTransformer<E, O> {
   const _OutputFilter(super.transformer) : super._();
 
@@ -52,7 +52,7 @@ class _OutputFilter<E extends UseCaseState, O extends DomainOutput>
   O transform(E entity) => _transformer!(entity);
 }
 
-class _InputFilter<E extends UseCaseState, I extends DomainInput>
+class _InputFilter<E extends Entity, I extends DomainInput>
     extends DomainInputTransformer<E, I> {
   const _InputFilter(super.transformer) : super._();
 

@@ -11,7 +11,7 @@ const _spritesBaseUrl =
 class HomeUseCase extends UseCase<HomeState> {
   HomeUseCase()
       : super(
-          useCaseState: HomeState(),
+          entity: HomeState(),
           transformers: [
             HomeDomainToUIOutputTransformer(),
             PokemonSearchDomainInputTransformer(),
@@ -21,7 +21,7 @@ class HomeUseCase extends UseCase<HomeState> {
 
   Future<void> fetchPokemons({bool isRefresh = false}) async {
     if (!isRefresh) {
-      useCaseState = useCaseState.copyWith(status: HomeStatus.loading);
+      entity = entity.copyWith(status: HomeStatus.loading);
     }
 
     final input = await getInput(PokemonCollectionDomainToGatewayOutput());
@@ -29,13 +29,13 @@ class HomeUseCase extends UseCase<HomeState> {
       case SuccessUseCaseInput(:PokemonCollectionSuccessDomainInput input):
         final pokemons = input.pokemonIdentities.map(_resolvePokemon);
 
-        useCaseState = useCaseState.copyWith(
+        entity = entity.copyWith(
           pokemons: pokemons.toList(growable: false),
           status: HomeStatus.loaded,
           isRefresh: isRefresh,
         );
       case FailureUseCaseInput(:PokemonCollectionFailureDomainInput input):
-        useCaseState = useCaseState.copyWith(
+        entity = entity.copyWith(
           errorMessage: switch (input.type) {
             PokemonFailureType.unauthorized =>
               'The request was not authorized.',
@@ -48,15 +48,14 @@ class HomeUseCase extends UseCase<HomeState> {
           isRefresh: isRefresh,
         );
       case _:
-        useCaseState = useCaseState.copyWith(
+        entity = entity.copyWith(
           status: HomeStatus.failed,
           isRefresh: isRefresh,
         );
     }
 
     if (isRefresh) {
-      useCaseState =
-          useCaseState.copyWith(isRefresh: false, status: HomeStatus.loaded);
+      entity = entity.copyWith(isRefresh: false, status: HomeStatus.loaded);
     }
   }
 

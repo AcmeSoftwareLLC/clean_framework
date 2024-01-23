@@ -182,7 +182,7 @@ final _testUseCaseProviderFamily =
   (_) => TestUseCase(),
 );
 
-class TestEntity extends UseCaseState {
+class TestEntity extends Entity {
   const TestEntity({this.message = ''});
 
   final String message;
@@ -199,7 +199,7 @@ class TestEntity extends UseCaseState {
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase()
       : super(
-          useCaseState: const TestEntity(),
+          entity: const TestEntity(),
           transformers: [
             DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (e, i) => e.copyWith(message: i.message),

@@ -16,7 +16,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'success'));
+    expect(useCase.entity, const EntityFake(value: 'success'));
   });
 
   test('FirebaseWatcherGateway transport failure', () async {
@@ -30,7 +30,7 @@ void main() {
 
     await useCase.doFakeRequest(const TestOutput('123'));
 
-    expect(useCase.useCaseState, const EntityFake(value: 'failure'));
+    expect(useCase.entity, const EntityFake(value: 'failure'));
   });
 }
 

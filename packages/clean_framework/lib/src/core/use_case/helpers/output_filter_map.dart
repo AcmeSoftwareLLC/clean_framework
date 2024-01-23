@@ -1,11 +1,10 @@
 part of 'use_case_transformer.dart';
 
-typedef OutputBuilder<E extends UseCaseState> = DomainOutput Function(E);
+typedef OutputBuilder<E extends Entity> = DomainOutput Function(E);
 
-typedef OutputFilterMap<E extends UseCaseState> = Map<Type, OutputBuilder<E>>;
+typedef OutputFilterMap<E extends Entity> = Map<Type, OutputBuilder<E>>;
 
-extension OutputFilterMapExtension<E extends UseCaseState>
-    on OutputFilterMap<E> {
+extension OutputFilterMapExtension<E extends Entity> on OutputFilterMap<E> {
   O call<O extends DomainOutput>(E entity) {
     final builder = this[O];
 
