@@ -25,6 +25,10 @@ abstract class DomainModelTransformer<E extends Entity, M extends DomainModel>
   M transform(E entity);
 }
 
+@Deprecated('Use DomainModelTransformer instead.')
+abstract class OutputTransformer<E extends Entity, M extends DomainModel>
+    extends DomainModelTransformer<E, M> {}
+
 abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
     implements UseCaseTransformer<E> {
   const DomainInputTransformer() : _transformer = null;
@@ -43,6 +47,10 @@ abstract class DomainInputTransformer<E extends Entity, I extends DomainInput>
   @protected
   E transform(E entity, I input);
 }
+
+@Deprecated('Use DomainInputTransformer instead.')
+abstract class InputTransformer<E extends Entity, I extends DomainInput>
+    extends DomainInputTransformer<E, I> {}
 
 class _DomainModelFilter<E extends Entity, M extends DomainModel>
     extends DomainModelTransformer<E, M> {
