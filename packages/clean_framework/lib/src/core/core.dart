@@ -6,6 +6,6 @@ export 'external_interface/request.dart';
 export 'external_interface/response.dart';
 export 'gateway/gateway.dart';
 export 'gateway/gateway_provider.dart';
+export 'use_case/entity.dart';
 export 'use_case/provider/use_case_provider.dart';
 export 'use_case/use_case.dart';
-export 'use_case/use_case_state.dart';

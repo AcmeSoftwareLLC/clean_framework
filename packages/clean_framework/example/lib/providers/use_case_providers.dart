@@ -1,12 +1,13 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_state.dart';
+import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 import 'package:clean_framework_example/features/form/domain/form_use_case.dart';
-import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 
-final homeUseCaseProvider = UseCaseProvider.autoDispose<HomeState, HomeUseCase>(
+final homeUseCaseProvider =
+    UseCaseProvider.autoDispose<HomeEntity, HomeUseCase>(
   HomeUseCase.new,
   (bridge) {
     bridge.connect(
@@ -22,10 +23,10 @@ final homeUseCaseProvider = UseCaseProvider.autoDispose<HomeState, HomeUseCase>(
 );
 
 final profileUseCaseFamily =
-    UseCaseProvider.family<ProfileState, ProfileUseCase, String>(
+    UseCaseProvider.family<ProfileEntity, ProfileUseCase, String>(
   ProfileUseCase.new,
 );
 
-final formUseCaseProvider = UseCaseProvider<FormState, FormUseCase>(
+final formUseCaseProvider = UseCaseProvider<FormEntity, FormUseCase>(
   FormUseCase.new,
 );

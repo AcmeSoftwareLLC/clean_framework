@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 
 class HomeDomainToUIOutput extends DomainOutput {

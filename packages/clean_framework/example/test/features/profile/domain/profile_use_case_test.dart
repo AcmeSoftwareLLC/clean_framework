@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfileUseCase tests |', () {
-    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
@@ -85,7 +85,7 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
@@ -141,7 +141,7 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileState, ProfileDomainToUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIOutput>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {

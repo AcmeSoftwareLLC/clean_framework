@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
@@ -24,7 +24,7 @@ void main() {
   ];
 
   group('HomeUseCase test |', () {
-    useCaseTest<HomeUseCase, HomeState, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
       'fetch Pokemon; success',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -50,7 +50,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeState, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
       'refresh Pokemon; success',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -78,7 +78,7 @@ void main() {
       },
     );
 
-    useCaseTest<HomeUseCase, HomeState, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
       'fetch Pokemon; failure',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -104,7 +104,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeState, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
       'refresh Pokemon; failure',
       provider: homeUseCaseProvider,
       execute: (useCase) {
@@ -130,7 +130,7 @@ void main() {
       ],
     );
 
-    useCaseTest<HomeUseCase, HomeState, HomeDomainToUIOutput>(
+    useCaseTest<HomeUseCase, HomeEntity, HomeDomainToUIOutput>(
       'search pokemon',
       provider: homeUseCaseProvider,
       seed: (e) => e.copyWith(

@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
-import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
 import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
@@ -8,10 +8,10 @@ import 'package:clean_framework_example/features/home/models/pokemon_model.dart'
 const _spritesBaseUrl =
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites';
 
-class HomeUseCase extends UseCase<HomeState> {
+class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase()
       : super(
-          entity: HomeState(),
+          entity: HomeEntity(),
           transformers: [
             HomeDomainToUIOutputTransformer(),
             PokemonSearchDomainInputTransformer(),
@@ -74,9 +74,9 @@ class PokemonSearchDomainInput extends SuccessDomainInput {
 }
 
 class HomeDomainToUIOutputTransformer
-    extends OutputTransformer<HomeState, HomeDomainToUIOutput> {
+    extends OutputTransformer<HomeEntity, HomeDomainToUIOutput> {
   @override
-  HomeDomainToUIOutput transform(HomeState entity) {
+  HomeDomainToUIOutput transform(HomeEntity entity) {
     final filteredPokemons = entity.pokemons.where(
       (pokemon) {
         final pokeName = pokemon.name.toLowerCase();
@@ -95,9 +95,9 @@ class HomeDomainToUIOutputTransformer
 }
 
 class PokemonSearchDomainInputTransformer
-    extends DomainInputTransformer<HomeState, PokemonSearchDomainInput> {
+    extends DomainInputTransformer<HomeEntity, PokemonSearchDomainInput> {
   @override
-  HomeState transform(HomeState entity, PokemonSearchDomainInput input) {
+  HomeEntity transform(HomeEntity entity, PokemonSearchDomainInput input) {
     return entity.copyWith(pokemonNameQuery: input.name);
   }
 }
@@ -109,9 +109,9 @@ class LoggedInEmailDomainInput extends SuccessDomainInput {
 }
 
 class LoggedInEmailDomainInputTransformer
-    extends DomainInputTransformer<HomeState, LoggedInEmailDomainInput> {
+    extends DomainInputTransformer<HomeEntity, LoggedInEmailDomainInput> {
   @override
-  HomeState transform(HomeState entity, LoggedInEmailDomainInput input) {
+  HomeEntity transform(HomeEntity entity, LoggedInEmailDomainInput input) {
     return entity.copyWith(loggedInEmail: input.email);
   }
 }

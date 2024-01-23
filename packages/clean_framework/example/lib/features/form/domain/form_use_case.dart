@@ -1,12 +1,12 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/validators/validators.dart';
-import 'package:clean_framework_example/features/form/domain/form_state.dart';
+import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 import 'package:clean_framework_example/features/form/domain/form_domain_outputs.dart';
 
-class FormUseCase extends UseCase<FormState> {
+class FormUseCase extends UseCase<FormEntity> {
   FormUseCase()
       : super(
-          entity: FormState(
+          entity: FormEntity(
             formController: FormController(
               validators: {const InputFieldValidator.required()},
             ),
@@ -80,9 +80,9 @@ class FormUseCase extends UseCase<FormState> {
 }
 
 class FormDomainToUIOutputTransformer
-    extends OutputTransformer<FormState, FormDomainToUIOutput> {
+    extends OutputTransformer<FormEntity, FormDomainToUIOutput> {
   @override
-  FormDomainToUIOutput transform(FormState state) {
+  FormDomainToUIOutput transform(FormEntity state) {
     return FormDomainToUIOutput(
       formController: state.formController,
       isLoading: state.screenState == FormScreenState.loading,

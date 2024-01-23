@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 
-class ProfileState extends Entity {
-  ProfileState({
+class ProfileEntity extends Entity {
+  ProfileEntity({
     this.name = '',
     this.types = const [],
     this.description = '',
@@ -15,21 +15,21 @@ class ProfileState extends Entity {
   final String description;
   final int height;
   final int weight;
-  final List<PokemonStatState> stats;
+  final List<ProfileStatEntity> stats;
 
   @override
   List<Object?> get props => [name, types, description, height, weight, stats];
 
   @override
-  ProfileState copyWith({
+  ProfileEntity copyWith({
     String? name,
     List<String>? types,
     String? description,
     int? height,
     int? weight,
-    List<PokemonStatState>? stats,
+    List<ProfileStatEntity>? stats,
   }) {
-    return ProfileState(
+    return ProfileEntity(
       name: name ?? this.name,
       types: types ?? this.types,
       description: description ?? this.description,
@@ -40,8 +40,8 @@ class ProfileState extends Entity {
   }
 }
 
-class PokemonStatState extends Entity {
-  PokemonStatState({this.name = '', this.point = 0});
+class ProfileStatEntity extends Entity {
+  ProfileStatEntity({this.name = '', this.point = 0});
 
   final String name;
   final int point;

@@ -1,4 +1,4 @@
-import 'package:clean_framework_example/features/home/domain/home_state.dart';
+import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_domain_outputs.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
@@ -148,10 +148,10 @@ class HomeUseCaseFake extends HomeUseCase {
   Future<void> fetchPokemons({bool isRefresh = false}) async {}
 }
 
-class HomeUseCaseMock extends UseCaseMock<HomeState> implements HomeUseCase {
+class HomeUseCaseMock extends UseCaseMock<HomeEntity> implements HomeUseCase {
   HomeUseCaseMock()
       : super(
-          entity: HomeState(),
+          entity: HomeEntity(),
           transformers: [HomeDomainToUIOutputTransformer()],
         );
 }

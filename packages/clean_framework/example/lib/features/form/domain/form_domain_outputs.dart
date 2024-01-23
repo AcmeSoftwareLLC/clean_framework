@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_state.dart';
+import 'package:clean_framework_example/features/form/domain/form_entity.dart';
 
 class FormDomainToUIOutput extends DomainOutput {
   const FormDomainToUIOutput({

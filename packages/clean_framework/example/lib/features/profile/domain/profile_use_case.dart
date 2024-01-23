@@ -1,16 +1,16 @@
 import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
 import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
-class ProfileUseCase extends UseCase<ProfileState> {
+class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase(this.name)
       : super(
-          entity: ProfileState(),
-          transformers: [ProfileUIOutputTransformer()],
+          entity: ProfileEntity(),
+          transformers: [ProfileDomainToUIOutputTransformer()],
         );
 
   final String name;
@@ -48,7 +48,7 @@ class ProfileUseCase extends UseCase<ProfileState> {
           height: profile.height,
           weight: profile.weight,
           stats: profile.stats
-              .map((s) => PokemonStatState(name: s.name, point: s.baseStat))
+              .map((s) => ProfileStatEntity(name: s.name, point: s.baseStat))
               .toList(growable: false),
         );
       },
@@ -57,10 +57,10 @@ class ProfileUseCase extends UseCase<ProfileState> {
   }
 }
 
-class ProfileUIOutputTransformer
-    extends OutputTransformer<ProfileState, ProfileDomainToUIOutput> {
+class ProfileDomainToUIOutputTransformer
+    extends OutputTransformer<ProfileEntity, ProfileDomainToUIOutput> {
   @override
-  ProfileDomainToUIOutput transform(ProfileState entity) {
+  ProfileDomainToUIOutput transform(ProfileEntity entity) {
     return ProfileDomainToUIOutput(
       types: entity.types,
       description: entity.description.replaceAll(RegExp(r'[\n\f]'), ' '),

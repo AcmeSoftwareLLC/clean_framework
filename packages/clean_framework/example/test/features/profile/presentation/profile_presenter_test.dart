@@ -1,4 +1,4 @@
-import 'package:clean_framework_example/features/profile/domain/profile_state.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_domain_outputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
@@ -27,12 +27,12 @@ void main() {
             height: 4,
             weight: 60,
             stats: [
-              PokemonStatState(name: 'hp', point: 35),
-              PokemonStatState(name: 'attack', point: 55),
-              PokemonStatState(name: 'defense', point: 40),
-              PokemonStatState(name: 'special-attack', point: 50),
-              PokemonStatState(name: 'special-defense', point: 50),
-              PokemonStatState(name: 'speed', point: 90),
+              ProfileStatEntity(name: 'hp', point: 35),
+              ProfileStatEntity(name: 'attack', point: 55),
+              ProfileStatEntity(name: 'defense', point: 40),
+              ProfileStatEntity(name: 'special-attack', point: 50),
+              ProfileStatEntity(name: 'special-defense', point: 50),
+              ProfileStatEntity(name: 'speed', point: 90),
             ],
             types: ['electric'],
           ),
