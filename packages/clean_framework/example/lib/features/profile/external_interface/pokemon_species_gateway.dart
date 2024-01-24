@@ -1,6 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_inputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
 import 'package:clean_framework_example/features/profile/models/pokemon_species_model.dart';
 
@@ -26,12 +27,6 @@ class PokemonSpeciesGateway extends Gateway<
       species: PokemonSpeciesModel.fromJson(response.data),
     );
   }
-}
-
-class PokemonSpeciesSuccessDomainInput extends SuccessDomainInput {
-  PokemonSpeciesSuccessDomainInput({required this.species});
-
-  final PokemonSpeciesModel species;
 }
 
 class PokemonSpeciesRequest extends GetPokemonRequest {

@@ -2,13 +2,8 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
 import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_inputs.dart';
 import 'package:clean_framework_example/features/home/domain/home_domain_models.dart';
-
-class PokemonCollectionFailureDomainInput extends FailureDomainInput {
-  PokemonCollectionFailureDomainInput({required this.type, super.message});
-
-  final PokemonFailureType type;
-}
 
 class PokemonCollectionGateway extends Gateway<
     PokemonCollectionDomainToGatewayModel,
@@ -41,32 +36,6 @@ class PokemonCollectionGateway extends Gateway<
         'results',
         converter: PokemonIdentity.fromJson,
       ),
-    );
-  }
-}
-
-class PokemonCollectionSuccessDomainInput extends SuccessDomainInput {
-  PokemonCollectionSuccessDomainInput({required this.pokemonIdentities});
-
-  final List<PokemonIdentity> pokemonIdentities;
-}
-
-final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
-
-class PokemonIdentity {
-  PokemonIdentity({required this.name, required this.id});
-
-  final String name;
-  final String id;
-
-  factory PokemonIdentity.fromJson(Map<String, dynamic> json) {
-    final deserializer = Deserializer(json);
-
-    final match = _pokemonResUrlRegex.firstMatch(deserializer.getString('url'));
-
-    return PokemonIdentity(
-      name: deserializer.getString('name'),
-      id: match?.group(1) ?? '0',
     );
   }
 }

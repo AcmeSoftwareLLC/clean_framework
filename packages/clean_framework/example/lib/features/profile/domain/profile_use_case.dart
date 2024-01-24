@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/features/profile/domain/profile_domain_inputs.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example/features/profile/domain/profile_domain_models.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
 
 class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase(this.name)

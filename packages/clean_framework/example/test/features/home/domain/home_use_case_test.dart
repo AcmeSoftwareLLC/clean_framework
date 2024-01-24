@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_example/features/home/domain/home_domain_inputs.dart';
 import 'package:clean_framework_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
-import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
 import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
 import 'package:clean_framework_example/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
