@@ -15,7 +15,7 @@ abstract class Gateway<M extends DomainModel, R extends Request,
         ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
     _useCase.subscribe<M, S>(
-      (output) => _processRequest(buildRequest(output)),
+      (domainModel) => _processRequest(buildRequest(domainModel)),
     );
   }
 

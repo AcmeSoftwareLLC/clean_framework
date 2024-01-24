@@ -166,8 +166,8 @@ class TestPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, TestDomainToUIModel output) {
-    super.onOutputUpdate(context, output);
+  void onDomainModelUpdate(BuildContext context, TestDomainToUIModel output) {
+    super.onDomainModelUpdate(context, output);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(output.message)),

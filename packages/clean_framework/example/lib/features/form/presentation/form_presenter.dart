@@ -32,7 +32,8 @@ class FormPresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, FormDomainToUIModel domainModel) {
+  void onDomainModelUpdate(
+      BuildContext context, FormDomainToUIModel domainModel) {
     if (domainModel.isLoggedIn) {
       showDialog<void>(
         context: context,

@@ -38,16 +38,35 @@ abstract class Presenter<V extends ViewModel, M extends DomainModel,
   @protected
   void onLayoutReady(BuildContext context, U useCase) {}
 
-  /// Called whenever the [output] updates.
+  /// Called whenever the [domainModel] updates.
   @protected
-  void onOutputUpdate(BuildContext context, M output) {}
+  void onDomainModelUpdate(BuildContext context, M domainModel) {}
+
+  @Deprecated('Use onDomainModelUpdate.')
+  @protected
+  void onOutputUpdate(BuildContext context, M output) =>
+      onDomainModelUpdate(context, output);
 
   /// Called whenever a new output is received.
   @protected
   @mustCallSuper
-  void onOutput(BuildContext context, OutputState<M> output, V viewModel) {
-    if (output.hasUpdated) onOutputUpdate(context, output.next);
+  void onDomainModel(
+    BuildContext context,
+    DomainModelState<M> domainModel,
+    V viewModel,
+  ) {
+    if (domainModel.hasUpdated) onDomainModelUpdate(context, domainModel.next);
   }
+
+  @Deprecated('Use onDomainModel.')
+  @protected
+  @mustCallSuper
+  void onOutput(
+    BuildContext context,
+    DomainModelState<M> output,
+    V viewModel,
+  ) =>
+      onDomainModel(context, output, viewModel);
 
   /// Called whenever the presenter configuration changes.
   @protected
@@ -96,12 +115,13 @@ class _PresenterState<V extends ViewModel, M extends DomainModel,
     var viewModel = ViewModelScope.maybeOf<V>(context);
 
     if (viewModel == null) {
-      final output = widget.subscribe(ref);
-      viewModel = widget.createViewModel(_useCase!, output);
+      final domainModel = widget.subscribe(ref);
+      viewModel = widget.createViewModel(_useCase!, domainModel);
 
       _provider.listen<M>(
         ref,
-        (p, n) => widget.onOutput(context, OutputState(p, n), viewModel!),
+        (p, n) =>
+            widget.onDomainModel(context, DomainModelState(p, n), viewModel!),
       );
     }
 
@@ -167,8 +187,8 @@ class ViewModelBuilder extends StatelessWidget {
 
 typedef PresenterBuilder<V extends ViewModel> = Widget Function(V viewModel);
 
-class OutputState<M extends DomainModel> {
-  OutputState(this.previous, this.next);
+class DomainModelState<M extends DomainModel> {
+  DomainModelState(this.previous, this.next);
 
   final M? previous;
   final M next;
