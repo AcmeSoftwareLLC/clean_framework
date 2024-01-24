@@ -32,7 +32,7 @@ abstract class Presenter<V extends ViewModel, M extends DomainModel,
   ConsumerState<Presenter<V, M, U>> createState() => _PresenterState<V, M, U>();
 
   @protected
-  V createViewModel(U useCase, M output);
+  V createViewModel(U useCase, M domainModel);
 
   /// Called when this presenter is inserted into the tree.
   @protected
