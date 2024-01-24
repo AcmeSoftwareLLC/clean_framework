@@ -122,8 +122,6 @@ The second method involves creating Domain Models on demand. This is used when t
   }
 ```
 
-**** REFACTOR BELOW BEFORE COMMIT ****
-
 The request method generates a Future that publishes a **FetchUserDataDomainToGatewayModel** instance. If this domain model type isn't being listened to, an error is thrown. During development, you can use dummy Gateways while developing the Use Case behavior before writing external code.
 
 The request method includes two callbacks: one for success and another for failures.
