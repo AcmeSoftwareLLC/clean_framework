@@ -3,8 +3,8 @@ import 'package:clean_framework/src/core/use_case/helpers/domain_input.dart';
 import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
 import 'package:meta/meta.dart';
 
-part 'input_filter_map.dart';
-part 'output_filter_map.dart';
+part 'domain_input_filter_map.dart';
+part 'domain_model_filter_map.dart';
 
 abstract class UseCaseTransformer<E extends Entity> {}
 

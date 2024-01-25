@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 
-import 'package:clean_framework_http_example/features/home/domain/home_ui_output.dart';
+import 'package:clean_framework_http_example/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_http_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_http_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_http_example/providers.dart';
