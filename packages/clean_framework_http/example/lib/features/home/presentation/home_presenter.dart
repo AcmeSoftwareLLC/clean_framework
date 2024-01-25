@@ -21,10 +21,10 @@ class HomePresenter
   @override
   HomeViewModel createViewModel(
     HomeUseCase useCase,
-    HomeDomainToUIModel output,
+    HomeDomainToUIModel domainModel,
   ) {
     return HomeViewModel(
-      pokemons: output.pokemons
+      pokemons: domainModel.pokemons
           .map(
             (p) => PokemonViewModel(
               name: p.name.toUpperCase(),

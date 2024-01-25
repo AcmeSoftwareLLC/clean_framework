@@ -16,7 +16,7 @@ void main() {
 
     await useCase.fetchDataImmediately();
 
-    final output = useCase.getOutput<TestDomainModel>();
+    final output = useCase.getDomainModel<TestDomainModel>();
     expect(output, const TestDomainModel('success'));
   });
 
@@ -32,7 +32,7 @@ void main() {
 
     await useCase.fetchDataImmediately();
 
-    final output = useCase.getOutput<TestDomainModel>();
+    final output = useCase.getDomainModel<TestDomainModel>();
     expect(output, const TestDomainModel('failure'));
   });
 
@@ -49,12 +49,12 @@ void main() {
 
     await useCase.fetchDataEventually();
 
-    final output = useCase.getOutput<TestDomainModel>();
+    final output = useCase.getDomainModel<TestDomainModel>();
     expect(output, const TestDomainModel('bar'));
 
     gateway.yieldResponse(const TestResponse('with yield'));
 
-    final output2 = useCase.getOutput<TestDomainModel>();
+    final output2 = useCase.getDomainModel<TestDomainModel>();
     expect(output2, const TestDomainModel('with yield'));
   });
 
@@ -65,7 +65,7 @@ void main() {
     TestBridgeGateway(subscriberUseCase: useCase2, publisherUseCase: useCase1);
 
     await useCase2.fetchStateFromOtherUseCase();
-    final output = useCase2.getOutput<TestDomainModel>();
+    final output = useCase2.getDomainModel<TestDomainModel>();
 
     expect(output, const TestDomainModel('bar'));
   });

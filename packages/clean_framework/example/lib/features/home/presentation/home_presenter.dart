@@ -19,17 +19,17 @@ class HomePresenter
 
   @override
   HomeViewModel createViewModel(
-      HomeUseCase useCase, HomeDomainToUIModel output) {
+      HomeUseCase useCase, HomeDomainToUIModel domainModel) {
     return HomeViewModel(
-      pokemons: output.pokemons,
+      pokemons: domainModel.pokemons,
       onSearch: (query) =>
           useCase.setInput(PokemonSearchDomainInput(name: query)),
       onRefresh: () => useCase.fetchPokemons(isRefresh: true),
       onRetry: useCase.fetchPokemons,
-      isLoading: output.status == HomeStatus.loading,
-      hasFailedLoading: output.status == HomeStatus.failed,
-      loggedInEmail: output.loggedInEmail,
-      errorMessage: output.errorMessage,
+      isLoading: domainModel.status == HomeStatus.loading,
+      hasFailedLoading: domainModel.status == HomeStatus.failed,
+      loggedInEmail: domainModel.loggedInEmail,
+      errorMessage: domainModel.errorMessage,
     );
   }
 

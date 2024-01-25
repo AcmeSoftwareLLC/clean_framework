@@ -34,7 +34,7 @@ ProviderContainer
 
       final completer = Completer<void>();
       final subscription = useCase.stream
-          .map((e) => useCase.transformToOutput<M>(e))
+          .map((e) => useCase.transformToDomainModel<M>(e))
           .distinct()
           .listen(domainModels.add, onDone: completer.complete);
 
@@ -92,7 +92,7 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
 
       final completer = Completer<void>();
       final subscription = toUseCase.stream
-          .map((e) => toUseCase.transformToOutput<M>(e))
+          .map((e) => toUseCase.transformToDomainModel<M>(e))
           .distinct()
           .listen(domainModels.add, onDone: completer.complete);
 

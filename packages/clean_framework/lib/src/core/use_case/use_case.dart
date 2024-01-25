@@ -73,10 +73,10 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     return updatedEntity;
   }
 
-  M getOutput<M extends DomainModel>() => transformToOutput(entity);
+  M getDomainModel<M extends DomainModel>() => transformToDomainModel(entity);
 
   @visibleForTesting
-  M transformToOutput<M extends DomainModel>(E entity) =>
+  M transformToDomainModel<M extends DomainModel>(E entity) =>
       _outputFilters<M>(entity);
 
   void setInput<I extends DomainInput>(I input) {

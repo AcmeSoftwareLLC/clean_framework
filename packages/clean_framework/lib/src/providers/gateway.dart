@@ -47,7 +47,7 @@ abstract class BridgeGateway<SUBSCRIBER_MODEL extends DomainModel,
       (output) {
         return Either<FailureDomainInput, SUBSCRIBER_INPUT>.right(
           onResponse(
-            _publisherUseCase.getOutput<PUBLISHER_MODEL>(),
+            _publisherUseCase.getDomainModel<PUBLISHER_MODEL>(),
           ),
         );
       },

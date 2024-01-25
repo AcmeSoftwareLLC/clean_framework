@@ -20,13 +20,13 @@ class FormPresenter
   @override
   FormViewModel createViewModel(
     FormUseCase useCase,
-    FormDomainToUIModel output,
+    FormDomainToUIModel domainModel,
   ) {
     return FormViewModel(
-      formController: output.formController,
-      isLoading: output.isLoading,
-      isLoggedIn: output.isLoggedIn,
-      requireGender: output.requireGender,
+      formController: domainModel.formController,
+      isLoading: domainModel.isLoading,
+      isLoggedIn: domainModel.isLoggedIn,
+      requireGender: domainModel.requireGender,
       onLogin: useCase.login,
     );
   }

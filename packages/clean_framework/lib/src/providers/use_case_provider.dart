@@ -35,7 +35,7 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     WidgetRef ref,
   ) {
     final useCase = getUseCase(ref);
-    return _provider.select((e) => useCase.getOutput());
+    return _provider.select((e) => useCase.getDomainModel());
   }
 }
 

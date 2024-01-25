@@ -89,7 +89,7 @@ void presenterCallbackTest<V extends ViewModel, M extends DomainModel,
     await setup(useCase);
 
     // ignore: invalid_use_of_protected_member
-    final vm = presenter.createViewModel(useCase, useCase.getOutput<M>());
+    final vm = presenter.createViewModel(useCase, useCase.getDomainModel<M>());
 
     await verify(useCase, vm as V);
   });

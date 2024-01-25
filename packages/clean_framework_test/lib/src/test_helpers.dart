@@ -183,7 +183,7 @@ void useCaseTest<U extends UseCase, M extends DomainModel>(
       Future<void>? expectation;
       if (expect != null) {
         expectation = expectLater(
-          useCase.stream.map((_) => useCase.getOutput<M>()),
+          useCase.stream.map((_) => useCase.getDomainModel<M>()),
           emitsInOrder(expect()),
         );
       }

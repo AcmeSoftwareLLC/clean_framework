@@ -41,7 +41,7 @@ class UseCaseProvider<US extends Entity, U extends UseCase<US>>
 
   @override
   ProviderListenable<M> selector<M extends DomainModel>(U useCase) {
-    return _internal.select((_) => useCase.getOutput());
+    return _internal.select((_) => useCase.getDomainModel());
   }
 
   StateNotifierProvider<U, US> call() => _internal;

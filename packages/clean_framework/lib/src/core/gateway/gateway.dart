@@ -49,8 +49,8 @@ abstract class Gateway<M extends DomainModel, R extends Request,
 
   @visibleForTesting
   @nonVirtual
-  Future<Either<FailureDomainInput, S>> buildInput(M output) {
-    return _processRequest(buildRequest(output));
+  Future<Either<FailureDomainInput, S>> buildInput(M domainModel) {
+    return _processRequest(buildRequest(domainModel));
   }
 
   _Source<R, P>? _source;
@@ -59,7 +59,7 @@ abstract class Gateway<M extends DomainModel, R extends Request,
 
   FailureDomainInput onFailure(covariant FailureResponse failureResponse);
 
-  R buildRequest(M output);
+  R buildRequest(M domainModel);
 
   Future<Either<FailureDomainInput, S>> _processRequest(R request) async {
     final either = await _source!.responder(request);

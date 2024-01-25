@@ -20,7 +20,7 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestDomainModel>();
+      final output = useCase.getDomainModel<TestDomainModel>();
       expect(output, const TestDomainModel('success'));
     },
   );
@@ -37,7 +37,7 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestDomainModel>();
+      final output = useCase.getDomainModel<TestDomainModel>();
       expect(output, const TestDomainModel('failure'));
     },
   );
@@ -54,7 +54,7 @@ void main() {
     },
     execute: (useCase) => useCase.fetchDataImmediately(),
     verify: (useCase) {
-      final output = useCase.getOutput<TestDomainModel>();
+      final output = useCase.getDomainModel<TestDomainModel>();
       expect(output, const TestDomainModel('failure'));
     },
   );

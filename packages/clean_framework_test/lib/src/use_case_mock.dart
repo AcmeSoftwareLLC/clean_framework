@@ -7,12 +7,12 @@ class UseCaseMock<E extends Entity> extends Mock {
     List<UseCaseTransformer<E>>? transformers,
   }) {
     if (transformers != null && transformers.isNotEmpty) {
-      _outputFilters.addTransformers(transformers);
+      _domainModelFilters.addTransformers(transformers);
     }
   }
 
   final E entity;
-  final DomainModelFilterMap<E> _outputFilters = {};
+  final DomainModelFilterMap<E> _domainModelFilters = {};
 
-  M getOutput<M extends DomainModel>() => _outputFilters<M>(entity);
+  M getDomainModel<M extends DomainModel>() => _domainModelFilters<M>(entity);
 }

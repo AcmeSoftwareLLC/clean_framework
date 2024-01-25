@@ -11,8 +11,8 @@ void main() {
       expect(useCase.debugEntity.foo, 'hello');
       expect(useCase.debugEntity.bar, 3);
 
-      expect(useCase.getOutput<FooDomainModel>().foo, 'hello');
-      expect(useCase.getOutput<BarDomainModel>().bar, 3);
+      expect(useCase.getDomainModel<FooDomainModel>().foo, 'hello');
+      expect(useCase.getDomainModel<BarDomainModel>().bar, 3);
     });
 
     test('input transformer', () {
@@ -20,7 +20,7 @@ void main() {
 
       expect(useCase.debugEntity.foo, 'hello');
 
-      expect(useCase.getOutput<FooDomainModel>().foo, 'hello');
+      expect(useCase.getDomainModel<FooDomainModel>().foo, 'hello');
     });
   });
 }

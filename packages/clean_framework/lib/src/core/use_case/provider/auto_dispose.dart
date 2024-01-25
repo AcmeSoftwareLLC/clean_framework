@@ -27,7 +27,7 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
 
   @override
   ProviderListenable<M> selector<M extends DomainModel>(U useCase) {
-    return _internal.select((_) => useCase.getOutput());
+    return _internal.select((_) => useCase.getDomainModel());
   }
 
   AutoDisposeStateNotifierProvider<U, E> call() => _internal;

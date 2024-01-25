@@ -18,3 +18,8 @@ class PokemonDomainToUIModel extends DomainModel {
   @override
   List<Object> get props => [name, url];
 }
+
+class PokemonDomainToGatewayModel extends DomainModel {
+  @override
+  List<Object?> get props => [];
+}

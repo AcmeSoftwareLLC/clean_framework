@@ -39,7 +39,7 @@ class UseCaseFake<S extends SuccessDomainInput> extends Fake
   void subscribe<M extends DomainModel, I extends DomainInput>(
     RequestSubscription<M, I> subscription,
   ) {
-    this.subscription = (output) => subscription(output as M);
+    this.subscription = (domainModel) => subscription(domainModel as M);
   }
 
   Future<void> doFakeRequest<M extends DomainModel>(M domainModel) async {

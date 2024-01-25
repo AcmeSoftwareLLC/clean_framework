@@ -47,7 +47,7 @@ void main() {
 
         useCase.setInput(const TestInput(foo: 'input'));
 
-        final output = useCase.getOutput<TestDomainModel>();
+        final output = useCase.getDomainModel<TestDomainModel>();
         expect(output, const TestDomainModel(foo: 'input'));
       },
     );
@@ -60,7 +60,7 @@ void main() {
         useCase.setInput(const TestInput(foo: 'input'));
 
         expect(
-          useCase.getOutput<NoTransformerTestDomainModel>,
+          useCase.getDomainModel<NoTransformerTestDomainModel>,
           throwsStateError,
         );
       },
