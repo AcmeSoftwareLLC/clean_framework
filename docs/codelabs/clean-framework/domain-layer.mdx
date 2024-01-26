@@ -240,7 +240,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
 Once you've set up the Use Case, the next step is to create a Domain to UI model, which the Presenter will use to show data on the screen. For this, you'll need to create a file named `home_domain_models.dart` in the `domain` directory.
 
-#### File: `lib/features/home/domain/home_ui_output.dart`
+#### File: `lib/features/home/domain/home_domain_models.dart`
 ```dart
 import 'package:clean_framework/clean_framework.dart';
 
@@ -321,5 +321,47 @@ class HomeUseCase extends UseCase<HomeEntity> {
   ...
 }
 ```
+
+### Other Notes
+
+So, now we have a Use Case set up, and it's sending and receiving data from the Presenter properly. That's great, but what if we have two features that need to share data or communicate in some way? Luckily, we have a built-in way to do this: creating a bridge between two use cases.
+
+#### Setting up a Bridge Between Two Use Cases
+
+Say we have a feature called 'home', and home needs to receive some data from another feature called 'form'. When the user types in their email on the screen for the 'form' feature, we want the 'home' feature's entity to be updated with the email address as well.
+
+To set up a bridge between two use cases, we'll need to add it to the provider for the destination Use Case:
+
+#### File: `lib/providers/use_case_providers.dart`
+```dart
+final homeUseCaseProvider =
+    UseCaseProvider.autoDispose<HomeEntity, HomeUseCase>(
+  HomeUseCase.new,
+  (bridge) {
+    bridge.connect(
+      formUseCaseProvider,
+      selector: (e) => e.userMeta.email,
+      (oldEmail, email) {
+        if (oldEmail != email) {
+          bridge.useCase.setInput(
+            LoggedInEmailDomainInput(email: email),
+          );
+        }
+      },
+    );
+  },
+);
+```
+
+In the 'home' feature's UseCaseProvider, there is an optional argument for a bridge function. It receives a single argument, the `UseCaseProviderBridge`. Then, we just use `bridge.connect()` within the anonymous function to connect the two use cases.
+
+#### `UseCaseProviderBridge.connect()`
+
+`bridge.connect()` takes three arguments:
+  - The source `UseCaseProvider`,
+  - The `selector` function, (similar to `select()` in Riverpod). This is where you specify which fields you want to end up in `HomeUseCase`'s entity, and receives `FormEntity` as an argument.
+  - An anonymous function that receives the field's old value and new value (`(oldEmail, email)`).
+
+From here, all you need to do is set up the `DomainInput` that will update `HomeUseCase` with the bridge data using `bridge.useCase.setInput(DomainInput)`. Now, as long as you have a `DomainInputTransformer` set up in `HomeUseCase` for the input containing the data we need (in this case, a transformer for `LoggedInEmailDomainInput`), `HomeEntity` will be updated with `FormEntity`'s `email` value whenever it updates.
 
 Congratulations! Your Pokemon app is getting closer to actually containing some business logic. In the next section, we'll start working on external interfaces and handling requests to interact with external services (e.g. a REST api.)

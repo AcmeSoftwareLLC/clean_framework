@@ -15,7 +15,9 @@ final homeUseCaseProvider =
       selector: (e) => e.userMeta.email,
       (oldEmail, email) {
         if (oldEmail != email) {
-          bridge.useCase.setInput(LoggedInEmailDomainInput(email: email));
+          bridge.useCase.setInput(
+            LoggedInEmailDomainInput(email: email),
+          );
         }
       },
     );
