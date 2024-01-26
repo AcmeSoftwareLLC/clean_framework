@@ -9,6 +9,7 @@ class PokeRouter extends AppRouter<Routes> {
   @override
   RouterConfiguration configureRouter() {
     return RouterConfiguration(
+      initialLocation: '/',
       debugLogDiagnostics: true,
       routes: [
         AppRoute(
