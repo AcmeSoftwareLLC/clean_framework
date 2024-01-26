@@ -1,0 +1,223 @@
+### Optional Example - Updating the Global Theme From a Feature
+
+At this point, we've covered the domain layer, features, and setting up the UI layer. Hopefully you're now familiar with the flow of data between the domain and the UI, as well as from use case to use case. However, what if we want to update something global, such as a theme used by the entire app, from within a feature? In this example, we'll cover one possible way to do this. If this doesn't interest you, feel free to move on to the next section and start writing the external interface layer for the Pokemon app, as it's not a required step.
+
+#### Overview
+
+For this guide, we won't be making any changes to the Pokemon app we've been writing, but instead outlining a separate example feature as a proof of concept. You can find the source code for this section in the `theme_example` project that is part of `clean_framework`.
+
+Here's what we'll be setting up for this guide:
+1. A screen that allows the user to choose the app theme (called `HomeUI`),
+2. Another UI-derived class, within the same feature, that converts the user's theme choice to a flutter `ThemeMode` object (called `ExampleThemeModeWrapper`),
+3. An `ExampleApp` class that will utilize the `ExampleThemeModeWrapper` UI to provide the themeMode choice to `MaterialApp.router`.
+
+Our feature will be called `Home`, and our sub-feature (that contains `ExampleThemeModeWrapper`) will be called `HomeTheme`.
+
+#### Setting Things Up
+
+Since we've already covered the domain and UI layers for Clean Framework apps, we won't go into depth about that again here. Our theme example app will contain a single feature, laid out as follows:
+
+```
+features
+    home
+        domain
+            - home_domain_models.dart
+            - home_entity.dart
+            - home_use_case.dart
+        presentation
+            theme
+                - home_theme_presenter.dart
+                - home_theme_ui.dart
+                - home_theme_view_model.dart
+            - home_presenter.dart
+            - home_ui.dart
+            - home_view_model.dart
+```
+
+##### Domain
+
+First, we need to get our data containers ready. Let's start with writing the `HomeEntity` for our `home` feature:
+
+#### File: `lib/features/home/domain/home_entity.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+
+class HomeEntity extends Entity {
+  const HomeEntity({
+    this.appTheme = AppTheme.light,
+  });
+
+  final AppTheme appTheme;
+
+  @override
+  HomeEntity copyWith({
+    AppTheme? appTheme,
+  }) {
+    return HomeEntity(
+      appTheme: appTheme ?? this.appTheme,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        appTheme,
+      ];
+}
+
+enum AppTheme {
+  light(name: 'Light Theme', value: 'LIGHT'),
+  dark(name: 'Dark Theme', value: 'DARK');
+
+  const AppTheme({
+    required this.name,
+    required this.value,
+  });
+
+  final String name;
+  final String value;
+}
+```
+
+Our entity only has a single field: `appTheme`. The `AppTheme` type will be our medium to store the user's theme choice, and will later be translated into a `ThemeMode` object to be passed into `MaterialApp.router()`.
+
+Next, we are going to need two `DomainModel`s, since we're going to end up with two `UI` classes: `HomeDomainToUIModel`, and `HomeThemeDomainToUIModel`:
+
+#### File: `lib/features/home/domain/home_domain_models.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+
+class HomeDomainToUIModel extends DomainModel {
+  const HomeDomainToUIModel({
+    required this.appTheme,
+  });
+
+  final AppTheme appTheme;
+
+  @override
+  List<Object?> get props => [
+        appTheme,
+      ];
+}
+
+class HomeThemeDomainToUIModel extends DomainModel {
+  const HomeThemeDomainToUIModel({
+    required this.appTheme,
+  });
+
+  final AppTheme appTheme;
+
+  @override
+  List<Object> get props => [
+        appTheme,
+      ];
+}
+```
+
+Both of our `UI` classes will need the selected `AppTheme`, so we have an `appTheme` field on both `DomainModel`s. You might be tempted to think, "why not just use a single `DomainModel` since they contain the same data?" But in our opinion, it's better to stick to having a single `DomainToUIModel` for each `Presenter` for consistency.
+
+Finally, now that we have our domain layer data objects, we just need to set up the `UseCase`:
+
+#### File: `lib/features/home/domain/home_domain_models.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:theme_example/features/home/domain/home_domain_models.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+
+class HomeUseCase extends UseCase<HomeEntity> {
+  HomeUseCase()
+      : super(
+          entity: const HomeEntity(),
+        );
+
+  Future<void> getTheme() async {
+    entity = entity.copyWith(
+      appTheme: AppTheme.light,
+    );
+  }
+
+  Future<void> updateTheme(AppTheme? theme) async {
+    entity = entity.copyWith(
+      appTheme: theme,
+    );
+  }
+}
+```
+
+We're going to have two functions in our `UseCase`:
+1. `getTheme()`: This is going to be called on initialization (`onLayoutReady()`) from our main `Presenter`.
+2. `updateTheme(AppTheme?)`: This function is what will update the entity each time the user makes a new theme selection from our main `UI`.
+
+Lastly, we're going to need two `DomainModelTransformer`s that each of our Presenters can subscribe to. We usually put these just below the `UseCase` in the same file.
+
+#### File: `lib/features/home/domain/home_use_case.dart`
+```dart
+class HomeDomainToUIModelTransformer
+    extends DomainModelTransformer<HomeEntity, HomeDomainToUIModel> {
+  @override
+  HomeDomainToUIModel transform(HomeEntity entity) {
+    return HomeDomainToUIModel(
+      appTheme: entity.appTheme,
+    );
+  }
+}
+
+class HomeThemeDomainToUIModelTransformer
+    extends DomainModelTransformer<HomeEntity, HomeThemeDomainToUIModel> {
+  @override
+  HomeThemeDomainToUIModel transform(HomeEntity entity) {
+    return HomeThemeDomainToUIModel(
+      appTheme: entity.appTheme,
+    );
+  }
+}
+```
+Just as before, with both of our `DomainModel`s, our `DomainModelTransformer`s are nearly identical. The only difference being the particular `Presenter` for which the data is intended. When updating the `DomainModel`s, we just provide them with our entity's `appTheme` field. That's it!
+
+Great, now that our domain layer is complete, let's move on to the necessary `Presenter`s and `UI` classes.
+
+##### Presentation
+
+To start, if you haven't already, create the six files laid out at the beginning of the guide:
+1. `presentation/home_presenter.dart`,
+2. `presentation/home_ui.dart`,
+3. `presentation/home_view_model.dart`,
+4. `presentation/theme/home_theme_presenter.dart`,
+5. `presentation/theme/home_theme_ui.dart`,
+6. `presentation/theme/home_theme_view_model.dart`,
+
+We'll outline each file one by one below.
+
+#### File: `lib/features/home/presentation/home_presenter.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/domain/home_domain_models.dart';
+import 'package:theme_example/features/home/domain/home_use_case.dart';
+import 'package:theme_example/features/home/presentation/home_view_model.dart';
+import 'package:theme_example/providers.dart';
+
+class HomePresenter
+    extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
+  HomePresenter({
+    required super.builder,
+    super.key,
+  }) : super(provider: homeUseCaseProvider);
+
+  @override
+  HomeViewModel createViewModel(
+      HomeUseCase useCase, HomeDomainToUIModel domainModel) {
+    return HomeViewModel(
+      appTheme: domainModel.appTheme,
+      onThemeChange: useCase.updateTheme,
+    );
+  }
+
+  @override
+  void onLayoutReady(BuildContext context, HomeUseCase useCase) {
+    useCase.getTheme();
+  }
+}
+```
+
+****** COMPLETE BEFORE MERGE: GO OVER PRESENTATION AND SETTING UP APP WIDGET ******
