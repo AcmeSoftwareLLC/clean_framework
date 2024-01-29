@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.0
+## 0.4.3
 **Jan 29, 2024**
 - Updated example project classes to reflect latest Clean Framework changes.
 
