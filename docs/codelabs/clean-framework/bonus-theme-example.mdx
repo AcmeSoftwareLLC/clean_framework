@@ -9,13 +9,15 @@ For this guide, we won't be making any changes to the Pokemon app we've been wri
 Here's what we'll be setting up for this guide:
 1. A screen that allows the user to choose the app theme (called `HomeUI`),
 2. Another UI-derived class, within the same feature, that converts the user's theme choice to a flutter `ThemeMode` object (called `ExampleThemeModeWrapper`),
-3. An `ExampleApp` class that will utilize the `ExampleThemeModeWrapper` UI to provide the themeMode choice to `MaterialApp.router`.
+3. A `ThemeExampleApp` top-level widget that will utilize the `ExampleThemeModeWrapper` UI to provide the themeMode choice to `MaterialApp.router`.
 
 Our feature will be called `Home`, and our sub-feature (that contains `ExampleThemeModeWrapper`) will be called `HomeTheme`.
 
 #### Setting Things Up
 
-Since we've already covered the domain and UI layers for Clean Framework apps, we won't go into depth about that again here. Our theme example app will contain a single feature, laid out as follows:
+Since we've already covered the domain and UI layers for Clean Framework apps in previous sections, we won't go into depth about how they work again here. 
+
+Our theme example app will contain a single feature, laid out as follows:
 
 ```
 features
@@ -118,7 +120,7 @@ Both of our `UI` classes will need the selected `AppTheme`, so we have an `appTh
 
 Finally, now that we have our domain layer data objects, we just need to set up the `UseCase`:
 
-#### File: `lib/features/home/domain/home_domain_models.dart`
+#### File: `lib/features/home/domain/home_use_case.dart`
 ```dart
 import 'package:clean_framework/clean_framework.dart';
 import 'package:theme_example/features/home/domain/home_domain_models.dart';
@@ -172,21 +174,46 @@ class HomeThemeDomainToUIModelTransformer
   }
 }
 ```
-Just as before, with both of our `DomainModel`s, our `DomainModelTransformer`s are nearly identical. The only difference being the particular `Presenter` for which the data is intended. When updating the `DomainModel`s, we just provide them with our entity's `appTheme` field. That's it!
+Just like our two `DomainModel`s, our `DomainModelTransformer`s are nearly identical. The only difference being the particular `Presenter` for which the data is intended. When updating the `DomainModel`s, we just provide them with our entity's `appTheme` field. That's it!
 
 Great, now that our domain layer is complete, let's move on to the necessary `Presenter`s and `UI` classes.
 
 ##### Presentation
 
 To start, if you haven't already, create the six files laid out at the beginning of the guide:
-1. `presentation/home_presenter.dart`,
-2. `presentation/home_ui.dart`,
-3. `presentation/home_view_model.dart`,
-4. `presentation/theme/home_theme_presenter.dart`,
-5. `presentation/theme/home_theme_ui.dart`,
-6. `presentation/theme/home_theme_view_model.dart`,
+1. `presentation/home_view_model.dart`,
+2. `presentation/home_presenter.dart`,
+3. `presentation/home_ui.dart`,
+4. `presentation/theme/home_theme_view_model.dart`,
+5. `presentation/theme/home_theme_presenter.dart`,
+6. `presentation/theme/home_theme_ui.dart`,
 
-We'll outline each file one by one below.
+We'll outline each file one by one below, starting with the main `ViewModel`.
+
+#### File: `lib/features/home/presentation/home_view_model.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+
+class HomeViewModel extends ViewModel {
+  const HomeViewModel({
+    required this.appTheme,
+    required this.onThemeChange,
+  });
+
+  final AppTheme appTheme;
+
+  final ValueChanged<AppTheme?> onThemeChange;
+
+  @override
+  List<Object> get props => [
+        appTheme,
+      ];
+}
+```
+
+For our main view model, we'll need the theme choice and a callback to the domain for updating the theme `onThemeChange`.
 
 #### File: `lib/features/home/presentation/home_presenter.dart`
 ```dart
@@ -220,4 +247,272 @@ class HomePresenter
 }
 ```
 
-****** COMPLETE BEFORE MERGE: GO OVER PRESENTATION AND SETTING UP APP WIDGET ******
+This will be the presenter for the main UI class (`home_ui.dart`). We call `useCase.getTheme()` on initialization `onLayoutReady` to update the theme with the default choice.
+
+#### File: `lib/features/home/presentation/home_ui.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+import 'package:theme_example/features/home/presentation/home_presenter.dart';
+import 'package:theme_example/features/home/presentation/home_view_model.dart';
+
+class HomeUI extends UI<HomeViewModel> {
+  HomeUI({
+    super.key,
+  });
+
+  @override
+  HomePresenter create(WidgetBuilder builder) {
+    return HomePresenter(builder: builder);
+  }
+
+  @override
+  Widget build(BuildContext context, HomeViewModel viewModel) {
+    final themeData = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(viewModel.appTheme.name),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(
+              height: 36,
+            ),
+            Text(
+              'Select App Theme',
+              style: themeData.textTheme.labelMedium,
+            ),
+            ...AppTheme.values.map(
+              (theme) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: RadioListTile(
+                  value: theme,
+                  groupValue: viewModel.appTheme,
+                  title: Text(
+                    theme.name,
+                    style: themeData.textTheme.labelMedium!.copyWith(
+                      color: theme == viewModel.appTheme
+                          ? themeData.colorScheme.primary
+                          : themeData.colorScheme.onBackground,
+                    ),
+                  ),
+                  onChanged: viewModel.onThemeChange,
+                  contentPadding: const EdgeInsets.all(4),
+                  tileColor: theme == viewModel.appTheme
+                      ? themeData.colorScheme.primaryContainer
+                      : null,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(
+                      color: themeData.colorScheme.outline,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+This will be our main UI that provides the user with radio button choices for the Dark and Light themes. Notice that for our `RadioListTile`, we are passing in the value of `onThemeChange`, ultimately calling `useCase.updateTheme()` when a radio button selection is made.
+
+Next, we'll move on to creating the theme wrapper widget presentation code, starting with the view model.
+
+#### File: `lib/features/home/presentation/theme/home_theme_view_model.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+
+class HomeThemeViewModel extends ViewModel {
+  const HomeThemeViewModel({
+    required this.appTheme,
+  });
+
+  final AppTheme appTheme;
+
+  @override
+  List<Object> get props => [
+        appTheme,
+      ];
+}
+```
+
+In this case, our theme widget only needs the current theme from the domain layer, so that's all the view model will contain.
+
+#### File: `lib/features/home/presentation/theme/home_theme_presenter.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/domain/home_domain_models.dart';
+import 'package:theme_example/features/home/domain/home_use_case.dart';
+import 'package:theme_example/features/home/presentation/theme/home_theme_view_model.dart';
+import 'package:theme_example/providers.dart';
+
+class HomeThemePresenter extends Presenter<HomeThemeViewModel,
+    HomeThemeDomainToUIModel, HomeUseCase> {
+  HomeThemePresenter({
+    required super.builder,
+    super.key,
+  }) : super(provider: homeUseCaseProvider);
+
+  @override
+  HomeThemeViewModel createViewModel(
+      HomeUseCase useCase, HomeThemeDomainToUIModel domainModel) {
+    return HomeThemeViewModel(
+      appTheme: domainModel.appTheme,
+    );
+  }
+
+  @override
+  void onLayoutReady(BuildContext context, HomeUseCase useCase) {
+    useCase.getTheme();
+  }
+}
+```
+
+Now all that is left is to create the wrapper widget itself, and utilize it in our `ThemeExampleApp` top-level widget.
+
+#### File: `lib/features/home/presentation/theme/home_theme_ui.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/domain/home_entity.dart';
+import 'package:theme_example/features/home/presentation/theme/home_theme_presenter.dart';
+import 'package:theme_example/features/home/presentation/theme/home_theme_view_model.dart';
+
+class ExampleThemeModeWrapper extends UI<HomeThemeViewModel> {
+  ExampleThemeModeWrapper({
+    required this.builder,
+    super.key,
+  });
+
+  final Widget Function(BuildContext, ThemeMode) builder;
+
+  @override
+  HomeThemePresenter create(WidgetBuilder builder) =>
+      HomeThemePresenter(builder: builder);
+
+  @override
+  Widget build(BuildContext context, HomeThemeViewModel viewModel) {
+    return builder(
+      context,
+      _getThemeMode(
+        viewModel.appTheme,
+      ),
+    );
+  }
+
+  ThemeMode _getThemeMode(AppTheme theme) {
+    return switch (theme) {
+      AppTheme.light => ThemeMode.light,
+      AppTheme.dark => ThemeMode.dark,
+    };
+  }
+}
+```
+That's it for the UI! In order to use the feature's `appTheme` choice outside of the app, we are providing a builder function that will convert the user's `AppTheme` choice to a `ThemeMode` object and passing it in as an argument to our `ExampleThemeModeWrapper` widget. Then, we can wrap `MaterialApp.router` in this widget and provide it with the user's `AppTheme` choice.
+
+Before creating the `ThemeExampleApp` class, we'll need to get a few prerequisites added.
+
+Firstly, create a `UseCaseProvider` for our home feature:
+
+#### File: `lib/providers.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:theme_example/features/home/domain/home_use_case.dart';
+
+final homeUseCaseProvider = UseCaseProvider(
+  HomeUseCase.new,
+);
+```
+
+And finally, we'll need a router for our app.
+
+#### File: `lib/router.dart`
+```dart
+import 'package:clean_framework_router/clean_framework_router.dart';
+import 'package:theme_example/features/home/presentation/home_ui.dart';
+
+class ExampleRouter extends AppRouter<Routes> {
+  @override
+  RouterConfiguration configureRouter() {
+    return RouterConfiguration(
+      debugLogDiagnostics: true,
+      routes: [
+        AppRoute(
+          route: Routes.home,
+          builder: (_, __) => HomeUI(),
+        ),
+      ],
+    );
+  }
+}
+
+enum Routes with RoutesMixin {
+  home('/');
+
+  const Routes(this.path);
+
+  @override
+  final String path;
+}
+```
+
+Now that that's done, let's create our top-level widget to pull it all together. Create a new folder in `lib` called `app`, and create a new file in it called `theme_example_app.dart`:
+
+#### File: `lib/app/theme_example_app.dart`
+```dart
+import 'package:clean_framework/clean_framework.dart';
+import 'package:clean_framework_router/clean_framework_router.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_example/features/home/presentation/theme/home_theme_ui.dart';
+import 'package:theme_example/router.dart';
+
+class ThemeExampleApp extends StatelessWidget {
+  const ThemeExampleApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppProviderScope(
+      child: AppRouterScope(
+        create: ExampleRouter.new,
+        builder: (context) {
+          return ExampleThemeModeWrapper(
+            builder: (context, themeMode) {
+              return MaterialApp.router(
+                title: 'Clean Framework Theme Example',
+                routerConfig: context.router.config,
+                theme: ThemeData(
+                  colorSchemeSeed: Colors.lightBlueAccent,
+                  useMaterial3: true,
+                ),
+                darkTheme: ThemeData(
+                  colorSchemeSeed: Colors.green,
+                  useMaterial3: true,
+                ),
+                themeMode: themeMode,
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+```
+
+This is where our theme actually gets applied to the app as a whole. Notice that `MaterialApp.router` is contained within an anonymous function provided to `ExampleThemeModeWrapper`. Because of the builder function we added to the wrapper widget, we have access to the user's app theme selection from within this function, and we can use it to apply a theme when creating the router.
+
+Now, if you call `runApp(const ThemeExampleApp())` from within `lib/main.dart`, the app should run and allow the theme to be updated from our example feature.
+
+We're done! Hopefully this gave you an understanding of some of the ways in which you can step outside the confines of a feature to interact with other parts of your app using Clean Framework. In the next part, we'll be continuing on with our Pokemon app and begin writing the external interface layer, allowing features to communicate with external services.
