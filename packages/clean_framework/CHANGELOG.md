@@ -1,4 +1,25 @@
 # Changelog
+## 4.0.0
+**Jan 29, 2024**
+**Breaking Change**
+- Deprecated and replaced a number of domain layer classes.
+    - Deprecated `Input`. Use `DomainInput`.
+    - Deprecated `Output`. Use `DomainModel`.
+    - Deprecated `Success`. Use `SuccessUseCaseInput`.
+    - Deprecated `Failure`. Use `FailureUseCaseInput`.
+    - **Deprecated `OutputTransformer`. Use `DomainModelTransformer`. (Breaking change)**
+    - **Deprecated `InputTransformer`. Use `DomainInputTransformer`. (Breaking change)**
+- Deprecated and replaced a number of functions.
+    - Package-wide changes:
+        - Renamed non-optional parameters named `output` to `domainModel` in a number of functions.
+    - `Presenter` changes:
+        - Deprecated `onOutput(context, output, viewModel)`. Use `onDomainModel(context, domainModel, viewModel)`.
+        - Deprecated `onOutputUpdate(context, output)`. Use `onDomainModelUpdate(context, domainModel)`.
+    - `UseCase` changes:
+        - **Renamed `getOutput` function to `getDomainModel`. (Breaking change)**
+- Updated documentation.
+- Added new example project (`theme_example`) to accompany new documentation.
+
 ## 3.2.5
 **Jan 5, 2024**
 - Bumps dependencies to latest version.

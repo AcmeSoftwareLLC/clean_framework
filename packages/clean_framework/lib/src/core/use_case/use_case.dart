@@ -21,13 +21,13 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     List<UseCaseTransformer<E>> transformers = const [],
   }) : super(entity) {
     if (transformers.isNotEmpty) {
-      _outputFilters.addTransformers(transformers);
-      _inputFilters.addTransformers(transformers);
+      _domainModelFilters.addTransformers(transformers);
+      _domainInputFilters.addTransformers(transformers);
     }
   }
 
-  final DomainModelFilterMap<E> _outputFilters = {};
-  final DomainInputFilterMap<E> _inputFilters = {};
+  final DomainModelFilterMap<E> _domainModelFilters = {};
+  final DomainInputFilterMap<E> _domainInputFilters = {};
   final RequestSubscriptionMap _requestSubscriptions = {};
 
   @protected
@@ -77,10 +77,10 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   M transformToDomainModel<M extends DomainModel>(E entity) =>
-      _outputFilters<M>(entity);
+      _domainModelFilters<M>(entity);
 
   void setInput<I extends DomainInput>(I input) {
-    entity = _inputFilters<I>(entity, input);
+    entity = _domainInputFilters<I>(entity, input);
   }
 
   void subscribe<M extends DomainModel, I extends DomainInput>(
