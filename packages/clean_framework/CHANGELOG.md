@@ -3,18 +3,18 @@
 **Jan 29, 2024**
 **Breaking Change**
 - Deprecated and replaced a number of domain layer classes.
-    - Deprecated `Input`. Use `DomainInput`.
-    - Deprecated `Output`. Use `DomainModel`.
-    - Deprecated `Success`. Use `SuccessUseCaseInput`.
-    - Deprecated `Failure`. Use `FailureUseCaseInput`.
-    - **Deprecated `OutputTransformer`. Use `DomainModelTransformer`. (Breaking change)**
-    - **Deprecated `InputTransformer`. Use `DomainInputTransformer`. (Breaking change)**
+    - Deprecated `Input`, replaced with `DomainInput`.
+    - Deprecated `Output`, replaced with `DomainModel`.
+    - Deprecated `Success`, replaced with `SuccessUseCaseInput`.
+    - Deprecated `Failure`, replaced with `FailureUseCaseInput`.
+    - **Deprecated `OutputTransformer`, replaced with `DomainModelTransformer`. (Breaking change)**
+    - **Deprecated `InputTransformer`, replaced with `DomainInputTransformer`. (Breaking change)**
 - Deprecated and replaced a number of functions.
     - Package-wide changes:
         - Renamed non-optional parameters named `output` to `domainModel` in a number of functions.
     - `Presenter` changes:
-        - Deprecated `onOutput(context, output, viewModel)`. Use `onDomainModel(context, domainModel, viewModel)`.
-        - Deprecated `onOutputUpdate(context, output)`. Use `onDomainModelUpdate(context, domainModel)`.
+        - Deprecated `onOutput(context, output, viewModel)`, replaced with `onDomainModel(context, domainModel, viewModel)`.
+        - Deprecated `onOutputUpdate(context, output)`, replaced with `onDomainModelUpdate(context, domainModel)`.
     - `UseCase` changes:
         - **Renamed `getOutput` function to `getDomainModel`. (Breaking change)**
 - Updated documentation.
