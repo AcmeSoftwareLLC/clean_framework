@@ -29,9 +29,16 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   clean_framework:
-    path: ../../clean_framework/
+    git: 
+      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
+      path: packages/clean_framework
+      ref: chris/domain-refactors
+
   clean_framework_router:
-    path: ../../clean_framework_router/
+    git: 
+      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
+      path: packages/clean_framework_router
+      ref: chris/domain-refactors
 
   flutter:
     sdk: flutter

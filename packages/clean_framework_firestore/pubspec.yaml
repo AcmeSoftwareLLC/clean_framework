@@ -3,20 +3,33 @@ description: A wrapper around cloud_firestore to make it easier to use with clea
 version: 0.5.2
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_firestore
+publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^4.0.0
+  # clean_framework: ^4.0.0
+  clean_framework:
+    git: 
+      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
+      path: packages/clean_framework
+      ref: chris/domain-refactors
+
   cloud_firestore: ^4.8.4
   equatable: ^2.0.5
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  clean_framework_test: ^0.5.3
+  # clean_framework_test: ^0.5.3
+  clean_framework_test:
+    git: 
+      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
+      path: packages/clean_framework_test
+      ref: chris/domain-refactors
+
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.0

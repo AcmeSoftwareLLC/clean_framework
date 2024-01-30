@@ -3,6 +3,7 @@ description: Clean Architecture components library, inspired on the guidelines c
 version: 4.0.0
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework
+publish_to: none
 screenshots:
   - description: 'Clean Framework'
     path: screenshots/clean-framework.png
@@ -28,7 +29,13 @@ dependencies:
   uniform: ^2.0.5
 
 dev_dependencies:
-  clean_framework_test: ^0.5.2
+  # clean_framework_test: ^0.5.2
+  clean_framework_test:
+    git: 
+      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
+      path: packages/clean_framework_test
+      ref: chris/domain-refactors
+
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.2
