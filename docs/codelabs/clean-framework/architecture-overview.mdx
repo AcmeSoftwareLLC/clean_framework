@@ -12,7 +12,7 @@ Clean Architecture is a unique, robust blueprint for developing software, outlin
 The core philosophy of Clean Architecture is the separation of software into distinct layers, each with a clearly defined role. This separation makes the system more flexible, maintainable, and testable, and differs from other patterns such as MVC, where there is less separation between the core business logic and UI, for example.
 
 2. **The Dependency Rule:**
-This rule states that dependencies should only point inwards: the innermost layers should not depend on the outer layers. That way, the business logic and application rules will not be affected by changes to external elements like the UI or database systems. As you'll find, this rule is what informs the structure of the rest of the framework, and is the key to avoiding messy, hair-pulling dependency cycles.
+This rule states that dependencies should only point inwards: the innermost layers should not depend on the outer layers. That way, the business logic and application rules will not be affected by changes to external elements like the UI or database systems. As you'll find, this rule is what informs the structure of the rest of the framework, and is the key to avoiding messy, hair-pulling bad dependency cycles.
 
 These are the two core features of Clean Architecture that we believe makes it unique among the available development patterns. There are many similarities between Clean Architecture and other patterns as well as many differences, and we'll cover some of those in another article. We'll also cover the different layers involved with Clean Architecture shortly, and how we went about implementing each in Clean Framework.
 
@@ -33,8 +33,8 @@ Clean Framework is a toolkit of classes and implementations that aid developers 
 Clean Framework consists of a few different layers, based closely on those laid out by Clean Architecture:
 1. **Entity Layer**: Data-wise, this is heart of your app. It consists of objects called `Entities` that contain the core state of each feature. These Entities are immutable, only containing data fields and methods that aid in data retrieval and integration. This layer should reside within the `domain` directory of each feature.
 
-2. **Use Case Layer**: Here's where most of the business logic lives. Use Cases manage the data in Entities and direct data flow. Being Plain Old Dart Objects (PODOs), Use Cases are completely agnostic to the implementation of outside layers, and can interact with various object types via Data Transfer Objects (DTOs) called `DomainInput`s and `DomainModel`s without fussing over details. This layer should reside within the `domain` directory of each feature, along with the Entity layer.
     - `DomainModel`s are essentially a snapshot of a part of, or the whole state (Entity) of the feature at a point in time. They transfer data from the Use Case layer to other layers.
+2. **Use Case Layer**: Here's where most of the business logic lives. Use Cases manage the data in Entities and direct data flow. Being Plain Old Dart Objects (PODOs), Use Cases are completely agnostic to the implementation of outside layers, and can interact with various object types via Data Transfer Objects (DTOs) called `DomainInput`s and `DomainModel`s without fussing over details. This layer should reside within the `domain` directory of each feature, along with the Entity layer.
     - `DomainInput`s contain data originating in external services or layers that needs to reach the Use Case.
 
 3. **Adapters Layer**: This layer translates `DomainInputs` and `DomainModels` into specific messages. It includes two main components:
