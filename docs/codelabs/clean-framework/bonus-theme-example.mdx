@@ -176,6 +176,23 @@ class HomeThemeDomainToUIModelTransformer
 ```
 Just like our two `DomainModel`s, our `DomainModelTransformer`s are nearly identical. The only difference being the particular `Presenter` for which the data is intended. When updating the `DomainModel`s, we just provide them with our entity's `appTheme` field. That's it!
 
+To allow the `Presenter`s to subscribe to `DomainModel` updates, we also need to provide the `DomainModelTransformer`s in the constructor of the Use Case. Add the optional `transformers` argument to the constructor, and pass in the two `DomainModelTransformer`s within a list:
+
+#### File: `lib/features/home/domain/home_use_case.dart`
+```dart
+class HomeUseCase extends UseCase<HomeEntity> {
+  HomeUseCase()
+      : super(
+          entity: const HomeEntity(),
+          transformers: [
+            HomeDomainToUIModelTransformer(),
+            HomeThemeDomainToUIModelTransformer(),
+          ],
+        );
+
+...
+```
+
 Great, now that our domain layer is complete, let's move on to the necessary `Presenter`s and `UI` classes.
 
 ##### Presentation
