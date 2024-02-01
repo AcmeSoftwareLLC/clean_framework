@@ -46,4 +46,30 @@ Clean Framework consists of a few different layers, based closely on those laid 
     - [clean_framework_rest](https://pub.dev/packages/clean_framework_rest)
     - [clean_framework_firestore](https://pub.dev/packages/clean_framework_firestore)
 
-As hinted at while explaining the different layers, Clean Framework intends for each app to be organized by feature. We'll go over the project structure of a typical Clean Framework app in the next article. Stay tuned!
+As hinted at while explaining the different layers, Clean Framework intends for each app to be organized by feature. We'll go over the project structure of a typical Clean Framework app in the next article.
+
+## Examples
+
+We provide a few different example projects to showcase the usage and different features of Clean Framework.
+
+### [example_rest](https://github.com/AcmeSoftwareLLC/clean_framework_examples/tree/main/example_rest): Pokemon App w/RESTful Backend
+
+<Image src="/assets/pokemon-app.png" caption="Pokemon App" width="300"/>
+
+Simple Pokémon browser app, showcasing how a simple app with a clean UI and a RESTful backend (PokéAPI REST API v2) might be written using `clean_framework.`
+
+### [example_graphql](https://github.com/AcmeSoftwareLLC/clean_framework_examples/tree/main/example_graphql): Pokemon App w/GraphQL Backend
+
+Simple Pokémon browser app, however instead utilizing a GraphQL backend (PokéAPI GraphQL API v1 beta). This app showcases how one can use the `clean_framework_graphql` package to easily interact with a GraphQL API.
+
+### [graphql_example](https://github.com/AcmeSoftwareLLC/clean_framework_examples/tree/main/graphql_example): Scenario Example - Using `clean_framework_graphql`
+
+Sample app with a bare-bones UI that illustrates the usage of the `clean_framework_graphql` package in interacting with a GraphQL API.
+
+### [theme_example](https://github.com/AcmeSoftwareLLC/clean_framework_examples/tree/main/theme_example): Scenario Example - Updating Theme
+
+Sample app with a bare-bones UI that showcases how one might reach beyond the confines of a Clean Framework feature to update a global app theme, while still adhering to the principles of Clean Architecture.
+
+## Conclusion
+
+By emphasizing separation of concerns, dependency inversion, and organizing code around features rather than technical concerns, Clean Architecture facilitates the creation of applications that are easier to test, extend, and maintain. Clean Framework aims to aid developers in adhering to these principles, providing a toolkit that marries theory with practice. Stay tuned to start diving into the process of developing a simple Clean Framework app!
