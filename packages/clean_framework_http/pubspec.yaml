@@ -3,13 +3,15 @@ description: External Interface for clean_framework package based on Dio.
 version: 0.4.3-dev.0
 homepage: https://acmesoftware.com
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/tree/main/packages/clean_framework_http
+# TODO(Chris): Remove when publishing.
+publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=1.17.0'
 
 dependencies:
-  # clean_framework: ^4.0.0
+  # clean_framework: ^4.0.0-dev.0
   clean_framework:
     git: 
       url: https://github.com/ChrisCostanzo-acme/clean_framework.git
@@ -22,7 +24,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  # clean_framework_test: ^0.5.3
+  # clean_framework_test: ^0.5.3-dev.0
   clean_framework_test:
     git: 
       url: https://github.com/ChrisCostanzo-acme/clean_framework.git
