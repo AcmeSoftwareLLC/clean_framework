@@ -103,6 +103,14 @@ Use Cases are designed without specific knowledge of external layers. Their role
 
 For instance, a Domain Model might contain data destined for a database, for display on a screen, or to be sent to a service. It's the job of the external layers to decide the fate and application of this data.
 
+As mentioned in our UI layer article, it might seem odd and a little redundant that we are creating multiple different data containers for (at times) the same data, and moving said data back and forth between them. 
+
+The benefit of having separate classes for the domain state (`Entity`) and the transfer of data into/out of the Use Case (`DomainInput`, `DomainModel`) as opposed to providing other layers with the Entity directly is twofold:
+1. It makes clear what the data is for, where it is headed, and
+2. It abstracts the core state of the domain layer from the outside world, adhering to the principals of Clean Architecture and avoiding bad dependency cycles.
+
+This way, we keep the `Entity` safe from outside changes/interference and leave state management solely up to the `UseCase`. Ultimately, in doing this, we make things easier to read, understand, and maintain.
+
 Regarding the generation of Domain Models, there are two main methods. We've already discussed domain model filters, which produce Domain Models when there's a change in the entity.
 
 The second method involves creating Domain Models on demand. This is used when the Use Case needs to wait for a response or some action from the external layers, and looks like this:

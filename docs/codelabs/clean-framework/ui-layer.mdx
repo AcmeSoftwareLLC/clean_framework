@@ -172,6 +172,10 @@ As you can see, our provider (`homeUseCaseProvider`) is passed to the Presenter 
 
 `UseCase (buiness logic)` → `DomainModel (data)` → `Presenter (createViewModel())` → `ViewModel (data)` → `UI (build())`.
 
+It may seem strange that we would be moving data into and out of multiple different containers. Why not just send it straight from the Use Case to the UI? Well, one of the main goals of Clean Architecture, and consequently, Clean Framework, is to maintain a good separation of concerns. By allowing the UI to directly interact with the Use Case, the boundary between UI logic and the business logic of the application would be less clear, and increase the risk of developing bad dependency cycles. This can make code harder to read, debug, and maintain. It may not seem that important for small applications, however, as the size of the application increases along with the amount of code, this separation becomes more and more crucial. 
+
+Our goal in having multiple data containers that can sometimes contain the same data (`Entity`, `DomainModel`, `ViewModel`, etc.) is to avoid mixing responsibilities and have each class perform one clearly defined task (ex. `DomainModel`: transfer data out of Use Case, `ViewModel`: hold data and callbacks required by the UI.)
+
 Now that all of the prerequisites have been created, we're ready to move on to adding the UI itself.
 
 ### Step 3: Build the UI
