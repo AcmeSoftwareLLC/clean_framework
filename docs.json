@@ -14,7 +14,8 @@
         ["Domain Layer","/codelabs/clean-framework/domain-layer"],
         ["Changing the Theme", "/codelabs/clean-framework/bonus-theme-example"],
         ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"],
-        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"]
+        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
+        ["Clean Framework vs Others", "/codelabs/clean-framework/architecture-comparison"]
     ]
     ],
     ["Feature Flags",
