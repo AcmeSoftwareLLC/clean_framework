@@ -4,15 +4,15 @@ import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final context = ProvidersContext();
   test('FirebaseGateway transport success', () async {
     final useCase = UseCaseFake();
-    final provider = UseCaseProvider((_) => useCase);
-    TestGateway(context, provider).transport = (request) async {
-      return const Either.right(
-        FirebaseSuccessResponse({'content': 'success'}),
-      );
-    };
+    TestGateway().feedResponse(
+      (request) async {
+        return const Either.right(
+          FirebaseSuccessResponse({'content': 'success'}),
+        );
+      },
+    );
 
     await useCase.doFakeRequest(const TestDomainModel('123'));
 
@@ -21,12 +21,13 @@ void main() {
 
   test('FirebaseGateway transport failure', () async {
     final useCase = UseCaseFake();
-    final provider = UseCaseProvider((_) => useCase);
-    TestGateway(context, provider).transport = (request) async {
-      return const Either.left(
-        FirebaseFailureResponse(type: FirebaseFailureType.noContent),
-      );
-    };
+    TestGateway().feedResponse(
+      (request) async {
+        return const Either.left(
+          FirebaseFailureResponse(type: FirebaseFailureType.noContent),
+        );
+      },
+    );
 
     await useCase.doFakeRequest(const TestDomainModel('123'));
 
@@ -36,9 +37,6 @@ void main() {
 
 class TestGateway extends FirebaseGateway<TestDomainModel,
     FirebaseReadIdRequest, TestSuccessInput> {
-  TestGateway(ProvidersContext context, UseCaseProvider provider)
-      : super(provider: provider, context: context);
-
   @override
   FirebaseReadIdRequest buildRequest(TestDomainModel output) =>
       FirebaseReadIdRequest(
