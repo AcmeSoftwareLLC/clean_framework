@@ -28,17 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  clean_framework:
-    git: 
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework
-      ref: chris/domain-refactors
-
-  clean_framework_router:
-    git: 
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework_router
-      ref: chris/domain-refactors
+  clean_framework: ^4.0.0-dev.0
+  clean_framework_router: ^0.5.10-dev.0
 
   flutter:
     sdk: flutter

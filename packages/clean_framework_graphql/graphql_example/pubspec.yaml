@@ -31,23 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  clean_framework:
-    git:
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework
-      ref: chris/domain-refactors
-
-  clean_framework_router:
-    git:
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework_router
-      ref: chris/domain-refactors
-
-  clean_framework_graphql:
-    git:
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework_graphql
-      ref: chris/domain-refactors
+  clean_framework: ^4.0.0-dev.0
+  clean_framework_router: ^0.5.10-dev.1
+  clean_framework_graphql: ^0.4.3-dev.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

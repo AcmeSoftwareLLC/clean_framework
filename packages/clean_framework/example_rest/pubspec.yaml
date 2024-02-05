@@ -1,0 +1,49 @@
+name: clean_framework_example_rest
+description: An example application to demonstrate usage of the clean_framework package with a REST api.
+publish_to: none
+version: 2.0.3+3
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  animations: ^2.0.8
+  clean_framework: ^4.0.0-dev.0
+  clean_framework_router: ^0.5.10-dev.0
+
+  dio: ^5.3.4
+  flutter_cache_manager: ^3.3.1
+  flutter_svg: ^2.0.9
+  palette_generator: ^0.3.3+3
+
+dev_dependencies:
+  clean_framework_test: ^0.5.3-dev.0
+
+  mocktail: ^1.0.1
+  flutter_test:
+    sdk: flutter
+  icons_launcher: ^2.1.5
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+
+icons_launcher:
+  image_path: ../../../images/clean-framework.png
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+    web:
+      enable: true
+    macos:
+      enable: true
+    windows:
+      enable: true
+    linux:
+      enable: true

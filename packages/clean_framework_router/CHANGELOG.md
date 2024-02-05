@@ -1,5 +1,9 @@
 # Changelog
-## 0.5.10
+## 0.5.10-dev.1
+**Feb 5, 2024**
+- Bump dependency to latest version.
+
+## 0.5.10-dev.0
 **Jan 29, 2024**
 - Bump dependency to latest version.
 

@@ -12,8 +12,6 @@ topics:
   - framework
   - form
   - feature-flag
-# TODO(Chris): Remove when publishing.
-publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -30,12 +28,7 @@ dependencies:
   uniform: ^2.0.5
 
 dev_dependencies:
-  # clean_framework_test: ^0.5.3-dev.0
-  clean_framework_test:
-    git: 
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework_test
-      ref: chris/domain-refactors
+  clean_framework_test: ^0.5.3-dev.0
 
   flutter_test:
     sdk: flutter

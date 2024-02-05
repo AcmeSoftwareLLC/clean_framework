@@ -1,5 +1,9 @@
 # Changelog
-## 0.5.3
+## 0.5.3-dev.1
+**Feb 5, 2024**
+- Bump dependencies to latest versions.
+
+## 0.5.3-dev.0
 **Jan 29, 2024**
 - Bump dependency to latest version.
 - Implement latest clean framework class changes to testing fakes.

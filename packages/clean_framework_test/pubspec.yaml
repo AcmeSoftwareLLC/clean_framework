@@ -1,29 +1,16 @@
 name: clean_framework_test
 description: A collection test helpers to support clean_framework.
-version: 0.5.3-dev.0
+version: 0.5.3-dev.1
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_test
-# TODO(Chris): Remove when publishing.
-publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: '>=3.0.0'
 
 dependencies:
-  # clean_framework: '>= 3.2.5 <=4.0.0-dev.0'
-  clean_framework: 
-    git:
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework
-      ref: chris/domain-refactors
-
-  # clean_framework_router: ^0.5.4-dev.0
-  clean_framework_router:
-    git:
-      url: https://github.com/ChrisCostanzo-acme/clean_framework.git
-      path: packages/clean_framework_router
-      ref: chris/domain-refactors
+  clean_framework: ^4.0.0-dev.0
+  clean_framework_router: ^0.5.10-dev.0
 
   diff_match_patch: ^0.4.1
   flutter:
