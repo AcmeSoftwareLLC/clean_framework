@@ -1,4 +1,9 @@
 # Changelog
+## 4.0.0-dev.1
+**Feb 5, 2024**
+- Bump dependency to latest version.
+- Update readme.
+
 ## 4.0.0-dev.0
 **Jan 29, 2024**
 **Breaking Change**

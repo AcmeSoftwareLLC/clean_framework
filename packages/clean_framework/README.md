@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/AcmeSoftwareLLC/clean-framework-intellij/blob/main/src/main/resources/META-INF/pluginIcon.svg" height="100" alt="Clean Framework" />
+<img src="https://raw.githubusercontent.com/AcmeSoftwareLLC/clean-framework-intellij/main/src/main/resources/META-INF/pluginIcon.svg" height="100" alt="Clean Framework" />
 </p>
 
 <p align="center">
