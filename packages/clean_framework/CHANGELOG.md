@@ -1,4 +1,9 @@
 # Changelog
+## 4.0.0
+**Feb 7, 2024**
+- Publish new major version.
+- See patch notes for 4.0.0-dev.0 and 4.0.0-dev.1 for full list of changes.
+
 ## 4.0.0-dev.1
 **Feb 5, 2024**
 - Bump dependency to latest version.

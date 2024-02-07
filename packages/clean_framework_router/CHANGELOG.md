@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.10
+**Feb 7, 2024**
+- Publish patch version for newest Clean Framework changes.
+
 ## 0.5.10-dev.1
 **Feb 5, 2024**
 - Bump dependency to latest version.

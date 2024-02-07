@@ -1,6 +1,6 @@
 name: clean_framework_test
 description: A collection test helpers to support clean_framework.
-version: 0.5.3-dev.1
+version: 0.5.3
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_test
 
@@ -9,8 +9,8 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^4.0.0-dev.0
-  clean_framework_router: ^0.5.10-dev.0
+  clean_framework: ^4.0.0
+  clean_framework_router: ^0.5.10
 
   diff_match_patch: ^0.4.1
   flutter:
