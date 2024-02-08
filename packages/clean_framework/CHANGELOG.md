@@ -1,4 +1,9 @@
 # Changelog
+## 4.0.1
+**Feb 7, 2024**
+- Bump dependencies to latest versions.
+- Rename REST example project to 'example'.
+
 ## 4.0.0
 **Feb 7, 2024**
 - Publish new major version.
