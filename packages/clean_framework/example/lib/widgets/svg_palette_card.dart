@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:clean_framework_example/widgets/app_scope.dart';
+import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';

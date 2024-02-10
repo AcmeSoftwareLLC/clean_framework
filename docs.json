@@ -8,12 +8,14 @@
     ["Installation", "/"],
     ["Basics",[
         ["Migrating to v2", "/codelabs/clean-framework/migration-guide"],
-        ["Overview","/codelabs/clean-framework/intro"],
+        ["Overview","/codelabs/clean-framework/architecture-overview"],
         ["Project Structure","/codelabs/clean-framework/project-structure"],
         ["UI Layer","/codelabs/clean-framework/ui-layer"],
         ["Domain Layer","/codelabs/clean-framework/domain-layer"],
+        ["Changing the Theme", "/codelabs/clean-framework/bonus-theme-example"],
         ["External Interface Layer","/codelabs/clean-framework/external-interface-layer"],
-        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"]
+        ["Adapter Layer","/codelabs/clean-framework/adapter-layer"],
+        ["Clean Framework vs Others", "/codelabs/clean-framework/architecture-comparison"]
     ]
     ],
     ["Feature Flags",

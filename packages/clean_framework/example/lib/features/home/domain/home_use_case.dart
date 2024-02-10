@@ -1,9 +1,9 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
-import 'package:clean_framework_example/features/home/domain/home_entity.dart';
-import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
-import 'package:clean_framework_example/features/home/external_interface/pokemon_collection_gateway.dart';
-import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_failure_response.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_domain_inputs.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 
 const _spritesBaseUrl =
     'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites';
@@ -13,9 +13,9 @@ class HomeUseCase extends UseCase<HomeEntity> {
       : super(
           entity: HomeEntity(),
           transformers: [
-            HomeUIOutputTransformer(),
-            PokemonSearchInputTransformer(),
-            LoggedInEmailInputTransformer(),
+            HomeDomainToUIModelTransformer(),
+            PokemonSearchDomainInputTransformer(),
+            LoggedInEmailDomainInputTransformer(),
           ],
         );
 
@@ -24,9 +24,9 @@ class HomeUseCase extends UseCase<HomeEntity> {
       entity = entity.copyWith(status: HomeStatus.loading);
     }
 
-    final input = await getInput(PokemonCollectionGatewayOutput());
+    final input = await getInput(PokemonCollectionDomainToGatewayModel());
     switch (input) {
-      case Success(:PokemonCollectionSuccessInput input):
+      case SuccessUseCaseInput(:PokemonCollectionSuccessDomainInput input):
         final pokemons = input.pokemonIdentities.map(_resolvePokemon);
 
         entity = entity.copyWith(
@@ -34,7 +34,7 @@ class HomeUseCase extends UseCase<HomeEntity> {
           status: HomeStatus.loaded,
           isRefresh: isRefresh,
         );
-      case Failure(:PokemonCollectionFailureInput input):
+      case FailureUseCaseInput(:PokemonCollectionFailureDomainInput input):
         entity = entity.copyWith(
           errorMessage: switch (input.type) {
             PokemonFailureType.unauthorized =>
@@ -67,16 +67,16 @@ class HomeUseCase extends UseCase<HomeEntity> {
   }
 }
 
-class PokemonSearchInput extends SuccessInput {
-  PokemonSearchInput({required this.name});
+class PokemonSearchDomainInput extends SuccessDomainInput {
+  PokemonSearchDomainInput({required this.name});
 
   final String name;
 }
 
-class HomeUIOutputTransformer
-    extends OutputTransformer<HomeEntity, HomeUIOutput> {
+class HomeDomainToUIModelTransformer
+    extends DomainModelTransformer<HomeEntity, HomeDomainToUIModel> {
   @override
-  HomeUIOutput transform(HomeEntity entity) {
+  HomeDomainToUIModel transform(HomeEntity entity) {
     final filteredPokemons = entity.pokemons.where(
       (pokemon) {
         final pokeName = pokemon.name.toLowerCase();
@@ -84,7 +84,7 @@ class HomeUIOutputTransformer
       },
     );
 
-    return HomeUIOutput(
+    return HomeDomainToUIModel(
       pokemons: filteredPokemons.toList(growable: false),
       status: entity.status,
       isRefresh: entity.isRefresh,
@@ -94,24 +94,24 @@ class HomeUIOutputTransformer
   }
 }
 
-class PokemonSearchInputTransformer
-    extends InputTransformer<HomeEntity, PokemonSearchInput> {
+class PokemonSearchDomainInputTransformer
+    extends DomainInputTransformer<HomeEntity, PokemonSearchDomainInput> {
   @override
-  HomeEntity transform(HomeEntity entity, PokemonSearchInput input) {
+  HomeEntity transform(HomeEntity entity, PokemonSearchDomainInput input) {
     return entity.copyWith(pokemonNameQuery: input.name);
   }
 }
 
-class LoggedInEmailInput extends SuccessInput {
-  LoggedInEmailInput({required this.email});
+class LoggedInEmailDomainInput extends SuccessDomainInput {
+  LoggedInEmailDomainInput({required this.email});
 
   final String email;
 }
 
-class LoggedInEmailInputTransformer
-    extends InputTransformer<HomeEntity, LoggedInEmailInput> {
+class LoggedInEmailDomainInputTransformer
+    extends DomainInputTransformer<HomeEntity, LoggedInEmailDomainInput> {
   @override
-  HomeEntity transform(HomeEntity entity, LoggedInEmailInput input) {
+  HomeEntity transform(HomeEntity entity, LoggedInEmailDomainInput input) {
     return entity.copyWith(loggedInEmail: input.email);
   }
 }

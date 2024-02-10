@@ -1,17 +1,19 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http/clean_framework_http.dart';
 import 'package:clean_framework_http_example/features/home/adapter/pokemon_model.dart';
+import 'package:clean_framework_http_example/features/home/domain/home_domain_inputs.dart';
+import 'package:clean_framework_http_example/features/home/domain/home_domain_models.dart';
 
-class PokemonGateway extends Gateway<PokemonGatewayOutput, PokemonRequest,
-    SuccessResponse, PokemonSuccessInput> {
+class PokemonGateway extends Gateway<PokemonDomainToGatewayModel,
+    PokemonRequest, SuccessResponse, PokemonSuccessInput> {
   @override
-  PokemonRequest buildRequest(PokemonGatewayOutput output) {
+  PokemonRequest buildRequest(PokemonDomainToGatewayModel output) {
     return PokemonRequest();
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -21,17 +23,6 @@ class PokemonGateway extends Gateway<PokemonGatewayOutput, PokemonRequest,
 
     return PokemonSuccessInput(pokemons: results);
   }
-}
-
-class PokemonGatewayOutput extends Output {
-  @override
-  List<Object?> get props => [];
-}
-
-class PokemonSuccessInput extends SuccessInput {
-  const PokemonSuccessInput({required this.pokemons});
-
-  final List<PokemonModel> pokemons;
 }
 
 class PokemonRequest extends GetHttpRequest {

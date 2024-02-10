@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/form/domain/form_entity.dart';
-import 'package:clean_framework_example/features/form/presentation/form_presenter.dart';
-import 'package:clean_framework_example/features/form/presentation/form_view_model.dart';
-import 'package:clean_framework_example/widgets/fields.dart';
+import 'package:clean_framework_example_rest/features/form/domain/form_entity.dart';
+import 'package:clean_framework_example_rest/features/form/presentation/form_presenter.dart';
+import 'package:clean_framework_example_rest/features/form/presentation/form_view_model.dart';
+import 'package:clean_framework_example_rest/widgets/fields.dart';
 import 'package:flutter/material.dart';
 
 class FormUI extends UI<FormViewModel> {

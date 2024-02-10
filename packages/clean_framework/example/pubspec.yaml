@@ -1,5 +1,5 @@
-name: clean_framework_example
-description: An example application to demonstrate usage of clean_framework package.
+name: clean_framework_example_rest
+description: An example application to demonstrate usage of the clean_framework package with a REST api.
 publish_to: none
 version: 2.0.3+3
 
@@ -10,15 +10,17 @@ dependencies:
   flutter:
     sdk: flutter
   animations: ^2.0.8
-  clean_framework: ^3.2.3
-  clean_framework_router: ^0.5.8
+  clean_framework: ^4.0.0
+  clean_framework_router: ^0.5.10
+
   dio: ^5.3.4
   flutter_cache_manager: ^3.3.1
   flutter_svg: ^2.0.9
   palette_generator: ^0.3.3+3
 
 dev_dependencies:
-  clean_framework_test: ^0.5.2
+  clean_framework_test: ^0.5.3
+
   mocktail: ^1.0.1
   flutter_test:
     sdk: flutter

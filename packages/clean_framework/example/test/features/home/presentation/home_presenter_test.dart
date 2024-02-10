@@ -1,21 +1,21 @@
-import 'package:clean_framework_example/features/home/domain/home_entity.dart';
-import 'package:clean_framework_example/features/home/domain/home_ui_output.dart';
-import 'package:clean_framework_example/features/home/domain/home_use_case.dart';
-import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
-import 'package:clean_framework_example/features/home/presentation/home_presenter.dart';
-import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_use_case.dart';
+import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
+import 'package:clean_framework_example_rest/features/home/presentation/home_presenter.dart';
+import 'package:clean_framework_example_rest/features/home/presentation/home_view_model.dart';
+import 'package:clean_framework_example_rest/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 void main() {
   setUpAll(() {
-    registerFallbackValue(PokemonSearchInput(name: ''));
+    registerFallbackValue(PokemonSearchDomainInput(name: ''));
   });
 
   group('HomePresenter tests |', () {
-    presenterTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'creates proper view model',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -41,7 +41,7 @@ void main() {
       ],
     );
 
-    presenterTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows success snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -63,7 +63,7 @@ void main() {
       },
     );
 
-    presenterTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows failure snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -85,7 +85,7 @@ void main() {
       },
     );
 
-    presenterTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'shows failure snack bar if refreshing fails',
       create: (builder) => HomePresenter(builder: builder),
       overrides: [
@@ -107,7 +107,7 @@ void main() {
       },
     );
 
-    presenterCallbackTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterCallbackTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'calls refresh pokemon in use case',
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),
@@ -122,20 +122,20 @@ void main() {
       },
     );
 
-    presenterCallbackTest<HomeViewModel, HomeUIOutput, HomeUseCase>(
+    presenterCallbackTest<HomeViewModel, HomeDomainToUIModel, HomeUseCase>(
       'sets search input on search',
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),
       setup: (useCase) {
-        when(() => useCase.setInput<PokemonSearchInput>(any()))
+        when(() => useCase.setInput<PokemonSearchDomainInput>(any()))
             .thenAnswer((_) async {});
       },
       verify: (useCase, vm) {
         vm.onSearch('pikachu');
 
         final input = verify(
-          () => useCase.setInput<PokemonSearchInput>(captureAny()),
-        ).captured.last as PokemonSearchInput;
+          () => useCase.setInput<PokemonSearchDomainInput>(captureAny()),
+        ).captured.last as PokemonSearchDomainInput;
 
         expect(input.name, equals('pikachu'));
       },
@@ -152,6 +152,6 @@ class HomeUseCaseMock extends UseCaseMock<HomeEntity> implements HomeUseCase {
   HomeUseCaseMock()
       : super(
           entity: HomeEntity(),
-          transformers: [HomeUIOutputTransformer()],
+          transformers: [HomeDomainToUIModelTransformer()],
         );
 }

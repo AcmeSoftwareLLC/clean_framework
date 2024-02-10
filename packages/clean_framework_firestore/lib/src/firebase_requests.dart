@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_legacy.dart';
+import 'package:clean_framework/clean_framework.dart';
 
 class FirebaseRequest extends Request {
   const FirebaseRequest({required this.path});

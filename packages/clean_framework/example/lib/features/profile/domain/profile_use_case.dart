@@ -1,16 +1,17 @@
 import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_inputs.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
 
 class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase(this.name)
       : super(
           entity: ProfileEntity(),
-          transformers: [ProfileUIOutputTransformer()],
+          transformers: [
+            ProfileDomainToUIModelTransformer(),
+          ],
         );
 
   final String name;
@@ -21,8 +22,8 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     // If the use case is not auto disposed then we have last fetched data.
     if (!entity.description.isEmpty) return;
 
-    request<PokemonSpeciesSuccessInput>(
-      PokemonSpeciesGatewayOutput(name: pokeName),
+    request<PokemonSpeciesSuccessDomainInput>(
+      PokemonSpeciesDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final descriptions = success.species.descriptions.where(
           (desc) => desc.language == 'en',
@@ -38,7 +39,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     );
 
     request<PokemonProfileSuccessInput>(
-      PokemonProfileGatewayOutput(name: pokeName),
+      PokemonProfileDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;
 
@@ -48,7 +49,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
           height: profile.height,
           weight: profile.weight,
           stats: profile.stats
-              .map((s) => PokemonStatEntity(name: s.name, point: s.baseStat))
+              .map((s) => ProfileStatEntity(name: s.name, point: s.baseStat))
               .toList(growable: false),
         );
       },
@@ -57,11 +58,11 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   }
 }
 
-class ProfileUIOutputTransformer
-    extends OutputTransformer<ProfileEntity, ProfileUIOutput> {
+class ProfileDomainToUIModelTransformer
+    extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
   @override
-  ProfileUIOutput transform(ProfileEntity entity) {
-    return ProfileUIOutput(
+  ProfileDomainToUIModel transform(ProfileEntity entity) {
+    return ProfileDomainToUIModel(
       types: entity.types,
       description: entity.description.replaceAll(RegExp(r'[\n\f]'), ' '),
       height: entity.height / 10,

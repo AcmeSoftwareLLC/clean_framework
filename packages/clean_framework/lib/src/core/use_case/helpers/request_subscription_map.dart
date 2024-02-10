@@ -1,38 +1,40 @@
 import 'dart:async';
 
-import 'package:clean_framework/src/core/use_case/helpers/input.dart';
-import 'package:clean_framework/src/core/use_case/helpers/output.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_input.dart';
+import 'package:clean_framework/src/core/use_case/helpers/domain_model.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 
-typedef RequestSubscriptionMap<I extends Input>
-    = Map<Type, RequestSubscription<Output, I>>;
+typedef RequestSubscriptionMap<I extends DomainInput>
+    = Map<Type, RequestSubscription<DomainModel, I>>;
 
-typedef Result<I extends Input> = FutureOr<Either<FailureInput, I>>;
+typedef Result<I extends DomainInput> = FutureOr<Either<FailureDomainInput, I>>;
 
-typedef RequestSubscription<O extends Output, I extends Input> = Result<I>
-    Function(O);
+typedef RequestSubscription<M extends DomainModel, I extends DomainInput>
+    = Result<I> Function(M);
 
-extension RequestSubscriptionMapExtension<I extends Input>
+extension RequestSubscriptionMapExtension<I extends DomainInput>
     on RequestSubscriptionMap<I> {
-  void add<O extends Output>(RequestSubscription<O, I> subscription) {
-    this[O] = (output) => subscription(output as O);
+  void add<M extends DomainModel>(RequestSubscription<M, I> subscription) {
+    this[M] = (domainModel) => subscription(domainModel as M);
   }
 
-  Result<S> getInput<S extends SuccessInput>(Output output) async {
-    final outputType = output.runtimeType;
-    final subscription = this[outputType];
+  Result<S> getDomainInput<S extends SuccessDomainInput>(
+    DomainModel domainModel,
+  ) async {
+    final domainModelType = domainModel.runtimeType;
+    final subscription = this[domainModelType];
 
     if (subscription == null) {
       throw StateError(
-        '\n\nNo subscription for "$outputType" exists.\n\n'
+        '\n\nNo subscription for "$domainModelType" exists.\n\n'
         'Please follow the steps below in order to fix this issue:\n'
-        '1. Ensure that the use case that requests "$outputType" is attached '
+        '1. Ensure that the use case that requests "$domainModelType" is attached '
         'the appropriate gateway.\n'
         '     AppropriateGatewayProvider(\n'
         '       ...,\n'
         '       useCases: [<<useCaseProvider>>],\n'
         '     )\n'
-        '2. Ensure that the gateway that belongs to "$outputType" is attached '
+        '2. Ensure that the gateway that belongs to "$domainModelType" is attached '
         'the appropriate external interface.\n'
         '     AppropriateExternalInterfaceProvider(\n'
         '       ...,\n'
@@ -48,7 +50,7 @@ extension RequestSubscriptionMapExtension<I extends Input>
       );
     }
 
-    final result = await subscription(output);
-    return result as Either<FailureInput, S>;
+    final result = await subscription(domainModel);
+    return result as Either<FailureDomainInput, S>;
   }
 }

@@ -15,7 +15,7 @@ class ProfileEntity extends Entity {
   final String description;
   final int height;
   final int weight;
-  final List<PokemonStatEntity> stats;
+  final List<ProfileStatEntity> stats;
 
   @override
   List<Object?> get props => [name, types, description, height, weight, stats];
@@ -27,7 +27,7 @@ class ProfileEntity extends Entity {
     String? description,
     int? height,
     int? weight,
-    List<PokemonStatEntity>? stats,
+    List<ProfileStatEntity>? stats,
   }) {
     return ProfileEntity(
       name: name ?? this.name,
@@ -40,8 +40,8 @@ class ProfileEntity extends Entity {
   }
 }
 
-class PokemonStatEntity extends Entity {
-  PokemonStatEntity({this.name = '', this.point = 0});
+class ProfileStatEntity extends Entity {
+  ProfileStatEntity({this.name = '', this.point = 0});
 
   final String name;
   final int point;

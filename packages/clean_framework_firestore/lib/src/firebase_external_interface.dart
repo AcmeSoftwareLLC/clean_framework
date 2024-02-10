@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_legacy.dart';
+import 'package:clean_framework/clean_framework.dart';
 
 import 'package:clean_framework_firestore/src/firebase_client.dart';
 import 'package:clean_framework_firestore/src/firebase_requests.dart';
@@ -7,10 +7,8 @@ import 'package:clean_framework_firestore/src/firebase_responses.dart';
 class FirebaseExternalInterface
     extends ExternalInterface<FirebaseRequest, FirebaseSuccessResponse> {
   FirebaseExternalInterface({
-    required List<GatewayConnection<Gateway>> gatewayConnections,
     FirebaseClient? firebaseClient,
-  })  : _client = firebaseClient ?? FirebaseClient(),
-        super(gatewayConnections);
+  }) : _client = firebaseClient ?? FirebaseClient();
   final FirebaseClient _client;
 
   @override

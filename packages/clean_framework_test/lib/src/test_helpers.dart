@@ -163,7 +163,7 @@ void uiTest(
 }
 
 @isTest
-void useCaseTest<U extends UseCase, O extends Output>(
+void useCaseTest<U extends UseCase, M extends DomainModel>(
   String description, {
   required ProvidersContext context,
   required U Function(Ref) build,
@@ -183,7 +183,7 @@ void useCaseTest<U extends UseCase, O extends Output>(
       Future<void>? expectation;
       if (expect != null) {
         expectation = expectLater(
-          useCase.stream.map((_) => useCase.getOutput<O>()),
+          useCase.stream.map((_) => useCase.getDomainModel<M>()),
           emitsInOrder(expect()),
         );
       }

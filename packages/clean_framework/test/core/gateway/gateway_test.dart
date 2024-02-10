@@ -12,7 +12,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -31,7 +31,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -49,7 +49,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isRight, isTrue);
@@ -68,7 +68,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput('Acme Software'),
+        const TestDomainToGatewayModel('Acme Software'),
       );
 
       expect(input.isLeft, isTrue);
@@ -201,23 +201,23 @@ class TestUseCase extends UseCase<TestEntity> {
       : super(
           entity: const TestEntity(),
           transformers: [
-            InputTransformer<TestEntity, TestSuccessInput>.from(
+            DomainInputTransformer<TestEntity, TestSuccessInput>.from(
               (e, i) => e.copyWith(message: i.message),
             ),
           ],
         );
 }
 
-class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
     TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -226,10 +226,10 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
-    TestSuccessResponse, TestSuccessInput> {
+class TestWatcherGateway extends WatcherGateway<TestDomainToGatewayModel,
+    TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);
   }
 
@@ -239,8 +239,8 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestGatewayOutput extends Output {
-  const TestGatewayOutput(this.name);
+class TestDomainToGatewayModel extends DomainModel {
+  const TestDomainToGatewayModel(this.name);
 
   final String name;
 
@@ -248,7 +248,7 @@ class TestGatewayOutput extends Output {
   List<Object?> get props => [name];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.message);
 
   final String message;

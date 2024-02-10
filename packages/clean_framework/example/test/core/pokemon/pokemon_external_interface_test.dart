@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:clean_framework/clean_framework.dart' hide Response;
-import 'package:clean_framework_example/core/dependency_providers.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example_rest/core/dependency_providers.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_request.dart';
+import 'package:clean_framework_example_rest/providers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

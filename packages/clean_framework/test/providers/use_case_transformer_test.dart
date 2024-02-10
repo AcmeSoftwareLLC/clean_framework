@@ -11,8 +11,8 @@ void main() {
       expect(useCase.debugEntity.foo, 'hello');
       expect(useCase.debugEntity.bar, 3);
 
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
-      expect(useCase.getOutput<BarOutput>().bar, 3);
+      expect(useCase.getDomainModel<FooDomainModel>().foo, 'hello');
+      expect(useCase.getDomainModel<BarDomainModel>().bar, 3);
     });
 
     test('input transformer', () {
@@ -20,12 +20,12 @@ void main() {
 
       expect(useCase.debugEntity.foo, 'hello');
 
-      expect(useCase.getOutput<FooOutput>().foo, 'hello');
+      expect(useCase.getDomainModel<FooDomainModel>().foo, 'hello');
     });
   });
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
 
   final String foo;
@@ -62,7 +62,7 @@ class TestUseCase extends UseCase<TestEntity> {
           transformers: [
             FooOutputTransformer(),
             FooInputTransformer(),
-            OutputTransformer.from((entity) => BarOutput(entity.bar)),
+            DomainModelTransformer.from((entity) => BarDomainModel(entity.bar)),
           ],
         );
 
@@ -75,35 +75,36 @@ class TestUseCase extends UseCase<TestEntity> {
   }
 }
 
-class FooInput extends SuccessInput {
+class FooInput extends SuccessDomainInput {
   const FooInput(this.foo);
   final String foo;
 }
 
-class FooOutput extends Output {
-  const FooOutput(this.foo);
+class FooDomainModel extends DomainModel {
+  const FooDomainModel(this.foo);
   final String foo;
 
   @override
   List<Object?> get props => [foo];
 }
 
-class BarOutput extends Output {
-  const BarOutput(this.bar);
+class BarDomainModel extends DomainModel {
+  const BarDomainModel(this.bar);
   final int bar;
 
   @override
   List<Object?> get props => [bar];
 }
 
-class FooOutputTransformer extends OutputTransformer<TestEntity, FooOutput> {
+class FooOutputTransformer
+    extends DomainModelTransformer<TestEntity, FooDomainModel> {
   @override
-  FooOutput transform(TestEntity entity) {
-    return FooOutput(entity.foo);
+  FooDomainModel transform(TestEntity entity) {
+    return FooDomainModel(entity.foo);
   }
 }
 
-class FooInputTransformer extends InputTransformer<TestEntity, FooInput> {
+class FooInputTransformer extends DomainInputTransformer<TestEntity, FooInput> {
   @override
   TestEntity transform(TestEntity entity, FooInput input) {
     return entity.copyWith(foo: input.foo);

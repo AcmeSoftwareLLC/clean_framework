@@ -1,4 +1,4 @@
-import 'package:clean_framework/clean_framework_legacy.dart';
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_graphql/src/graphql_method.dart';
 import 'package:clean_framework_graphql/src/graphql_requests.dart';
 import 'package:clean_framework_graphql/src/graphql_responses.dart';
@@ -8,24 +8,21 @@ class GraphQLExternalInterface
     extends ExternalInterface<GraphQLRequest, GraphQLSuccessResponse> {
   GraphQLExternalInterface({
     required String link,
-    required List<GatewayConnection<Gateway>> gatewayConnections,
     GraphQLToken? token,
     GraphQLPersistence persistence = const GraphQLPersistence(),
     Map<String, String> headers = const {},
     Duration? timeout,
-  })  : service = GraphQLService(
+  }) : service = GraphQLService(
           endpoint: link,
           token: token,
           persistence: persistence,
           headers: headers,
           timeout: timeout,
-        ),
-        super(gatewayConnections);
+        );
 
   GraphQLExternalInterface.withService({
-    required List<GatewayConnection<Gateway>> gatewayConnections,
     required this.service,
-  }) : super(gatewayConnections);
+  });
 
   final GraphQLService service;
 

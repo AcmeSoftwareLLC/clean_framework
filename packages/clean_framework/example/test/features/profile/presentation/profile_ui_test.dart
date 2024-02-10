@@ -1,7 +1,7 @@
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
-import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
-import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/widgets/app_scope.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/presentation/profile_ui.dart';
+import 'package:clean_framework_example_rest/features/profile/presentation/profile_view_model.dart';
+import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,26 +1,25 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_profile_gateway.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
-import 'package:clean_framework_example/features/profile/models/pokemon_profile_model.dart';
-import 'package:clean_framework_example/features/profile/models/pokemon_species_model.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_inputs.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_use_case.dart';
+import 'package:clean_framework_example_rest/features/profile/models/pokemon_profile_model.dart';
+import 'package:clean_framework_example_rest/features/profile/models/pokemon_species_model.dart';
+import 'package:clean_framework_example_rest/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfileUseCase tests |', () {
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
             return Either.right(
-              PokemonSpeciesSuccessInput(
+              PokemonSpeciesSuccessDomainInput(
                 species: PokemonSpeciesModel(
                   descriptions: [
                     PokemonDescriptionModel(
@@ -34,8 +33,8 @@ void main() {
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
+            PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
               PokemonProfileSuccessInput(
@@ -61,14 +60,14 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,
           weight: 0,
           stats: [],
         ),
-        ProfileUIOutput(
+        ProfileDomainToUIModel(
           types: ['electric'],
           description: 'At will, it can generate powerful electricity.',
           height: 0.4,
@@ -85,19 +84,20 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
-            return Either.left(FailureInput(message: 'Something went wrong'));
+            return Either.left(
+                FailureDomainInput(message: 'Something went wrong'));
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
+            PokemonProfileSuccessInput>(
           (output) {
             return Either.right(
               PokemonProfileSuccessInput(
@@ -123,7 +123,7 @@ void main() {
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIModel(
           types: ['electric'],
           description: '',
           height: 0.4,
@@ -140,15 +140,15 @@ void main() {
       ],
     );
 
-    useCaseTest<ProfileUseCase, ProfileEntity, ProfileUIOutput>(
+    useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase
-            .subscribe<PokemonSpeciesGatewayOutput, PokemonSpeciesSuccessInput>(
+        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
+            PokemonSpeciesSuccessDomainInput>(
           (output) {
             return Either.right(
-              PokemonSpeciesSuccessInput(
+              PokemonSpeciesSuccessDomainInput(
                 species: PokemonSpeciesModel(
                   descriptions: [
                     PokemonDescriptionModel(
@@ -162,17 +162,18 @@ void main() {
           },
         );
 
-        useCase
-            .subscribe<PokemonProfileGatewayOutput, PokemonProfileSuccessInput>(
+        useCase.subscribe<PokemonProfileDomainToGatewayModel,
+            PokemonProfileSuccessInput>(
           (output) {
-            return Either.left(FailureInput(message: 'Something went wrong'));
+            return Either.left(
+                FailureDomainInput(message: 'Something went wrong'));
           },
         );
 
         useCase.fetchPokemonProfile();
       },
       expect: () => [
-        ProfileUIOutput(
+        ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,

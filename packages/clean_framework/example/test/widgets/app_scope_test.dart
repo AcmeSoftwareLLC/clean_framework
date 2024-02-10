@@ -1,4 +1,4 @@
-import 'package:clean_framework_example/widgets/app_scope.dart';
+import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';

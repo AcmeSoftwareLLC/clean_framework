@@ -1,4 +1,4 @@
-import 'package:clean_framework_example/widgets/svg_palette_card.dart';
+import 'package:clean_framework_example_rest/widgets/svg_palette_card.dart';
 import 'package:flutter/material.dart';
 
 class PokemonCard extends StatelessWidget {

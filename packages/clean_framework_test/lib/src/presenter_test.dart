@@ -11,7 +11,8 @@ import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
-void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
+void presenterTest<V extends ViewModel, M extends DomainModel,
+    U extends UseCase>(
   String description, {
   required Presenter Function(WidgetBuilder builder) create,
   List<Override> overrides = const [],
@@ -74,7 +75,7 @@ void presenterTest<V extends ViewModel, O extends Output, U extends UseCase>(
 }
 
 @isTest
-void presenterCallbackTest<V extends ViewModel, O extends Output,
+void presenterCallbackTest<V extends ViewModel, M extends DomainModel,
     U extends UseCase>(
   String description, {
   required U useCase,
@@ -88,7 +89,7 @@ void presenterCallbackTest<V extends ViewModel, O extends Output,
     await setup(useCase);
 
     // ignore: invalid_use_of_protected_member
-    final vm = presenter.createViewModel(useCase, useCase.getOutput<O>());
+    final vm = presenter.createViewModel(useCase, useCase.getDomainModel<M>());
 
     await verify(useCase, vm as V);
   });
