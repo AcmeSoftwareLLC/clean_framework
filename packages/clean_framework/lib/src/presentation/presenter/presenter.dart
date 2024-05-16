@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-abstract class Presenter<V extends ViewModel, O extends Output,
+abstract class Presenter<V extends ViewModel, M extends DomainModel,
     U extends UseCase> extends ConsumerStatefulWidget {
   const Presenter({
     required this.provider,
@@ -29,31 +29,50 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   final Object _arg;
 
   @override
-  ConsumerState<Presenter<V, O, U>> createState() => _PresenterState<V, O, U>();
+  ConsumerState<Presenter<V, M, U>> createState() => _PresenterState<V, M, U>();
 
   @protected
-  V createViewModel(U useCase, O output);
+  V createViewModel(U useCase, M domainModel);
 
   /// Called when this presenter is inserted into the tree.
   @protected
   void onLayoutReady(BuildContext context, U useCase) {}
 
-  /// Called whenever the [output] updates.
+  /// Called whenever the [domainModel] updates.
   @protected
-  void onOutputUpdate(BuildContext context, O output) {}
+  void onDomainModelUpdate(BuildContext context, M domainModel) {}
+
+  @Deprecated('Use onDomainModelUpdate.')
+  @protected
+  void onOutputUpdate(BuildContext context, M output) =>
+      onDomainModelUpdate(context, output);
 
   /// Called whenever a new output is received.
   @protected
   @mustCallSuper
-  void onOutput(BuildContext context, OutputState<O> output, V viewModel) {
-    if (output.hasUpdated) onOutputUpdate(context, output.next);
+  void onDomainModel(
+    BuildContext context,
+    DomainModelState<M> domainModel,
+    V viewModel,
+  ) {
+    if (domainModel.hasUpdated) onDomainModelUpdate(context, domainModel.next);
   }
+
+  @Deprecated('Use onDomainModel.')
+  @protected
+  @mustCallSuper
+  void onOutput(
+    BuildContext context,
+    DomainModelState<M> output,
+    V viewModel,
+  ) =>
+      onDomainModel(context, output, viewModel);
 
   /// Called whenever the presenter configuration changes.
   @protected
   void didUpdatePresenter(
     BuildContext context,
-    covariant Presenter<V, O, U> old,
+    covariant Presenter<V, M, U> old,
     U useCase,
   ) {}
 
@@ -62,11 +81,11 @@ abstract class Presenter<V extends ViewModel, O extends Output,
   void onDestroy(U useCase) {}
 
   @visibleForTesting
-  O subscribe(WidgetRef ref) => provider.subscribe<O>(ref);
+  M subscribe(WidgetRef ref) => provider.subscribe<M>(ref);
 }
 
-class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
-    extends ConsumerState<Presenter<V, O, U>> {
+class _PresenterState<V extends ViewModel, M extends DomainModel,
+    U extends UseCase> extends ConsumerState<Presenter<V, M, U>> {
   U? _useCase;
   late final UseCaseProviderBase _provider;
 
@@ -86,7 +105,7 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
   }
 
   @override
-  void didUpdateWidget(covariant Presenter<V, O, U> oldWidget) {
+  void didUpdateWidget(covariant Presenter<V, M, U> oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.didUpdatePresenter(context, oldWidget, _useCase!);
   }
@@ -96,12 +115,13 @@ class _PresenterState<V extends ViewModel, O extends Output, U extends UseCase>
     var viewModel = ViewModelScope.maybeOf<V>(context);
 
     if (viewModel == null) {
-      final output = widget.subscribe(ref);
-      viewModel = widget.createViewModel(_useCase!, output);
+      final domainModel = widget.subscribe(ref);
+      viewModel = widget.createViewModel(_useCase!, domainModel);
 
-      _provider.listen<O>(
+      _provider.listen<M>(
         ref,
-        (p, n) => widget.onOutput(context, OutputState(p, n), viewModel!),
+        (p, n) =>
+            widget.onDomainModel(context, DomainModelState(p, n), viewModel!),
       );
     }
 
@@ -167,11 +187,11 @@ class ViewModelBuilder extends StatelessWidget {
 
 typedef PresenterBuilder<V extends ViewModel> = Widget Function(V viewModel);
 
-class OutputState<O extends Output> {
-  OutputState(this.previous, this.next);
+class DomainModelState<M extends DomainModel> {
+  DomainModelState(this.previous, this.next);
 
-  final O? previous;
-  final O next;
+  final M? previous;
+  final M next;
 
   bool get hasUpdated => previous != next;
 }

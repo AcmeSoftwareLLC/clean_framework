@@ -10,7 +10,7 @@ void main() {
       final gateway = _testGatewayProvider.read(container);
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput(success: true),
+        const TestDomainToGatewayModel(success: true),
       );
 
       expect(input.isRight, isTrue);
@@ -24,11 +24,11 @@ void main() {
       final gateway = _testGatewayProvider.read(container);
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput(success: false),
+        const TestDomainToGatewayModel(success: false),
       );
 
       expect(input.isLeft, isTrue);
-      expect(input.left, isA<FailureInput>());
+      expect(input.left, isA<FailureDomainInput>());
     });
 
     test('watcher gateway success', () async {
@@ -38,7 +38,7 @@ void main() {
       final gateway = _testWatcherGatewayProvider.read(container);
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput(success: true),
+        const TestDomainToGatewayModel(success: true),
       );
 
       expect(input.isRight, isTrue);
@@ -52,11 +52,11 @@ void main() {
       final gateway = _testWatcherGatewayProvider.read(container);
 
       final input = await gateway.buildInput(
-        const TestGatewayOutput(success: false),
+        const TestDomainToGatewayModel(success: false),
       );
 
       expect(input.isLeft, isTrue);
-      expect(input.left, isA<FailureInput>());
+      expect(input.left, isA<FailureDomainInput>());
     });
 
     test('override external interface provider', () {
@@ -170,16 +170,16 @@ class TestRequest extends Request {
   final bool success;
 }
 
-class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
     TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(success: output.success);
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -188,16 +188,16 @@ class TestGateway extends Gateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
-    TestSuccessResponse, TestSuccessInput> {
+class TestWatcherGateway extends WatcherGateway<TestDomainToGatewayModel,
+    TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
-  TestRequest buildRequest(TestGatewayOutput output) {
+  TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(success: output.success);
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -206,8 +206,8 @@ class TestWatcherGateway extends WatcherGateway<TestGatewayOutput, TestRequest,
   }
 }
 
-class TestGatewayOutput extends Output {
-  const TestGatewayOutput({required this.success});
+class TestDomainToGatewayModel extends DomainModel {
+  const TestDomainToGatewayModel({required this.success});
 
   final bool success;
 
@@ -215,4 +215,4 @@ class TestGatewayOutput extends Output {
   List<Object?> get props => [success];
 }
 
-class TestSuccessInput extends SuccessInput {}
+class TestSuccessInput extends SuccessDomainInput {}

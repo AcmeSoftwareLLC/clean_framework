@@ -66,7 +66,7 @@ class FirebaseClient {
       return;
     }
 
-    return _fireStore.doc(path).delete();
+    return _fireStore.collection(path).doc(id).delete();
   }
 
   /// Queries a fire-store document for the [path] and [id].

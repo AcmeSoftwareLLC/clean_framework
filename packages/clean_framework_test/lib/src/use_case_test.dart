@@ -10,7 +10,7 @@ import 'package:meta/meta.dart';
 
 @isTest
 ProviderContainer
-    useCaseTest<U extends UseCase<E>, E extends Entity, O extends Output>(
+    useCaseTest<U extends UseCase<E>, E extends Entity, M extends DomainModel>(
   String description, {
   required UseCaseProviderBase provider,
   required FutureOr<void> Function(U) execute,
@@ -30,13 +30,13 @@ ProviderContainer
         useCase.entity = seed(useCase.entity);
       }
 
-      final outputs = <O>[];
+      final domainModels = <M>[];
 
       final completer = Completer<void>();
       final subscription = useCase.stream
-          .map((e) => useCase.transformToOutput<O>(e))
+          .map((e) => useCase.transformToDomainModel<M>(e))
           .distinct()
-          .listen(outputs.add, onDone: completer.complete);
+          .listen(domainModels.add, onDone: completer.complete);
 
       await execute(useCase);
       await Future<void>.delayed(Duration.zero);
@@ -45,13 +45,13 @@ ProviderContainer
 
       if (expect != null) {
         final dynamic expected = expect();
-        final shallowEquality = '$outputs' == '$expected';
+        final shallowEquality = '$domainModels' == '$expected';
 
         try {
-          ft.expect(outputs, ft.wrapMatcher(expected));
+          ft.expect(domainModels, ft.wrapMatcher(expected));
         } on ft.TestFailure catch (e) {
-          if (shallowEquality || expected is! List<O>) rethrow;
-          final difference = diff(expected: expected, actual: outputs);
+          if (shallowEquality || expected is! List<M>) rethrow;
+          final difference = diff(expected: expected, actual: domainModels);
           throw ft.TestFailure('${e.message}\n$difference');
         }
       }
@@ -66,7 +66,7 @@ ProviderContainer
 
 @isTest
 ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
-    O extends Output, FU extends UseCase>(
+    M extends DomainModel, FU extends UseCase>(
   String description, {
   required UseCaseProviderBase from,
   required UseCaseProviderBase to,
@@ -88,13 +88,13 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
         toUseCase.entity = seed(toUseCase.entity);
       }
 
-      final outputs = <O>[];
+      final domainModels = <M>[];
 
       final completer = Completer<void>();
       final subscription = toUseCase.stream
-          .map((e) => toUseCase.transformToOutput<O>(e))
+          .map((e) => toUseCase.transformToDomainModel<M>(e))
           .distinct()
-          .listen(outputs.add, onDone: completer.complete);
+          .listen(domainModels.add, onDone: completer.complete);
 
       await execute(fromUseCase);
       await Future<void>.delayed(Duration.zero);
@@ -103,13 +103,13 @@ ProviderContainer useCaseBridgeTest<TU extends UseCase<E>, E extends Entity,
 
       if (expect != null) {
         final dynamic expected = expect();
-        final shallowEquality = '$outputs' == '$expected';
+        final shallowEquality = '$domainModels' == '$expected';
 
         try {
-          ft.expect(outputs, ft.wrapMatcher(expected));
+          ft.expect(domainModels, ft.wrapMatcher(expected));
         } on ft.TestFailure catch (e) {
-          if (shallowEquality || expected is! List<O>) rethrow;
-          final difference = diff(expected: expected, actual: outputs);
+          if (shallowEquality || expected is! List<M>) rethrow;
+          final difference = diff(expected: expected, actual: domainModels);
           throw ft.TestFailure('${e.message}\n$difference');
         }
       }

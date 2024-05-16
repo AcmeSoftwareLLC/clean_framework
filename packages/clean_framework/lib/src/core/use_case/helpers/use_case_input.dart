@@ -1,20 +1,22 @@
 import 'package:clean_framework/src/core/core.dart';
 
-sealed class UseCaseInput<S extends SuccessInput> {
+sealed class UseCaseInput<S extends SuccessDomainInput> {
   const UseCaseInput([this._success, this._failure]);
 
   final S? _success;
-  final FailureInput? _failure;
+  final FailureDomainInput? _failure;
 }
 
-class Success<S extends SuccessInput> extends UseCaseInput<S> {
-  const Success(S input) : super(input, null);
+class SuccessUseCaseInput<S extends SuccessDomainInput>
+    extends UseCaseInput<S> {
+  const SuccessUseCaseInput(S input) : super(input, null);
 
   S get input => super._success!;
 }
 
-class Failure<S extends SuccessInput> extends UseCaseInput<S> {
-  const Failure(FailureInput input) : super(null, input);
+class FailureUseCaseInput<S extends SuccessDomainInput>
+    extends UseCaseInput<S> {
+  const FailureUseCaseInput(FailureDomainInput input) : super(null, input);
 
-  FailureInput get input => super._failure!;
+  FailureDomainInput get input => super._failure!;
 }

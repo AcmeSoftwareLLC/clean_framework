@@ -1,9 +1,9 @@
-import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
-import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
-import 'package:clean_framework_example/features/home/presentation/home_view_model.dart';
-import 'package:clean_framework_example/routing/routes.dart';
-import 'package:clean_framework_example/widgets/app_scope.dart';
-import 'package:clean_framework_example/widgets/pokemon_card.dart';
+import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
+import 'package:clean_framework_example_rest/features/home/presentation/home_ui.dart';
+import 'package:clean_framework_example_rest/features/home/presentation/home_view_model.dart';
+import 'package:clean_framework_example_rest/routing/routes.dart';
+import 'package:clean_framework_example_rest/widgets/app_scope.dart';
+import 'package:clean_framework_example_rest/widgets/pokemon_card.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';

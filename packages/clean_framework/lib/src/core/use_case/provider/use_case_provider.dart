@@ -10,11 +10,11 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<E extends Entity, U extends UseCase<E>>
-    extends UseCaseProviderBase<E, U> {
+class UseCaseProvider<US extends Entity, U extends UseCase<US>>
+    extends UseCaseProviderBase<US, U> {
   UseCaseProvider(
     U Function() create, [
-    UseCaseProviderConnector<E, U>? connector,
+    UseCaseProviderConnector<US, U>? connector,
   ]) {
     _internal = StateNotifierProvider(
       (ref) {
@@ -27,7 +27,7 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
 
   UseCaseProvider._(this._internal);
 
-  late final StateNotifierProvider<U, E> _internal;
+  late final StateNotifierProvider<U, US> _internal;
 
   static const autoDispose = AutoDisposeUseCaseProviderBuilder();
 
@@ -40,9 +40,9 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
   Override overrideWith(U useCase) => _internal.overrideWith((_) => useCase);
 
   @override
-  ProviderListenable<O> selector<O extends Output>(U useCase) {
-    return _internal.select((_) => useCase.getOutput());
+  ProviderListenable<M> selector<M extends DomainModel>(U useCase) {
+    return _internal.select((_) => useCase.getDomainModel());
   }
 
-  StateNotifierProvider<U, E> call() => _internal;
+  StateNotifierProvider<U, US> call() => _internal;
 }

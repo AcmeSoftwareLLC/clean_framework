@@ -12,7 +12,7 @@ void main() {
       return const Either.right(TestResponse('success'));
     };
 
-    await useCase.doFakeRequest(const TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'success'));
   });
@@ -24,7 +24,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(const TestDirectOutput('123'));
+    await useCase.doFakeRequest(const TestDirectDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'failure'));
   });
@@ -37,7 +37,7 @@ void main() {
         return const Either.right(TestResponse('success'));
       };
 
-    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'success'));
 
@@ -53,7 +53,7 @@ void main() {
       return Either.left(UnknownFailureResponse());
     };
 
-    await useCase.doFakeRequest(const TestSubscriptionOutput('123'));
+    await useCase.doFakeRequest(const TestSubscriptionDomainModel('123'));
 
     expect(useCase.entity, const EntityFake(value: 'failure'));
   });
@@ -67,17 +67,18 @@ void main() {
   });
 }
 
-class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
+class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest,
     TestResponse, TestSuccessInput> {
   TestDirectGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestDirectOutput output) => TestRequest(output.id);
+  TestRequest buildRequest(TestDirectDomainModel output) =>
+      TestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
@@ -86,18 +87,18 @@ class TestDirectGateway extends Gateway<TestDirectOutput, TestRequest,
   }
 }
 
-class TestYieldGateway extends WatcherGateway<TestSubscriptionOutput,
+class TestYieldGateway extends WatcherGateway<TestSubscriptionDomainModel,
     TestRequest, TestResponse, TestSuccessInput> {
   TestYieldGateway(UseCaseProvider provider)
       : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestSubscriptionOutput output) =>
+  TestRequest buildRequest(TestSubscriptionDomainModel output) =>
       TestRequest(output.id);
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
@@ -119,21 +120,21 @@ class TestResponse extends SuccessResponse {
   List<Object?> get props => [foo];
 }
 
-class TestSuccessInput extends SuccessInput {
+class TestSuccessInput extends SuccessDomainInput {
   const TestSuccessInput(this.foo);
   final String foo;
 }
 
-class TestDirectOutput extends Output {
-  const TestDirectOutput(this.id);
+class TestDirectDomainModel extends DomainModel {
+  const TestDirectDomainModel(this.id);
   final String id;
 
   @override
   List<Object?> get props => [id];
 }
 
-class TestSubscriptionOutput extends Output {
-  const TestSubscriptionOutput(this.id);
+class TestSubscriptionDomainModel extends DomainModel {
+  const TestSubscriptionDomainModel(this.id);
   final String id;
 
   @override

@@ -12,7 +12,7 @@ import 'package:meta/meta.dart';
 export 'helpers/use_case_input.dart';
 export 'use_case_helpers.dart';
 
-typedef InputCallback<E extends Entity, I extends Input> = E Function(I);
+typedef InputCallback<E extends Entity, I extends DomainInput> = E Function(I);
 
 abstract class UseCase<E extends Entity> extends StateNotifier<E>
     with UseCaseDebounceMixin {
@@ -21,13 +21,13 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     List<UseCaseTransformer<E>> transformers = const [],
   }) : super(entity) {
     if (transformers.isNotEmpty) {
-      _outputFilters.addTransformers(transformers);
-      _inputFilters.addTransformers(transformers);
+      _domainModelFilters.addTransformers(transformers);
+      _domainInputFilters.addTransformers(transformers);
     }
   }
 
-  final OutputFilterMap<E> _outputFilters = {};
-  final InputFilterMap<E> _inputFilters = {};
+  final DomainModelFilterMap<E> _domainModelFilters = {};
+  final DomainInputFilterMap<E> _domainInputFilters = {};
   final RequestSubscriptionMap _requestSubscriptions = {};
 
   @protected
@@ -38,16 +38,16 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   /// Updating this variable will synchronously call all the listeners.
   /// Notifying the listeners is O(N) with N the number of listeners.
   ///
-  /// Updating the entity will throw if at least one listener throws.
+  /// Updating the domain state will throw if at least one listener throws.
   ///
-  /// For testing purposes, you can use [debugEntity] to access the entity.
+  /// For testing purposes, you can use [debugEntity] to access the domain state.
   E get entity => super.state;
 
   @protected
 
   /// Updates the [entity] with the [newEntity] and notifies all the listeners.
   ///
-  /// For testing purposes, you can use [debugEntityUpdate] to update entity.
+  /// For testing purposes, you can use [debugEntityUpdate] to update use case state.
   set entity(E newEntity) => super.state = newEntity;
 
   /// A development-only way to access [entity] outside of [UseCase].
@@ -73,45 +73,49 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
     return updatedEntity;
   }
 
-  O getOutput<O extends Output>() => transformToOutput(entity);
+  M getDomainModel<M extends DomainModel>() => transformToDomainModel(entity);
 
   @visibleForTesting
-  O transformToOutput<O extends Output>(E entity) => _outputFilters<O>(entity);
+  M transformToDomainModel<M extends DomainModel>(E entity) =>
+      _domainModelFilters<M>(entity);
 
-  void setInput<I extends Input>(I input) {
-    entity = _inputFilters<I>(entity, input);
+  void setInput<I extends DomainInput>(I input) {
+    entity = _domainInputFilters<I>(entity, input);
   }
 
-  void subscribe<O extends Output, I extends Input>(
-    RequestSubscription<O, I> subscription,
+  void subscribe<M extends DomainModel, I extends DomainInput>(
+    RequestSubscription<M, I> subscription,
   ) {
-    _requestSubscriptions.add<O>(subscription);
+    _requestSubscriptions.add<M>(subscription);
   }
 
   @visibleForTesting
   @protected
-  FutureOr<Either<FailureInput, S>> getInternalInput<S extends SuccessInput>(
-    Output output,
+  FutureOr<Either<FailureDomainInput, S>>
+      getInternalInput<S extends SuccessDomainInput>(
+    DomainModel domainModel,
   ) {
-    return _requestSubscriptions.getInput<S>(output);
+    return _requestSubscriptions.getDomainInput<S>(domainModel);
   }
 
   @visibleForTesting
   @protected
-  Future<void> request<S extends SuccessInput>(
-    Output output, {
+  Future<void> request<S extends SuccessDomainInput>(
+    DomainModel domainModel, {
     required InputCallback<E, S> onSuccess,
-    required InputCallback<E, FailureInput> onFailure,
+    required InputCallback<E, FailureDomainInput> onFailure,
   }) async {
-    final input = await getInternalInput<S>(output);
+    final input = await getInternalInput<S>(domainModel);
 
     entity = input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
         return onFailure(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
         return onSuccess(success);
       },
     );
@@ -119,19 +123,21 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
 
   @visibleForTesting
   @protected
-  Future<UseCaseInput<S>> getInput<S extends SuccessInput>(
-    Output output,
+  Future<UseCaseInput<S>> getInput<S extends SuccessDomainInput>(
+    DomainModel domainModel,
   ) async {
-    final input = await getInternalInput<S>(output);
+    final input = await getInternalInput<S>(domainModel);
 
     return input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, output, failure);
-        return Failure(failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
+        return FailureUseCaseInput(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, output, success);
-        return Success(success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
+        return SuccessUseCaseInput(success);
       },
     );
   }

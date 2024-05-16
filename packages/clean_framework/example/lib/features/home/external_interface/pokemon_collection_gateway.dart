@@ -1,74 +1,41 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_failure_response.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
-
-class PokemonCollectionFailureInput extends FailureInput {
-  PokemonCollectionFailureInput({required this.type, super.message});
-
-  final PokemonFailureType type;
-}
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_failure_response.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_request.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_domain_inputs.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
 
 class PokemonCollectionGateway extends Gateway<
-    PokemonCollectionGatewayOutput,
+    PokemonCollectionDomainToGatewayModel,
     PokemonCollectionRequest,
     PokemonSuccessResponse,
-    PokemonCollectionSuccessInput> {
+    PokemonCollectionSuccessDomainInput> {
   @override
-  PokemonCollectionRequest buildRequest(PokemonCollectionGatewayOutput output) {
+  PokemonCollectionRequest buildRequest(
+      PokemonCollectionDomainToGatewayModel domainModel) {
     return PokemonCollectionRequest();
   }
 
   @override
-  PokemonCollectionFailureInput onFailure(
+  PokemonCollectionFailureDomainInput onFailure(
     PokemonFailureResponse failureResponse,
   ) {
-    return PokemonCollectionFailureInput(
+    return PokemonCollectionFailureDomainInput(
       message: failureResponse.message,
       type: failureResponse.type,
     );
   }
 
   @override
-  PokemonCollectionSuccessInput onSuccess(PokemonSuccessResponse response) {
+  PokemonCollectionSuccessDomainInput onSuccess(
+      PokemonSuccessResponse response) {
     final deserializer = Deserializer(response.data);
 
-    return PokemonCollectionSuccessInput(
+    return PokemonCollectionSuccessDomainInput(
       pokemonIdentities: deserializer.getList(
         'results',
         converter: PokemonIdentity.fromJson,
       ),
-    );
-  }
-}
-
-class PokemonCollectionGatewayOutput extends Output {
-  @override
-  List<Object?> get props => [];
-}
-
-class PokemonCollectionSuccessInput extends SuccessInput {
-  PokemonCollectionSuccessInput({required this.pokemonIdentities});
-
-  final List<PokemonIdentity> pokemonIdentities;
-}
-
-final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
-
-class PokemonIdentity {
-  PokemonIdentity({required this.name, required this.id});
-
-  final String name;
-  final String id;
-
-  factory PokemonIdentity.fromJson(Map<String, dynamic> json) {
-    final deserializer = Deserializer(json);
-
-    final match = _pokemonResUrlRegex.firstMatch(deserializer.getString('url'));
-
-    return PokemonIdentity(
-      name: deserializer.getString('name'),
-      id: match?.group(1) ?? '0',
     );
   }
 }
