@@ -44,7 +44,7 @@ class HomeUI extends UI<HomeViewModel> {
                     style: themeData.textTheme.labelMedium!.copyWith(
                       color: theme == viewModel.appTheme
                           ? themeData.colorScheme.primary
-                          : themeData.colorScheme.onBackground,
+                          : themeData.colorScheme.onSurface,
                     ),
                   ),
                   onChanged: viewModel.onThemeChange,

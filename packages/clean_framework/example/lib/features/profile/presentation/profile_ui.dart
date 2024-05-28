@@ -140,7 +140,7 @@ class _StatRow extends StatelessWidget {
               color: primaryColor.withAlpha(stat.point),
               value: pointFraction,
               minHeight: 8,
-              backgroundColor: themeData.colorScheme.surfaceVariant,
+              backgroundColor: themeData.colorScheme.surfaceContainerHighest,
             ),
           ),
         ),
@@ -184,7 +184,7 @@ class _BodyMeasurement extends StatelessWidget {
             Container(
               width: 1,
               height: 32,
-              color: themeData.colorScheme.surfaceVariant,
+              color: themeData.colorScheme.surfaceContainerHighest,
             ),
             Expanded(
               child: Column(

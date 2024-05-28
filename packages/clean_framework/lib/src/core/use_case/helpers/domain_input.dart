@@ -44,7 +44,5 @@ class FailureDomainInput implements DomainInput {
 @Deprecated('Use FailureDomainInput.')
 class FailureInput extends FailureDomainInput {
   @Deprecated('Use FailureDomainInput.')
-  const FailureInput({this.message = ''}) : super(message: message);
-
-  final String message;
+  const FailureInput({super.message = ''});
 }

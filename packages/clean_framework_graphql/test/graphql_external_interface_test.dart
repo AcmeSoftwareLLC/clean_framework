@@ -18,7 +18,8 @@ void main() {
 
     //   final result = await gateway.transport(SuccessfulRequest());
     //   expect(result.isRight, isTrue);
-    //   expect(result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'}));
+    //   expect(
+    //   result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'}));
     // });
 
     // test('failure response', () async {
@@ -52,7 +53,8 @@ void main() {
 
     //   final result = await gateway.transport(MutationRequest());
     //   expect(result.isRight, isTrue);
-    //   expect(result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'}));
+    //   expect(result.right, const GraphQLSuccessResponse(data: {'foo': 'bar'})
+    //   );
     // });
 
     // test('failure with mutation', () async {

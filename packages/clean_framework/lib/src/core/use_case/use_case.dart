@@ -39,15 +39,14 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E>
   /// Notifying the listeners is O(N) with N the number of listeners.
   ///
   /// Updating the domain state will throw if at least one listener throws.
-  ///
-  /// For testing purposes, you can use [debugEntity] to access the domain state.
   E get entity => super.state;
 
   @protected
 
   /// Updates the [entity] with the [newEntity] and notifies all the listeners.
   ///
-  /// For testing purposes, you can use [debugEntityUpdate] to update use case state.
+  /// For testing purposes,
+  /// you can use [debugEntityUpdate] to update use case state.
   set entity(E newEntity) => super.state = newEntity;
 
   /// A development-only way to access [entity] outside of [UseCase].
