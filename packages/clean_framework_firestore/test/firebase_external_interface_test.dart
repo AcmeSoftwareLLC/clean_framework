@@ -16,7 +16,7 @@ void main() {
   test('FirebaseExternalInterface watch id request', () async {
     // to cover the internal initialize of FirebaseClient
     expect(
-      () => FirebaseExternalInterface(gatewayConnections: []),
+      FirebaseExternalInterface.new,
       throwsException,
     );
 
@@ -24,7 +24,6 @@ void main() {
         WatcherGatewayFake<FirebaseWatchIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -47,7 +46,6 @@ void main() {
         WatcherGatewayFake<FirebaseWatchAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay.transport(
@@ -73,7 +71,6 @@ void main() {
         GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -87,7 +84,6 @@ void main() {
         GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -102,7 +98,6 @@ void main() {
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -119,7 +114,6 @@ void main() {
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result =
@@ -135,7 +129,6 @@ void main() {
         GatewayFake<FirebaseUpdateRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -149,7 +142,6 @@ void main() {
         GatewayFake<FirebaseDeleteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -165,7 +157,6 @@ void main() {
         GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -186,7 +177,6 @@ void main() {
         GatewayFake<FirebaseReadAllRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -206,7 +196,6 @@ void main() {
         GatewayFake<FirebaseWriteRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: firebaseClient,
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay
@@ -234,7 +223,6 @@ void main() {
         GatewayFake<FirebaseReadIdRequest, FirebaseSuccessResponse>();
     FirebaseExternalInterface(
       firebaseClient: FirebaseClientFake({}, 'exception message'),
-      gatewayConnections: [() => gateWay],
     );
 
     final result = await gateWay.transport(

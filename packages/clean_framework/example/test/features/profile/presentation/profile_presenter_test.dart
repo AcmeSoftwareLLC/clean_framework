@@ -1,15 +1,15 @@
-import 'package:clean_framework_example/features/profile/domain/profile_entity.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_ui_output.dart';
-import 'package:clean_framework_example/features/profile/domain/profile_use_case.dart';
-import 'package:clean_framework_example/features/profile/presentation/profile_presenter.dart';
-import 'package:clean_framework_example/features/profile/presentation/profile_view_model.dart';
-import 'package:clean_framework_example/providers.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_use_case.dart';
+import 'package:clean_framework_example_rest/features/profile/presentation/profile_presenter.dart';
+import 'package:clean_framework_example_rest/features/profile/presentation/profile_view_model.dart';
+import 'package:clean_framework_example_rest/providers.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ProfilePresenter tests |', () {
-    presenterTest<ProfileViewModel, ProfileUIOutput, ProfileUseCase>(
+    presenterTest<ProfileViewModel, ProfileDomainToUIModel, ProfileUseCase>(
       'creates proper view model',
       create: (builder) => ProfilePresenter(
         builder: builder,
@@ -27,12 +27,12 @@ void main() {
             height: 4,
             weight: 60,
             stats: [
-              PokemonStatEntity(name: 'hp', point: 35),
-              PokemonStatEntity(name: 'attack', point: 55),
-              PokemonStatEntity(name: 'defense', point: 40),
-              PokemonStatEntity(name: 'special-attack', point: 50),
-              PokemonStatEntity(name: 'special-defense', point: 50),
-              PokemonStatEntity(name: 'speed', point: 90),
+              ProfileStatEntity(name: 'hp', point: 35),
+              ProfileStatEntity(name: 'attack', point: 55),
+              ProfileStatEntity(name: 'defense', point: 40),
+              ProfileStatEntity(name: 'special-attack', point: 50),
+              ProfileStatEntity(name: 'special-defense', point: 50),
+              ProfileStatEntity(name: 'speed', point: 90),
             ],
             types: ['electric'],
           ),

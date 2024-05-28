@@ -1,14 +1,15 @@
 import 'package:animations/animations.dart';
-import 'package:clean_framework_example/features/form/presentation/form_ui.dart';
-import 'package:clean_framework_example/features/home/presentation/home_ui.dart';
-import 'package:clean_framework_example/features/profile/presentation/profile_ui.dart';
-import 'package:clean_framework_example/routing/routes.dart';
+import 'package:clean_framework_example_rest/features/form/presentation/form_ui.dart';
+import 'package:clean_framework_example_rest/features/home/presentation/home_ui.dart';
+import 'package:clean_framework_example_rest/features/profile/presentation/profile_ui.dart';
+import 'package:clean_framework_example_rest/routing/routes.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 
 class PokeRouter extends AppRouter<Routes> {
   @override
   RouterConfiguration configureRouter() {
     return RouterConfiguration(
+      initialLocation: '/',
       debugLogDiagnostics: true,
       routes: [
         AppRoute(

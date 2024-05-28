@@ -92,30 +92,31 @@ class TestInterface extends ExternalInterface {
   }
 }
 
-class TestBridgeGateway
-    extends BridgeGateway<TestOutput, TestOutput, SuccessInput> {
+class TestBridgeGateway extends BridgeGateway<TestDomainModel, TestDomainModel,
+    SuccessDomainInput> {
   TestBridgeGateway({
     required super.subscriberUseCase,
     required super.publisherUseCase,
   });
   @override
-  SuccessInput onResponse(TestOutput output) => const SuccessInput();
+  SuccessDomainInput onResponse(TestDomainModel output) =>
+      const SuccessDomainInput();
 }
 
 class TestGateway extends Gateway {
   TestGateway(UseCase useCase) : super(useCase: useCase);
 
   @override
-  TestRequest buildRequest(Output output) => TestRequest();
+  TestRequest buildRequest(DomainModel domainModel) => TestRequest();
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return const FailureInput(message: 'backend error');
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return const FailureDomainInput(message: 'backend error');
   }
 
   @override
-  SuccessInput onSuccess(SuccessResponse response) {
-    return const SuccessInput();
+  SuccessDomainInput onSuccess(SuccessResponse response) {
+    return const SuccessDomainInput();
   }
 }
 
@@ -123,7 +124,7 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity) : super(entity: entity);
 
   void doRequest() => request(
-        TestOutput(),
+        TestDomainModel(),
         onSuccess: (_) => TestEntity(),
         onFailure: (_) => TestEntity(),
       );
@@ -145,7 +146,7 @@ class TestEntity2 extends TestEntity {
   TestEntity2 copyWith({String? foo}) => TestEntity2();
 }
 
-class TestOutput extends Output {
+class TestDomainModel extends DomainModel {
   @override
   List<Object?> get props => [];
 }

@@ -1,18 +1,21 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_request.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
-import 'package:clean_framework_example/features/profile/models/pokemon_profile_model.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_request.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_inputs.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/models/pokemon_profile_model.dart';
 
-class PokemonProfileGateway extends Gateway<PokemonProfileGatewayOutput,
+class PokemonProfileGateway extends Gateway<PokemonProfileDomainToGatewayModel,
     PokemonProfileRequest, PokemonSuccessResponse, PokemonProfileSuccessInput> {
   @override
-  PokemonProfileRequest buildRequest(PokemonProfileGatewayOutput output) {
-    return PokemonProfileRequest(name: output.name);
+  PokemonProfileRequest buildRequest(
+      PokemonProfileDomainToGatewayModel domainModel) {
+    return PokemonProfileRequest(name: domainModel.name);
   }
 
   @override
-  FailureInput onFailure(FailureResponse failureResponse) {
-    return FailureInput(message: failureResponse.message);
+  FailureDomainInput onFailure(FailureResponse failureResponse) {
+    return FailureDomainInput(message: failureResponse.message);
   }
 
   @override
@@ -21,21 +24,6 @@ class PokemonProfileGateway extends Gateway<PokemonProfileGatewayOutput,
       profile: PokemonProfileModel.fromJson(response.data),
     );
   }
-}
-
-class PokemonProfileGatewayOutput extends Output {
-  PokemonProfileGatewayOutput({required this.name});
-
-  final String name;
-
-  @override
-  List<Object?> get props => [name];
-}
-
-class PokemonProfileSuccessInput extends SuccessInput {
-  PokemonProfileSuccessInput({required this.profile});
-
-  final PokemonProfileModel profile;
 }
 
 class PokemonProfileRequest extends GetPokemonRequest {

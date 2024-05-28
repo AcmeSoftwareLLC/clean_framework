@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/features/home/models/pokemon_model.dart';
+import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 import 'package:flutter/foundation.dart';
 
 class HomeViewModel extends ViewModel {

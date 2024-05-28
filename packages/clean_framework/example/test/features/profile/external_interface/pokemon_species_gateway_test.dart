@@ -1,19 +1,21 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example/core/pokemon/pokemon_success_response.dart';
-import 'package:clean_framework_example/features/profile/external_interface/pokemon_species_gateway.dart';
+import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/external_interface/pokemon_species_gateway.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('PokemonSpeciesGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonSpeciesGateway();
-      final gatewayOutput = PokemonSpeciesGatewayOutput(name: 'pikachu');
+      final gatewayOutput = PokemonSpeciesDomainToGatewayModel(name: 'pikachu');
 
       final request = await gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon-species/pikachu'));
 
-      expect(gatewayOutput, PokemonSpeciesGatewayOutput(name: 'pikachu'));
+      expect(
+          gatewayOutput, PokemonSpeciesDomainToGatewayModel(name: 'pikachu'));
     });
 
     test('success', () async {
@@ -54,7 +56,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesGatewayOutput(name: 'pikachu'),
+        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isRight, isTrue);
@@ -81,7 +83,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesGatewayOutput(name: 'pikachu'),
+        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isLeft, isTrue);

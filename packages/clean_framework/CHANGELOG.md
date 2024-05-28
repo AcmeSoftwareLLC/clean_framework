@@ -1,7 +1,39 @@
 # Changelog
-## 3.2.6
-**May 28, 2024**
-- Bumps dependencies to latest version.
+## 4.0.1
+**Feb 7, 2024**
+- Bump dependencies to latest versions.
+- Rename REST example project to 'example'.
+
+## 4.0.0
+**Feb 7, 2024**
+- Publish new major version.
+- See patch notes for 4.0.0-dev.0 and 4.0.0-dev.1 for full list of changes.
+
+## 4.0.0-dev.1
+**Feb 5, 2024**
+- Bump dependency to latest version.
+- Update readme.
+
+## 4.0.0-dev.0
+**Jan 29, 2024**
+**Breaking Change**
+- Deprecated and replaced a number of domain layer classes.
+    - Deprecated `Input`, replaced with `DomainInput`.
+    - Deprecated `Output`, replaced with `DomainModel`.
+    - Deprecated `Success`, replaced with `SuccessUseCaseInput`.
+    - Deprecated `Failure`, replaced with `FailureUseCaseInput`.
+    - **Deprecated `OutputTransformer`, replaced with `DomainModelTransformer`. (Breaking change)**
+    - **Deprecated `InputTransformer`, replaced with `DomainInputTransformer`. (Breaking change)**
+- Deprecated and replaced a number of functions.
+    - Package-wide changes:
+        - Renamed non-optional parameters named `output` to `domainModel` in a number of functions.
+    - `Presenter` changes:
+        - Deprecated `onOutput(context, output, viewModel)`, replaced with `onDomainModel(context, domainModel, viewModel)`.
+        - Deprecated `onOutputUpdate(context, output)`, replaced with `onDomainModelUpdate(context, domainModel)`.
+    - `UseCase` changes:
+        - **Renamed `getOutput` function to `getDomainModel`. (Breaking change)**
+- Updated documentation.
+- Added new example project (`theme_example`) to accompany new documentation.
 
 ## 3.2.5
 **Jan 5, 2024**
