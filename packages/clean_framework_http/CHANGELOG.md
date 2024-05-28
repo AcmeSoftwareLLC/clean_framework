@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.4
+**May 28, 2024**
+- Bump dependencies to latest versions.
+
 ## 0.4.3
 **Feb 7, 2024**
 - Publish patch version for newest Clean Framework changes.
