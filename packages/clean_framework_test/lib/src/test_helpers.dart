@@ -141,7 +141,7 @@ void uiTest(
 
       await tester.pumpWidget(
         parentBuilder == null ? child : parentBuilder(child),
-        pumpDuration,
+        duration: pumpDuration,
       );
 
       if (postFrame == null) {

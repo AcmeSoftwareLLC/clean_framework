@@ -32,7 +32,7 @@ class PokemonSearchField extends StatelessWidget
               prefixIcon: Icon(Icons.search),
               border: InputBorder.none,
               filled: true,
-              fillColor: Theme.of(context).colorScheme.surfaceVariant,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
           )
         ],
