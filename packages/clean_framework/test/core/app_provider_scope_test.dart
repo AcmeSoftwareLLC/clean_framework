@@ -7,12 +7,10 @@ void main() {
     testWidgets(
       'initializes providers',
       (tester) async {
-        final container = ProviderContainer();
-
+        const key = ValueKey('child');
         final scope = AppProviderScope(
-          parent: container,
           externalInterfaceProviders: [_testExternalInterfaceProvider],
-          child: const SizedBox.shrink(),
+          child: const SizedBox.shrink(key: key),
         );
 
         await tester.pumpWidget(scope);
@@ -20,7 +18,9 @@ void main() {
         _testUseCaseProvider.init();
         await tester.pumpAndSettle();
 
-        final useCase = container.read(_testUseCaseProvider().notifier);
+        final useCase = AppProviderScope.containerOf(
+          tester.element(find.byKey(key)),
+        ).read(_testUseCaseProvider().notifier);
         await useCase.ping('Hello');
 
         expect(useCase.debugEntity.pong, 'Hello');
@@ -30,11 +30,8 @@ void main() {
     testWidgets(
       'throws error if no appropriate providers were supplied',
       (tester) async {
-        final container = ProviderContainer();
-
-        final scope = AppProviderScope(
-          parent: container,
-          child: const MaterialApp(home: Text('PING')),
+        const scope = AppProviderScope(
+          child: MaterialApp(home: Text('PING')),
         );
 
         await tester.pumpWidget(scope);
@@ -42,7 +39,9 @@ void main() {
         _testUseCaseProvider.init();
         await tester.pump();
 
-        final useCase = container.read(_testUseCaseProvider().notifier);
+        final useCase = AppProviderScope.containerOf(
+          tester.element(find.byType(MaterialApp)),
+        ).read(_testUseCaseProvider().notifier);
 
         try {
           await useCase.ping('Hello');

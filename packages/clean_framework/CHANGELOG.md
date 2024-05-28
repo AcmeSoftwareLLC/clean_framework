@@ -1,4 +1,8 @@
 # Changelog
+## 4.0.2
+**May 28, 2024**
+- Bump dependencies to latest versions.
+
 ## 4.0.1
 **Feb 7, 2024**
 - Bump dependencies to latest versions.
@@ -6,16 +10,6 @@
 
 ## 4.0.0
 **Feb 7, 2024**
-- Publish new major version.
-- See patch notes for 4.0.0-dev.0 and 4.0.0-dev.1 for full list of changes.
-
-## 4.0.0-dev.1
-**Feb 5, 2024**
-- Bump dependency to latest version.
-- Update readme.
-
-## 4.0.0-dev.0
-**Jan 29, 2024**
 **Breaking Change**
 - Deprecated and replaced a number of domain layer classes.
     - Deprecated `Input`, replaced with `DomainInput`.

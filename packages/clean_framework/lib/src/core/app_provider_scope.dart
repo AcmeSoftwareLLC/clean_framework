@@ -10,12 +10,9 @@ class AppProviderScope extends StatelessWidget {
     this.externalInterfaceProviders = const [],
     this.overrides = const [],
     this.observers,
-    this.parent,
   });
 
   final Widget child;
-
-  final ProviderContainer? parent;
 
   /// The listeners that subscribes to changes on providers
   /// stored on this [ProviderScope].
@@ -29,7 +26,6 @@ class AppProviderScope extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      parent: parent,
       observers: observers,
       overrides: overrides,
       child: Builder(
@@ -45,8 +41,11 @@ class AppProviderScope extends StatelessWidget {
   }
 
   /// Read the current [ProviderContainer] for a [BuildContext].
-  static ProviderContainer containerOf(BuildContext context) {
-    return ProviderScope.containerOf(context);
+  static ProviderContainer containerOf(
+    BuildContext context, {
+    bool listen = true,
+  }) {
+    return ProviderScope.containerOf(context, listen: listen);
   }
 }
 
