@@ -1,6 +1,9 @@
 import 'package:clean_framework/src/core/core.dart';
 import 'package:clean_framework/src/utilities/logger.dart';
 
+/// Logger initialized for [CleanFrameworkObserver].
+Logger get logger => CleanFrameworkObserver.instance.logger;
+
 /// The class to observe failures, route changes and other events.
 class CleanFrameworkObserver {
   /// Default constructor.
