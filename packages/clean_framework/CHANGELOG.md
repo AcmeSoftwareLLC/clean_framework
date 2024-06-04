@@ -1,4 +1,8 @@
 # Changelog
+## 4.1.0
+**Jun 4, 2024**
+- Removes dependency on package `logger` and provides `Logger` interface.
+
 ## 4.0.2
 **May 28, 2024**
 - Bump dependencies to latest versions.
