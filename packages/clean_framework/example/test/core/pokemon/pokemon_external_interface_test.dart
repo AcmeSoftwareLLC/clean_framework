@@ -53,14 +53,14 @@ void main() {
           'pokemon',
           queryParameters: any(named: 'queryParameters'),
         ),
-      ).thenThrow(HttpException('No Internet'));
+      ).thenThrow(const HttpException('No Internet'));
 
       final result = await interface.request(TestPokemonRequest());
 
       expect(result.isLeft, isTrue);
       expect(
         result.left.message,
-        equals(HttpException('No Internet').toString()),
+        equals(const HttpException('No Internet').toString()),
       );
     });
   });

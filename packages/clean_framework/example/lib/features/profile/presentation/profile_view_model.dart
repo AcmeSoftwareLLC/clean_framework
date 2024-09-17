@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/features/profile/domain/profile_dom
 import 'package:flutter/material.dart';
 
 class ProfileViewModel extends ViewModel {
-  ProfileViewModel({
+  const ProfileViewModel({
     required this.pokemonTypes,
     required this.description,
     required this.height,

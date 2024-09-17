@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_inputs.dart';
-import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 import 'package:clean_framework_example_rest/providers.dart';
@@ -12,7 +12,7 @@ void main() {
   const baseImageUrl = 'https://raw.githubusercontent.com'
       '/PokeAPI/sprites/master/sprites/pokemon/other/dream-world';
 
-  final pokemons = [
+  const pokemons = [
     PokemonModel(
       name: 'PIKACHU',
       imageUrl: '$baseImageUrl/45.svg',
@@ -32,7 +32,7 @@ void main() {
 
         return useCase.fetchPokemons();
       },
-      expect: () => [
+      expect: () => const [
         HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loading,
@@ -59,7 +59,7 @@ void main() {
         return useCase.fetchPokemons(isRefresh: true);
       },
       expect: () {
-        return [
+        return const [
           HomeDomainToUIModel(
             pokemons: pokemons,
             status: HomeStatus.loaded,
@@ -87,14 +87,14 @@ void main() {
         return useCase.fetchPokemons();
       },
       expect: () => [
-        HomeDomainToUIModel(
+        const HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loading,
           isRefresh: false,
           loggedInEmail: '',
           errorMessage: '',
         ),
-        HomeDomainToUIModel(
+        const HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: false,
@@ -113,14 +113,14 @@ void main() {
         return useCase.fetchPokemons(isRefresh: true);
       },
       expect: () => [
-        HomeDomainToUIModel(
+        const HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.failed,
           isRefresh: true,
           loggedInEmail: '',
           errorMessage: '',
         ),
-        HomeDomainToUIModel(
+        const HomeDomainToUIModel(
           pokemons: [],
           status: HomeStatus.loaded,
           isRefresh: false,
@@ -134,7 +134,7 @@ void main() {
       'search pokemon',
       provider: homeUseCaseProvider,
       seed: (e) => e.copyWith(
-        pokemons: [
+        pokemons: const [
           PokemonModel(
             name: 'PIKACHU',
             imageUrl: '$baseImageUrl/45.svg',
@@ -149,7 +149,7 @@ void main() {
       execute: (useCase) {
         return useCase.setInput(PokemonSearchDomainInput(name: 'pika'));
       },
-      expect: () => [
+      expect: () => const [
         HomeDomainToUIModel(
           pokemons: [
             PokemonModel(
@@ -187,7 +187,7 @@ void _mockFailure(HomeUseCase useCase) {
   useCase.subscribe<PokemonCollectionDomainToGatewayModel,
       PokemonCollectionSuccessDomainInput>(
     (_) async {
-      return Either.left(FailureDomainInput(message: 'No Internet'));
+      return const Either.left(FailureDomainInput(message: 'No Internet'));
     },
   );
 }

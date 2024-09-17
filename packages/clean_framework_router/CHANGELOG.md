@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.12
+**Sep 17, 2024**
+- Bump dependency to latest version.
+
 ## 0.5.11
 **May 28, 2024**
 - Bump dependency to latest version.

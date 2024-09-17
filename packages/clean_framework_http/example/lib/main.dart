@@ -6,7 +6,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('BASE_URL', 'https://pokeapi.co/api/v2');
+  await prefs.setString('BASE_URL', 'https://pokeapi.co/api/v2');
 
   runApp(const CleanFrameworkHttpExampleApp());
 }

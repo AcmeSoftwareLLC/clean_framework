@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
+
+@immutable
 class PokemonModel {
-  PokemonModel({
+  const PokemonModel({
     required this.name,
     required this.imageUrl,
   });

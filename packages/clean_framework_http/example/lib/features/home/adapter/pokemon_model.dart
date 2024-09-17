@@ -1,7 +1,9 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/foundation.dart';
 
+@immutable
 class PokemonModel {
-  PokemonModel({
+  const PokemonModel({
     required this.name,
     required this.url,
   });

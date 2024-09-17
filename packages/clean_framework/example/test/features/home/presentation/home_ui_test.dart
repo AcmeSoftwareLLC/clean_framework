@@ -18,7 +18,7 @@ void main() {
       'shows pokemon list correctly',
       ui: HomeUI(),
       viewModel: HomeViewModel(
-        pokemons: [
+        pokemons: const [
           PokemonModel(name: 'Pikachu', imageUrl: ''),
           PokemonModel(name: 'Bulbasaur', imageUrl: ''),
         ],
@@ -40,7 +40,7 @@ void main() {
       'shows loading indicator if loading data',
       ui: HomeUI(),
       viewModel: HomeViewModel(
-        pokemons: [],
+        pokemons: const [],
         isLoading: true,
         hasFailedLoading: false,
         loggedInEmail: '',
@@ -58,7 +58,7 @@ void main() {
       'shows loading failed widget if data failed loading',
       ui: HomeUI(),
       viewModel: HomeViewModel(
-        pokemons: [],
+        pokemons: const [],
         isLoading: false,
         hasFailedLoading: true,
         loggedInEmail: '',
@@ -91,7 +91,7 @@ void main() {
       },
       ui: HomeUI(),
       viewModel: HomeViewModel(
-        pokemons: [
+        pokemons: const [
           PokemonModel(name: 'Pikachu', imageUrl: ''),
           PokemonModel(name: 'Bulbasaur', imageUrl: ''),
         ],

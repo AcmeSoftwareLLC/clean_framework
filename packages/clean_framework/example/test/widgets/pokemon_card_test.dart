@@ -11,7 +11,7 @@ void main() {
     await tester.pumpWidget(
       AppScope(
         paletteGenerator: PaletteGenerator.fromColors(
-          [PaletteColor(Color(0xFFFF0000), 100)],
+          [PaletteColor(const Color(0xFFFF0000), 100)],
         ),
         cacheManager: TestCacheManager(),
         child: MaterialApp(
@@ -34,7 +34,7 @@ void main() {
       matching: find.byType(Material),
     );
 
-    Material material = tester.widget<Material>(cardMaterialFinder);
-    expect(material.color, equals(Color(0xFFFF0000)));
+    final material = tester.widget<Material>(cardMaterialFinder);
+    expect(material.color, equals(const Color(0xFFFF0000)));
   });
 }

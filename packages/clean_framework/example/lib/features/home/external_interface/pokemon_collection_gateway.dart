@@ -12,7 +12,8 @@ class PokemonCollectionGateway extends Gateway<
     PokemonCollectionSuccessDomainInput> {
   @override
   PokemonCollectionRequest buildRequest(
-      PokemonCollectionDomainToGatewayModel domainModel) {
+    PokemonCollectionDomainToGatewayModel domainModel,
+  ) {
     return PokemonCollectionRequest();
   }
 
@@ -28,7 +29,8 @@ class PokemonCollectionGateway extends Gateway<
 
   @override
   PokemonCollectionSuccessDomainInput onSuccess(
-      PokemonSuccessResponse response) {
+    PokemonSuccessResponse response,
+  ) {
     final deserializer = Deserializer(response.data);
 
     return PokemonCollectionSuccessDomainInput(

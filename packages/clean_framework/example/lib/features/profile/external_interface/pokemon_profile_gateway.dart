@@ -9,7 +9,8 @@ class PokemonProfileGateway extends Gateway<PokemonProfileDomainToGatewayModel,
     PokemonProfileRequest, PokemonSuccessResponse, PokemonProfileSuccessInput> {
   @override
   PokemonProfileRequest buildRequest(
-      PokemonProfileDomainToGatewayModel domainModel) {
+    PokemonProfileDomainToGatewayModel domainModel,
+  ) {
     return PokemonProfileRequest(name: domainModel.name);
   }
 

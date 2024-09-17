@@ -11,14 +11,14 @@ void main() {
     await tester.pumpWidget(
       AppScope(
         paletteGenerator: PaletteGenerator.fromColors(
-          [PaletteColor(Color(0xFFFF0000), 100)],
+          [PaletteColor(const Color(0xFFFF0000), 100)],
         ),
         cacheManager: TestCacheManager(),
         child: MaterialApp(
           home: SvgPaletteCard(
             url: '',
             builder: (context, picture) {
-              return Text('Palette Card');
+              return const Text('Palette Card');
             },
           ),
         ),
@@ -31,15 +31,15 @@ void main() {
       matching: find.byType(Material),
     );
 
-    Material material = tester.widget<Material>(cardMaterialFinder);
-    expect(material.color, equals(Color(0xFFFF0000)));
+    var material = tester.widget<Material>(cardMaterialFinder);
+    expect(material.color, equals(const Color(0xFFFF0000)));
 
     await tester.pumpWidget(
       AppScope(
         paletteGenerator: PaletteGenerator.fromColors(
           [
-            PaletteColor(Color(0xFF00FF00), 100), // Green
-            PaletteColor(Color(0xFF0000FF), 50), // Blue
+            PaletteColor(const Color(0xFF00FF00), 100), // Green
+            PaletteColor(const Color(0xFF0000FF), 50), // Blue
           ],
         ),
         cacheManager: TestCacheManager(),
@@ -47,7 +47,7 @@ void main() {
           home: SvgPaletteCard(
             url: 'test',
             builder: (context, picture) {
-              return Text('Palette Card');
+              return const Text('Palette Card');
             },
           ),
         ),
@@ -58,7 +58,7 @@ void main() {
     material = tester.widget<Material>(cardMaterialFinder);
     expect(
       material.color,
-      equals(Color(0xFF00FF00)), // Since Green is dominant,
+      equals(const Color(0xFF00FF00)), // Since Green is dominant,
       // as it has pop. of 100.
     );
   });

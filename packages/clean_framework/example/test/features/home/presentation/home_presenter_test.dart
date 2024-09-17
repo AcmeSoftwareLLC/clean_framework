@@ -1,5 +1,5 @@
-import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 import 'package:clean_framework_example_rest/features/home/presentation/home_presenter.dart';
@@ -25,14 +25,18 @@ void main() {
         useCase.debugEntityUpdate(
           (e) => e.copyWith(
             pokemons: [
-              PokemonModel(name: 'Pikachu', imageUrl: ''),
-              PokemonModel(name: 'Bulbasaur', imageUrl: ''),
+              const PokemonModel(name: 'Pikachu', imageUrl: ''),
+              const PokemonModel(name: 'Bulbasaur', imageUrl: ''),
             ],
           ),
         );
       },
       expect: () => [
-        isA<HomeViewModel>().having((vm) => vm.pokemons, 'pokemons', []),
+        isA<HomeViewModel>().having(
+          (vm) => vm.pokemons,
+          'pokemons',
+          <PokemonModel>[],
+        ),
         isA<HomeViewModel>().having(
           (vm) => vm.pokemons.map((p) => p.name),
           'pokemons',
@@ -151,7 +155,7 @@ class HomeUseCaseFake extends HomeUseCase {
 class HomeUseCaseMock extends UseCaseMock<HomeEntity> implements HomeUseCase {
   HomeUseCaseMock()
       : super(
-          entity: HomeEntity(),
+          entity: const HomeEntity(),
           transformers: [HomeDomainToUIModelTransformer()],
         );
 }

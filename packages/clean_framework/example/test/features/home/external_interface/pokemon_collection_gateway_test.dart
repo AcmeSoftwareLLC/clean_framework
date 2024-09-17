@@ -10,7 +10,7 @@ void main() {
       final gateway = PokemonCollectionGateway();
       final gatewayOutput = PokemonCollectionDomainToGatewayModel();
 
-      final request = await gateway.buildRequest(gatewayOutput);
+      final request = gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon'));
       expect(request.queryParams, equals({'limit': 1000}));
@@ -21,19 +21,19 @@ void main() {
     test('success', () async {
       final gateway = PokemonCollectionGateway()
         ..feedResponse(
-          (request) async => Either.right(
+          (request) async => const Either.right(
             PokemonSuccessResponse(
               data: {
                 'results': [
                   {
                     'name': 'pikachu',
-                    'url': 'https://pokeapi.co/api/v2/pokemon/45/'
+                    'url': 'https://pokeapi.co/api/v2/pokemon/45/',
                   },
                   {
                     'name': 'charmander',
-                    'url': 'https://pokeapi.co/api/v2/pokemon/5/'
+                    'url': 'https://pokeapi.co/api/v2/pokemon/5/',
                   }
-                ]
+                ],
               },
             ),
           ),

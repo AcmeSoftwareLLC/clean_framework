@@ -33,24 +33,28 @@ class PokemonExternalInterface
         case DioExceptionType.receiveTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.cancel:
-          return PokemonFailureResponse(type: PokemonFailureType.serverError);
+          return const PokemonFailureResponse(
+            type: PokemonFailureType.serverError,
+          );
         case DioExceptionType.badResponse:
           final response = error.response!;
+
+          final data = Map<String, Object?>.from(response.data as Map);
           return switch (response.statusCode) {
             401 => PokemonFailureResponse(
                 type: PokemonFailureType.unauthorized,
                 message: 'The request was not authorized.',
-                errorData: response.data ?? {},
+                errorData: data,
               ),
             404 => PokemonFailureResponse(
                 type: PokemonFailureType.notFound,
                 message: 'The requested resource was not found.',
-                errorData: response.data ?? {},
+                errorData: data,
               ),
             _ => PokemonFailureResponse(
                 type: PokemonFailureType.unknown,
                 message: 'An unknown error occurred.',
-                errorData: response.data ?? {},
+                errorData: data,
               ),
           };
         case DioExceptionType.badCertificate:

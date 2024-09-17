@@ -10,8 +10,10 @@ class ProfilePresenter extends Presenter<ProfileViewModel,
   ProfilePresenter({
     required super.builder,
     required String name,
+    super.key,
   }) : super.family(family: profileUseCaseFamily, arg: name);
 
+  @override
   @protected
   void onLayoutReady(BuildContext context, ProfileUseCase useCase) {
     useCase.fetchPokemonProfile();

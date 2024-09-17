@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/features/home/domain/home_entity.da
 import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 
 class HomeDomainToUIModel extends DomainModel {
-  HomeDomainToUIModel({
+  const HomeDomainToUIModel({
     required this.pokemons,
     required this.status,
     required this.isRefresh,

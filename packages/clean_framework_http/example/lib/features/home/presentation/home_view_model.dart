@@ -10,7 +10,7 @@ class HomeViewModel extends ViewModel {
 }
 
 class PokemonViewModel extends ViewModel {
-  PokemonViewModel({required this.name, required this.imageUrl});
+  const PokemonViewModel({required this.name, required this.imageUrl});
 
   final String name;
   final String imageUrl;

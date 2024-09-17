@@ -7,24 +7,25 @@ environment:
   sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
+  animations: ^2.0.11
+  clean_framework: ^4.1.1
+  clean_framework_router: ^0.5.11
+  dio: ^5.7.0
   flutter:
     sdk: flutter
-  animations: ^2.0.8
-  clean_framework: ^4.0.0
-  clean_framework_router: ^0.5.10
-
-  dio: ^5.3.4
-  flutter_cache_manager: ^3.3.1
-  flutter_svg: ^2.0.9
-  palette_generator: ^0.3.3+3
+  flutter_cache_manager: ^3.4.1
+  flutter_svg: ^2.0.10+1
+  palette_generator: ^0.3.3+4
+  uniform: ^2.0.6
 
 dev_dependencies:
   clean_framework_test: ^0.5.3
-
-  mocktail: ^1.0.1
+  file: ^7.0.0
   flutter_test:
     sdk: flutter
-  icons_launcher: ^2.1.5
+  http: ^1.2.2
+  icons_launcher: ^2.1.7
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true

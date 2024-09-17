@@ -34,7 +34,7 @@ void main() {
         height: '0.4 m',
         weight: '6.0 kg',
         pokemonTypes: [PokemonType('electric')],
-        stats: [
+        stats: const [
           PokemonStat(name: 'Hp', point: 35),
           PokemonStat(name: 'Attack', point: 55),
           PokemonStat(name: 'Defense', point: 40),

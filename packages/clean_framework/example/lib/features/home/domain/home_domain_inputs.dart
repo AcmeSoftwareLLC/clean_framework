@@ -18,9 +18,6 @@ final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
 class PokemonIdentity {
   PokemonIdentity({required this.name, required this.id});
 
-  final String name;
-  final String id;
-
   factory PokemonIdentity.fromJson(Map<String, dynamic> json) {
     final deserializer = Deserializer(json);
 
@@ -31,4 +28,7 @@ class PokemonIdentity {
       id: match?.group(1) ?? '0',
     );
   }
+
+  final String name;
+  final String id;
 }

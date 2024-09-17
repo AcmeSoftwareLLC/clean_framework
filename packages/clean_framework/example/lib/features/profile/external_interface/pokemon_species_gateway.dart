@@ -12,7 +12,8 @@ class PokemonSpeciesGateway extends Gateway<
     PokemonSpeciesSuccessDomainInput> {
   @override
   PokemonSpeciesRequest buildRequest(
-      PokemonSpeciesDomainToGatewayModel domainModel) {
+    PokemonSpeciesDomainToGatewayModel domainModel,
+  ) {
     return PokemonSpeciesRequest(name: domainModel.name);
   }
 

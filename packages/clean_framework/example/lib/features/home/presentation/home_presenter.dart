@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_example_rest/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_example_rest/providers.dart';
@@ -10,6 +10,7 @@ class HomePresenter
     extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
   HomePresenter({
     required super.builder,
+    super.key,
   }) : super(provider: homeUseCaseProvider);
 
   @override
@@ -19,7 +20,9 @@ class HomePresenter
 
   @override
   HomeViewModel createViewModel(
-      HomeUseCase useCase, HomeDomainToUIModel domainModel) {
+    HomeUseCase useCase,
+    HomeDomainToUIModel domainModel,
+  ) {
     return HomeViewModel(
       pokemons: domainModel.pokemons,
       onSearch: (query) =>
@@ -34,7 +37,10 @@ class HomePresenter
   }
 
   @override
-  void onOutputUpdate(BuildContext context, HomeDomainToUIModel domainModel) {
+  void onDomainModelUpdate(
+    BuildContext context,
+    HomeDomainToUIModel domainModel,
+  ) {
     if (domainModel.isRefresh) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

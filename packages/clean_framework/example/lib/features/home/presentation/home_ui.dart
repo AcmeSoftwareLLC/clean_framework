@@ -11,6 +11,8 @@ import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
 class HomeUI extends UI<HomeViewModel> {
+  HomeUI({super.key});
+
   @override
   HomePresenter create(WidgetBuilder builder) {
     return HomePresenter(builder: builder);
@@ -22,7 +24,7 @@ class HomeUI extends UI<HomeViewModel> {
 
     Widget child;
     if (viewModel.isLoading) {
-      child = Center(child: CircularProgressIndicator());
+      child = const Center(child: CircularProgressIndicator());
     } else if (viewModel.hasFailedLoading) {
       child = _LoadingFailed(onRetry: viewModel.onRetry);
     } else {
@@ -30,7 +32,7 @@ class HomeUI extends UI<HomeViewModel> {
         onRefresh: viewModel.onRefresh,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final minWidth = 240;
+            const minWidth = 240;
             final crossAxisCount = max(1, constraints.maxWidth ~/ minWidth);
             final remainingWidth = constraints.maxWidth % minWidth;
 
@@ -58,7 +60,7 @@ class HomeUI extends UI<HomeViewModel> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pokémon (REST)'),
+        title: const Text('Pokémon (REST)'),
         centerTitle: false,
         titleTextStyle: textTheme.displaySmall!.copyWith(
           fontWeight: FontWeight.w300,
@@ -89,7 +91,7 @@ class HomeUI extends UI<HomeViewModel> {
       body: child,
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.router.go(Routes.form),
-        child: Icon(Icons.login),
+        child: const Icon(Icons.login),
       ),
     );
   }
@@ -121,7 +123,6 @@ class _LoadingFailed extends StatelessWidget {
     final viewModel = context.viewModel<HomeViewModel>();
     return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(
@@ -144,7 +145,7 @@ class _LoadingFailed extends StatelessWidget {
           const SizedBox(height: 24),
           OutlinedButton(
             onPressed: onRetry,
-            child: Text('Help Flareon, find her friends'),
+            child: const Text('Help Flareon, find her friends'),
           ),
           const SizedBox(height: 64),
         ],

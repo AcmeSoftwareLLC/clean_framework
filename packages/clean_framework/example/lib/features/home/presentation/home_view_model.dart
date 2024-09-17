@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/features/home/models/pokemon_model.
 import 'package:flutter/foundation.dart';
 
 class HomeViewModel extends ViewModel {
-  HomeViewModel({
+  const HomeViewModel({
     required this.pokemons,
     required this.isLoading,
     required this.hasFailedLoading,

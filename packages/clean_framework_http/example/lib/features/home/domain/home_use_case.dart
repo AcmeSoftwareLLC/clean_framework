@@ -1,8 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http_example/features/home/domain/home_domain_inputs.dart';
-
-import 'package:clean_framework_http_example/features/home/domain/home_entity.dart';
 import 'package:clean_framework_http_example/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_http_example/features/home/domain/home_entity.dart';
 
 final _pokemonResUrlRegex = RegExp(r'https://pokeapi.co/api/v2/pokemon/(\d+)/');
 

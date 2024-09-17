@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/validators/validators.dart';
-import 'package:clean_framework_example_rest/features/form/domain/form_entity.dart';
 import 'package:clean_framework_example_rest/features/form/domain/form_domain_models.dart';
+import 'package:clean_framework_example_rest/features/form/domain/form_entity.dart';
 
 class FormUseCase extends UseCase<FormEntity> {
   FormUseCase()
@@ -61,7 +61,9 @@ class FormUseCase extends UseCase<FormEntity> {
         gender: _genderController.value?.name ?? '',
       );
       entity = entity.copyWith(
-          screenState: FormScreenState.success, userMeta: userMeta);
+        screenState: FormScreenState.success,
+        userMeta: userMeta,
+      );
       formController.setSubmitted(false);
 
       entity = entity.copyWith(screenState: FormScreenState.initial);

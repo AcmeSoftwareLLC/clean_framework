@@ -19,7 +19,7 @@ class HomeUI extends UI<HomeViewModel> {
         );
 
     return Scaffold(
-      appBar: AppBar(title: Text('Pokemons')),
+      appBar: AppBar(title: const Text('Pokemons')),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {

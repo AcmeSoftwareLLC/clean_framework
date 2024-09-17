@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_inputs.dart';
-import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_use_case.dart';
 import 'package:clean_framework_example_rest/features/profile/models/pokemon_profile_model.dart';
 import 'package:clean_framework_example_rest/features/profile/models/pokemon_species_model.dart';
@@ -15,63 +15,62 @@ void main() {
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) {
-        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
-            PokemonSpeciesSuccessDomainInput>(
-          (output) {
-            return Either.right(
-              PokemonSpeciesSuccessDomainInput(
-                species: PokemonSpeciesModel(
-                  descriptions: [
-                    PokemonDescriptionModel(
-                      language: 'en',
-                      text: 'At will, it can generate powerful electricity.',
-                    ),
-                  ],
+        useCase
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
+            (output) {
+              return Either.right(
+                PokemonSpeciesSuccessDomainInput(
+                  species: PokemonSpeciesModel(
+                    descriptions: [
+                      PokemonDescriptionModel(
+                        language: 'en',
+                        text: 'At will, it can generate powerful electricity.',
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-
-        useCase.subscribe<PokemonProfileDomainToGatewayModel,
-            PokemonProfileSuccessInput>(
-          (output) {
-            return Either.right(
-              PokemonProfileSuccessInput(
-                profile: PokemonProfileModel(
-                  types: ['electric'],
-                  height: 4,
-                  weight: 60,
-                  baseExperience: 112,
-                  stats: [
-                    PokemonStatModel(name: 'hp', baseStat: 35),
-                    PokemonStatModel(name: 'attack', baseStat: 55),
-                    PokemonStatModel(name: 'defense', baseStat: 40),
-                    PokemonStatModel(name: 'special-attack', baseStat: 50),
-                    PokemonStatModel(name: 'special-defense', baseStat: 50),
-                    PokemonStatModel(name: 'speed', baseStat: 90),
-                  ],
+              );
+            },
+          )
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
+            (output) {
+              return Either.right(
+                PokemonProfileSuccessInput(
+                  profile: PokemonProfileModel(
+                    types: ['electric'],
+                    height: 4,
+                    weight: 60,
+                    baseExperience: 112,
+                    stats: [
+                      PokemonStatModel(name: 'hp', baseStat: 35),
+                      PokemonStatModel(name: 'attack', baseStat: 55),
+                      PokemonStatModel(name: 'defense', baseStat: 40),
+                      PokemonStatModel(name: 'special-attack', baseStat: 50),
+                      PokemonStatModel(name: 'special-defense', baseStat: 50),
+                      PokemonStatModel(name: 'speed', baseStat: 90),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-
-        useCase.fetchPokemonProfile();
+              );
+            },
+          )
+          ..fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIModel(
+        const ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,
           weight: 0,
           stats: [],
         ),
-        ProfileDomainToUIModel(
+        const ProfileDomainToUIModel(
           types: ['electric'],
           description: 'At will, it can generate powerful electricity.',
           height: 0.4,
-          weight: 6.0,
+          weight: 6,
           stats: [
             PokemonStat(name: 'Hp', point: 35),
             PokemonStat(name: 'Attack', point: 55),
@@ -88,46 +87,46 @@ void main() {
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
-            PokemonSpeciesSuccessDomainInput>(
-          (output) {
-            return Either.left(
-                FailureDomainInput(message: 'Something went wrong'));
-          },
-        );
-
-        useCase.subscribe<PokemonProfileDomainToGatewayModel,
-            PokemonProfileSuccessInput>(
-          (output) {
-            return Either.right(
-              PokemonProfileSuccessInput(
-                profile: PokemonProfileModel(
-                  types: ['electric'],
-                  height: 4,
-                  weight: 60,
-                  baseExperience: 112,
-                  stats: [
-                    PokemonStatModel(name: 'hp', baseStat: 35),
-                    PokemonStatModel(name: 'attack', baseStat: 55),
-                    PokemonStatModel(name: 'defense', baseStat: 40),
-                    PokemonStatModel(name: 'special-attack', baseStat: 50),
-                    PokemonStatModel(name: 'special-defense', baseStat: 50),
-                    PokemonStatModel(name: 'speed', baseStat: 90),
-                  ],
+        useCase
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
+            (output) {
+              return const Either.left(
+                FailureDomainInput(message: 'Something went wrong'),
+              );
+            },
+          )
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
+            (output) {
+              return Either.right(
+                PokemonProfileSuccessInput(
+                  profile: PokemonProfileModel(
+                    types: ['electric'],
+                    height: 4,
+                    weight: 60,
+                    baseExperience: 112,
+                    stats: [
+                      PokemonStatModel(name: 'hp', baseStat: 35),
+                      PokemonStatModel(name: 'attack', baseStat: 55),
+                      PokemonStatModel(name: 'defense', baseStat: 40),
+                      PokemonStatModel(name: 'special-attack', baseStat: 50),
+                      PokemonStatModel(name: 'special-defense', baseStat: 50),
+                      PokemonStatModel(name: 'speed', baseStat: 90),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-
-        useCase.fetchPokemonProfile();
+              );
+            },
+          )
+          ..fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIModel(
+        const ProfileDomainToUIModel(
           types: ['electric'],
           description: '',
           height: 0.4,
-          weight: 6.0,
+          weight: 6,
           stats: [
             PokemonStat(name: 'Hp', point: 35),
             PokemonStat(name: 'Attack', point: 55),
@@ -144,36 +143,36 @@ void main() {
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) {
-        useCase.subscribe<PokemonSpeciesDomainToGatewayModel,
-            PokemonSpeciesSuccessDomainInput>(
-          (output) {
-            return Either.right(
-              PokemonSpeciesSuccessDomainInput(
-                species: PokemonSpeciesModel(
-                  descriptions: [
-                    PokemonDescriptionModel(
-                      language: 'en',
-                      text: 'At will, it can generate powerful electricity.',
-                    ),
-                  ],
+        useCase
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
+            (output) {
+              return Either.right(
+                PokemonSpeciesSuccessDomainInput(
+                  species: PokemonSpeciesModel(
+                    descriptions: [
+                      PokemonDescriptionModel(
+                        language: 'en',
+                        text: 'At will, it can generate powerful electricity.',
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-
-        useCase.subscribe<PokemonProfileDomainToGatewayModel,
-            PokemonProfileSuccessInput>(
-          (output) {
-            return Either.left(
-                FailureDomainInput(message: 'Something went wrong'));
-          },
-        );
-
-        useCase.fetchPokemonProfile();
+              );
+            },
+          )
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
+            (output) {
+              return const Either.left(
+                FailureDomainInput(message: 'Something went wrong'),
+              );
+            },
+          )
+          ..fetchPokemonProfile();
       },
       expect: () => [
-        ProfileDomainToUIModel(
+        const ProfileDomainToUIModel(
           types: [],
           description: 'At will, it can generate powerful electricity.',
           height: 0,

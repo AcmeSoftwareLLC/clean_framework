@@ -24,7 +24,7 @@ Future<void> main() async {
                 isA<DefaultCacheManager>(),
               );
 
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -39,7 +39,7 @@ Future<void> main() async {
             builder: (context) {
               expect(AppScope.cacheManagerOf(context), isA<TestCacheManager>());
 
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -57,7 +57,7 @@ Future<void> main() async {
                   expect(generator, isA<PaletteGenerator>());
                 });
 
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -83,7 +83,7 @@ Future<void> main() async {
                   expect(generator, isA<PaletteGenerator>());
                 });
 
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -101,7 +101,7 @@ Future<void> main() async {
                 isA<DefaultCacheManager>(),
               );
 
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             },
           ),
         ),
@@ -116,7 +116,7 @@ Future<void> main() async {
                 isA<DefaultCacheManager>(),
               );
 
-              return SizedBox.shrink();
+              return const SizedBox.shrink();
             },
           ),
         ),

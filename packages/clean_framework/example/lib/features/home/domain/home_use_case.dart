@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_failure_response.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_inputs.dart';
-import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
+import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
 import 'package:clean_framework_example_rest/features/home/models/pokemon_model.dart';
 
 const _spritesBaseUrl =
@@ -11,7 +11,7 @@ const _spritesBaseUrl =
 class HomeUseCase extends UseCase<HomeEntity> {
   HomeUseCase()
       : super(
-          entity: HomeEntity(),
+          entity: const HomeEntity(),
           transformers: [
             HomeDomainToUIModelTransformer(),
             PokemonSearchDomainInputTransformer(),
@@ -26,7 +26,9 @@ class HomeUseCase extends UseCase<HomeEntity> {
 
     final input = await getInput(PokemonCollectionDomainToGatewayModel());
     switch (input) {
-      case SuccessUseCaseInput(:PokemonCollectionSuccessDomainInput input):
+      case SuccessUseCaseInput(
+          :final PokemonCollectionSuccessDomainInput input
+        ):
         final pokemons = input.pokemonIdentities.map(_resolvePokemon);
 
         entity = entity.copyWith(
@@ -34,7 +36,9 @@ class HomeUseCase extends UseCase<HomeEntity> {
           status: HomeStatus.loaded,
           isRefresh: isRefresh,
         );
-      case FailureUseCaseInput(:PokemonCollectionFailureDomainInput input):
+      case FailureUseCaseInput(
+          :final PokemonCollectionFailureDomainInput input
+        ):
         entity = entity.copyWith(
           errorMessage: switch (input.type) {
             PokemonFailureType.unauthorized =>

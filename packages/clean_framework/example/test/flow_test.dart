@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_external_interface.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_request.dart';
@@ -56,7 +58,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
       (request, send) async {
         if (request is PokemonCollectionRequest) {
           send(
-            PokemonSuccessResponse(
+            const PokemonSuccessResponse(
               data: {
                 'results': [
                   {'name': 'bulbasaur'},
@@ -69,7 +71,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
 
         if (request is PokemonSpeciesRequest) {
           send(
-            PokemonSuccessResponse(
+            const PokemonSuccessResponse(
               data: {
                 'flavor_text_entries': [
                   {
@@ -82,7 +84,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
                     'version': {
                       'name': 'yellow',
                       'url': 'https://pokeapi.co/api/v2/version/3/',
-                    }
+                    },
                   },
                   {
                     'flavor_text':
@@ -94,7 +96,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
                     'version': {
                       'name': 'gold',
                       'url': 'https://pokeapi.co/api/v2/version/4/',
-                    }
+                    },
                   },
                 ],
               },

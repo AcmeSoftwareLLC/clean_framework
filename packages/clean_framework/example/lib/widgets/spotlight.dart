@@ -8,10 +8,10 @@ import 'package:palette_generator/palette_generator.dart';
 
 class Spotlight extends StatefulWidget {
   const Spotlight({
-    super.key,
     required this.imageUrl,
     required this.heroTag,
     required this.builder,
+    super.key,
     this.placeholderBuilder,
     this.width,
     this.height,
@@ -63,20 +63,20 @@ class _SpotlightState extends State<Spotlight> {
                     _getColor((p) => p.lightMutedColor),
                     _getColor((p) => p.dominantColor),
                   ],
-                  stops: <double>[0.0, 0.2, 0.5, 0.7, 1.0],
-                  transform: GradientRotation(pi * 1.5),
+                  stops: const <double>[0, 0.2, 0.5, 0.7, 1],
+                  transform: const GradientRotation(pi * 1.5),
                 ),
               ),
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
-                    center: FractionalOffset(0.5, 0.3),
+                    center: const FractionalOffset(0.5, 0.3),
                     colors: [
                       for (var a = 0; a < 200; a++)
                         Theme.of(context).colorScheme.surface.withAlpha(a),
                     ],
                     stops: [
-                      for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop
+                      for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop,
                     ],
                     radius: size.width / 600,
                   ),
@@ -125,8 +125,10 @@ class _SpotlightState extends State<Spotlight> {
       final pictureInfo = await vg.loadPicture(SvgStringLoader(_rawSvg!), null);
       final image = await pictureInfo.picture.toImage(100, 100);
 
+      if (!mounted) return;
+
       _palette = await AppScope.paletteGeneratorOf(context, image);
-      if (mounted) setState(() {});
+      setState(() {});
     }
   }
 

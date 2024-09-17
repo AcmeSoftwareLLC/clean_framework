@@ -1,4 +1,8 @@
 # Changelog
+## 0.4.5
+**Sep 17, 2024**
+- Bump dependencies to latest versions.
+
 ## 0.4.4
 **May 28, 2024**
 - Bump dependencies to latest versions.

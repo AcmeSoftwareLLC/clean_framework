@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 class PokemonCard extends StatelessWidget {
   const PokemonCard({
-    super.key,
     required this.imageUrl,
     required this.name,
     required this.onTap,
     required this.heroTag,
+    super.key,
   });
 
   final String imageUrl;
@@ -21,7 +21,7 @@ class PokemonCard extends StatelessWidget {
       cacheKey: name,
       url: imageUrl,
       onTap: onTap,
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       builder: (context, picture) {
         return Padding(
           padding: const EdgeInsets.all(16),
@@ -41,9 +41,10 @@ class PokemonCard extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Expanded(
-                  child: picture == null
-                      ? const SizedBox.shrink()
-                      : Hero(tag: heroTag, child: picture)),
+                child: picture == null
+                    ? const SizedBox.shrink()
+                    : Hero(tag: heroTag, child: picture),
+              ),
             ],
           ),
         );

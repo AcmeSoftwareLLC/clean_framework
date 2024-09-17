@@ -19,7 +19,7 @@ class FormButton extends StatelessWidget {
             minimumSize: const Size.fromHeight(kMinInteractiveDimension),
           ),
           onPressed: isEnabled ? onPressed : null,
-          child: controller.isSubmitted ? Text('Submitting...') : child,
+          child: controller.isSubmitted ? const Text('Submitting...') : child,
         );
       },
     );

@@ -9,6 +9,7 @@ class ProfileUI extends UI<ProfileViewModel> {
   ProfileUI({
     required this.pokemonName,
     required this.pokemonImageUrl,
+    super.key,
   });
 
   final String pokemonName;
@@ -41,7 +42,7 @@ class ProfileUI extends UI<ProfileViewModel> {
           margin: EdgeInsets.zero,
           elevation: Theme.of(context).brightness == Brightness.light ? 0 : 4,
           color: Theme.of(context).colorScheme.surface.withAlpha(120),
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(48)),
           ),
           child: Padding(

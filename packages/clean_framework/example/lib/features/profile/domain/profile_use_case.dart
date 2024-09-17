@@ -2,13 +2,13 @@ import 'dart:math';
 
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_inputs.dart';
-import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
+import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
 
 class ProfileUseCase extends UseCase<ProfileEntity> {
   ProfileUseCase(this.name)
       : super(
-          entity: ProfileEntity(),
+          entity: const ProfileEntity(),
           transformers: [
             ProfileDomainToUIModelTransformer(),
           ],
@@ -20,7 +20,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
     final pokeName = name.toLowerCase();
 
     // If the use case is not auto disposed then we have last fetched data.
-    if (!entity.description.isEmpty) return;
+    if (entity.description.isNotEmpty) return;
 
     request<PokemonSpeciesSuccessDomainInput>(
       PokemonSpeciesDomainToGatewayModel(name: pokeName),

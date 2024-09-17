@@ -1,17 +1,18 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class SvgPaletteCard extends StatefulWidget {
   const SvgPaletteCard({
-    super.key,
     required this.url,
     required this.builder,
+    super.key,
     this.duration = const Duration(milliseconds: 500),
     this.cacheKey,
     this.onTap,
@@ -100,7 +101,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
 
       if (mounted) setState(() {});
 
-      _generateColor();
+      unawaited(_generateColor());
     } catch (e) {
       log(e.toString(), name: 'SvgPaletteCard');
     }

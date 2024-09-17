@@ -7,7 +7,7 @@ import 'package:clean_framework_http_example/features/home/domain/home_domain_mo
 class PokemonGateway extends Gateway<PokemonDomainToGatewayModel,
     PokemonRequest, SuccessResponse, PokemonSuccessInput> {
   @override
-  PokemonRequest buildRequest(PokemonDomainToGatewayModel output) {
+  PokemonRequest buildRequest(PokemonDomainToGatewayModel domainModel) {
     return PokemonRequest();
   }
 

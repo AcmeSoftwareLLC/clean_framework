@@ -20,7 +20,6 @@ class _PokemonHttpExternalInterfaceDelegate
 
     return HttpOptions(
       baseUrl: prefs.getString('BASE_URL')!,
-      responseType: HttpResponseType.json,
     );
   }
 

@@ -1,7 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
+import 'package:flutter/foundation.dart';
 
 class ProfileDomainToUIModel extends DomainModel {
-  ProfileDomainToUIModel({
+  const ProfileDomainToUIModel({
     required this.types,
     required this.description,
     required this.height,
@@ -19,8 +20,9 @@ class ProfileDomainToUIModel extends DomainModel {
   List<Object?> get props => [types, description, height, weight, stats];
 }
 
+@immutable
 class PokemonStat {
-  PokemonStat({required this.name, required this.point});
+  const PokemonStat({required this.name, required this.point});
 
   final String name;
   final int point;
@@ -38,7 +40,7 @@ class PokemonStat {
 }
 
 class PokemonProfileDomainToGatewayModel extends DomainModel {
-  PokemonProfileDomainToGatewayModel({required this.name});
+  const PokemonProfileDomainToGatewayModel({required this.name});
 
   final String name;
 
@@ -47,7 +49,7 @@ class PokemonProfileDomainToGatewayModel extends DomainModel {
 }
 
 class PokemonSpeciesDomainToGatewayModel extends DomainModel {
-  PokemonSpeciesDomainToGatewayModel({required this.name});
+  const PokemonSpeciesDomainToGatewayModel({required this.name});
 
   final String name;
 

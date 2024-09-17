@@ -1,7 +1,6 @@
 import 'package:file/memory.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_cache_manager/src/storage/file_system/file_system.dart';
 import 'package:http/http.dart' as http;
 
 class TestCacheManager extends CacheManager {
@@ -61,7 +60,7 @@ class TestFileSystem extends FileSystem {
       MemoryFileSystem().systemTempDirectory.createTemp('test');
   @override
   Future<File> createFile(String name) async {
-    var dir = await directoryFuture;
+    final dir = await directoryFuture;
     await dir.create(recursive: true);
     return dir.childFile(name);
   }

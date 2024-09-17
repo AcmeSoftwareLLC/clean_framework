@@ -15,7 +15,7 @@ enum FormScreenState {
 }
 
 class FormEntity extends Entity {
-  FormEntity({
+  const FormEntity({
     required this.formController,
     this.screenState = FormScreenState.initial,
     this.userMeta = const UserMetaEntity(),

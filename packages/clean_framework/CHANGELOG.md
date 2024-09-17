@@ -1,4 +1,8 @@
 # Changelog
+## 4.1.2
+**Sep 17, 2024**
+- Bump dependency to latest version.
+
 ## 4.1.1
 **Jun 4, 2024**
 - Exposes `logger` getter.

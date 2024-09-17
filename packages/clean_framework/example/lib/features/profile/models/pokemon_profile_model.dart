@@ -20,7 +20,12 @@ class PokemonProfileModel {
         'stats',
         converter: PokemonStatModel.fromJson,
       ),
-      types: deserializer.getList('types', converter: (t) => t['type']['name']),
+      types: deserializer.getList(
+        'types',
+        converter: (t) {
+          return t['type']['name'].toString(); //ignore: avoid_dynamic_calls
+        },
+      ),
     );
   }
 

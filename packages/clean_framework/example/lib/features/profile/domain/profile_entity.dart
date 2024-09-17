@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 
 class ProfileEntity extends Entity {
-  ProfileEntity({
+  const ProfileEntity({
     this.name = '',
     this.types = const [],
     this.description = '',
@@ -41,7 +41,7 @@ class ProfileEntity extends Entity {
 }
 
 class ProfileStatEntity extends Entity {
-  ProfileStatEntity({this.name = '', this.point = 0});
+  const ProfileStatEntity({this.name = '', this.point = 0});
 
   final String name;
   final int point;

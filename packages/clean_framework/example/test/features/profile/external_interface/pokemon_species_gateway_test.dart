@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
@@ -8,20 +10,22 @@ void main() {
   group('PokemonSpeciesGateway tests |', () {
     test('verify request', () async {
       final gateway = PokemonSpeciesGateway();
-      final gatewayOutput = PokemonSpeciesDomainToGatewayModel(name: 'pikachu');
+      const gatewayOutput = PokemonSpeciesDomainToGatewayModel(name: 'pikachu');
 
-      final request = await gateway.buildRequest(gatewayOutput);
+      final request = gateway.buildRequest(gatewayOutput);
 
       expect(request.resource, equals('pokemon-species/pikachu'));
 
       expect(
-          gatewayOutput, PokemonSpeciesDomainToGatewayModel(name: 'pikachu'));
+        gatewayOutput,
+        const PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
+      );
     });
 
     test('success', () async {
       final gateway = PokemonSpeciesGateway()
         ..feedResponse(
-          (request) async => Either.right(
+          (request) async => const Either.right(
             PokemonSuccessResponse(
               data: {
                 'flavor_text_entries': [
@@ -35,7 +39,7 @@ void main() {
                     'version': {
                       'name': 'yellow',
                       'url': 'https://pokeapi.co/api/v2/version/3/',
-                    }
+                    },
                   },
                   {
                     'flavor_text':
@@ -47,7 +51,7 @@ void main() {
                     'version': {
                       'name': 'gold',
                       'url': 'https://pokeapi.co/api/v2/version/4/',
-                    }
+                    },
                   },
                 ],
               },
@@ -56,7 +60,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
+        const PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isRight, isTrue);
@@ -83,7 +87,7 @@ void main() {
         );
 
       final input = await gateway.buildInput(
-        PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
+        const PokemonSpeciesDomainToGatewayModel(name: 'pikachu'),
       );
 
       expect(input.isLeft, isTrue);

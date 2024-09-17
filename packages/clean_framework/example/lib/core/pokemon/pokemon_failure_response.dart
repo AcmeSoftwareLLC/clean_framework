@@ -8,14 +8,15 @@ enum PokemonFailureType {
 }
 
 class PokemonFailureResponse extends TypedFailureResponse<PokemonFailureType> {
-  PokemonFailureResponse({
-    required PokemonFailureType type,
+  const PokemonFailureResponse({
+    required super.type,
     super.errorData = const {},
     super.message = '',
-  }) : super(type: type);
+  });
 
   @override
   String toString() {
-    return 'PokemonFailureResponse{type: $type, errorData: $errorData, message: $message}';
+    return 'PokemonFailureResponse'
+        '{type: $type, errorData: $errorData, message: $message}';
   }
 }

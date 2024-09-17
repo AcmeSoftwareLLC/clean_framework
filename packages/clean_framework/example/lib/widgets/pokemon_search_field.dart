@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PokemonSearchField extends StatelessWidget
     implements PreferredSizeWidget {
-  const PokemonSearchField({super.key, required this.onChanged});
+  const PokemonSearchField({required this.onChanged, super.key});
 
   final ValueChanged<String> onChanged;
 
@@ -29,17 +29,17 @@ class PokemonSearchField extends StatelessWidget
               hintStyle: textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w100,
               ),
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: const Icon(Icons.search),
               border: InputBorder.none,
               filled: true,
               fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(80);
 }

@@ -23,10 +23,9 @@ class PokeRouter extends AppRouter<Routes> {
             AppRoute.custom(
               route: Routes.profile,
               builder: (_, state) {
-                print(state.location);
                 return ProfileUI(
                   pokemonName: state.params['pokemon_name'] ?? '',
-                  pokemonImageUrl: state.extra as String,
+                  pokemonImageUrl: state.extra! as String,
                 );
               },
               transitionsBuilder: (_, animation, secondaryAnimation, child) {

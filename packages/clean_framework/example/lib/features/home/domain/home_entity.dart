@@ -4,7 +4,7 @@ import 'package:clean_framework_example_rest/features/home/models/pokemon_model.
 enum HomeStatus { initial, loading, loaded, failed }
 
 class HomeEntity extends Entity {
-  HomeEntity({
+  const HomeEntity({
     this.pokemons = const [],
     this.pokemonNameQuery = '',
     this.status = HomeStatus.initial,

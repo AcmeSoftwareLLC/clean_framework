@@ -6,8 +6,8 @@ import 'package:palette_generator/palette_generator.dart';
 
 class AppScope extends InheritedWidget {
   const AppScope({
-    super.key,
     required super.child,
+    super.key,
     this.cacheManager,
     this.paletteGenerator,
   });
@@ -34,5 +34,5 @@ class AppScope extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(AppScope old) => false;
+  bool updateShouldNotify(AppScope oldWidget) => false;
 }
