@@ -57,7 +57,7 @@ class HttpExternalInterface
             maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
           );
 
-          options = updatedCacheOptions.toOptions();
+          options = options.copyWith(extra: updatedCacheOptions.toExtra());
         }
 
         final response = await dio.request<dynamic>(
