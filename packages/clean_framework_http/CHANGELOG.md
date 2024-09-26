@@ -1,4 +1,9 @@
 # Changelog
+## 0.4.6
+**Sep 26, 2024**
+- Bump dependencies to latest versions.
+- Adds `refresh` flag to `HttpRequest`; can be used to refresh cache.
+
 ## 0.4.5
 **Sep 17, 2024**
 - Bump dependencies to latest versions.
