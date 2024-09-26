@@ -45,12 +45,19 @@ class HttpExternalInterface
         );
 
         if (cacheOptions != null) {
-          options = cacheOptions
-              .copyWith(
-                policy: request.cachePolicy?.value,
-                maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
-              )
-              .toOptions();
+          assert(
+            !request.refresh || request.cachePolicy == null,
+            '\n\n If the request is a refresh request, '
+            'the cache policy must be null.',
+          );
+
+          final policy = request.cachePolicy?.value;
+          final updatedCacheOptions = cacheOptions.copyWith(
+            policy: request.refresh ? CachePolicy.refresh : policy,
+            maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
+          );
+
+          options = updatedCacheOptions.toOptions();
         }
 
         final response = await dio.request<dynamic>(
