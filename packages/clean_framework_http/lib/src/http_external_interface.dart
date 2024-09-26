@@ -37,32 +37,37 @@ class HttpExternalInterface
           if (rootHeaders != null) ...rootHeaders,
         };
 
-        final options = Options(
+        var options = Options(
           headers: headers,
+          method: request.method.name,
           responseType: request.responseType?.original,
           contentType: request.contentType,
         );
 
-        final cacheExtra = cacheOptions
-            ?.copyWith(
-              policy: request.cachePolicy?.value,
-              maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
-            )
-            .toExtra();
+        if (cacheOptions != null) {
+          assert(
+            !request.refresh || request.cachePolicy == null,
+            '\n\n If the request is a refresh request, '
+            'the cache policy must be null.',
+          );
+
+          final policy = request.cachePolicy?.value;
+          final updatedCacheOptions = cacheOptions.copyWith(
+            policy: request.refresh ? CachePolicy.refresh : policy,
+            maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
+          );
+
+          options = options.copyWith(extra: updatedCacheOptions.toExtra());
+        }
 
         final response = await dio.request<dynamic>(
           request.path,
           data: request.data,
           queryParameters: request.queryParameters,
-
-          // ignore: invalid_use_of_internal_member
-          options: DioMixin.checkOptions(request.method.name, options).copyWith(
-            extra: cacheExtra,
-          ),
+          options: options,
         );
 
         final responseType = response.requestOptions.responseType;
-
         final data = response.data;
         final statusCode = response.statusCode;
 
