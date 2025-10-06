@@ -12,10 +12,10 @@ dependencies:
   clean_framework_http: ^0.4.4
   clean_framework_router: ^0.5.11
   dio: ^5.7.0
-  dio_cache_interceptor_sembast_storage: ^0.2.0
   flutter:
     sdk: flutter
   flutter_svg_image: ^1.1.0+1
+  http_cache_sembast_store: ^1.0.0
   path_provider: ^2.1.4
   pretty_dio_logger: ^1.4.0
   shared_preferences: ^2.3.2

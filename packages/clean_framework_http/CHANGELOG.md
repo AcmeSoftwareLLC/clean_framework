@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.0
+**Oct 6, 2025**
+- Bumps dependencies to latest version.
+
 ## 0.4.6
 **Sep 26, 2024**
 - Bump dependencies to latest versions.

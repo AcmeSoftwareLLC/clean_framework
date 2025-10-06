@@ -1,6 +1,6 @@
 import 'package:clean_framework_http/clean_framework_http.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor_sembast_storage/dio_cache_interceptor_sembast_storage.dart';
+import 'package:http_cache_sembast_store/http_cache_sembast_store.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';

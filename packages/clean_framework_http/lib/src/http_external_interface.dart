@@ -54,7 +54,7 @@ class HttpExternalInterface
           final policy = request.cachePolicy?.value;
           final updatedCacheOptions = cacheOptions.copyWith(
             policy: request.refresh ? CachePolicy.refresh : policy,
-            maxStale: Nullable(request.maxStale ?? cacheOptions.maxStale),
+            maxStale: request.maxStale ?? cacheOptions.maxStale,
           );
 
           options = options.copyWith(extra: updatedCacheOptions.toExtra());
