@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   clean_framework: ^4.1.1
-  clean_framework_http: ^0.4.4
+  clean_framework_http: ^1.0.0
   clean_framework_router: ^0.5.11
   dio: ^5.7.0
   flutter:
