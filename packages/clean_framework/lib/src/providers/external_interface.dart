@@ -57,7 +57,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           } else {
             await handler(request, e.complete);
           }
-        } on Exception catch (error, stackTrace) {
+        } on Object catch (error, stackTrace) {
           e.completeFailure(_onError(error, stackTrace, request));
         }
       },
