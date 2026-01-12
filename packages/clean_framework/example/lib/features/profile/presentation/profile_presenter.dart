@@ -7,7 +7,8 @@ import 'package:clean_framework_example_rest/features/profile/presentation/profi
 import 'package:clean_framework_example_rest/providers.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePresenter extends Presenter<ProfileViewModel, ProfileDomainToUIModel, ProfileUseCase> {
+class ProfilePresenter extends Presenter<ProfileViewModel,
+    ProfileDomainToUIModel, ProfileUseCase> {
   ProfilePresenter({
     required super.builder,
     required String name,
@@ -26,7 +27,8 @@ class ProfilePresenter extends Presenter<ProfileViewModel, ProfileDomainToUIMode
     ProfileDomainToUIModel domainModel,
   ) {
     return ProfileViewModel(
-      pokemonTypes: domainModel.types.map(PokemonType.new).toList(growable: false),
+      pokemonTypes:
+          domainModel.types.map(PokemonType.new).toList(growable: false),
       description: domainModel.description,
       height: '📏 ${domainModel.height} m',
       weight: '⚖️ ${domainModel.weight} kg',

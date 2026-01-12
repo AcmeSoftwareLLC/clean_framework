@@ -14,7 +14,8 @@ export 'use_case_helpers.dart';
 
 typedef InputCallback<E extends Entity, I extends DomainInput> = E Function(I);
 
-abstract class UseCase<E extends Entity> extends StateNotifier<E> with UseCaseDebounceMixin {
+abstract class UseCase<E extends Entity> extends StateNotifier<E>
+    with UseCaseDebounceMixin {
   UseCase({
     required E entity,
     List<UseCaseTransformer<E>> transformers = const [],
@@ -74,7 +75,8 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> with UseCaseDe
   M getDomainModel<M extends DomainModel>() => transformToDomainModel(entity);
 
   @visibleForTesting
-  M transformToDomainModel<M extends DomainModel>(E entity) => _domainModelFilters<M>(entity);
+  M transformToDomainModel<M extends DomainModel>(E entity) =>
+      _domainModelFilters<M>(entity);
 
   void setInput<I extends DomainInput>(I input) {
     entity = _domainInputFilters<I>(entity, input);
@@ -88,7 +90,8 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> with UseCaseDe
 
   @visibleForTesting
   @protected
-  FutureOr<Either<FailureDomainInput, S>> getInternalInput<S extends SuccessDomainInput>(
+  FutureOr<Either<FailureDomainInput, S>>
+      getInternalInput<S extends SuccessDomainInput>(
     DomainModel domainModel,
   ) {
     return _requestSubscriptions.getDomainInput<S>(domainModel);
@@ -105,11 +108,13 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> with UseCaseDe
 
     entity = input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, domainModel, failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
         return onFailure(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, domainModel, success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
         return onSuccess(success);
       },
     );
@@ -124,11 +129,13 @@ abstract class UseCase<E extends Entity> extends StateNotifier<E> with UseCaseDe
 
     return input.fold(
       (failure) {
-        CleanFrameworkObserver.instance.onFailureInput(this, domainModel, failure);
+        CleanFrameworkObserver.instance
+            .onFailureInput(this, domainModel, failure);
         return FailureUseCaseInput(failure);
       },
       (success) {
-        CleanFrameworkObserver.instance.onSuccessInput(this, domainModel, success);
+        CleanFrameworkObserver.instance
+            .onSuccessInput(this, domainModel, success);
         return SuccessUseCaseInput(success);
       },
     );

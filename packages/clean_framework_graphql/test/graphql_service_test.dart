@@ -367,7 +367,7 @@ class QueryOptionsMock extends Mock implements QueryOptions {}
 
 class MutationOptionsMock extends Mock implements MutationOptions {}
 
-final successResult = QueryResult.internal(
+final QueryResult<Map<String, dynamic>> successResult = QueryResult.internal(
   source: QueryResultSource.network,
   data: {'foo': 'bar'},
   parserFn: (data) => data,

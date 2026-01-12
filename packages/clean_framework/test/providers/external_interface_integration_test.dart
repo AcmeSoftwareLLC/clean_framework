@@ -80,7 +80,8 @@ void main() {
 }
 
 class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
-  TestInterface(GatewayProvider provider) : super([() => provider.getGateway(context)]);
+  TestInterface(GatewayProvider provider)
+      : super([() => provider.getGateway(context)]);
 
   @override
   void handleRequest() {
@@ -119,11 +120,14 @@ class TestInterface extends ExternalInterface<TestRequest, TestResponse> {
   }
 }
 
-class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest, TestResponse, TestSuccessInput> {
-  TestDirectGateway(UseCaseProvider provider) : super(provider: provider, context: context);
+class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest,
+    TestResponse, TestSuccessInput> {
+  TestDirectGateway(UseCaseProvider provider)
+      : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestDirectDomainModel output) => FutureTestRequest(output.id);
+  TestRequest buildRequest(TestDirectDomainModel output) =>
+      FutureTestRequest(output.id);
 
   @override
   FailureDomainInput onFailure(FailureResponse failureResponse) {
@@ -136,8 +140,10 @@ class TestDirectGateway extends Gateway<TestDirectDomainModel, TestRequest, Test
   }
 }
 
-class TestGatewayWithFailure extends Gateway<TestDirectDomainModel, FailedRequest, TestResponse, TestSuccessInput> {
-  TestGatewayWithFailure(UseCaseProvider provider) : super(provider: provider, context: context);
+class TestGatewayWithFailure extends Gateway<TestDirectDomainModel,
+    FailedRequest, TestResponse, TestSuccessInput> {
+  TestGatewayWithFailure(UseCaseProvider provider)
+      : super(provider: provider, context: context);
 
   @override
   FailedRequest buildRequest(TestDirectDomainModel output) {
@@ -155,12 +161,14 @@ class TestGatewayWithFailure extends Gateway<TestDirectDomainModel, FailedReques
   }
 }
 
-class TestWatcherGatewayWithFailure
-    extends WatcherGateway<TestDirectDomainModel, FailedRequest, TestResponse, TestSuccessInput> {
-  TestWatcherGatewayWithFailure(UseCaseProvider provider) : super(provider: provider, context: context);
+class TestWatcherGatewayWithFailure extends WatcherGateway<
+    TestDirectDomainModel, FailedRequest, TestResponse, TestSuccessInput> {
+  TestWatcherGatewayWithFailure(UseCaseProvider provider)
+      : super(provider: provider, context: context);
 
   @override
-  FailedRequest buildRequest(TestDirectDomainModel output) => FailedRequest(output.id);
+  FailedRequest buildRequest(TestDirectDomainModel output) =>
+      FailedRequest(output.id);
 
   @override
   TestSuccessInput onSuccess(TestResponse response) {
@@ -168,12 +176,14 @@ class TestWatcherGatewayWithFailure
   }
 }
 
-class TestYieldGateway
-    extends WatcherGateway<TestSubscriptionDomainModel, TestRequest, TestResponse, TestSuccessInput> {
-  TestYieldGateway(UseCaseProvider provider) : super(provider: provider, context: context);
+class TestYieldGateway extends WatcherGateway<TestSubscriptionDomainModel,
+    TestRequest, TestResponse, TestSuccessInput> {
+  TestYieldGateway(UseCaseProvider provider)
+      : super(provider: provider, context: context);
 
   @override
-  TestRequest buildRequest(TestSubscriptionDomainModel output) => StreamTestRequest(output.id);
+  TestRequest buildRequest(TestSubscriptionDomainModel output) =>
+      StreamTestRequest(output.id);
 
   @override
   TestSuccessInput onSuccess(TestResponse response) {

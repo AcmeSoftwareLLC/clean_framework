@@ -4,18 +4,21 @@ import 'package:clean_framework_example_rest/features/profile/external_interface
 import 'package:clean_framework_example_rest/features/profile/external_interface/pokemon_species_gateway.dart';
 import 'package:clean_framework_example_rest/providers/use_case_providers.dart';
 
-final GatewayProvider<PokemonCollectionGateway> pokemonCollectionGateway = GatewayProvider(
+final GatewayProvider<PokemonCollectionGateway> pokemonCollectionGateway =
+    GatewayProvider(
   PokemonCollectionGateway.new,
   useCases: [homeUseCaseProvider],
 );
 
-final GatewayProvider<PokemonProfileGateway> pokemonProfileGateway = GatewayProvider(
+final GatewayProvider<PokemonProfileGateway> pokemonProfileGateway =
+    GatewayProvider(
   PokemonProfileGateway.new,
   useCases: [],
   families: [profileUseCaseFamily],
 );
 
-final GatewayProvider<PokemonSpeciesGateway> pokemonSpeciesGateway = GatewayProvider(
+final GatewayProvider<PokemonSpeciesGateway> pokemonSpeciesGateway =
+    GatewayProvider(
   PokemonSpeciesGateway.new,
   useCases: [],
   families: [profileUseCaseFamily],

@@ -116,7 +116,8 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       final palette = await AppScope.paletteGeneratorOf(context, image);
 
       if (!mounted) return;
-      _color = widget.backgroundColorBuilder?.call(context, palette) ?? palette.dominantColor?.color;
+      _color = widget.backgroundColorBuilder?.call(context, palette) ??
+          palette.dominantColor?.color;
 
       setState(() {});
     }

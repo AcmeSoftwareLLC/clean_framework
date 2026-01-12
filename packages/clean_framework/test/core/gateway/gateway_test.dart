@@ -137,7 +137,8 @@ void main() {
       await subscription.cancel();
     });
 
-    test('yielding response will update use case created using family', () async {
+    test('yielding response will update use case created using family',
+        () async {
       final container = ProviderContainer();
 
       final gateway = _testGatewayProvider.read(container);
@@ -169,14 +170,17 @@ void main() {
   });
 }
 
-final GatewayProvider<TestWatcherGateway> _testGatewayProvider = GatewayProvider(
+final GatewayProvider<TestWatcherGateway> _testGatewayProvider =
+    GatewayProvider(
   TestWatcherGateway.new,
   useCases: [_testUseCaseProvider],
   families: [_testUseCaseProviderFamily],
 );
 
-final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
-final UseCaseProviderFamily<TestEntity, TestUseCase, String> _testUseCaseProviderFamily =
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
+    UseCaseProvider(TestUseCase.new);
+final UseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseProviderFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (_) => TestUseCase(),
 );
@@ -207,7 +211,8 @@ class TestUseCase extends UseCase<TestEntity> {
         );
 }
 
-class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
+    TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);
@@ -224,8 +229,8 @@ class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuc
   }
 }
 
-class TestWatcherGateway
-    extends WatcherGateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
+class TestWatcherGateway extends WatcherGateway<TestDomainToGatewayModel,
+    TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(output.name);

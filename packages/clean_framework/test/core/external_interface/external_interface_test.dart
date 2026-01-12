@@ -107,9 +107,11 @@ class _Dependency {
   final String value;
 }
 
-final DependencyProvider<_Dependency> _testDependencyProvider = DependencyProvider((_) => _Dependency('test'));
+final DependencyProvider<_Dependency> _testDependencyProvider =
+    DependencyProvider((_) => _Dependency('test'));
 
-final ExternalInterfaceProvider<TestExternalInterface> _testExternalInterfaceProvider = ExternalInterfaceProvider(
+final ExternalInterfaceProvider<TestExternalInterface>
+    _testExternalInterfaceProvider = ExternalInterfaceProvider(
   () => TestExternalInterface(delegate: TextExternalInterfaceDelegate()),
   gateways: [
     _testGatewayProvider,
@@ -117,15 +119,18 @@ final ExternalInterfaceProvider<TestExternalInterface> _testExternalInterfacePro
   ],
 );
 
-final GatewayProvider<TestGateway> _testGatewayProvider = GatewayProvider(TestGateway.new);
+final GatewayProvider<TestGateway> _testGatewayProvider =
+    GatewayProvider(TestGateway.new);
 
-final GatewayProvider<TestWatcherGateway> _testWatcherGatewayProvider = GatewayProvider(
+final GatewayProvider<TestWatcherGateway> _testWatcherGatewayProvider =
+    GatewayProvider(
   TestWatcherGateway.new,
 );
 
 class NewTestExternalInterface extends TestExternalInterface {}
 
-class TestExternalInterface extends ExternalInterface<TestRequest, TestSuccessResponse> {
+class TestExternalInterface
+    extends ExternalInterface<TestRequest, TestSuccessResponse> {
   TestExternalInterface({super.delegate});
 
   @override
@@ -169,7 +174,8 @@ class TestRequest extends Request {
   final bool success;
 }
 
-class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
+    TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(success: output.success);
@@ -186,8 +192,8 @@ class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuc
   }
 }
 
-class TestWatcherGateway
-    extends WatcherGateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
+class TestWatcherGateway extends WatcherGateway<TestDomainToGatewayModel,
+    TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(success: output.success);

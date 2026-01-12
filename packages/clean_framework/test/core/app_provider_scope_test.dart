@@ -52,7 +52,8 @@ void main() {
   });
 }
 
-final ExternalInterfaceProvider<TestExternalInterface> _testExternalInterfaceProvider = ExternalInterfaceProvider(
+final ExternalInterfaceProvider<TestExternalInterface>
+    _testExternalInterfaceProvider = ExternalInterfaceProvider(
   TestExternalInterface.new,
   gateways: [_testGatewayProvider],
 );
@@ -62,9 +63,11 @@ final GatewayProvider<TestGateway> _testGatewayProvider = GatewayProvider(
   useCases: [_testUseCaseProvider],
 );
 
-final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
+    UseCaseProvider(TestUseCase.new);
 
-class TestExternalInterface extends ExternalInterface<TestRequest, TestSuccessResponse> {
+class TestExternalInterface
+    extends ExternalInterface<TestRequest, TestSuccessResponse> {
   @override
   void handleRequest() {
     on<TestRequest>(
@@ -80,7 +83,8 @@ class TestExternalInterface extends ExternalInterface<TestRequest, TestSuccessRe
   }
 }
 
-class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
+    TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(ping: output.ping);

@@ -16,7 +16,8 @@ void main() {
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) async {
         final profileUseCase = useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
                 PokemonSpeciesSuccessDomainInput(
@@ -32,7 +33,8 @@ void main() {
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
             (output) {
               return Either.right(
                 PokemonProfileSuccessInput(
@@ -86,14 +88,16 @@ void main() {
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) async {
         final profileUseCase = useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
             (output) {
               return const Either.left(
                 FailureDomainInput(message: 'Something went wrong'),
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
             (output) {
               return Either.right(
                 PokemonProfileSuccessInput(
@@ -140,7 +144,8 @@ void main() {
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) async {
         final profileUseCase = useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel,
+              PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
                 PokemonSpeciesSuccessDomainInput(
@@ -156,7 +161,8 @@ void main() {
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel,
+              PokemonProfileSuccessInput>(
             (output) {
               return const Either.left(
                 FailureDomainInput(message: 'Something went wrong'),

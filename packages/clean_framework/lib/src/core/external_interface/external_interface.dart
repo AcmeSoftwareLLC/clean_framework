@@ -64,7 +64,8 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     );
   }
 
-  final _RequestController<R, S> _requestController = StreamController.broadcast();
+  final _RequestController<R, S> _requestController =
+      StreamController.broadcast();
 
   @visibleForTesting
   Future<Either<FailureResponse, S>> request(R request) {
@@ -132,11 +133,13 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   }
 }
 
-typedef _RequestController<R extends Request, S extends SuccessResponse> = StreamController<RequestCompleter<R, S>>;
+typedef _RequestController<R extends Request, S extends SuccessResponse>
+    = StreamController<RequestCompleter<R, S>>;
 
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
-typedef RequestHandler<E extends Request, S extends SuccessResponse> = FutureOr<void> Function(
+typedef RequestHandler<E extends Request, S extends SuccessResponse>
+    = FutureOr<void> Function(
   E request,
   ResponseSender<S> send,
 );
@@ -158,7 +161,8 @@ class RequestCompleter<R extends Request, S extends SuccessResponse> {
   }
 }
 
-class _StreamRequestCompleter<R extends Request, S extends SuccessResponse> extends RequestCompleter<R, S> {
+class _StreamRequestCompleter<R extends Request, S extends SuccessResponse>
+    extends RequestCompleter<R, S> {
   _StreamRequestCompleter(super.request, this.emitSuccess);
 
   final void Function(S) emitSuccess;

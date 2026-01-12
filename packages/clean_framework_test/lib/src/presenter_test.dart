@@ -12,7 +12,8 @@ import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
-void presenterTest<V extends ViewModel, M extends DomainModel, U extends UseCase>(
+void presenterTest<V extends ViewModel, M extends DomainModel,
+    U extends UseCase>(
   String description, {
   required Presenter Function(WidgetBuilder builder) create,
   List<Override> overrides = const [],
@@ -75,7 +76,8 @@ void presenterTest<V extends ViewModel, M extends DomainModel, U extends UseCase
 }
 
 @isTest
-void presenterCallbackTest<V extends ViewModel, M extends DomainModel, U extends UseCase>(
+void presenterCallbackTest<V extends ViewModel, M extends DomainModel,
+    U extends UseCase>(
   String description, {
   required U useCase,
   required Presenter Function(WidgetBuilder builder) create,
@@ -107,7 +109,8 @@ class _TestBuilder<U extends UseCase> extends ConsumerStatefulWidget {
   ConsumerState<_TestBuilder<U>> createState() => _TestBuilderState<U>();
 }
 
-class _TestBuilderState<U extends UseCase> extends ConsumerState<_TestBuilder<U>> {
+class _TestBuilderState<U extends UseCase>
+    extends ConsumerState<_TestBuilder<U>> {
   @override
   void initState() {
     super.initState();

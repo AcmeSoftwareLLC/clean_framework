@@ -17,7 +17,8 @@ final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
   },
 );
 
-final AutoDisposeUseCaseProvider<TestEntity, TestUseCase> _testUseCaseProvider2 =
+final AutoDisposeUseCaseProvider<TestEntity, TestUseCase>
+    _testUseCaseProvider2 =
     UseCaseProvider.autoDispose<TestEntity, TestUseCase>(
   TestUseCase.new,
   (bridge) {
@@ -37,13 +38,15 @@ final _testUseCaseProvider3 = UseCaseProvider<TestEntity, TestUseCase>(
   TestUseCase.new,
 );
 
-final AutoDisposeUseCaseProviderFamily<TestEntity, TestUseCase, String> _testUseCaseAutoDisposeFamily =
+final AutoDisposeUseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseAutoDisposeFamily =
     UseCaseProvider.autoDispose.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
   (_) {},
 );
 
-final UseCaseProviderFamily<TestEntity, TestUseCase, String> _testUseCaseFamily =
+final UseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
   (_) {},
@@ -187,7 +190,9 @@ void main() {
 
               return ElevatedButton(
                 onPressed: () {
-                  _testUseCaseProvider.getUseCaseFromContext(context).set(foo: 'bar');
+                  _testUseCaseProvider
+                      .getUseCaseFromContext(context)
+                      .set(foo: 'bar');
                 },
                 child: const Text('CLICK'),
               );
@@ -239,8 +244,10 @@ void main() {
     test('use case creation', () {
       final container = ProviderContainer();
 
-      final pikachuUseCase = _testUseCaseAutoDisposeFamily('Pikachu').read(container);
-      final bulbasaurUseCase = _testUseCaseAutoDisposeFamily('Bulbasaur').read(container);
+      final pikachuUseCase =
+          _testUseCaseAutoDisposeFamily('Pikachu').read(container);
+      final bulbasaurUseCase =
+          _testUseCaseAutoDisposeFamily('Bulbasaur').read(container);
 
       expect(pikachuUseCase, isA<TestUseCase>());
       expect(bulbasaurUseCase, isA<TestUseCase>());

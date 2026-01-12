@@ -10,7 +10,8 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 typedef HttpCancelToken = CancelToken;
 
-class HttpExternalInterface extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
+class HttpExternalInterface
+    extends ExternalInterface<HttpRequest, HttpSuccessResponse> {
   HttpExternalInterface({
     HttpExternalInterfaceDelegate? delegate,
   }) : super(delegate: delegate ?? _DefaultHttpExternalInterfaceDelegate());
@@ -173,7 +174,8 @@ enum HttpResponseType {
   final ResponseType original;
 }
 
-class _DefaultHttpExternalInterfaceDelegate extends HttpExternalInterfaceDelegate {
+class _DefaultHttpExternalInterfaceDelegate
+    extends HttpExternalInterfaceDelegate {
   @override
   Map<String, String>? buildHeaders() => null;
 

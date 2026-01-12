@@ -57,7 +57,8 @@ class TestCacheManager extends CacheManager {
 }
 
 class TestFileSystem extends FileSystem {
-  final Future<Directory> directoryFuture = MemoryFileSystem().systemTempDirectory.createTemp('test');
+  final Future<Directory> directoryFuture =
+      MemoryFileSystem().systemTempDirectory.createTemp('test');
   @override
   Future<File> createFile(String name) async {
     final dir = await directoryFuture;

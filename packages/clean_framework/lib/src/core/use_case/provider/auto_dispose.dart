@@ -1,6 +1,7 @@
 part of 'use_case_provider.dart';
 
-class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>> extends UseCaseProviderBase<E, U> {
+class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
+    extends UseCaseProviderBase<E, U> {
   AutoDisposeUseCaseProvider(
     U Function() create, [
     UseCaseProviderConnector<E, U>? connector,

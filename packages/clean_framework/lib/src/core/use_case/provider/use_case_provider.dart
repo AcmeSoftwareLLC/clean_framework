@@ -12,7 +12,8 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<US extends Entity, U extends UseCase<US>> extends UseCaseProviderBase<US, U> {
+class UseCaseProvider<US extends Entity, U extends UseCase<US>>
+    extends UseCaseProviderBase<US, U> {
   UseCaseProvider(
     U Function() create, [
     UseCaseProviderConnector<US, U>? connector,

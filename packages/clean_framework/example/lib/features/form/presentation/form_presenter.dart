@@ -7,7 +7,8 @@ import 'package:clean_framework_example_rest/features/form/presentation/form_vie
 import 'package:clean_framework_example_rest/providers.dart';
 import 'package:flutter/material.dart';
 
-class FormPresenter extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {
+class FormPresenter
+    extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {
   FormPresenter({
     required super.builder,
     super.key,

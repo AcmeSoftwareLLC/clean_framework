@@ -48,7 +48,9 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
           types: profile.types,
           height: profile.height,
           weight: profile.weight,
-          stats: profile.stats.map((s) => ProfileStatEntity(name: s.name, point: s.baseStat)).toList(growable: false),
+          stats: profile.stats
+              .map((s) => ProfileStatEntity(name: s.name, point: s.baseStat))
+              .toList(growable: false),
         );
       },
       onFailure: (failure) => entity,
@@ -56,7 +58,8 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   }
 }
 
-class ProfileDomainToUIModelTransformer extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
+class ProfileDomainToUIModelTransformer
+    extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
   @override
   ProfileDomainToUIModel transform(ProfileEntity entity) {
     return ProfileDomainToUIModel(
@@ -76,6 +79,10 @@ class ProfileDomainToUIModelTransformer extends DomainModelTransformer<ProfileEn
   }
 
   String _kebabToTitleCase(String input) {
-    return input.replaceAll('special', 'sp.').split('-').map((s) => s[0].toUpperCase() + s.substring(1)).join(' ');
+    return input
+        .replaceAll('special', 'sp.')
+        .split('-')
+        .map((s) => s[0].toUpperCase() + s.substring(1))
+        .join(' ');
   }
 }

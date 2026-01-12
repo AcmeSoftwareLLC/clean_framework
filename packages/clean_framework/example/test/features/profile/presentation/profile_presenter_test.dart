@@ -16,7 +16,8 @@ void main() {
         name: 'pikachu',
       ),
       overrides: [
-        profileUseCaseFamily('PIKACHU').overrideWith(ProfileUseCaseFake('PIKACHU')),
+        profileUseCaseFamily('PIKACHU')
+            .overrideWith(ProfileUseCaseFake('PIKACHU')),
       ],
       setup: (useCase) {
         useCase.debugEntityUpdate(
@@ -38,7 +39,8 @@ void main() {
         );
       },
       expect: () => [
-        isA<ProfileViewModel>().having((vm) => vm.description, 'description', ''),
+        isA<ProfileViewModel>()
+            .having((vm) => vm.description, 'description', ''),
         isA<ProfileViewModel>().having(
           (vm) => vm.description,
           'description',

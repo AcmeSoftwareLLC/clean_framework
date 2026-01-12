@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
-class ExternalInterfaceProvider<E extends ExternalInterface> extends CleanFrameworkProvider<Provider<E>> {
+class ExternalInterfaceProvider<E extends ExternalInterface>
+    extends CleanFrameworkProvider<Provider<E>> {
   ExternalInterfaceProvider(
     E Function() create, {
     List<GatewayProvider> gateways = const [],

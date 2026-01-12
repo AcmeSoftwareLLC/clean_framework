@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
-class GatewayProvider<G extends Gateway> extends CleanFrameworkProvider<Provider<G>> {
+class GatewayProvider<G extends Gateway>
+    extends CleanFrameworkProvider<Provider<G>> {
   GatewayProvider(
     G Function() create, {
     List<UseCaseProviderBase> useCases = const [],

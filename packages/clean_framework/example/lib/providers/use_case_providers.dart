@@ -24,7 +24,8 @@ final AutoDisposeUseCaseProvider<HomeEntity, HomeUseCase> homeUseCaseProvider =
   },
 );
 
-final UseCaseProviderFamily<ProfileEntity, ProfileUseCase, String> profileUseCaseFamily =
+final UseCaseProviderFamily<ProfileEntity, ProfileUseCase, String>
+    profileUseCaseFamily =
     UseCaseProvider.family<ProfileEntity, ProfileUseCase, String>(
   ProfileUseCase.new,
 );

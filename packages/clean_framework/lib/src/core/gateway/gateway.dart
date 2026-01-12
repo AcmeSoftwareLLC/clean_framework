@@ -9,8 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<M extends DomainModel, R extends Request, P extends SuccessResponse,
-    S extends SuccessDomainInput> {
+abstract class Gateway<M extends DomainModel, R extends Request,
+    P extends SuccessResponse, S extends SuccessDomainInput> {
   void attach(
     Ref ref, {
     required List<UseCaseProviderBase> providers,
@@ -38,7 +38,6 @@ abstract class Gateway<M extends DomainModel, R extends Request, P extends Succe
 
   @visibleForTesting
   @nonVirtual
-  // ignore: use_setters_to_change_properties
   void feedResponse(Responder<R, P> feeder, {Type? source}) {
     assert(
       _source == null,
@@ -71,7 +70,10 @@ abstract class Gateway<M extends DomainModel, R extends Request, P extends Succe
   }
 }
 
-abstract class WatcherGateway<M extends DomainModel, R extends Request, P extends SuccessResponse,
+abstract class WatcherGateway<
+    M extends DomainModel,
+    R extends Request,
+    P extends SuccessResponse,
     S extends SuccessDomainInput> extends Gateway<M, R, P, S> {
   @override
   FailureDomainInput onFailure(FailureResponse failureResponse) {
@@ -86,7 +88,8 @@ abstract class WatcherGateway<M extends DomainModel, R extends Request, P extend
   }
 }
 
-typedef Responder<R extends Request, P extends SuccessResponse> = FutureOr<Either<FailureResponse, P>> Function(
+typedef Responder<R extends Request, P extends SuccessResponse>
+    = FutureOr<Either<FailureResponse, P>> Function(
   R request,
 );
 

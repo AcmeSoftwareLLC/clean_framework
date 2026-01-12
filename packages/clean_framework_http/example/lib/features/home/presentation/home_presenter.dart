@@ -7,7 +7,8 @@ import 'package:clean_framework_http_example/features/home/presentation/home_vie
 import 'package:clean_framework_http_example/providers.dart';
 import 'package:flutter/material.dart';
 
-class HomePresenter extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
+class HomePresenter
+    extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
   HomePresenter({
     required super.builder,
     super.key,

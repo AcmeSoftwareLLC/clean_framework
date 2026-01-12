@@ -73,7 +73,8 @@ class _SpotlightState extends State<Spotlight> {
                   gradient: RadialGradient(
                     center: const FractionalOffset(0.5, 0.3),
                     colors: [
-                      for (var a = 0; a < 200; a++) Theme.of(context).colorScheme.surface.withAlpha(a),
+                      for (var a = 0; a < 200; a++)
+                        Theme.of(context).colorScheme.surface.withAlpha(a),
                     ],
                     stops: [
                       for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop,
