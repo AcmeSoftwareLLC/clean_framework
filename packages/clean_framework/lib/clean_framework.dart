@@ -1,5 +1,5 @@
 /// Clean Framework
-library clean_framework;
+library;
 
 export 'package:clean_framework/src/app_providers_container.dart';
 export 'package:clean_framework/src/core/core.dart';
@@ -12,6 +12,5 @@ export 'package:clean_framework/src/utilities/logger.dart';
 export 'package:clean_framework/src/utilities/network_logger.dart';
 export 'package:clean_framework/src/widgets/widgets.dart';
 export 'package:equatable/equatable.dart';
-export 'package:flutter_riverpod/flutter_riverpod.dart'
-    show Consumer, Provider, ProviderContainer;
+export 'package:flutter_riverpod/flutter_riverpod.dart' show Consumer, Provider, ProviderContainer;
 export 'package:uniform/uniform.dart';

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/form/domain/form_domain_models.dart';
 import 'package:clean_framework_example_rest/features/form/domain/form_use_case.dart';
@@ -5,8 +7,7 @@ import 'package:clean_framework_example_rest/features/form/presentation/form_vie
 import 'package:clean_framework_example_rest/providers.dart';
 import 'package:flutter/material.dart';
 
-class FormPresenter
-    extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {
+class FormPresenter extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {
   FormPresenter({
     required super.builder,
     super.key,
@@ -14,7 +15,7 @@ class FormPresenter
 
   @override
   void onLayoutReady(BuildContext context, FormUseCase useCase) {
-    useCase.fetchAndPrefillData();
+    unawaited(useCase.fetchAndPrefillData());
   }
 
   @override
@@ -37,34 +38,36 @@ class FormPresenter
     FormDomainToUIModel domainModel,
   ) {
     if (domainModel.isLoggedIn) {
-      showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          final meta = domainModel.userMeta;
+      unawaited(
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            final meta = domainModel.userMeta;
 
-          return AlertDialog(
-            title: const Text('Login Success'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Email: ${meta.email}'),
-                Text('Password: ${meta.password}'),
-                Text('Gender: ${meta.gender}'),
-              ],
-            ),
-            actions: [
-              FilledButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                child: const Text('Done'),
+            return AlertDialog(
+              title: const Text('Login Success'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Email: ${meta.email}'),
+                  Text('Password: ${meta.password}'),
+                  Text('Gender: ${meta.gender}'),
+                ],
               ),
-            ],
-          );
-        },
+              actions: [
+                FilledButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Done'),
+                ),
+              ],
+            );
+          },
+        ),
       );
     }
   }

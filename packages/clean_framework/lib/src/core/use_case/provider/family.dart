@@ -17,6 +17,7 @@ class UseCaseProviderFamily<E extends Entity, U extends UseCase<E>, A extends Ob
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
+    //ignore: invalid_use_of_internal_member
     _internal = StateNotifierProviderFamily(
       (ref, arg) {
         final useCase = create(arg);

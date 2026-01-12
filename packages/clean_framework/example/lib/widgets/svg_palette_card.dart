@@ -102,7 +102,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       if (mounted) setState(() {});
 
       unawaited(_generateColor());
-    } catch (e) {
+    } on Exception catch (e) {
       log(e.toString(), name: 'SvgPaletteCard');
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
@@ -6,8 +8,7 @@ import 'package:clean_framework_example_rest/features/home/presentation/home_vie
 import 'package:clean_framework_example_rest/providers.dart';
 import 'package:flutter/material.dart';
 
-class HomePresenter
-    extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
+class HomePresenter extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {
   HomePresenter({
     required super.builder,
     super.key,
@@ -15,7 +16,7 @@ class HomePresenter
 
   @override
   void onLayoutReady(BuildContext context, HomeUseCase useCase) {
-    useCase.fetchPokemons();
+    unawaited(useCase.fetchPokemons());
   }
 
   @override
@@ -25,8 +26,7 @@ class HomePresenter
   ) {
     return HomeViewModel(
       pokemons: domainModel.pokemons,
-      onSearch: (query) =>
-          useCase.setInput(PokemonSearchDomainInput(name: query)),
+      onSearch: (query) => useCase.setInput(PokemonSearchDomainInput(name: query)),
       onRefresh: () => useCase.fetchPokemons(isRefresh: true),
       onRetry: useCase.fetchPokemons,
       isLoading: domainModel.status == HomeStatus.loading,

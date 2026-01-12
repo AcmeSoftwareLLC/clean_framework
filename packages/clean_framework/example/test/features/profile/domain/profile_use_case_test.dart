@@ -15,7 +15,7 @@ void main() {
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
       execute: (useCase) async {
-        useCase
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
@@ -53,8 +53,8 @@ void main() {
                 ),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(
@@ -85,7 +85,7 @@ void main() {
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) async {
-        useCase
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return const Either.left(
@@ -114,8 +114,8 @@ void main() {
                 ),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(
@@ -139,7 +139,7 @@ void main() {
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
       execute: (useCase) async {
-        useCase
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
@@ -162,8 +162,8 @@ void main() {
                 FailureDomainInput(message: 'Something went wrong'),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(

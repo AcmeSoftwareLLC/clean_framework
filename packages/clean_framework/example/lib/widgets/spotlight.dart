@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
@@ -36,7 +37,7 @@ class _SpotlightState extends State<Spotlight> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _loadFileFromCache();
+      unawaited(_loadFileFromCache());
     });
   }
 
@@ -72,8 +73,7 @@ class _SpotlightState extends State<Spotlight> {
                   gradient: RadialGradient(
                     center: const FractionalOffset(0.5, 0.3),
                     colors: [
-                      for (var a = 0; a < 200; a++)
-                        Theme.of(context).colorScheme.surface.withAlpha(a),
+                      for (var a = 0; a < 200; a++) Theme.of(context).colorScheme.surface.withAlpha(a),
                     ],
                     stops: [
                       for (var stop = 0.0; stop < 1.0; stop += 1 / 200) stop,
