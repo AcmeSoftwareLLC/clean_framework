@@ -229,7 +229,7 @@ void main() {
         ],
       );
 
-      final useCase = _testUseCaseProvider2().notifier.read(container);
+      final useCase = container.read(_testUseCaseProvider2().notifier);
 
       expect(useCase, isA<NewTestUseCase>());
     });
