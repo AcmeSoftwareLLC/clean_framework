@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
 part 'auto_dispose.dart';
@@ -10,8 +12,7 @@ part 'base.dart';
 part 'bridge.dart';
 part 'family.dart';
 
-class UseCaseProvider<US extends Entity, U extends UseCase<US>>
-    extends UseCaseProviderBase<US, U> {
+class UseCaseProvider<US extends Entity, U extends UseCase<US>> extends UseCaseProviderBase<US, U> {
   UseCaseProvider(
     U Function() create, [
     UseCaseProviderConnector<US, U>? connector,

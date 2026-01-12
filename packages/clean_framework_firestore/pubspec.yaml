@@ -1,6 +1,6 @@
 name: clean_framework_firestore
 description: A wrapper around cloud_firestore to make it easier to use with clean_framework.
-version: 0.5.3
+version: 0.5.4
 homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_firestore
 
@@ -9,17 +9,17 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  clean_framework: ^4.0.0
+  clean_framework: ^5.0.0
 
-  cloud_firestore: ^4.8.4
+  cloud_firestore: ^6.1.1
   equatable: ^2.0.5
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  clean_framework_test: ^0.5.3
+  clean_framework_test: ^0.5.4
 
   flutter_test:
     sdk: flutter
   mocktail: ^1.0.0
-  very_good_analysis: ^5.0.0+1
+  very_good_analysis: ^10.0.0

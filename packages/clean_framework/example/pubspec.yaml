@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   animations: ^2.0.11
-  clean_framework: ^4.1.1
-  clean_framework_router: ^0.5.11
+  clean_framework: ^5.0.0
+  clean_framework_router: ^0.5.13
   dio: ^5.7.0
   flutter:
     sdk: flutter
@@ -19,12 +19,12 @@ dependencies:
   uniform: ^2.0.6
 
 dev_dependencies:
-  clean_framework_test: ^0.5.3
+  clean_framework_test: ^0.5.4
   file: ^7.0.0
   flutter_test:
     sdk: flutter
   http: ^1.2.2
-  icons_launcher: ^2.1.7
+  icons_launcher: ^3.0.3
   mocktail: ^1.0.4
 
 flutter:

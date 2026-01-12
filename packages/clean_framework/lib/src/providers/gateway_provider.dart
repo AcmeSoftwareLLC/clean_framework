@@ -1,6 +1,7 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 
 class GatewayProvider<G extends Gateway> implements OverridableProvider<G> {
   GatewayProvider(this.create) : _provider = Provider<G>(create);

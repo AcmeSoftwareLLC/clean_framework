@@ -16,13 +16,13 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 
   final String name;
 
-  void fetchPokemonProfile() {
+  Future<void> fetchPokemonProfile() async {
     final pokeName = name.toLowerCase();
 
     // If the use case is not auto disposed then we have last fetched data.
     if (entity.description.isNotEmpty) return;
 
-    request<PokemonSpeciesSuccessDomainInput>(
+    await request<PokemonSpeciesSuccessDomainInput>(
       PokemonSpeciesDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final descriptions = success.species.descriptions.where(
@@ -38,7 +38,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
       onFailure: (failure) => entity,
     );
 
-    request<PokemonProfileSuccessInput>(
+    await request<PokemonProfileSuccessInput>(
       PokemonProfileDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;
@@ -48,9 +48,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
           types: profile.types,
           height: profile.height,
           weight: profile.weight,
-          stats: profile.stats
-              .map((s) => ProfileStatEntity(name: s.name, point: s.baseStat))
-              .toList(growable: false),
+          stats: profile.stats.map((s) => ProfileStatEntity(name: s.name, point: s.baseStat)).toList(growable: false),
         );
       },
       onFailure: (failure) => entity,
@@ -58,8 +56,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
   }
 }
 
-class ProfileDomainToUIModelTransformer
-    extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
+class ProfileDomainToUIModelTransformer extends DomainModelTransformer<ProfileEntity, ProfileDomainToUIModel> {
   @override
   ProfileDomainToUIModel transform(ProfileEntity entity) {
     return ProfileDomainToUIModel(
@@ -79,10 +76,6 @@ class ProfileDomainToUIModelTransformer
   }
 
   String _kebabToTitleCase(String input) {
-    return input
-        .replaceAll('special', 'sp.')
-        .split('-')
-        .map((s) => s[0].toUpperCase() + s.substring(1))
-        .join(' ');
+    return input.replaceAll('special', 'sp.').split('-').map((s) => s[0].toUpperCase() + s.substring(1)).join(' ');
   }
 }

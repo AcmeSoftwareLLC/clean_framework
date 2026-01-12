@@ -14,10 +14,9 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
-      execute: (useCase) {
+      execute: (useCase) async {
         useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel,
-              PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
                 PokemonSpeciesSuccessDomainInput(
@@ -33,8 +32,7 @@ void main() {
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel,
-              PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
             (output) {
               return Either.right(
                 PokemonProfileSuccessInput(
@@ -86,18 +84,16 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
-      execute: (useCase) {
+      execute: (useCase) async {
         useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel,
-              PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return const Either.left(
                 FailureDomainInput(message: 'Something went wrong'),
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel,
-              PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
             (output) {
               return Either.right(
                 PokemonProfileSuccessInput(
@@ -142,10 +138,9 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
-      execute: (useCase) {
+      execute: (useCase) async {
         useCase
-          ..subscribe<PokemonSpeciesDomainToGatewayModel,
-              PokemonSpeciesSuccessDomainInput>(
+          ..subscribe<PokemonSpeciesDomainToGatewayModel, PokemonSpeciesSuccessDomainInput>(
             (output) {
               return Either.right(
                 PokemonSpeciesSuccessDomainInput(
@@ -161,8 +156,7 @@ void main() {
               );
             },
           )
-          ..subscribe<PokemonProfileDomainToGatewayModel,
-              PokemonProfileSuccessInput>(
+          ..subscribe<PokemonProfileDomainToGatewayModel, PokemonProfileSuccessInput>(
             (output) {
               return const Either.left(
                 FailureDomainInput(message: 'Something went wrong'),

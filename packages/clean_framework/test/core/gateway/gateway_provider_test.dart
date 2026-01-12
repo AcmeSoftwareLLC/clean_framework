@@ -19,7 +19,7 @@ void main() {
   });
 }
 
-final _gatewayProvider = GatewayProvider(TestGateway.new);
+final GatewayProvider<TestGateway> _gatewayProvider = GatewayProvider(TestGateway.new);
 
 class NewTestGateway extends TestGateway {}
 

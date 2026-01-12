@@ -6,7 +6,7 @@ import 'package:clean_framework_example_rest/features/home/domain/home_use_case.
 import 'package:clean_framework_example_rest/features/profile/domain/profile_entity.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_use_case.dart';
 
-final homeUseCaseProvider =
+final AutoDisposeUseCaseProvider<HomeEntity, HomeUseCase> homeUseCaseProvider =
     UseCaseProvider.autoDispose<HomeEntity, HomeUseCase>(
   HomeUseCase.new,
   (bridge) {
@@ -24,7 +24,7 @@ final homeUseCaseProvider =
   },
 );
 
-final profileUseCaseFamily =
+final UseCaseProviderFamily<ProfileEntity, ProfileUseCase, String> profileUseCaseFamily =
     UseCaseProvider.family<ProfileEntity, ProfileUseCase, String>(
   ProfileUseCase.new,
 );

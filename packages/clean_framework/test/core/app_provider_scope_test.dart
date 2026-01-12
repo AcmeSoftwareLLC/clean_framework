@@ -45,7 +45,7 @@ void main() {
 
         try {
           await useCase.ping('Hello');
-        } catch (e, s) {
+        } on Exception catch (e, s) {
           FlutterError.demangleStackTrace(s);
           expect(e, isA<StateError>());
         }
@@ -54,20 +54,19 @@ void main() {
   });
 }
 
-final _testExternalInterfaceProvider = ExternalInterfaceProvider(
+final ExternalInterfaceProvider<TestExternalInterface> _testExternalInterfaceProvider = ExternalInterfaceProvider(
   TestExternalInterface.new,
   gateways: [_testGatewayProvider],
 );
 
-final _testGatewayProvider = GatewayProvider(
+final GatewayProvider<TestGateway> _testGatewayProvider = GatewayProvider(
   TestGateway.new,
   useCases: [_testUseCaseProvider],
 );
 
-final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
 
-class TestExternalInterface
-    extends ExternalInterface<TestRequest, TestSuccessResponse> {
+class TestExternalInterface extends ExternalInterface<TestRequest, TestSuccessResponse> {
   @override
   void handleRequest() {
     on<TestRequest>(
@@ -83,8 +82,7 @@ class TestExternalInterface
   }
 }
 
-class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
-    TestSuccessResponse, TestSuccessInput> {
+class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest, TestSuccessResponse, TestSuccessInput> {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(ping: output.ping);

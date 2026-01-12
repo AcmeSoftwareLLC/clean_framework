@@ -5,3 +5,4 @@ linter:
     one_member_abstracts: false
     only_throw_errors: false
     public_member_api_docs: false
+    lines_longer_than_80_chars: false

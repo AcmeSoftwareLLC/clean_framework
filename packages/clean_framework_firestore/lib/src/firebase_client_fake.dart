@@ -77,6 +77,6 @@ class FirebaseClientFake implements FirebaseClient {
   void clearQuery() {}
 
   void dispose() {
-    _controller.close();
+    unawaited(_controller.close());
   }
 }

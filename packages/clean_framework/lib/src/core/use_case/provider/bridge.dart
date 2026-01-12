@@ -1,13 +1,14 @@
 part of 'use_case_provider.dart';
 
-typedef UseCaseProviderConnector<E extends Entity, U extends UseCase<E>> = void
-    Function(UseCaseProviderBridge<E, U> bridge);
+typedef UseCaseProviderConnector<E extends Entity, U extends UseCase<E>> = void Function(
+  UseCaseProviderBridge<E, U> bridge,
+);
 
 class UseCaseProviderBridge<BE extends Entity, BU extends UseCase<BE>> {
-  UseCaseProviderBridge._(this.useCase, Ref<BE> ref) : _ref = ref;
+  UseCaseProviderBridge._(this.useCase, Ref ref) : _ref = ref;
 
   final BU useCase;
-  final Ref<BE> _ref;
+  final Ref _ref;
 
   void connect<E extends Entity, U extends UseCase<E>, T>(
     UseCaseProvider<E, U> provider,

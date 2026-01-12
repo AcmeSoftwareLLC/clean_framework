@@ -19,8 +19,7 @@ class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
 
   // ignore: library_private_types_in_public_api
   static _InheritedFeatureScope of(BuildContext context) {
-    final result =
-        context.dependOnInheritedWidgetOfExactType<_InheritedFeatureScope>();
+    final result = context.dependOnInheritedWidgetOfExactType<_InheritedFeatureScope>();
     assert(result != null, 'No _InheritedFeatureScope found in context');
     return result!;
   }
@@ -29,8 +28,7 @@ class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
   State<FeatureScope<T>> createState() => _FeatureScopeState<T>();
 }
 
-class _FeatureScopeState<T extends FeatureProvider>
-    extends State<FeatureScope<T>> {
+class _FeatureScopeState<T extends FeatureProvider> extends State<FeatureScope<T>> {
   late final FeatureClient _client;
 
   @override
@@ -41,7 +39,7 @@ class _FeatureScopeState<T extends FeatureProvider>
     OpenFeature.instance.provider = featureProvider;
     _client = OpenFeature.instance.getClient();
 
-    _load(featureProvider);
+    unawaited(_load(featureProvider));
   }
 
   Future<void> _load(T featureProvider) async {

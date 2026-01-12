@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final provider = UseCaseProvider((_) => TestUseCase());
+final UseCaseProvider<Entity, TestUseCase> provider = UseCaseProvider((_) => TestUseCase());
 void main() {
   testWidgets('Presenter initial load', (tester) async {
     final presenter = TestPresenter(
@@ -12,8 +14,7 @@ void main() {
       },
     );
 
-    await ProviderTester<dynamic>()
-        .pumpWidget(tester, MaterialApp(home: presenter));
+    await ProviderTester<dynamic>().pumpWidget(tester, MaterialApp(home: presenter));
 
     expect(find.byKey(const Key('foo')), findsOneWidget);
     expect(find.text('INITIAL'), findsOneWidget);
@@ -42,8 +43,7 @@ void main() {
           builder: (context, snapshot) {
             return TestPresenter(
               count: snapshot.data,
-              builder: (viewModel) =>
-                  Text(viewModel.foo, key: const Key('foo')),
+              builder: (viewModel) => Text(viewModel.foo, key: const Key('foo')),
             );
           },
         ),
@@ -65,10 +65,8 @@ void main() {
   );
 }
 
-class TestPresenter
-    extends Presenter<TestViewModel, TestDomainModel, TestUseCase> {
-  TestPresenter({required super.builder, super.key, this.count})
-      : super(provider: provider);
+class TestPresenter extends Presenter<TestViewModel, TestDomainModel, TestUseCase> {
+  TestPresenter({required super.builder, super.key, this.count}) : super(provider: provider);
 
   final int? count;
 
@@ -78,12 +76,11 @@ class TestPresenter
   @override
   void onLayoutReady(BuildContext context, TestUseCase useCase) {
     super.onLayoutReady(context, useCase);
-    useCase.fetch();
+    unawaited(useCase.fetch());
   }
 
   @override
-  TestViewModel createViewModel(_, TestDomainModel output) =>
-      TestViewModel.fromOutput(output);
+  TestViewModel createViewModel(_, TestDomainModel output) => TestViewModel.fromOutput(output);
 
   @override
   void onOutputUpdate(BuildContext context, TestDomainModel output) {
@@ -133,8 +130,7 @@ class TestDomainModel extends DomainModel {
 class TestViewModel extends ViewModel {
   const TestViewModel(this.foo);
 
-  TestViewModel.fromOutput(TestDomainModel output)
-      : foo = output.foo.toUpperCase();
+  TestViewModel.fromOutput(TestDomainModel output) : foo = output.foo.toUpperCase();
   final String foo;
 
   @override

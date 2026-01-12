@@ -48,7 +48,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _fetchSvg();
+      unawaited(_fetchSvg());
     });
   }
 
@@ -56,9 +56,9 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
   void didUpdateWidget(SvgPaletteCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.url != widget.url) {
-      _fetchSvg();
+      unawaited(_fetchSvg());
     }
-    _generateColor();
+    unawaited(_generateColor());
   }
 
   @override
@@ -116,8 +116,7 @@ class _SvgPaletteCardState extends State<SvgPaletteCard> {
       final palette = await AppScope.paletteGeneratorOf(context, image);
 
       if (!mounted) return;
-      _color = widget.backgroundColorBuilder?.call(context, palette) ??
-          palette.dominantColor?.color;
+      _color = widget.backgroundColorBuilder?.call(context, palette) ?? palette.dominantColor?.color;
 
       setState(() {});
     }

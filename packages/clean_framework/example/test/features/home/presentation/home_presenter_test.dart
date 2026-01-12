@@ -116,11 +116,10 @@ void main() {
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),
       setup: (useCase) {
-        when(() => useCase.fetchPokemons(isRefresh: true))
-            .thenAnswer((_) async {});
+        when(() => useCase.fetchPokemons(isRefresh: true)).thenAnswer((_) async {});
       },
-      verify: (useCase, vm) {
-        vm.onRefresh();
+      verify: (useCase, vm) async {
+        await vm.onRefresh();
 
         verify(() => useCase.fetchPokemons(isRefresh: true));
       },
@@ -131,8 +130,7 @@ void main() {
       useCase: HomeUseCaseMock(),
       create: (builder) => HomePresenter(builder: builder),
       setup: (useCase) {
-        when(() => useCase.setInput<PokemonSearchDomainInput>(any()))
-            .thenAnswer((_) async {});
+        when(() => useCase.setInput<PokemonSearchDomainInput>(any())).thenAnswer((_) async {});
       },
       verify: (useCase, vm) {
         vm.onSearch('pikachu');

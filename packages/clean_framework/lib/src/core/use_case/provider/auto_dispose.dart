@@ -1,23 +1,23 @@
 part of 'use_case_provider.dart';
 
-class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
-    extends UseCaseProviderBase<E, U> {
+class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>> extends UseCaseProviderBase<E, U> {
   AutoDisposeUseCaseProvider(
     U Function() create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
-    _internal = StateNotifierProvider.autoDispose(
+    _internal = StateNotifierProvider<U, E>(
       (ref) {
         final useCase = create();
         connector?.call(UseCaseProviderBridge._(useCase, ref));
         return useCase;
       },
+      isAutoDispose: true,
     );
   }
 
   AutoDisposeUseCaseProvider._(this._internal);
 
-  late final AutoDisposeStateNotifierProvider<U, E> _internal;
+  late final StateNotifierProvider<U, E> _internal;
 
   @override
   Refreshable<U> buildNotifier() => _internal.notifier;
@@ -30,7 +30,7 @@ class AutoDisposeUseCaseProvider<E extends Entity, U extends UseCase<E>>
     return _internal.select((_) => useCase.getDomainModel());
   }
 
-  AutoDisposeStateNotifierProvider<U, E> call() => _internal;
+  StateNotifierProvider<U, E> call() => _internal;
 }
 
 class AutoDisposeUseCaseProviderBuilder {

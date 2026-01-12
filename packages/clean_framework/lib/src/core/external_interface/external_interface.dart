@@ -21,7 +21,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 
   @internal
   void attach(
-    ProviderRef<Object> ref, {
+    Ref ref, {
     required List<GatewayProvider> providers,
   }) {
     _ref = DependencyRef(ref);
@@ -64,8 +64,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
     );
   }
 
-  final _RequestController<R, S> _requestController =
-      StreamController.broadcast();
+  final _RequestController<R, S> _requestController = StreamController.broadcast();
 
   @visibleForTesting
   Future<Either<FailureResponse, S>> request(R request) {
@@ -111,7 +110,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           } else {
             await handler(request, e.complete);
           }
-        } catch (error, stackTrace) {
+        } on Exception catch (error, stackTrace) {
           e.completeFailure(_onError(error, request, stackTrace));
         }
       },
@@ -133,13 +132,14 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
   }
 }
 
-typedef _RequestController<R extends Request, S extends SuccessResponse>
-    = StreamController<RequestCompleter<R, S>>;
+typedef _RequestController<R extends Request, S extends SuccessResponse> = StreamController<RequestCompleter<R, S>>;
 
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
-typedef RequestHandler<E extends Request, S extends SuccessResponse>
-    = FutureOr<void> Function(E request, ResponseSender<S> send);
+typedef RequestHandler<E extends Request, S extends SuccessResponse> = FutureOr<void> Function(
+  E request,
+  ResponseSender<S> send,
+);
 
 class RequestCompleter<R extends Request, S extends SuccessResponse> {
   RequestCompleter(this.request) : _completer = Completer();
@@ -158,8 +158,7 @@ class RequestCompleter<R extends Request, S extends SuccessResponse> {
   }
 }
 
-class _StreamRequestCompleter<R extends Request, S extends SuccessResponse>
-    extends RequestCompleter<R, S> {
+class _StreamRequestCompleter<R extends Request, S extends SuccessResponse> extends RequestCompleter<R, S> {
   _StreamRequestCompleter(super.request, this.emitSuccess);
 
   final void Function(S) emitSuccess;

@@ -1,10 +1,8 @@
 part of 'use_case_provider.dart';
 
-abstract class UseCaseProviderFamilyBase<E extends Entity, U extends UseCase<E>,
-    A extends Object> {
+abstract class UseCaseProviderFamilyBase<E extends Entity, U extends UseCase<E>, A extends Object> {
   // ignore: close_sinks
-  final StreamController<(Refreshable<U>, A)> _notifierController =
-      StreamController.broadcast();
+  final StreamController<(Refreshable<U>, A)> _notifierController = StreamController.broadcast();
 
   Stream<(Refreshable<U>, A)> get notifier => _notifierController.stream;
 
@@ -13,8 +11,8 @@ abstract class UseCaseProviderFamilyBase<E extends Entity, U extends UseCase<E>,
   UseCaseProviderBase<E, U> call(A arg);
 }
 
-class UseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
-    A extends Object> extends UseCaseProviderFamilyBase<E, U, A> {
+class UseCaseProviderFamily<E extends Entity, U extends UseCase<E>, A extends Object>
+    extends UseCaseProviderFamilyBase<E, U, A> {
   UseCaseProviderFamily(
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
@@ -40,8 +38,7 @@ class UseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
 class UseCaseProviderFamilyBuilder {
   const UseCaseProviderFamilyBuilder();
 
-  UseCaseProviderFamily<E, U, A>
-      call<E extends Entity, U extends UseCase<E>, A extends Object>(
+  UseCaseProviderFamily<E, U, A> call<E extends Entity, U extends UseCase<E>, A extends Object>(
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
@@ -49,22 +46,23 @@ class UseCaseProviderFamilyBuilder {
   }
 }
 
-class AutoDisposeUseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
-    A extends Object> extends UseCaseProviderFamilyBase<E, U, A> {
+class AutoDisposeUseCaseProviderFamily<E extends Entity, U extends UseCase<E>, A extends Object>
+    extends UseCaseProviderFamilyBase<E, U, A> {
   AutoDisposeUseCaseProviderFamily(
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
-    _internal = AutoDisposeStateNotifierProviderFamily(
+    _internal = StateNotifierProvider.family<U, E, A>(
       (ref, arg) {
         final useCase = create(arg);
         connector?.call(UseCaseProviderBridge._(useCase, ref));
         return useCase;
       },
+      isAutoDispose: true,
     );
   }
 
-  late final AutoDisposeStateNotifierProviderFamily<U, E, A> _internal;
+  late final StateNotifierProviderFamily<U, E, A> _internal;
 
   @override
   void init(A arg) => _notifierController.add((_internal(arg).notifier, arg));
@@ -78,8 +76,7 @@ class AutoDisposeUseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
 class AutoDisposeUseCaseProviderFamilyBuilder {
   const AutoDisposeUseCaseProviderFamilyBuilder();
 
-  AutoDisposeUseCaseProviderFamily<E, U, A>
-      call<E extends Entity, U extends UseCase<E>, A extends Object>(
+  AutoDisposeUseCaseProviderFamily<E, U, A> call<E extends Entity, U extends UseCase<E>, A extends Object>(
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {

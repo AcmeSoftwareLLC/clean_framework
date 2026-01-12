@@ -2,11 +2,11 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
+import 'package:flutter_riverpod/misc.dart';
 
-class UseCaseProvider<E extends Entity, U extends UseCase<E>>
-    implements OverridableProvider<U> {
-  UseCaseProvider(this.create)
-      : _provider = StateNotifierProvider<U, E>(create);
+class UseCaseProvider<E extends Entity, U extends UseCase<E>> implements OverridableProvider<U> {
+  UseCaseProvider(this.create) : _provider = StateNotifierProvider<U, E>(create);
   final StateNotifierProvider<U, E> _provider;
   final U Function(Ref) create;
 
@@ -30,8 +30,7 @@ class UseCaseProvider<E extends Entity, U extends UseCase<E>>
     ref.listen<M>(_listenForOutputChange(ref), listener);
   }
 
-  AlwaysAliveProviderListenable<M>
-      _listenForOutputChange<M extends DomainModel>(
+  ProviderListenable<M> _listenForOutputChange<M extends DomainModel>(
     WidgetRef ref,
   ) {
     final useCase = getUseCase(ref);

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +55,11 @@ Future<void> main() async {
           AppScope(
             child: Builder(
               builder: (context) {
-                AppScope.paletteGeneratorOf(context, image).then((generator) {
-                  expect(generator, isA<PaletteGenerator>());
-                });
+                unawaited(
+                  AppScope.paletteGeneratorOf(context, image).then((generator) {
+                    expect(generator, isA<PaletteGenerator>());
+                  }),
+                );
 
                 return const SizedBox.shrink();
               },
@@ -79,9 +83,11 @@ Future<void> main() async {
             ),
             child: Builder(
               builder: (context) {
-                AppScope.paletteGeneratorOf(context, image).then((generator) {
-                  expect(generator, isA<PaletteGenerator>());
-                });
+                unawaited(
+                  AppScope.paletteGeneratorOf(context, image).then((generator) {
+                    expect(generator, isA<PaletteGenerator>());
+                  }),
+                );
 
                 return const SizedBox.shrink();
               },

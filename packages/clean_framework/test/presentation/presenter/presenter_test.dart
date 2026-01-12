@@ -55,8 +55,7 @@ void main() {
       );
     });
 
-    testWidgets('didUpdatePresenter is triggered if presenter property changes',
-        (tester) async {
+    testWidgets('didUpdatePresenter is triggered if presenter property changes', (tester) async {
       final messageNotifier = ValueNotifier('');
 
       await tester.pumpWidget(
@@ -89,15 +88,14 @@ void main() {
   });
 }
 
-final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
 
-final _testUseCaseProviderFamily =
+final UseCaseProviderFamily<TestEntity, TestUseCase, String> _testUseCaseProviderFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
 );
 
-class TestPresenter
-    extends Presenter<TestViewModel, TestDomainToUIModel, TestUseCase> {
+class TestPresenter extends Presenter<TestViewModel, TestDomainToUIModel, TestUseCase> {
   TestPresenter({
     super.key,
     WidgetBuilder? builder,
