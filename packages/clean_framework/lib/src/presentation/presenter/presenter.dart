@@ -1,26 +1,32 @@
+import 'dart:async';
+
 import 'package:clean_framework/src/core/core.dart';
 import 'package:clean_framework/src/presentation/presenter/view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
-abstract class Presenter<V extends ViewModel, M extends DomainModel,
-    U extends UseCase> extends ConsumerStatefulWidget {
+abstract class Presenter<
+  V extends ViewModel,
+  M extends DomainModel,
+  U extends UseCase
+>
+    extends ConsumerStatefulWidget {
   const Presenter({
     required this.provider,
     required this.builder,
     super.key,
-  })  : _arg = const _NoArg(),
-        _family = null;
+  }) : _arg = const _NoArg(),
+       _family = null;
 
   Presenter.family({
     required UseCaseProviderFamilyBase family,
     required Object arg,
     required this.builder,
     super.key,
-  })  : _arg = arg,
-        provider = family(arg),
-        _family = family;
+  }) : _arg = arg,
+       provider = family(arg),
+       _family = family;
 
   @visibleForTesting
   final UseCaseProviderBase provider;
@@ -65,8 +71,7 @@ abstract class Presenter<V extends ViewModel, M extends DomainModel,
     BuildContext context,
     DomainModelState<M> output,
     V viewModel,
-  ) =>
-      onDomainModel(context, output, viewModel);
+  ) => onDomainModel(context, output, viewModel);
 
   /// Called whenever the presenter configuration changes.
   @protected
@@ -84,8 +89,12 @@ abstract class Presenter<V extends ViewModel, M extends DomainModel,
   M subscribe(WidgetRef ref) => provider.subscribe<M>(ref);
 }
 
-class _PresenterState<V extends ViewModel, M extends DomainModel,
-    U extends UseCase> extends ConsumerState<Presenter<V, M, U>> {
+class _PresenterState<
+  V extends ViewModel,
+  M extends DomainModel,
+  U extends UseCase
+>
+    extends ConsumerState<Presenter<V, M, U>> {
   U? _useCase;
   late final UseCaseProviderBase _provider;
 
@@ -142,15 +151,18 @@ class _PresenterState<V extends ViewModel, M extends DomainModel,
     final arg = widget._arg;
 
     if (arg is _NoArg) {
-      provider
-        ..notifier.first.then((_) => setLayoutReadyIfViewModelFound())
-        ..init();
+      unawaited(
+        provider.notifier.first.then((_) => setLayoutReadyIfViewModelFound()),
+      );
+      provider.init();
     } else {
-      widget._family!
-        ..notifier
+      final family = widget._family!;
+      unawaited(
+        family.notifier
             .firstWhere((e) => e.$2 == arg)
-            .then((_) => setLayoutReadyIfViewModelFound())
-        ..init(arg);
+            .then((_) => setLayoutReadyIfViewModelFound()),
+      );
+      family.init(arg);
     }
 
     return provider;
@@ -212,8 +224,8 @@ class ViewModelScope<V extends ViewModel> extends InheritedWidget {
   }
 
   static V? maybeOf<V extends ViewModel>(BuildContext context) {
-    final result =
-        context.dependOnInheritedWidgetOfExactType<ViewModelScope<V>>();
+    final result = context
+        .dependOnInheritedWidgetOfExactType<ViewModelScope<V>>();
     return result?.viewModel;
   }
 

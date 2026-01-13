@@ -7,7 +7,7 @@ void main() {
     await tester.pumpWidget(
       AppProvidersContainer(
         child: const MaterialApp(),
-        onBuild: (_, __) {},
+        onBuild: (_, _) {},
       ),
     );
   });
@@ -24,8 +24,9 @@ void main() {
     final provider = UseCaseProvider((_) => useCase);
     final gatewayProvider = GatewayProvider((_) => gateway);
     final bridgeGatewayProvider = BridgeGatewayProvider((_) => bridgeGateway);
-    final externalInterfaceProvider =
-        ExternalInterfaceProvider((_) => externalInterface);
+    final externalInterfaceProvider = ExternalInterfaceProvider(
+      (_) => externalInterface,
+    );
 
     expect(provider.getUseCaseFromContext(context), useCase);
     expect(gatewayProvider.getGateway(context), gateway);
@@ -39,16 +40,18 @@ void main() {
 
   test('Providers with overrides', () async {
     final provider = UseCaseProvider((_) => TestUseCase(TestEntity()));
-    final gatewayProvider =
-        GatewayProvider((_) => TestGateway(TestUseCase(TestEntity())));
+    final gatewayProvider = GatewayProvider(
+      (_) => TestGateway(TestUseCase(TestEntity())),
+    );
     final bridgeGatewayProvider = BridgeGatewayProvider(
       (_) => TestBridgeGateway(
         subscriberUseCase: TestUseCase(TestEntity()),
         publisherUseCase: TestUseCase(TestEntity()),
       ),
     );
-    final externalInterfaceProvider =
-        ExternalInterfaceProvider((_) => TestInterface());
+    final externalInterfaceProvider = ExternalInterfaceProvider(
+      (_) => TestInterface(),
+    );
 
     final useCase = TestUseCase(TestEntity());
     final gateway = TestGateway(useCase);
@@ -92,8 +95,9 @@ class TestInterface extends ExternalInterface {
   }
 }
 
-class TestBridgeGateway extends BridgeGateway<TestDomainModel, TestDomainModel,
-    SuccessDomainInput> {
+class TestBridgeGateway
+    extends
+        BridgeGateway<TestDomainModel, TestDomainModel, SuccessDomainInput> {
   TestBridgeGateway({
     required super.subscriberUseCase,
     required super.publisherUseCase,
@@ -124,10 +128,10 @@ class TestUseCase extends UseCase<TestEntity> {
   TestUseCase(TestEntity entity) : super(entity: entity);
 
   void doRequest() => request(
-        TestDomainModel(),
-        onSuccess: (_) => TestEntity(),
-        onFailure: (_) => TestEntity(),
-      );
+    TestDomainModel(),
+    onSuccess: (_) => TestEntity(),
+    onFailure: (_) => TestEntity(),
+  );
 }
 
 class TestEntity extends Entity {

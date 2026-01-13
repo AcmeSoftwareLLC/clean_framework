@@ -168,11 +168,11 @@ void main() {
 
 class GraphQLServiceFake extends Fake implements GraphQLService {
   GraphQLServiceFake(this._json)
-      : _exception = _json.isEmpty ? 'service exception' : null;
+    : _exception = _json.isEmpty ? 'service exception' : null;
 
   GraphQLServiceFake.exception(GraphQLServiceException exception)
-      : _exception = exception,
-        _json = const {};
+    : _exception = exception,
+      _json = const {};
 
   final Map<String, dynamic> _json;
   final Object? _exception;
@@ -186,7 +186,7 @@ class GraphQLServiceFake extends Fake implements GraphQLService {
     GraphQLFetchPolicy? fetchPolicy,
     GraphQLErrorPolicy? errorPolicy,
   }) async {
-    if (_exception != null) throw _exception!;
+    if (_exception != null) throw _exception;
 
     return GraphQLServiceResponse(
       data: _json,

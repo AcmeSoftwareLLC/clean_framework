@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
@@ -29,7 +31,9 @@ void main() {
                 'flavor_text_entries': [
                   {
                     'flavor_text':
-                        'It keeps its tail\nraised to monitor\nits surroundings.\fIf you yank its\ntail, it will try\nto bite you.',
+                        'It keeps its tail\nraised to monitor\nits '
+                        'surroundings.\fIf you yank its\ntail, '
+                        'it will try\nto bite you.',
                     'language': {
                       'name': 'en',
                       'url': 'https://pokeapi.co/api/v2/language/9/',
@@ -41,7 +45,9 @@ void main() {
                   },
                   {
                     'flavor_text':
-                        'This intelligent\nPOKéMON roasts\nhard BERRIES with\felectricity to\nmake them tender\nenough to eat.',
+                        'This intelligent\nPOKéMON '
+                        'roasts\nhard BERRIES with\felectricity to\nmake '
+                        'them tender\nenough to eat.',
                     'language': {
                       'name': 'en',
                       'url': 'https://pokeapi.co/api/v2/language/9/',

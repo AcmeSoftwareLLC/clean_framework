@@ -18,12 +18,12 @@ class AppRoute extends GoRoute {
     super.routes,
     super.redirect,
   }) : super(
-          path: route.path,
-          name: (route as Enum).name,
-          builder: builder == null
-              ? null
-              : (ctx, state) => builder(ctx, AppRouterState.from(state)),
-        );
+         path: route.path,
+         name: (route as Enum).name,
+         builder: builder == null
+             ? null
+             : (ctx, state) => builder(ctx, AppRouterState.from(state)),
+       );
 
   AppRoute.page({
     required this.route,
@@ -33,12 +33,12 @@ class AppRoute extends GoRoute {
     super.routes,
     super.redirect,
   }) : super(
-          path: route.path,
-          name: (route as Enum).name,
-          pageBuilder: builder == null
-              ? null
-              : (ctx, state) => builder(ctx, AppRouterState.from(state)),
-        );
+         path: route.path,
+         name: (route as Enum).name,
+         pageBuilder: builder == null
+             ? null
+             : (ctx, state) => builder(ctx, AppRouterState.from(state)),
+       );
 
   AppRoute.custom({
     required this.route,
@@ -49,20 +49,20 @@ class AppRoute extends GoRoute {
     super.routes,
     super.redirect,
   }) : super(
-          path: route.path,
-          name: (route as Enum).name,
-          pageBuilder: builder == null
-              ? null
-              : (context, state) {
-                  final transBuilder =
-                      transitionsBuilder ?? (_, __, ___, child) => child;
+         path: route.path,
+         name: (route as Enum).name,
+         pageBuilder: builder == null
+             ? null
+             : (context, state) {
+                 final transBuilder =
+                     transitionsBuilder ?? (_, _, _, child) => child;
 
-                  return CustomTransitionPage(
-                    child: builder(context, AppRouterState.from(state)),
-                    transitionsBuilder: transBuilder,
-                  );
-                },
-        );
+                 return CustomTransitionPage(
+                   child: builder(context, AppRouterState.from(state)),
+                   transitionsBuilder: transBuilder,
+                 );
+               },
+       );
 
   final RoutesMixin route;
 }

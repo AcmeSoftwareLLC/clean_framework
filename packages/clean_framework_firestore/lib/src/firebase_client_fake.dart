@@ -21,7 +21,7 @@ class FirebaseClientFake implements FirebaseClient {
     required String path,
     required String id,
   }) async {
-    if (_exception != null) throw _exception!;
+    if (_exception != null) throw _exception;
     return _content;
   }
 

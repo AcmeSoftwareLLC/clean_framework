@@ -12,7 +12,6 @@ typedef EitherMapper<T, E> = T Function(E);
 
 @sealed
 @immutable
-
 /// [Either] represents a value of two possible types.
 /// An Either is either an [Either.left] or an [Either.right].
 abstract class Either<L, R> {
@@ -46,7 +45,7 @@ abstract class Either<L, R> {
   /// Folds either the left or the right side of this disjunction.
   T fold<T>(EitherMapper<T, L> leftMapper, EitherMapper<T, R> rightMapper);
 
-  Never _noSuchElementException(value) {
+  Never _noSuchElementException(dynamic value) {
     throw NoSuchElementException(
       'You should check ${isLeft ? 'isLeft' : 'isRight'} before calling.',
     );

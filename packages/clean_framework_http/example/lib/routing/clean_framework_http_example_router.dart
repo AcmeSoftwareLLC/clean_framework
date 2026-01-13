@@ -9,7 +9,7 @@ class CleanFrameworkHttpExampleRouter extends AppRouter<Routes> {
       routes: [
         AppRoute(
           route: Routes.home,
-          builder: (_, __) => HomeUI(),
+          builder: (_, _) => HomeUI(),
         ),
       ],
     );

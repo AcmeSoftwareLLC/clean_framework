@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_external_interface.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_request.dart';

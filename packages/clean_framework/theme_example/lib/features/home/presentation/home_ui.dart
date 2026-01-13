@@ -5,9 +5,7 @@ import 'package:theme_example/features/home/presentation/home_presenter.dart';
 import 'package:theme_example/features/home/presentation/home_view_model.dart';
 
 class HomeUI extends UI<HomeViewModel> {
-  HomeUI({
-    super.key,
-  });
+  HomeUI({super.key});
 
   @override
   HomePresenter create(WidgetBuilder builder) {
@@ -26,36 +24,31 @@ class HomeUI extends UI<HomeViewModel> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(
-              height: 36,
-            ),
-            Text(
-              'Select App Theme',
-              style: themeData.textTheme.labelMedium,
-            ),
+            const SizedBox(height: 36),
+            Text('Select App Theme', style: themeData.textTheme.labelMedium),
             ...AppTheme.values.map(
               (theme) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: RadioListTile(
-                  value: theme,
+                child: RadioGroup(
                   groupValue: viewModel.appTheme,
-                  title: Text(
-                    theme.name,
-                    style: themeData.textTheme.labelMedium!.copyWith(
-                      color: theme == viewModel.appTheme
-                          ? themeData.colorScheme.primary
-                          : themeData.colorScheme.onSurface,
-                    ),
-                  ),
                   onChanged: viewModel.onThemeChange,
-                  contentPadding: const EdgeInsets.all(4),
-                  tileColor: theme == viewModel.appTheme
-                      ? themeData.colorScheme.primaryContainer
-                      : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                      color: themeData.colorScheme.outline,
+                  child: RadioListTile(
+                    value: theme,
+                    title: Text(
+                      theme.name,
+                      style: themeData.textTheme.labelMedium!.copyWith(
+                        color: theme == viewModel.appTheme
+                            ? themeData.colorScheme.primary
+                            : themeData.colorScheme.onSurface,
+                      ),
+                    ),
+                    contentPadding: const EdgeInsets.all(4),
+                    tileColor: theme == viewModel.appTheme
+                        ? themeData.colorScheme.primaryContainer
+                        : null,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(color: themeData.colorScheme.outline),
                     ),
                   ),
                 ),
