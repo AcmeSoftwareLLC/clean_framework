@@ -1,5 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/core/pokemon/pokemon_success_response.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';

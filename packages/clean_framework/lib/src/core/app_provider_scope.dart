@@ -1,6 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 class AppProviderScope extends StatelessWidget {

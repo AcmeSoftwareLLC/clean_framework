@@ -5,3 +5,5 @@ linter:
     one_member_abstracts: false
     only_throw_errors: false
     public_member_api_docs: false
+    document_ignores: false
+    unreachable_from_main: false

@@ -6,12 +6,13 @@ import 'package:clean_framework/src/core/use_case/provider/use_case_provider.dar
 import 'package:clean_framework/src/core/use_case/use_case.dart';
 import 'package:clean_framework/src/utilities/either.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
 abstract class Gateway<M extends DomainModel, R extends Request,
     P extends SuccessResponse, S extends SuccessDomainInput> {
   void attach(
-    ProviderRef<Object> ref, {
+    Ref ref, {
     required List<UseCaseProviderBase> providers,
     List<UseCaseProviderFamilyBase> families = const [],
   }) {
@@ -29,7 +30,7 @@ abstract class Gateway<M extends DomainModel, R extends Request,
 
   final Set<UseCase> _useCases = {};
 
-  void _subscribe(ProviderRef<Object> ref, Refreshable<UseCase> notifier) {
+  void _subscribe(Ref ref, Refreshable<UseCase> notifier) {
     final useCase = ref.read(notifier);
     _useCases.add(useCase);
     useCase.subscribe<M, S>(buildInput);
@@ -37,7 +38,6 @@ abstract class Gateway<M extends DomainModel, R extends Request,
 
   @visibleForTesting
   @nonVirtual
-  // ignore: use_setters_to_change_properties
   void feedResponse(Responder<R, P> feeder, {Type? source}) {
     assert(
       _source == null,
@@ -89,7 +89,9 @@ abstract class WatcherGateway<
 }
 
 typedef Responder<R extends Request, P extends SuccessResponse>
-    = FutureOr<Either<FailureResponse, P>> Function(R request);
+    = FutureOr<Either<FailureResponse, P>> Function(
+  R request,
+);
 
 class _Source<R extends Request, P extends SuccessResponse> {
   _Source(this.responder, this.type);

@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.4
+**Jan 12, 2026**
+- Bump dependencies to latest versions.
+
 ## 0.5.3
 **Feb 10, 2024**
 - Fix bug causing `FirebaseDeleteRequest`s to fail.

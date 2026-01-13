@@ -107,9 +107,11 @@ class _Dependency {
   final String value;
 }
 
-final _testDependencyProvider = DependencyProvider((_) => _Dependency('test'));
+final DependencyProvider<_Dependency> _testDependencyProvider =
+    DependencyProvider((_) => _Dependency('test'));
 
-final _testExternalInterfaceProvider = ExternalInterfaceProvider(
+final ExternalInterfaceProvider<TestExternalInterface>
+    _testExternalInterfaceProvider = ExternalInterfaceProvider(
   () => TestExternalInterface(delegate: TextExternalInterfaceDelegate()),
   gateways: [
     _testGatewayProvider,
@@ -117,9 +119,11 @@ final _testExternalInterfaceProvider = ExternalInterfaceProvider(
   ],
 );
 
-final _testGatewayProvider = GatewayProvider(TestGateway.new);
+final GatewayProvider<TestGateway> _testGatewayProvider =
+    GatewayProvider(TestGateway.new);
 
-final _testWatcherGatewayProvider = GatewayProvider(
+final GatewayProvider<TestWatcherGateway> _testWatcherGatewayProvider =
+    GatewayProvider(
   TestWatcherGateway.new,
 );
 

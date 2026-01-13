@@ -1,4 +1,8 @@
 # Changelog
+## 0.5.4
+**Jan 12, 2026**
+- Bump dependency to latest version.
+
 ## 0.5.3
 **Feb 7, 2024**
 - Updates for newest clean framework class changes.

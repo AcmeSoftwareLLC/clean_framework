@@ -54,7 +54,7 @@ abstract class InputTransformer<E extends Entity, I extends DomainInput>
 
 class _DomainModelFilter<E extends Entity, M extends DomainModel>
     extends DomainModelTransformer<E, M> {
-  const _DomainModelFilter(super.transformer) : super._();
+  const _DomainModelFilter(super._transformer) : super._();
 
   @override
   M transform(E entity) => _transformer!(entity);
@@ -62,7 +62,7 @@ class _DomainModelFilter<E extends Entity, M extends DomainModel>
 
 class _DomainInputFilter<E extends Entity, I extends DomainInput>
     extends DomainInputTransformer<E, I> {
-  const _DomainInputFilter(super.transformer) : super._();
+  const _DomainInputFilter(super._transformer) : super._();
 
   @override
   E transform(E entity, I input) => _transformer!(entity, input);

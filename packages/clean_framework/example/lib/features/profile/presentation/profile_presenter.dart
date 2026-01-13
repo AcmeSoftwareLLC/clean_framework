@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_use_case.dart';
@@ -16,7 +18,7 @@ class ProfilePresenter extends Presenter<ProfileViewModel,
   @override
   @protected
   void onLayoutReady(BuildContext context, ProfileUseCase useCase) {
-    useCase.fetchPokemonProfile();
+    unawaited(useCase.fetchPokemonProfile());
   }
 
   @override

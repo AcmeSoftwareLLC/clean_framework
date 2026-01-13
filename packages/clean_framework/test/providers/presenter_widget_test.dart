@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final provider = UseCaseProvider((_) => TestUseCase());
+final UseCaseProvider<Entity, TestUseCase> provider =
+    UseCaseProvider((_) => TestUseCase());
 void main() {
   testWidgets('Presenter initial load', (tester) async {
     final presenter = TestPresenter(
@@ -78,7 +81,7 @@ class TestPresenter
   @override
   void onLayoutReady(BuildContext context, TestUseCase useCase) {
     super.onLayoutReady(context, useCase);
-    useCase.fetch();
+    unawaited(useCase.fetch());
   }
 
   @override

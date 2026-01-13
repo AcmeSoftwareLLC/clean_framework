@@ -6,7 +6,7 @@ import 'package:clean_framework/src/core/use_case/use_case_debounce_mixin.dart';
 import 'package:clean_framework/src/core/use_case/use_case_helpers.dart';
 import 'package:clean_framework/src/utilities/clean_framework_observer.dart';
 import 'package:clean_framework/src/utilities/either.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:meta/meta.dart';
 
 export 'helpers/use_case_input.dart';

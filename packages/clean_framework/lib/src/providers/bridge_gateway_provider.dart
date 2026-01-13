@@ -2,6 +2,7 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/src/providers/gateway.dart';
 import 'package:clean_framework/src/providers/overridable_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 
 class BridgeGatewayProvider<G extends BridgeGateway>
     implements OverridableProvider<G> {

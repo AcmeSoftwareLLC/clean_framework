@@ -166,7 +166,7 @@ enum HttpResponseType {
   /// Response data will be a [ResponseBody] instance.
   stream(ResponseType.stream),
 
-  /// Get original bytes, the type of [Response.data] will be List<int>.
+  /// Get original bytes, the type of [Response.data] will be List`<`int>.
   bytes(ResponseType.bytes);
 
   const HttpResponseType(this.original);

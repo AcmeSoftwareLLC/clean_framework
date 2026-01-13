@@ -5,6 +5,29 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('AppProviderScope tests |', () {
     testWidgets(
+      'throws error if no appropriate providers were supplied',
+      (tester) async {
+        const scope = AppProviderScope(
+          child: MaterialApp(home: Text('PING')),
+        );
+
+        await tester.pumpWidget(scope);
+
+        _testUseCaseProvider.init();
+        await tester.pump();
+
+        final useCase = AppProviderScope.containerOf(
+          tester.element(find.byType(MaterialApp)),
+        ).read(_testUseCaseProvider().notifier);
+
+        await expectLater(
+          () => useCase.ping('Hello'),
+          throwsA(isA<StateError>()),
+        );
+      },
+    );
+
+    testWidgets(
       'initializes providers',
       (tester) async {
         const key = ValueKey('child');
@@ -26,45 +49,22 @@ void main() {
         expect(useCase.debugEntity.pong, 'Hello');
       },
     );
-
-    testWidgets(
-      'throws error if no appropriate providers were supplied',
-      (tester) async {
-        const scope = AppProviderScope(
-          child: MaterialApp(home: Text('PING')),
-        );
-
-        await tester.pumpWidget(scope);
-
-        _testUseCaseProvider.init();
-        await tester.pump();
-
-        final useCase = AppProviderScope.containerOf(
-          tester.element(find.byType(MaterialApp)),
-        ).read(_testUseCaseProvider().notifier);
-
-        try {
-          await useCase.ping('Hello');
-        } catch (e, s) {
-          FlutterError.demangleStackTrace(s);
-          expect(e, isA<StateError>());
-        }
-      },
-    );
   });
 }
 
-final _testExternalInterfaceProvider = ExternalInterfaceProvider(
+final ExternalInterfaceProvider<TestExternalInterface>
+    _testExternalInterfaceProvider = ExternalInterfaceProvider(
   TestExternalInterface.new,
   gateways: [_testGatewayProvider],
 );
 
-final _testGatewayProvider = GatewayProvider(
+final GatewayProvider<TestGateway> _testGatewayProvider = GatewayProvider(
   TestGateway.new,
   useCases: [_testUseCaseProvider],
 );
 
-final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
+    UseCaseProvider(TestUseCase.new);
 
 class TestExternalInterface
     extends ExternalInterface<TestRequest, TestSuccessResponse> {

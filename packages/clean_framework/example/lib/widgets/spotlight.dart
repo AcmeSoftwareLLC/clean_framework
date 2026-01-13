@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
@@ -36,7 +37,7 @@ class _SpotlightState extends State<Spotlight> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _loadFileFromCache();
+      unawaited(_loadFileFromCache());
     });
   }
 

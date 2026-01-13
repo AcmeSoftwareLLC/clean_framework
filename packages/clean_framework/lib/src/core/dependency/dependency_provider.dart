@@ -1,5 +1,6 @@
 import 'package:clean_framework/src/core/clean_framework_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
 class DependencyProvider<T extends Object>

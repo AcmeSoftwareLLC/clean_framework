@@ -16,13 +16,13 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
 
   final String name;
 
-  void fetchPokemonProfile() {
+  Future<void> fetchPokemonProfile() async {
     final pokeName = name.toLowerCase();
 
     // If the use case is not auto disposed then we have last fetched data.
     if (entity.description.isNotEmpty) return;
 
-    request<PokemonSpeciesSuccessDomainInput>(
+    await request<PokemonSpeciesSuccessDomainInput>(
       PokemonSpeciesDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final descriptions = success.species.descriptions.where(
@@ -38,7 +38,7 @@ class ProfileUseCase extends UseCase<ProfileEntity> {
       onFailure: (failure) => entity,
     );
 
-    request<PokemonProfileSuccessInput>(
+    await request<PokemonProfileSuccessInput>(
       PokemonProfileDomainToGatewayModel(name: pokeName),
       onSuccess: (success) {
         final profile = success.profile;

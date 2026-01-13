@@ -55,5 +55,5 @@ class ProfileUseCaseFake extends ProfileUseCase {
   ProfileUseCaseFake(super.name);
 
   @override
-  void fetchPokemonProfile() {}
+  Future<void> fetchPokemonProfile() async {}
 }

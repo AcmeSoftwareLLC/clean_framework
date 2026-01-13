@@ -2,6 +2,7 @@ import 'package:clean_framework/src/core/clean_framework_provider.dart';
 import 'package:clean_framework/src/core/gateway/gateway.dart';
 import 'package:clean_framework/src/core/use_case/provider/use_case_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
 class GatewayProvider<G extends Gateway>

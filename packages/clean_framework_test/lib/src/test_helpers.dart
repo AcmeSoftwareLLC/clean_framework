@@ -1,5 +1,3 @@
-//ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
-
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework_legacy.dart';

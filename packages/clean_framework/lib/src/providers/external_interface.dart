@@ -57,7 +57,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           } else {
             await handler(request, e.complete);
           }
-        } catch (error, stackTrace) {
+        } on Object catch (error, stackTrace) {
           e.completeFailure(_onError(error, stackTrace, request));
         }
       },
@@ -84,7 +84,10 @@ typedef GatewayConnection<G extends Gateway> = G Function();
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
 typedef RequestHandler<E extends Request, S extends SuccessResponse>
-    = FutureOr<void> Function(E request, ResponseSender<S> send);
+    = FutureOr<void> Function(
+  E request,
+  ResponseSender<S> send,
+);
 
 class _RequestCompleter<R extends Request, S extends SuccessResponse> {
   _RequestCompleter(this.request) : _completer = Completer();

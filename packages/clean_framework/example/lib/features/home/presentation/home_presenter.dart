@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_domain_models.dart';
 import 'package:clean_framework_example_rest/features/home/domain/home_entity.dart';
@@ -15,7 +17,7 @@ class HomePresenter
 
   @override
   void onLayoutReady(BuildContext context, HomeUseCase useCase) {
-    useCase.fetchPokemons();
+    unawaited(useCase.fetchPokemons());
   }
 
   @override

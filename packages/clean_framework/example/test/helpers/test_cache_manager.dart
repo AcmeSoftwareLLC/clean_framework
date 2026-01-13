@@ -1,4 +1,5 @@
 import 'package:file/memory.dart';
+import 'package:file/src/interface/directory.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:http/http.dart' as http;
@@ -56,7 +57,7 @@ class TestCacheManager extends CacheManager {
 }
 
 class TestFileSystem extends FileSystem {
-  final directoryFuture =
+  final Future<Directory> directoryFuture =
       MemoryFileSystem().systemTempDirectory.createTemp('test');
   @override
   Future<File> createFile(String name) async {

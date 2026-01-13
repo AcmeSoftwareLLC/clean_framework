@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 
 abstract class CleanFrameworkProvider<P extends ProviderBase<Object>> {
   CleanFrameworkProvider({required P provider}) : _provider = provider;

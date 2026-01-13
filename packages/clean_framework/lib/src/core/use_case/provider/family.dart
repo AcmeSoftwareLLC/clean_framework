@@ -2,7 +2,6 @@ part of 'use_case_provider.dart';
 
 abstract class UseCaseProviderFamilyBase<E extends Entity, U extends UseCase<E>,
     A extends Object> {
-  // ignore: close_sinks
   final StreamController<(Refreshable<U>, A)> _notifierController =
       StreamController.broadcast();
 
@@ -19,6 +18,7 @@ class UseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
+    //ignore: invalid_use_of_internal_member
     _internal = StateNotifierProviderFamily(
       (ref, arg) {
         final useCase = create(arg);
@@ -55,16 +55,17 @@ class AutoDisposeUseCaseProviderFamily<E extends Entity, U extends UseCase<E>,
     U Function(A) create, [
     UseCaseProviderConnector<E, U>? connector,
   ]) {
-    _internal = AutoDisposeStateNotifierProviderFamily(
+    _internal = StateNotifierProvider.family<U, E, A>(
       (ref, arg) {
         final useCase = create(arg);
         connector?.call(UseCaseProviderBridge._(useCase, ref));
         return useCase;
       },
+      isAutoDispose: true,
     );
   }
 
-  late final AutoDisposeStateNotifierProviderFamily<U, E, A> _internal;
+  late final StateNotifierProviderFamily<U, E, A> _internal;
 
   @override
   void init(A arg) => _notifierController.add((_internal(arg).notifier, arg));

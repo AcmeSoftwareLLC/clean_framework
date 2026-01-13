@@ -89,9 +89,11 @@ void main() {
   });
 }
 
-final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
+    UseCaseProvider(TestUseCase.new);
 
-final _testUseCaseProviderFamily =
+final UseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseProviderFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
 );

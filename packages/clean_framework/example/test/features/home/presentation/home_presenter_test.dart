@@ -119,8 +119,8 @@ void main() {
         when(() => useCase.fetchPokemons(isRefresh: true))
             .thenAnswer((_) async {});
       },
-      verify: (useCase, vm) {
-        vm.onRefresh();
+      verify: (useCase, vm) async {
+        await vm.onRefresh();
 
         verify(() => useCase.fetchPokemons(isRefresh: true));
       },

@@ -170,14 +170,17 @@ void main() {
   });
 }
 
-final _testGatewayProvider = GatewayProvider(
+final GatewayProvider<TestWatcherGateway> _testGatewayProvider =
+    GatewayProvider(
   TestWatcherGateway.new,
   useCases: [_testUseCaseProvider],
   families: [_testUseCaseProviderFamily],
 );
 
-final _testUseCaseProvider = UseCaseProvider(TestUseCase.new);
-final _testUseCaseProviderFamily =
+final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
+    UseCaseProvider(TestUseCase.new);
+final UseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseProviderFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (_) => TestUseCase(),
 );

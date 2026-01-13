@@ -21,7 +21,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
 
   @internal
   void attach(
-    ProviderRef<Object> ref, {
+    Ref ref, {
     required List<GatewayProvider> providers,
   }) {
     _ref = DependencyRef(ref);
@@ -111,7 +111,7 @@ abstract class ExternalInterface<R extends Request, S extends SuccessResponse> {
           } else {
             await handler(request, e.complete);
           }
-        } catch (error, stackTrace) {
+        } on Object catch (error, stackTrace) {
           e.completeFailure(_onError(error, request, stackTrace));
         }
       },
@@ -139,7 +139,10 @@ typedef _RequestController<R extends Request, S extends SuccessResponse>
 typedef ResponseSender<S extends SuccessResponse> = void Function(S response);
 
 typedef RequestHandler<E extends Request, S extends SuccessResponse>
-    = FutureOr<void> Function(E request, ResponseSender<S> send);
+    = FutureOr<void> Function(
+  E request,
+  ResponseSender<S> send,
+);
 
 class RequestCompleter<R extends Request, S extends SuccessResponse> {
   RequestCompleter(this.request) : _completer = Completer();

@@ -2,6 +2,7 @@ import 'package:clean_framework/src/core/clean_framework_provider.dart';
 import 'package:clean_framework/src/core/external_interface/external_interface.dart';
 import 'package:clean_framework/src/core/gateway/gateway_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:meta/meta.dart';
 
 class ExternalInterfaceProvider<E extends ExternalInterface>

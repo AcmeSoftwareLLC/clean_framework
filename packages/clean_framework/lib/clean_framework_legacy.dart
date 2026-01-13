@@ -1,5 +1,5 @@
 /// Clean Framework v1 (Legacy)
-library clean_framework_legacy;
+library;
 
 export 'package:clean_framework/src/app_providers_container.dart';
 export 'package:clean_framework/src/core/external_interface/request.dart';

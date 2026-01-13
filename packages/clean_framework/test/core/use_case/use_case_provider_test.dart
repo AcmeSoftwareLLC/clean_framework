@@ -17,7 +17,8 @@ final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
   },
 );
 
-final _testUseCaseProvider2 =
+final AutoDisposeUseCaseProvider<TestEntity, TestUseCase>
+    _testUseCaseProvider2 =
     UseCaseProvider.autoDispose<TestEntity, TestUseCase>(
   TestUseCase.new,
   (bridge) {
@@ -37,13 +38,15 @@ final _testUseCaseProvider3 = UseCaseProvider<TestEntity, TestUseCase>(
   TestUseCase.new,
 );
 
-final _testUseCaseAutoDisposeFamily =
+final AutoDisposeUseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseAutoDisposeFamily =
     UseCaseProvider.autoDispose.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
   (_) {},
 );
 
-final _testUseCaseFamily =
+final UseCaseProviderFamily<TestEntity, TestUseCase, String>
+    _testUseCaseFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
   (_) {},
@@ -231,7 +234,7 @@ void main() {
         ],
       );
 
-      final useCase = _testUseCaseProvider2().notifier.read(container);
+      final useCase = container.read(_testUseCaseProvider2().notifier);
 
       expect(useCase, isA<NewTestUseCase>());
     });

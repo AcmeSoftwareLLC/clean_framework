@@ -41,7 +41,7 @@ class _FeatureScopeState<T extends FeatureProvider>
     OpenFeature.instance.provider = featureProvider;
     _client = OpenFeature.instance.getClient();
 
-    _load(featureProvider);
+    unawaited(_load(featureProvider));
   }
 
   Future<void> _load(T featureProvider) async {

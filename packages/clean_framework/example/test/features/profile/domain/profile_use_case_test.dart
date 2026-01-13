@@ -14,8 +14,8 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile',
       provider: profileUseCaseFamily('pikachu'),
-      execute: (useCase) {
-        useCase
+      execute: (useCase) async {
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel,
               PokemonSpeciesSuccessDomainInput>(
             (output) {
@@ -55,8 +55,8 @@ void main() {
                 ),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(
@@ -86,8 +86,8 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; description failure',
       provider: profileUseCaseFamily('PIKACHU'),
-      execute: (useCase) {
-        useCase
+      execute: (useCase) async {
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel,
               PokemonSpeciesSuccessDomainInput>(
             (output) {
@@ -118,8 +118,8 @@ void main() {
                 ),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(
@@ -142,8 +142,8 @@ void main() {
     useCaseTest<ProfileUseCase, ProfileEntity, ProfileDomainToUIModel>(
       'fetches pokemon profile; profile/stat failure',
       provider: profileUseCaseFamily('PIKACHU'),
-      execute: (useCase) {
-        useCase
+      execute: (useCase) async {
+        final profileUseCase = useCase
           ..subscribe<PokemonSpeciesDomainToGatewayModel,
               PokemonSpeciesSuccessDomainInput>(
             (output) {
@@ -168,8 +168,8 @@ void main() {
                 FailureDomainInput(message: 'Something went wrong'),
               );
             },
-          )
-          ..fetchPokemonProfile();
+          );
+        await profileUseCase.fetchPokemonProfile();
       },
       expect: () => [
         const ProfileDomainToUIModel(
