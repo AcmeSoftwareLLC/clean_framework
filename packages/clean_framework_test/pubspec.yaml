@@ -21,7 +21,7 @@ dependencies:
   flutter_test:
     sdk: flutter
   meta: '>=1.8.0 <2.0.0'
-  mocktail: ^1.0.0
+  mocktail: ^1.0.4
 
 dev_dependencies:
   very_good_analysis: ^10.0.0
