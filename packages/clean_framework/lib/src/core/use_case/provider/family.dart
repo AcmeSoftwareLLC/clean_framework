@@ -2,7 +2,6 @@ part of 'use_case_provider.dart';
 
 abstract class UseCaseProviderFamilyBase<E extends Entity, U extends UseCase<E>,
     A extends Object> {
-  // ignore: close_sinks
   final StreamController<(Refreshable<U>, A)> _notifierController =
       StreamController.broadcast();
 
