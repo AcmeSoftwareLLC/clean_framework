@@ -5,16 +5,18 @@ homepage: https://acmesoftware.com/
 repository: https://github.com/AcmeSoftwareLLC/clean_framework/packages/clean_framework_graphql
 
 environment:
-  sdk: '>=2.17.0 <4.0.0'
-  flutter: '>=3.0.0'
+  sdk: '>=3.8.0 <4.0.0'
+  flutter: '>=3.32.0'
+
+resolution: workspace
 
 dependencies:
   clean_framework: ^4.1.3
 
   flutter:
     sdk: flutter
-  gql: ^1.0.0
-  graphql: ^5.1.3
+  gql: ^1.0.1
+  graphql: ^5.2.3
 
 dev_dependencies:
   clean_framework_test: ^0.5.4

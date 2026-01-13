@@ -3,7 +3,7 @@ name: Quality Check
 on:
   push:
   pull_request:
-    types: [ opened, reopened ]
+    types: [opened, reopened]
 
 jobs:
   gen-cov:
@@ -17,10 +17,10 @@ jobs:
       - name: Setup Flutter Stable
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
           cache: true
 
-      - name: 'Install Tools'
+      - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
 
@@ -37,9 +37,8 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{secrets.CODECOV_TOKEN}}
-          files: ./packages/clean_framework/coverage/lcov.info,./packages/clean_framework_firestore/coverage/lcov.info,./packages/clean_framework_graphql/coverage/lcov.info,./packages/clean_framework_rest/coverage/lcov.info,./packages/clean_framework_router/coverage/lcov.info,./packages/clean_framework_test/coverage/lcov.info
+          files: ./packages/clean_framework/coverage/lcov.info,./packages/clean_framework_firestore/coverage/lcov.info,./packages/clean_framework_graphql/coverage/lcov.info,./packages/clean_framework_http/coverage/lcov.info,./packages/clean_framework_router/coverage/lcov.info,./packages/clean_framework_test/coverage/lcov.info
           name: clean-framework-coverage
-
 #  pana:
 #    defaults:
 #      run:

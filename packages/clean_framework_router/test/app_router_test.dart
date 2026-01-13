@@ -36,7 +36,7 @@ class TestRouter extends AppRouter<Routes> {
   RouterConfiguration configureRouter() {
     return RouterConfiguration(
       routes: routes,
-      errorBuilder: (_, __) => const Page404(),
+      errorBuilder: (_, _) => const Page404(),
       redirect: redirect,
       observers: observers,
     );
@@ -52,11 +52,11 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => const OnTapPage(id: 'Home'),
+              builder: (_, _) => const OnTapPage(id: 'Home'),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => const OnTapPage(id: 'Detail'),
+              builder: (_, _) => const OnTapPage(id: 'Detail'),
             ),
           ],
         );
@@ -73,14 +73,14 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => const OnTapPage(id: 'Detail'),
+              builder: (_, _) => const OnTapPage(id: 'Detail'),
             ),
           ],
         );
@@ -114,14 +114,14 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.subDetail),
               ),
               routes: [
                 AppRoute(
                   route: Routes.subDetail,
-                  builder: (_, __) => const OnTapPage(id: 'Detail'),
+                  builder: (_, _) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
@@ -157,7 +157,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.detailWithParam,
@@ -198,7 +198,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 // ignore: deprecated_member_use_from_same_package
                 onTap: (context) => testRouter.to(
@@ -240,7 +240,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.detail,
@@ -281,7 +281,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.detail,
@@ -323,7 +323,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.detailWithParam,
@@ -337,7 +337,8 @@ void main() {
               route: Routes.detailWithParam,
               builder: (_, state) => OnTapPage(
                 id: 'Detail',
-                value: '${state.params['meta']}${state.queryParams['b']}'
+                value:
+                    '${state.params['meta']}${state.queryParams['b']}'
                     '${state.extra}',
               ),
             ),
@@ -366,7 +367,7 @@ void main() {
         routes: [
           AppRoute(
             route: Routes.home,
-            builder: (_, __) => OnTapPage(
+            builder: (_, _) => OnTapPage(
               id: 'Home',
               onTap: (context) => testRouter.go(Routes.subDetail),
             ),
@@ -437,7 +438,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(
                   Routes.subDetailWithParam,
@@ -451,7 +452,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -486,7 +488,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(Routes.subDetail),
               ),
@@ -548,7 +550,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(Routes.subDetail),
               ),
@@ -610,7 +612,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.push(Routes.subDetail),
               ),
@@ -680,7 +682,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.goLocation(
                   '/detail/123?b=456',
@@ -692,7 +694,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -728,7 +731,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 // ignore: deprecated_member_use_from_same_package
                 onTap: (context) => testRouter.open(
@@ -741,7 +744,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -775,7 +779,7 @@ void main() {
         routes: [
           AppRoute(
             route: Routes.home,
-            builder: (_, __) => OnTapPage(
+            builder: (_, _) => OnTapPage(
               id: 'Home',
               onTap: (context) => testRouter.goLocation('/test'),
             ),
@@ -804,14 +808,14 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.subDetail),
               ),
               routes: [
                 AppRoute(
                   route: Routes.subDetail,
-                  builder: (_, __) => const OnTapPage(id: 'Detail'),
+                  builder: (_, _) => const OnTapPage(id: 'Detail'),
                 ),
               ],
             ),
@@ -842,19 +846,19 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => const OnTapPage(id: 'Detail'),
+              builder: (_, _) => const OnTapPage(id: 'Detail'),
               redirect: (context, state) => '/more-detail',
             ),
             AppRoute(
               route: Routes.moreDetailRoot,
-              builder: (_, __) => const OnTapPage(id: 'More Detail'),
+              builder: (_, _) => const OnTapPage(id: 'More Detail'),
             ),
           ],
         );
@@ -883,18 +887,18 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => const OnTapPage(id: 'Detail'),
+              builder: (_, _) => const OnTapPage(id: 'Detail'),
             ),
             AppRoute(
               route: Routes.moreDetailRoot,
-              builder: (_, __) => const OnTapPage(id: 'More Detail'),
+              builder: (_, _) => const OnTapPage(id: 'More Detail'),
             ),
           ],
           redirect: (context, state) {
@@ -927,21 +931,21 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Detail',
                 onTap: (context) => testRouter.go(Routes.moreDetailRoot),
               ),
             ),
             AppRoute(
               route: Routes.moreDetailRoot,
-              builder: (_, __) => const OnTapPage(id: 'More Detail'),
+              builder: (_, _) => const OnTapPage(id: 'More Detail'),
             ),
           ],
         );
@@ -995,21 +999,21 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(Routes.detail),
               ),
             ),
             AppRoute(
               route: Routes.detail,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Detail',
                 onTap: (context) => testRouter.go(Routes.moreDetailRoot),
               ),
             ),
             AppRoute(
               route: Routes.moreDetailRoot,
-              builder: (_, __) => const OnTapPage(id: 'More Detail'),
+              builder: (_, _) => const OnTapPage(id: 'More Detail'),
             ),
           ],
         );
@@ -1054,7 +1058,7 @@ void main() {
           routes: [
             AppRoute.page(
               route: Routes.home,
-              builder: (_, __) => CupertinoPage(
+              builder: (_, _) => CupertinoPage(
                 child: OnTapPage(
                   id: 'Home',
                   onTap: (context) => testRouter.go(
@@ -1070,7 +1074,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -1109,7 +1114,7 @@ void main() {
           routes: [
             AppRoute.custom(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.subDetailWithParam,
@@ -1129,7 +1134,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -1167,7 +1173,7 @@ void main() {
           routes: [
             AppRoute(
               route: Routes.home,
-              builder: (_, __) => OnTapPage(
+              builder: (_, _) => OnTapPage(
                 id: 'Home',
                 onTap: (context) => testRouter.go(
                   Routes.subDetailWithParam,
@@ -1181,7 +1187,8 @@ void main() {
                   route: Routes.subDetailWithParam,
                   builder: (_, state) => OnTapPage(
                     id: 'Detail',
-                    value: '${state.params['meta']}${state.queryParams['b']}'
+                    value:
+                        '${state.params['meta']}${state.queryParams['b']}'
                         '${state.extra}',
                   ),
                 ),
@@ -1215,7 +1222,7 @@ void main() {
         routes: [
           AppRoute(
             route: Routes.home,
-            builder: (_, __) => const OnTapPage(id: 'Home'),
+            builder: (_, _) => const OnTapPage(id: 'Home'),
           ),
         ],
       );

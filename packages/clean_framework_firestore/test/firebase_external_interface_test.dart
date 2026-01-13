@@ -26,8 +26,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseWatchIdRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseWatchIdRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
 
@@ -73,8 +74,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseReadIdRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
   });
@@ -86,8 +88,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseReadAllRequest(path: 'fake path'));
+    final result = await gateWay.transport(
+      const FirebaseReadAllRequest(path: 'fake path'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, FirebaseSuccessResponse(testContent));
   });
@@ -100,8 +103,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseWriteRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseWriteRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, const FirebaseSuccessResponse({'id': 'id'}));
 
@@ -116,8 +120,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result =
-        await gateWay.transport(const FirebaseWriteRequest(path: 'fake path'));
+    final result = await gateWay.transport(
+      const FirebaseWriteRequest(path: 'fake path'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, const FirebaseSuccessResponse({'id': 'id'}));
 
@@ -131,8 +136,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseUpdateRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseUpdateRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, const FirebaseSuccessResponse({}));
   });
@@ -144,8 +150,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseDeleteRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseDeleteRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isRight, isTrue);
     expect(result.right, const FirebaseSuccessResponse({}));
   });
@@ -159,8 +166,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseReadIdRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseReadIdRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -179,8 +187,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseReadAllRequest(path: 'fake path'));
+    final result = await gateWay.transport(
+      const FirebaseReadAllRequest(path: 'fake path'),
+    );
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -198,8 +207,9 @@ void main() {
       firebaseClient: firebaseClient,
     );
 
-    final result = await gateWay
-        .transport(const FirebaseWriteRequest(path: 'fake path', id: 'foo'));
+    final result = await gateWay.transport(
+      const FirebaseWriteRequest(path: 'fake path', id: 'foo'),
+    );
     expect(result.isLeft, isTrue);
     expect(
       result.left,
@@ -211,7 +221,7 @@ void main() {
 
   test('FirebaseExternalInterface query', () async {
     FirebaseClientFake({})
-      ..createQuery('fake', (_) => _)
+      ..createQuery('fake', (f) => f)
       ..clearQuery()
       ..dispose();
   });

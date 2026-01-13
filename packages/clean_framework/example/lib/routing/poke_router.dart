@@ -14,11 +14,11 @@ class PokeRouter extends AppRouter<Routes> {
       routes: [
         AppRoute(
           route: Routes.home,
-          builder: (_, __) => HomeUI(),
+          builder: (_, _) => HomeUI(),
           routes: [
             AppRoute(
               route: Routes.form,
-              builder: (_, __) => FormUI(),
+              builder: (_, _) => FormUI(),
             ),
             AppRoute.custom(
               route: Routes.profile,

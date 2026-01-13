@@ -1,5 +1,7 @@
 // coverage:ignore-file
 
+import 'dart:async';
+
 import 'package:clean_framework/clean_framework_legacy.dart'
     hide Request, Response;
 import 'package:gql/language.dart';
@@ -16,7 +18,7 @@ class GraphQLLoggerLink extends Link {
 
   @override
   Stream<Response> request(Request request, [NextLink? forward]) {
-    _logRequest(request);
+    unawaited(_logRequest(request));
 
     return forward!(request).map(_responseMapper).handleError(_onError);
   }

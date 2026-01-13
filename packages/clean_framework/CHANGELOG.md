@@ -165,7 +165,7 @@ For entity updates that do not need to rebuild the UI, should be wrapped inside 
 Sub-packages:
 - clean_framework_router
 - clean_framework_graphql
-- clean_framework_rest
+- clean_framework_http
 - clean_framework_firestore
 - clean_framework_test
 ```

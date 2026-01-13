@@ -18,19 +18,21 @@ class GraphQLService {
   }) {
     final link = _createLink(token: token);
 
-    _createClient(
-      link: link,
-      persistence: persistence,
-      defaultPolicies: defaultPolicies,
+    unawaited(
+      _createClient(
+        link: link,
+        persistence: persistence,
+        defaultPolicies: defaultPolicies,
+      ),
     );
   }
 
   GraphQLService.withClient({
     required GraphQLClient client,
     this.timeout,
-  })  : endpoint = '',
-        headers = const {},
-        _graphQLClient = client;
+  }) : endpoint = '',
+       headers = const {},
+       _graphQLClient = client;
 
   /// The GraphQL endpoint.
   final String endpoint;
@@ -75,15 +77,16 @@ class GraphQLService {
     GraphQLErrorPolicy? errorPolicy,
   }) async {
     final resolvedTimeout = timeout ?? this.timeout;
-    final policy =
-        fetchPolicy == null ? null : FetchPolicy.values[fetchPolicy.index];
+    final policy = fetchPolicy == null
+        ? null
+        : FetchPolicy.values[fetchPolicy.index];
 
     final doc = gql(document);
     final hasStitching = _hasStitching(doc);
     final errPolicy = errorPolicy == null
         ? hasStitching
-            ? ErrorPolicy.all
-            : ErrorPolicy.none
+              ? ErrorPolicy.all
+              : ErrorPolicy.none
         : ErrorPolicy.values[errorPolicy.index];
 
     try {
@@ -264,7 +267,7 @@ class GraphQLOperationError {
   final List<ErrorLocation>? locations;
 
   /// Path of the error node in the query
-  final List<dynamic /* String | int */ >? path;
+  final List<dynamic /* String | int */>? path;
 
   /// Implementation-specific extensions to this error
   final Map<String, dynamic>? extensions;

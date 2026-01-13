@@ -6,12 +6,7 @@ class ExampleRouter extends AppRouter<Routes> {
   RouterConfiguration configureRouter() {
     return RouterConfiguration(
       debugLogDiagnostics: true,
-      routes: [
-        AppRoute(
-          route: Routes.home,
-          builder: (_, __) => HomeUI(),
-        ),
-      ],
+      routes: [AppRoute(route: Routes.home, builder: (_, _) => HomeUI())],
     );
   }
 }

@@ -12,8 +12,8 @@ import 'package:flutter_test/flutter_test.dart' as ft;
 import 'package:meta/meta.dart';
 
 @isTest
-void presenterTest<V extends ViewModel, M extends DomainModel,
-    U extends UseCase>(
+void
+presenterTest<V extends ViewModel, M extends DomainModel, U extends UseCase>(
   String description, {
   required Presenter Function(WidgetBuilder builder) create,
   List<Override> overrides = const [],
@@ -76,8 +76,11 @@ void presenterTest<V extends ViewModel, M extends DomainModel,
 }
 
 @isTest
-void presenterCallbackTest<V extends ViewModel, M extends DomainModel,
-    U extends UseCase>(
+void presenterCallbackTest<
+  V extends ViewModel,
+  M extends DomainModel,
+  U extends UseCase
+>(
   String description, {
   required U useCase,
   required Presenter Function(WidgetBuilder builder) create,
@@ -116,12 +119,12 @@ class _TestBuilderState<U extends UseCase>
     super.initState();
 
     if (widget.onInit != null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
         // ignore: invalid_use_of_visible_for_testing_member
         final useCase = widget.presenter.provider.read(
           ProviderScope.containerOf(context),
         );
-        widget.onInit!(useCase as U);
+        await widget.onInit!(useCase as U);
       });
     }
   }
