@@ -2,9 +2,9 @@ import 'package:clean_framework/src/core/use_case/use_case.dart';
 import 'package:clean_framework/src/presentation/presenter/presenter.dart';
 import 'package:clean_framework/src/presentation/presenter/view_model.dart';
 import 'package:clean_framework/src/providers/use_case_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract class Presenter<
   V extends ViewModel,

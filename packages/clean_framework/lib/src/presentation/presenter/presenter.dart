@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:clean_framework/src/core/core.dart';
 import 'package:clean_framework/src/presentation/presenter/view_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:meta/meta.dart';
 
 abstract class Presenter<

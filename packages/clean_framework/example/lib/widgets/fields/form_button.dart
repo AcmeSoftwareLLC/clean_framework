@@ -1,5 +1,5 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FormButton extends StatelessWidget {
   const FormButton({required this.onPressed, required this.child, super.key});
@@ -11,7 +11,8 @@ class FormButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return UniformBuilder(
       builder: (context, controller, _) {
-        final isEnabled = controller.contains({InputFormState.touched}) &&
+        final isEnabled =
+            controller.contains({InputFormState.touched}) &&
             !controller.isSubmitted;
 
         return FilledButton(

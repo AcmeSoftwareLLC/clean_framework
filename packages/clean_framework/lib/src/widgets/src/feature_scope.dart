@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
   const FeatureScope({
@@ -19,8 +19,8 @@ class FeatureScope<T extends FeatureProvider> extends StatefulWidget {
 
   // ignore: library_private_types_in_public_api
   static _InheritedFeatureScope of(BuildContext context) {
-    final result =
-        context.dependOnInheritedWidgetOfExactType<_InheritedFeatureScope>();
+    final result = context
+        .dependOnInheritedWidgetOfExactType<_InheritedFeatureScope>();
     assert(result != null, 'No _InheritedFeatureScope found in context');
     return result!;
   }

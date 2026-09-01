@@ -1,14 +1,11 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:theme_example/features/home/domain/home_entity.dart';
 import 'package:theme_example/features/home/presentation/theme/home_theme_presenter.dart';
 import 'package:theme_example/features/home/presentation/theme/home_theme_view_model.dart';
 
 class ExampleThemeModeWrapper extends UI<HomeThemeViewModel> {
-  ExampleThemeModeWrapper({
-    required this.builder,
-    super.key,
-  });
+  ExampleThemeModeWrapper({required this.builder, super.key});
 
   final Widget Function(BuildContext, ThemeMode) builder;
 
@@ -18,12 +15,7 @@ class ExampleThemeModeWrapper extends UI<HomeThemeViewModel> {
 
   @override
   Widget build(BuildContext context, HomeThemeViewModel viewModel) {
-    return builder(
-      context,
-      _getThemeMode(
-        viewModel.appTheme,
-      ),
-    );
+    return builder(context, _getThemeMode(viewModel.appTheme));
   }
 
   ThemeMode _getThemeMode(AppTheme theme) {

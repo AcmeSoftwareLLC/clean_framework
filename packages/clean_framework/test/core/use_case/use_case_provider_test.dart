@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
   TestUseCase.new,
@@ -18,8 +18,7 @@ final _testUseCaseProvider = UseCaseProvider<TestEntity, TestUseCase>(
 );
 
 final AutoDisposeUseCaseProvider<TestEntity, TestUseCase>
-    _testUseCaseProvider2 =
-    UseCaseProvider.autoDispose<TestEntity, TestUseCase>(
+_testUseCaseProvider2 = UseCaseProvider.autoDispose<TestEntity, TestUseCase>(
   TestUseCase.new,
   (bridge) {
     bridge.connect<TestEntity, TestUseCase, String>(
@@ -39,15 +38,14 @@ final _testUseCaseProvider3 = UseCaseProvider<TestEntity, TestUseCase>(
 );
 
 final AutoDisposeUseCaseProviderFamily<TestEntity, TestUseCase, String>
-    _testUseCaseAutoDisposeFamily =
-    UseCaseProvider.autoDispose.family<TestEntity, TestUseCase, String>(
-  (name) => TestUseCase(name: name),
-  (_) {},
-);
+_testUseCaseAutoDisposeFamily = UseCaseProvider.autoDispose
+    .family<TestEntity, TestUseCase, String>(
+      (name) => TestUseCase(name: name),
+      (_) {},
+    );
 
 final UseCaseProviderFamily<TestEntity, TestUseCase, String>
-    _testUseCaseFamily =
-    UseCaseProvider.family<TestEntity, TestUseCase, String>(
+_testUseCaseFamily = UseCaseProvider.family<TestEntity, TestUseCase, String>(
   (name) => TestUseCase(name: name),
   (_) {},
 );
@@ -149,8 +147,8 @@ void main() {
                       foo: clicked3
                           ? 'bar3'
                           : clicked
-                              ? 'bar'
-                              : '',
+                          ? 'bar'
+                          : '',
                     ),
                   );
 
@@ -244,10 +242,10 @@ void main() {
     test('use case creation', () {
       final container = ProviderContainer();
 
-      final pikachuUseCase =
-          _testUseCaseAutoDisposeFamily('Pikachu').read(container);
-      final bulbasaurUseCase =
-          _testUseCaseAutoDisposeFamily('Bulbasaur').read(container);
+      final pikachuUseCase = _testUseCaseAutoDisposeFamily('Pikachu')
+          .read(container);
+      final bulbasaurUseCase = _testUseCaseAutoDisposeFamily('Bulbasaur')
+          .read(container);
 
       expect(pikachuUseCase, isA<TestUseCase>());
       expect(bulbasaurUseCase, isA<TestUseCase>());
@@ -292,12 +290,12 @@ class NewTestUseCase extends TestUseCase {}
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({this.name = ''})
-      : super(
-          entity: const TestEntity(),
-          transformers: [
-            DomainModelTransformer.from((e) => TestDomainModel(foo: e.foo)),
-          ],
-        );
+    : super(
+        entity: const TestEntity(),
+        transformers: [
+          DomainModelTransformer.from((e) => TestDomainModel(foo: e.foo)),
+        ],
+      );
 
   final String name;
 

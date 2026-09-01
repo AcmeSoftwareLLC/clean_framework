@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef FeatureBuilderCallback<T extends Object> = Widget Function(
   BuildContext,

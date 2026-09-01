@@ -1,5 +1,5 @@
 import 'package:clean_framework/src/presentation/presentation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 abstract class UI<V extends ViewModel> extends StatefulWidget {
   UI({

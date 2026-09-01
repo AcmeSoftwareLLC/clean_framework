@@ -1,5 +1,5 @@
 import 'package:clean_framework_example_rest/widgets/svg_palette_card.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PokemonCard extends StatelessWidget {
   const PokemonCard({
@@ -33,9 +33,7 @@ class PokemonCard extends StatelessWidget {
                 alignment: Alignment.topLeft,
                 child: Text(
                   name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
+                  style: Theme.of(context).textTheme.titleMedium!
                       .copyWith(fontWeight: FontWeight.w300),
                 ),
               ),

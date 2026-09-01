@@ -23,6 +23,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^3.4.2
+  material_ui: ^1.1.0
   meta: '>=1.12.0 <2.0.0'
   stack_trace: '>=1.11.0 <2.0.0'
   uniform: ^2.0.7

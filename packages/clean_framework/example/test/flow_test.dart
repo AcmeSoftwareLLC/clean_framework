@@ -12,8 +12,8 @@ import 'package:clean_framework_example_rest/providers.dart';
 import 'package:clean_framework_example_rest/routing.dart';
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('Flow Test', (tester) async {
@@ -75,8 +75,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
               data: {
                 'flavor_text_entries': [
                   {
-                    'flavor_text':
-                        'It keeps its tail\nraised to monitor\nits surroundings.\fIf you yank its\ntail, it will try\nto bite you.',
+                    'flavor_text': 'It keeps its tail\nraised to monitor\nits surroundings.\fIf you yank its\ntail, it will try\nto bite you.',
                     'language': {
                       'name': 'en',
                       'url': 'https://pokeapi.co/api/v2/language/9/',
@@ -87,8 +86,7 @@ class PokemonExternalInterfaceFake extends PokemonExternalInterface {
                     },
                   },
                   {
-                    'flavor_text':
-                        'This intelligent\nPOKéMON roasts\nhard BERRIES with\felectricity to\nmake them tender\nenough to eat.',
+                    'flavor_text': 'This intelligent\nPOKéMON roasts\nhard BERRIES with\felectricity to\nmake them tender\nenough to eat.',
                     'language': {
                       'name': 'en',
                       'url': 'https://pokeapi.co/api/v2/language/9/',

@@ -1,13 +1,11 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:theme_example/features/home/presentation/theme/home_theme_ui.dart';
 import 'package:theme_example/router.dart';
 
 class ThemeExampleApp extends StatelessWidget {
-  const ThemeExampleApp({
-    super.key,
-  });
+  const ThemeExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {

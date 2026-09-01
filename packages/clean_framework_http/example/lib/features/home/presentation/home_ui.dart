@@ -1,8 +1,8 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http_example/features/home/presentation/home_presenter.dart';
 import 'package:clean_framework_http_example/features/home/presentation/home_view_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg_image/flutter_svg_image.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeUI extends UI<HomeViewModel> {
   HomeUI({super.key});
@@ -14,9 +14,9 @@ class HomeUI extends UI<HomeViewModel> {
   @override
   Widget build(BuildContext context, HomeViewModel viewModel) {
     final titleStyle = Theme.of(context).textTheme.titleLarge!.copyWith(
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.w300,
-        );
+      color: Theme.of(context).colorScheme.onPrimaryContainer,
+      fontWeight: FontWeight.w300,
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Pokemons')),

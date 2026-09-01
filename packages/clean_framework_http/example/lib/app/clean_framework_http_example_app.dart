@@ -2,7 +2,7 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http_example/providers.dart';
 import 'package:clean_framework_http_example/routing.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CleanFrameworkHttpExampleApp extends StatelessWidget {
   const CleanFrameworkHttpExampleApp({super.key});

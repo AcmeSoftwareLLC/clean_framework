@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/providers.dart';
 import 'package:clean_framework_example_rest/routing.dart';
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PokeApp extends StatelessWidget {
   const PokeApp({super.key});

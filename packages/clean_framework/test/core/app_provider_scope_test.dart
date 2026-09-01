@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('AppProviderScope tests |', () {
@@ -53,7 +53,7 @@ void main() {
 }
 
 final ExternalInterfaceProvider<TestExternalInterface>
-    _testExternalInterfaceProvider = ExternalInterfaceProvider(
+_testExternalInterfaceProvider = ExternalInterfaceProvider(
   TestExternalInterface.new,
   gateways: [_testGatewayProvider],
 );
@@ -83,8 +83,14 @@ class TestExternalInterface
   }
 }
 
-class TestGateway extends Gateway<TestDomainToGatewayModel, TestRequest,
-    TestSuccessResponse, TestSuccessInput> {
+class TestGateway
+    extends
+        Gateway<
+          TestDomainToGatewayModel,
+          TestRequest,
+          TestSuccessResponse,
+          TestSuccessInput
+        > {
   @override
   TestRequest buildRequest(TestDomainToGatewayModel output) {
     return TestRequest(ping: output.ping);
