@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:meta/meta.dart';
 
 @visibleForTesting
@@ -23,15 +23,10 @@ void setupUITest({
   );
 }
 
-class _UITestConfig {
-  _UITestConfig({
-    required this.context,
-    required this.router,
-  });
-
-  final ProvidersContext context;
-  final AppRouter router;
-}
+class _UITestConfig({
+  required final ProvidersContext context,
+  required final AppRouter router,
+});
 
 /// Can be used to wrap the test widget with other widgets.
 ///

@@ -5,7 +5,7 @@ import 'package:clean_framework_http_example/features/home/domain/home_domain_mo
 import 'package:clean_framework_http_example/features/home/domain/home_use_case.dart';
 import 'package:clean_framework_http_example/features/home/presentation/home_view_model.dart';
 import 'package:clean_framework_http_example/providers.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomePresenter
     extends Presenter<HomeViewModel, HomeDomainToUIModel, HomeUseCase> {

@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/features/form/domain/form_entity.da
 import 'package:clean_framework_example_rest/features/form/presentation/form_presenter.dart';
 import 'package:clean_framework_example_rest/features/form/presentation/form_view_model.dart';
 import 'package:clean_framework_example_rest/widgets/fields.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FormUI extends UI<FormViewModel> {
   FormUI({super.key});

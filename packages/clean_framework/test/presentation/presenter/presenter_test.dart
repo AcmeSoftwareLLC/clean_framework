@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('Presenter tests |', () {
@@ -55,37 +55,42 @@ void main() {
       );
     });
 
-    testWidgets('didUpdatePresenter is triggered if presenter property changes',
-        (tester) async {
-      final messageNotifier = ValueNotifier('');
+    testWidgets(
+      'didUpdatePresenter is triggered if presenter property changes',
+      (tester) async {
+        final messageNotifier = ValueNotifier('');
 
-      await tester.pumpWidget(
-        AppProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: ValueListenableBuilder<String>(
-                valueListenable: messageNotifier,
-                builder: (context, message, _) {
-                  return TestPresenter(message: message);
-                },
+        await tester.pumpWidget(
+          AppProviderScope(
+            child: MaterialApp(
+              home: Scaffold(
+                body: ValueListenableBuilder<String>(
+                  valueListenable: messageNotifier,
+                  builder: (context, message, _) {
+                    return TestPresenter(message: message);
+                  },
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('DEFAULT'), findsOneWidget);
+        expect(find.text('DEFAULT'), findsOneWidget);
 
-      messageNotifier.value = 'BAR';
-      await tester.pumpAndSettle();
+        messageNotifier.value = 'BAR';
+        await tester.pumpAndSettle();
 
-      expect(
-        find.descendant(of: find.byType(SnackBar), matching: find.text('BAR')),
-        findsOneWidget,
-      );
+        expect(
+          find.descendant(
+            of: find.byType(SnackBar),
+            matching: find.text('BAR'),
+          ),
+          findsOneWidget,
+        );
 
-      messageNotifier.dispose();
-    });
+        messageNotifier.dispose();
+      },
+    );
   });
 }
 
@@ -93,10 +98,10 @@ final UseCaseProvider<Entity, TestUseCase> _testUseCaseProvider =
     UseCaseProvider(TestUseCase.new);
 
 final UseCaseProviderFamily<TestEntity, TestUseCase, String>
-    _testUseCaseProviderFamily =
+_testUseCaseProviderFamily =
     UseCaseProvider.family<TestEntity, TestUseCase, String>(
-  (name) => TestUseCase(name: name),
-);
+      (name) => TestUseCase(name: name),
+    );
 
 class TestPresenter
     extends Presenter<TestViewModel, TestDomainToUIModel, TestUseCase> {
@@ -105,41 +110,42 @@ class TestPresenter
     WidgetBuilder? builder,
     this.message = '',
   }) : super(
-          provider: _testUseCaseProvider,
-          builder: builder ??
-              (context) {
-                final viewModel = ViewModelScope.of<TestViewModel>(context);
-                return Column(
-                  children: [
-                    Text(viewModel.message),
-                    ElevatedButton(
-                      onPressed: () => viewModel.update('FOO'),
-                      child: const Text('CLICK'),
-                    ),
-                  ],
-                );
-              },
-        );
+         provider: _testUseCaseProvider,
+         builder:
+             builder ??
+             (context) {
+               final viewModel = ViewModelScope.of<TestViewModel>(context);
+               return Column(
+                 children: [
+                   Text(viewModel.message),
+                   ElevatedButton(
+                     onPressed: () => viewModel.update('FOO'),
+                     child: const Text('CLICK'),
+                   ),
+                 ],
+               );
+             },
+       );
 
   TestPresenter.family({
     super.key,
     this.message = '',
   }) : super.family(
-          family: _testUseCaseProviderFamily,
-          arg: message,
-          builder: (context) {
-            final viewModel = ViewModelScope.of<TestViewModel>(context);
-            return Column(
-              children: [
-                Text(viewModel.message),
-                ElevatedButton(
-                  onPressed: () => viewModel.update('FOO'),
-                  child: const Text('CLICK'),
-                ),
-              ],
-            );
-          },
-        );
+         family: _testUseCaseProviderFamily,
+         arg: message,
+         builder: (context) {
+           final viewModel = ViewModelScope.of<TestViewModel>(context);
+           return Column(
+             children: [
+               Text(viewModel.message),
+               ElevatedButton(
+                 onPressed: () => viewModel.update('FOO'),
+                 child: const Text('CLICK'),
+               ),
+             ],
+           );
+         },
+       );
 
   final String message;
 
@@ -215,14 +221,14 @@ class TestEntity extends Entity {
 
 class TestUseCase extends UseCase<TestEntity> {
   TestUseCase({this.name = ''})
-      : super(
-          entity: const TestEntity(message: 'DEFAULT'),
-          transformers: [
-            DomainModelTransformer.from(
-              (entity) => TestDomainToUIModel(message: entity.message),
-            ),
-          ],
-        );
+    : super(
+        entity: const TestEntity(message: 'DEFAULT'),
+        transformers: [
+          DomainModelTransformer.from(
+            (entity) => TestDomainToUIModel(message: entity.message),
+          ),
+        ],
+      );
 
   final String name;
 

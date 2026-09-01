@@ -4,11 +4,11 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:clean_framework_test/src/diff.dart';
 import 'package:clean_framework_test/src/ui_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart' as ft;
+import 'package:material_ui/material_ui.dart';
 import 'package:meta/meta.dart';
 
 @isTest

@@ -8,7 +8,7 @@ import 'package:clean_framework_example_rest/routing/routes.dart';
 import 'package:clean_framework_example_rest/widgets/pokemon_card.dart';
 import 'package:clean_framework_example_rest/widgets/pokemon_search_field.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class HomeUI extends UI<HomeViewModel> {
   HomeUI({super.key});

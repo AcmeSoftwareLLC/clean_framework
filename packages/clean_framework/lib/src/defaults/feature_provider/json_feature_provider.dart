@@ -12,8 +12,8 @@ export 'engine/open_feature_flags.dart';
 class JsonFeatureProvider implements FeatureProvider {
   /// Default constructor.
   JsonFeatureProvider({
-    EvaluationEngine engine = const JsonEvaluationEngine(),
-  }) : _engine = engine;
+    this._engine = const JsonEvaluationEngine(),
+  });
 
   final EvaluationEngine _engine;
   final Completer<OpenFeatureFlags> _flagsCompleter = Completer();

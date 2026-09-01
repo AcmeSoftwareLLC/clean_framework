@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 class AppProviderScope extends StatelessWidget {
@@ -70,7 +70,7 @@ class _ProviderInitializerState extends State<_ProviderInitializer> {
   void initState() {
     super.initState();
 
-    FlutterError.demangleStackTrace = (StackTrace stack) {
+    FlutterError.demangleStackTrace = (stack) {
       if (stack is Trace) return stack.vmTrace;
       if (stack is Chain) return stack.toTrace().vmTrace;
       return stack;

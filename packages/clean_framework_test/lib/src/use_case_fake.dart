@@ -7,14 +7,12 @@ typedef UseCaseSubscription
   DomainModel,
 );
 
-class UseCaseFake<S extends SuccessDomainInput> extends Fake
-    implements UseCase<EntityFake> {
-  UseCaseFake({this.domainModel});
-
+class UseCaseFake<S extends SuccessDomainInput>({
+  final DomainModel? domainModel,
+}) extends Fake implements UseCase<EntityFake> {
   EntityFake _entity = const EntityFake();
   late RequestSubscription subscription;
   S? successInput;
-  final DomainModel? domainModel;
 
   @override
   EntityFake get entity => _entity;
@@ -54,11 +52,7 @@ class UseCaseFake<S extends SuccessDomainInput> extends Fake
   }
 }
 
-class EntityFake extends Entity {
-  const EntityFake({this.value = 'initial'});
-
-  final String value;
-
+class const EntityFake({final String value = 'initial'}) extends Entity {
   @override
   List<Object?> get props => [value];
 

@@ -6,9 +6,6 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class DomainInput extends DomainDTO {}
 
-@Deprecated('Use DomainInput.')
-abstract class Input extends DomainInput {}
-
 /// Used for the transfer of data into the domain layer (use case) after some
 /// success response.
 class SuccessDomainInput implements DomainInput {
@@ -29,20 +26,11 @@ class SuccessInput extends SuccessDomainInput {
 
 /// Used for the transfer of data into the domain layer (use case) after some
 /// failure response.
-class FailureDomainInput implements DomainInput {
-  const FailureDomainInput({this.message = ''});
-
-  final String message;
-
+class const FailureDomainInput({final String message = ''})
+    implements DomainInput {
   @override
   List<Object?> get props => [message];
 
   @override
   bool? get stringify => true;
-}
-
-@Deprecated('Use FailureDomainInput.')
-class FailureInput extends FailureDomainInput {
-  @Deprecated('Use FailureDomainInput.')
-  const FailureInput({super.message = ''});
 }

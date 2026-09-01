@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:clean_framework_test/clean_framework_test_legacy.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -66,9 +66,9 @@ class TestUI extends UI<TestViewModel> {
 
 class PresenterFake extends Presenter<TestViewModel, TestDomainModel, UseCase> {
   PresenterFake({required super.builder, super.key})
-      : super(
-          provider: UseCaseProvider((_) => UseCaseFake()),
-        );
+    : super(
+        provider: UseCaseProvider((_) => UseCaseFake()),
+      );
 
   @override
   TestDomainModel subscribe(_) => const TestDomainModel('bar');

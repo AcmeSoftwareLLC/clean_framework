@@ -1,4 +1,9 @@
 # Changelog
+## 1.0.2
+**Sep 1, 2026**
+- Bumps dependencies to latest version.
+- Adopts Dart primary constructors for applicable classes.
+
 ## 1.0.1
 **Jan 12, 2026**
 - Bumps dependencies to latest version.

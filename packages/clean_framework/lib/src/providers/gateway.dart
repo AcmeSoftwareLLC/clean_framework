@@ -1,18 +1,22 @@
 import 'package:clean_framework/clean_framework_legacy.dart';
 import 'package:meta/meta.dart';
 
-abstract class Gateway<M extends DomainModel, R extends Request,
-    P extends SuccessResponse, S extends SuccessDomainInput> {
+abstract class Gateway<
+  M extends DomainModel,
+  R extends Request,
+  P extends SuccessResponse,
+  S extends SuccessDomainInput
+> {
   Gateway({
     ProvidersContext? context,
     UseCaseProvider? provider,
     UseCase? useCase,
   }) : assert(
-          () {
-            return (context != null && provider != null) || useCase != null;
-          }(),
-          '',
-        ) {
+         () {
+           return (context != null && provider != null) || useCase != null;
+         }(),
+         '',
+       ) {
     _useCase = useCase ?? provider!.getUseCaseFromContext(context!);
     _useCase.subscribe<M, S>(
       (domainModel) => _processRequest(buildRequest(domainModel)),
@@ -36,13 +40,15 @@ abstract class Gateway<M extends DomainModel, R extends Request,
   }
 }
 
-abstract class BridgeGateway<SUBSCRIBER_MODEL extends DomainModel,
-    PUBLISHER_MODEL extends DomainModel, SUBSCRIBER_INPUT extends DomainInput> {
+abstract class BridgeGateway<
+  SUBSCRIBER_MODEL extends DomainModel,
+  PUBLISHER_MODEL extends DomainModel,
+  SUBSCRIBER_INPUT extends DomainInput
+> {
   BridgeGateway({
-    required UseCase subscriberUseCase,
-    required UseCase publisherUseCase,
-  })  : _subscriberUseCase = subscriberUseCase,
-        _publisherUseCase = publisherUseCase {
+    required this._subscriberUseCase,
+    required this._publisherUseCase,
+  }) {
     _subscriberUseCase.subscribe<SUBSCRIBER_MODEL, SUBSCRIBER_INPUT>(
       (output) {
         return Either<FailureDomainInput, SUBSCRIBER_INPUT>.right(
@@ -60,10 +66,12 @@ abstract class BridgeGateway<SUBSCRIBER_MODEL extends DomainModel,
 }
 
 abstract class WatcherGateway<
-    M extends DomainModel,
-    R extends Request,
-    P extends SuccessResponse,
-    S extends SuccessDomainInput> extends Gateway<M, R, P, S> {
+  M extends DomainModel,
+  R extends Request,
+  P extends SuccessResponse,
+  S extends SuccessDomainInput
+>
+    extends Gateway<M, R, P, S> {
   WatcherGateway({
     required ProvidersContext context,
     required UseCaseProvider provider,
@@ -80,5 +88,5 @@ abstract class WatcherGateway<
   }
 }
 
-typedef Transport<R extends Request, P extends SuccessResponse>
-    = Future<Either<FailureResponse, P>> Function(R request);
+typedef Transport<R extends Request, P extends SuccessResponse> =
+    Future<Either<FailureResponse, P>> Function(R request);

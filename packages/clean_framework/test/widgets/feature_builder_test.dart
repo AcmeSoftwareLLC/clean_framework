@@ -1,7 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework/clean_framework_defaults.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   group('FeatureBuilder tests ||', () {
@@ -325,7 +325,7 @@ class FakeJsonFeatureProvider extends JsonFeatureProvider {
               'conditions': [
                 {'context': 'platform', 'op': 'equals', 'value': 'android'},
               ],
-            }
+            },
           ],
         },
       },

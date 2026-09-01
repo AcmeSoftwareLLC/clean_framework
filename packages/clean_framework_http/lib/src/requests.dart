@@ -2,16 +2,12 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_http/clean_framework_http.dart';
 
 /// The HTTP Request methods.
-abstract class HttpRequest extends Request {
-  /// Creates a new [HttpRequest] with the given [method] and [cancelToken].
-  const HttpRequest(this.method, {this.cancelToken});
-
+abstract class const HttpRequest(
   /// The HTTP method to be used.
-  final HttpMethods method;
-
+  final HttpMethods method, {
   /// The token to cancel the request.
-  final HttpCancelToken? cancelToken;
-
+  final HttpCancelToken? cancelToken,
+}) extends Request {
   /// The path of the request.
   String get path;
 

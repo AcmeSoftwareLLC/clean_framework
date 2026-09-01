@@ -5,7 +5,7 @@ import 'package:clean_framework_example_rest/features/form/domain/form_domain_mo
 import 'package:clean_framework_example_rest/features/form/domain/form_use_case.dart';
 import 'package:clean_framework_example_rest/features/form/presentation/form_view_model.dart';
 import 'package:clean_framework_example_rest/providers.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class FormPresenter
     extends Presenter<FormViewModel, FormDomainToUIModel, FormUseCase> {

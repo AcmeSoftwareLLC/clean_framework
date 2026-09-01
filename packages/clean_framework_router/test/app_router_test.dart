@@ -1,8 +1,8 @@
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum Routes with RoutesMixin {
   home('/'),
@@ -1241,13 +1241,12 @@ Future<void> pumpApp(WidgetTester tester) {
   );
 }
 
-class OnTapPage extends StatelessWidget {
-  const OnTapPage({required this.id, super.key, this.onTap, this.value});
-
-  final String id;
-  final void Function(BuildContext)? onTap;
-  final String? value;
-
+class const OnTapPage({
+  required final String id,
+  super.key,
+  final void Function(BuildContext)? onTap,
+  final String? value,
+}) extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

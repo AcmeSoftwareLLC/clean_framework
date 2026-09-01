@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class Spotlight extends StatefulWidget {

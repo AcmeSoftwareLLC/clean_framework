@@ -3,7 +3,7 @@ import 'package:clean_framework_example_rest/features/profile/domain/profile_dom
 import 'package:clean_framework_example_rest/features/profile/presentation/profile_presenter.dart';
 import 'package:clean_framework_example_rest/features/profile/presentation/profile_view_model.dart';
 import 'package:clean_framework_example_rest/widgets/spotlight.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileUI extends UI<ProfileViewModel> {
   ProfileUI({
@@ -227,8 +227,8 @@ class _PokeTypeChip extends StatelessWidget {
             Text(
               type.name,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: type.color,
-                  ),
+                color: type.color,
+              ),
             ),
           ],
         ),

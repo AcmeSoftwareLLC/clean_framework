@@ -1,6 +1,6 @@
 import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_example_rest/features/profile/domain/profile_domain_models.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileViewModel extends ViewModel {
   const ProfileViewModel({
@@ -23,8 +23,8 @@ class ProfileViewModel extends ViewModel {
 
 class PokemonType {
   PokemonType(this.name)
-      : color = _pokemonTypeColors[name] ?? Colors.white,
-        emoji = _pokemonTypeEmojis[name] ?? '';
+    : color = _pokemonTypeColors[name] ?? Colors.white,
+      emoji = _pokemonTypeEmojis[name] ?? '';
 
   final String name;
   final String emoji;

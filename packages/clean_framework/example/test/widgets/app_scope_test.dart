@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:clean_framework_example_rest/widgets/app_scope.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import '../helpers/test_cache_manager.dart';
