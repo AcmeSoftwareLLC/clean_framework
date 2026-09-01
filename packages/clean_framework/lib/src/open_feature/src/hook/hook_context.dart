@@ -5,24 +5,14 @@ import 'package:clean_framework/src/open_feature/src/core/feature_client.dart';
 import 'package:clean_framework/src/open_feature/src/evaluation_context/evaluation_context.dart';
 import 'package:clean_framework/src/open_feature/src/provider/feature_provider.dart';
 
-class HookContext<T extends Object> {
-  HookContext({
-    required this.flagKey,
-    required this.flagType,
-    required this.context,
-    required this.defaultValue,
-    required this.client,
-    required this.provider,
-  });
-
-  final String flagKey;
-  final FlagValueType flagType;
-  final EvaluationContext context;
-  final T defaultValue;
-
-  final FeatureClient client;
-  final FeatureProvider provider;
-
+class HookContext<T extends Object>({
+  required final String flagKey,
+  required final FlagValueType flagType,
+  required final EvaluationContext context,
+  required final T defaultValue,
+  required final FeatureClient client,
+  required final FeatureProvider provider,
+}) {
   HookContext<T> apply({required EvaluationContext context}) {
     return HookContext(
       flagKey: flagKey,

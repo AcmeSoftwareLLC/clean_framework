@@ -16,11 +16,7 @@ class DependencyProvider<T extends Object>
   T read(ProviderContainer container) => container.read(call());
 }
 
-class DependencyRef {
-  const DependencyRef(this._ref);
-
-  final Ref _ref;
-
+class const DependencyRef(final Ref _ref) {
   T read<T extends Object>(DependencyProvider<T> provider) {
     return _ref.read(provider());
   }

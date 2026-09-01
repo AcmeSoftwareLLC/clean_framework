@@ -5,18 +5,13 @@ import 'package:clean_framework/src/utilities/logger.dart';
 Logger get logger => CleanFrameworkObserver.instance.logger;
 
 /// The class to observe failures, route changes and other events.
-class CleanFrameworkObserver {
-  /// Default constructor.
-  CleanFrameworkObserver({
-    this.enableNetworkLogs = true,
-    this.logger = const Logger(),
-  });
-
-  final Logger logger;
-
+class CleanFrameworkObserver({
   /// Enables network logs.
-  final bool enableNetworkLogs;
+  final bool enableNetworkLogs = true,
 
+  /// Logger used by [CleanFrameworkObserver].
+  final Logger logger = const Logger(),
+}) {
   /// Default instance of [CleanFrameworkObserver].
   ///
   /// This can be changed in following way:

@@ -23,15 +23,10 @@ void setupUITest({
   );
 }
 
-class _UITestConfig {
-  _UITestConfig({
-    required this.context,
-    required this.router,
-  });
-
-  final ProvidersContext context;
-  final AppRouter router;
-}
+class _UITestConfig({
+  required final ProvidersContext context,
+  required final AppRouter router,
+});
 
 /// Can be used to wrap the test widget with other widgets.
 ///
