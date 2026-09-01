@@ -5,18 +5,21 @@ import 'package:clean_framework_test/clean_framework_test_legacy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-final UseCaseProvider<Entity, TestUseCase> provider =
-    UseCaseProvider((_) => TestUseCase());
+final UseCaseProvider<Entity, TestUseCase> provider = UseCaseProvider(
+  (_) => TestUseCase(),
+);
 void main() {
   testWidgets('Presenter initial load', (tester) async {
     final presenter = TestPresenter(
-      builder: (TestViewModel viewModel) {
+      builder: (viewModel) {
         return Text(viewModel.foo, key: const Key('foo'));
       },
     );
 
-    await ProviderTester<dynamic>()
-        .pumpWidget(tester, MaterialApp(home: presenter));
+    await ProviderTester<dynamic>().pumpWidget(
+      tester,
+      MaterialApp(home: presenter),
+    );
 
     expect(find.byKey(const Key('foo')), findsOneWidget);
     expect(find.text('INITIAL'), findsOneWidget);
@@ -71,7 +74,7 @@ void main() {
 class TestPresenter
     extends Presenter<TestViewModel, TestDomainModel, TestUseCase> {
   TestPresenter({required super.builder, super.key, this.count})
-      : super(provider: provider);
+    : super(provider: provider);
 
   final int? count;
 
@@ -107,14 +110,14 @@ class TestPresenter
 
 class TestUseCase extends UseCase<EntityFake> {
   TestUseCase()
-      : super(
-          entity: const EntityFake(),
-          transformers: [
-            DomainModelTransformer.from(
-              (entity) => TestDomainModel(entity.value),
-            ),
-          ],
-        );
+    : super(
+        entity: const EntityFake(),
+        transformers: [
+          DomainModelTransformer.from(
+            (entity) => TestDomainModel(entity.value),
+          ),
+        ],
+      );
 
   Future<void> fetch() async {
     entity = const EntityFake(value: 'a');
@@ -137,7 +140,7 @@ class TestViewModel extends ViewModel {
   const TestViewModel(this.foo);
 
   TestViewModel.fromOutput(TestDomainModel output)
-      : foo = output.foo.toUpperCase();
+    : foo = output.foo.toUpperCase();
   final String foo;
 
   @override

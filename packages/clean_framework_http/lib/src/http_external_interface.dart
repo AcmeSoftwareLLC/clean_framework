@@ -34,7 +34,7 @@ class HttpExternalInterface
         final rootHeaders = await delegate.buildHeaders();
         final headers = {
           ...request.headers,
-          if (rootHeaders != null) ...rootHeaders,
+          ...?rootHeaders,
         };
 
         var options = Options(
@@ -101,28 +101,27 @@ class HttpExternalInterface
     if (error is DioException) {
       return switch (error.type) {
         DioExceptionType.badResponse => HttpFailureResponse(
-            message: error.message ?? '',
-            path: error.requestOptions.path,
-            statusCode: error.response?.statusCode ?? 0,
-            error: error.response?.data,
-            stackTrace: error.stackTrace,
-          ),
+          message: error.message ?? '',
+          path: error.requestOptions.path,
+          statusCode: error.response?.statusCode ?? 0,
+          error: error.response?.data,
+          stackTrace: error.stackTrace,
+        ),
         DioExceptionType.connectionTimeout ||
         DioExceptionType.sendTimeout ||
         DioExceptionType.receiveTimeout ||
         DioExceptionType.badCertificate ||
-        DioExceptionType.connectionError =>
-          ConnectionHttpFailureResponse(
-            type: HttpErrorType.values.byName(error.type.name),
-            message: error.message ?? '',
-            path: error.requestOptions.path,
-            error: error.error,
-            stackTrace: error.stackTrace,
-          ),
+        DioExceptionType.connectionError => ConnectionHttpFailureResponse(
+          type: HttpErrorType.values.byName(error.type.name),
+          message: error.message ?? '',
+          path: error.requestOptions.path,
+          error: error.error,
+          stackTrace: error.stackTrace,
+        ),
         DioExceptionType.cancel => CancelledHttpFailureResponse(
-            message: error.message ?? '',
-            path: error.requestOptions.path,
-          ),
+          message: error.message ?? '',
+          path: error.requestOptions.path,
+        ),
         _ => UnknownFailureResponse(error),
       };
     }

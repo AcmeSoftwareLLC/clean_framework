@@ -14,9 +14,8 @@ class AppProvidersContainer extends StatelessWidget {
     required this.child,
     super.key,
     ProvidersContext? providersContext,
-    ContainerBuildCallback? onBuild,
-  })  : _providersContext = providersContext ?? ProvidersContext(),
-        _onBuild = onBuild;
+    this._onBuild,
+  }) : _providersContext = providersContext ?? ProvidersContext();
 
   /// The widget below this widget in the tree.
   final Widget child;
