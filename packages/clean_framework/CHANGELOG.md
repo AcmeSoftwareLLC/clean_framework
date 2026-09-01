@@ -3,6 +3,7 @@
 **Sep 1, 2026**
 - Bumps dependencies to latest version.
 - Adopts Dart primary constructors for applicable classes.
+- Switches from `package:flutter/material.dart` to `package:material_ui/material_ui.dart`.
 
 ## 4.1.3
 **Jan 12, 2026**
